@@ -88,6 +88,7 @@ function GitCommitsList() {
                             <Table.HeadCell>Commit Id</Table.HeadCell>
                             <Table.HeadCell>Operating System</Table.HeadCell>
                             <Table.HeadCell>Output File</Table.HeadCell>
+                            <Table.HeadCell>Run time</Table.HeadCell>
                         </Table.Head>
                         <Table.Body className="divide-y">
                             {filteredJobResults?.jobResults?.map(
@@ -169,6 +170,9 @@ function GitCommitsList() {
                                                 height="256px"
                                             />
                                         </Table.Cell>
+                                        <Table.Cell>
+                                            {result.end_time && result.start_time ? calculateTimeDifferenceInMinutes(result.end_time, result.start_time) : "Unknown"} minutes
+                                        </Table.Cell>
                                     </Table.Row>
                                 )
                             )}
@@ -184,6 +188,12 @@ function GitCommitsList() {
             )}
         </div>
     )
+}
+
+function calculateTimeDifferenceInMinutes(startTime: number, endTime: number): number {
+    const differenceInSeconds = Math.abs(endTime - startTime);
+    const differenceInMinutes = differenceInSeconds / 60;
+    return differenceInMinutes;
 }
 
 export default GitCommitsList

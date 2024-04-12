@@ -154,6 +154,8 @@ export type PostUploadArtifactBody = {
   commit_hash: string;
   /** Cuda version. */
   cuda_version?: string;
+  /** The end time of the job as a Unix timestamp. */
+  end_time: number;
   /** Unique identifier for the job */
   job_id: string;
   /** Operating system used in the run */
@@ -164,6 +166,8 @@ export type PostUploadArtifactBody = {
   repo: string;
   /** Unique identifier for the run */
   run_id: string;
+  /** The start time of the job as a Unix timestamp. */
+  start_time: number;
   /** The name of the workflow */
   workflow_name: string;
 };
@@ -194,6 +198,10 @@ page?: number;
  * The number of items to include per page.
  */
 pageSize?: number;
+/**
+ * The repo to filter by.
+ */
+repoName?: string;
 };
 
 export interface Workspace {
@@ -362,6 +370,8 @@ export interface ActionJobResult {
   commit_hash?: string;
   /** The ID of the commit */
   commit_id?: string;
+  /** The end time of the job as a Unix timestamp. */
+  end_time?: number;
   /** The repository name */
   git_repo?: string;
   /** GPU type used */
@@ -372,6 +382,8 @@ export interface ActionJobResult {
   operating_system?: string;
   /** PyTorch version used */
   pytorch_version?: string;
+  /** The start time of the job as a Unix timestamp. */
+  start_time?: number;
   storage_file?: StorageFile;
   /** Name of the workflow */
   workflow_name?: string;
