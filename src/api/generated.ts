@@ -191,6 +191,10 @@ operatingSystem?: string;
  */
 workflowName?: string;
 /**
+ * The branch of the gitcommit to filter the CI data by.
+ */
+branch?: string;
+/**
  * The page number to retrieve.
  */
 page?: number;
@@ -202,6 +206,17 @@ pageSize?: number;
  * The repo to filter by.
  */
 repoName?: string;
+};
+
+export type GetBranch200 = {
+  branches?: string[];
+};
+
+export type GetBranchParams = {
+/**
+ * The repo to filter by.
+ */
+repo_name?: string;
 };
 
 export interface Workspace {
@@ -399,6 +414,70 @@ export interface ActionJobResult {
 ) => any
   ? P
   : never;
+
+
+/**
+ * Returns all branches for a given repo.
+ * @summary Retrieve all distinct branches for a given repo
+ */
+export const getBranch = (
+    params: GetBranchParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetBranch200>(
+      {url: `/branch`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetBranchQueryKey = (params: GetBranchParams,) => {
+    return [`/branch`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetBranchQueryOptions = <TData = Awaited<ReturnType<typeof getBranch>>, TError = void>(params: GetBranchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getBranch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetBranchQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getBranch>>> = ({ signal }) => getBranch(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getBranch>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetBranchQueryResult = NonNullable<Awaited<ReturnType<typeof getBranch>>>
+export type GetBranchQueryError = void
+
+/**
+ * @summary Retrieve all distinct branches for a given repo
+ */
+export const useGetBranch = <TData = Awaited<ReturnType<typeof getBranch>>, TError = void>(
+ params: GetBranchParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getBranch>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetBranchQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
 
 
 /**

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useGetGitcommit } from '../src/api/generated'
+import { useGetBranch, useGetGitcommit } from '../src/api/generated'
 import {
     Badge,
     Button,
@@ -25,8 +25,13 @@ function GitCommitsList() {
         operatingSystem: filterOS == '' ? undefined : filterOS,
         commitId: commitId == '' ? undefined : commitId,
         workflowName: workflowNameFilter == '' ? undefined : workflowNameFilter,
+        branch: branch,
         page: currentPage,
         pageSize: 10,
+    })
+
+    const { data: branchesQueryResults, isLoading: loadingBranchs } = useGetBranch({
+        repo_name: 'comfyanonymous/ComfyUI'
     })
 
     return (
@@ -44,9 +49,11 @@ function GitCommitsList() {
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                 >
-                    <option value="">Select Branch</option>
-                    <option value="master">master</option>
-                    {/* Add other branch options here */}
+                    {branchesQueryResults?.branches?.map((branch, index) => (
+                        <option key={index} value={branch}>
+                            {branch}
+                        </option>
+                    ))}
                 </Select>
                 <Select
                     id="os-select"
