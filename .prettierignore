@@ -1,0 +1,10 @@
+package-lock.json
+pnpm-lock.yaml
+package.json
+NativeApp/dist/bundles/*
+NativeApp/build-*
+NativeApp/assets/*
+NativeApp/.expo-shared/*
+public/*
+NativeApp/eas.json
+src/api/generated.ts

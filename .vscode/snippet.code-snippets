@@ -1,0 +1,87 @@
+{
+    // Place your kana workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+    // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+    // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+    // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+    // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+    // Placeholders with the same ids are connected.
+    // Example:
+    // "Print to console": {
+    //     "scope": "javascript,typescript",
+    //     "prefix": "log",
+    //     "body": [
+    //         "console.log('$1');",
+    //         "$2"
+    //     ],
+    //     "description": "Log output to console"
+    // }
+    // "edf": {
+    //   "scope": "javascript,typescript,typescriptreact,javascriptreact",
+    //   "prefix": "edf,edr",
+    //   "body": [
+    //     "export default function $1() {",
+    //     "  return (",
+    //     "    <div>",
+    //     "      <div>",
+    //     "        <button onClick={() => history.back()}> ◀ Back</button>",
+    //     "      </div>",
+    //     "      <div className='text-xl font-bold'>{location.pathname} is COMING SOON</div>",
+    //     "    </div>",
+    //     "  );",
+    //     "}"
+    //   ],
+    //   "description": "Log output to console"
+    // },
+    "global_shortcut_import": {
+        "scope": "javascript,typescript,typescriptreact,javascriptreact",
+        "prefix": "global firebase const import",
+        "body": [
+            "import {",
+            "  FIRESTORE_ALL_INFERENCE_COLLECTION_NAME as ALL_JOBS,",
+            "  FIRESTORE_ALL_MODEL_COLLECTION_NAME as ALL_MODELS,",
+            "  FIRESTORE_ALL_I2I_COLLECTION_NAME as ALL_I2I,",
+            "  FIRESTORE_ALL_VIDEO_COLLECTION_NAME as ALL_VIDEOS,",
+            "  FIRESTORE_INVITE_CODE_NAME as INVITE_CODE,",
+            "  FIRESTORE_USER_COLLECTION_NAME as USERS,",
+            "  FIRESTORE_USER_INFERENCE_JOBS_COLLECTION_NAME as USER_INF_JOBS,",
+            "  FIRESTORE_USER_MODEL_COLLECTION_NAME as MODELS,",
+            "  FIRESTORE_USER_VIDEO_COLLECTION_NAME as VIDEOS,",
+            "  FIRESTORE_USER_INFERENCE_COLLECTION_NAME as INFS,",
+            "  FIRESTORE_USER_I2I_COLLECTION_NAME as I2I_INF_JOBS,",
+            "  FIRESTORE_FLAGS_COLLECTION_NAME as FLAGS,",
+            "  FIRESTORE_ASK_CELEB_DOC_NAME as ASK_CELEB,",
+            "} from \"../../global/constants\";",
+        ],
+    },
+    // "export default detailsHandler": {
+    //   "scope": "javascript,typescript,typescriptreact,javascriptreact",
+    //   "prefix": "export default detailsHandler",
+    //   "body": [
+    //     "import RESTfulHandler from '../utils/RESTful';",
+    //     "import db from '../utils/db'",
+    //     "async function my({_id, ...doc}: Partial<${1:KanaData}>): Promise<Record<string, any>>{",
+    //     "  ${2:// Validate details permissions and contents write permissions}",
+    //     "}",
+    //     "export default RESTfulHandler<${1:Docs}>({",
+    //     "  GET: async (q, r) => r.json(await db.${2:coll}.findOne(await my(q.query))),",
+    //     "  DELETE: async (q, r) => r.json(await db.${2:coll}.deleteOne(await my(q.query))),",
+    //     "  PUT: async (q, r) => r.json(await db.${2:coll}.多补([await my(q.query)])),",
+    //     "});"
+    //   ]
+    // },
+    // "export default indexHandler": {
+    //   "scope": "javascript,typescript,typescriptreact,javascriptreact",
+    //   "prefix": "export default indexHandler",
+    //   "body": [
+    //     "import RESTfulHandler from '../utils/RESTful';",
+    //     "import db from '../utils/db'",
+    //     "async function my({...doc}: Partial<${1:KanaData}>): Promise<Record<string, any>>{",
+    //     "  ${2:// Validate index permissions and post permissions}",
+    //     "}",
+    //     "export default RESTfulHandler<${1:Docs}>({",
+    //     "  GET: async (q, r) => r.json(await db.${2:coll}.find(await my(q.query)).toArray()),",
+    //     "  POST: async (q, r) => r.json(await db.${2:coll}.insertOne([await my(q.query))])),",
+    //     "});"
+    //   ]
+    // }
+}

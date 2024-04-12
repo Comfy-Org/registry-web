@@ -1,0 +1,27 @@
+name: Next.js CI
+
+on:
+    push:
+        branches: [dev]
+    pull_request:
+        branches: [dev, staging, main]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '16'
+            - name: Install pnpm
+              run: npm install -g pnpm
+            - name: Install Dependencies
+              run: pnpm install
+            - name: Run Next.js Lint
+              run: pnpm run lint
+            - name: Check Formatting with Prettier
+              run: npx prettier --check .
+            - name: Build the Next.js Project
+              run: pnpm run build
