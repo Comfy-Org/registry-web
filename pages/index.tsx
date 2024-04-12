@@ -171,7 +171,7 @@ function GitCommitsList() {
                                             />
                                         </Table.Cell>
                                         <Table.Cell>
-                                            {result.end_time && result.start_time ? calculateTimeDifferenceInMinutes(result.end_time, result.start_time) : "Unknown"} minutes
+                                            {result.end_time && result.start_time ? calculateTimeDifferenceInMinutes(result.end_time, result.start_time) : "unknown"} minutes
                                         </Table.Cell>
                                     </Table.Row>
                                 )
