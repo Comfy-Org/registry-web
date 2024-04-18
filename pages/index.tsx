@@ -12,27 +12,37 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { CiFilter } from 'react-icons/ci'
 import { ClearableLabel } from '../components/Labels/ClearableLabel'
+import { useRouter } from 'next/router'
 
 function GitCommitsList() {
     const [currentPage, setCurrentPage] = React.useState(1)
     const onPageChange = (page: number) => setCurrentPage(page)
-
-    const [filterOS, setFilterOS] = React.useState<string>('')
-    const [branch, setBranch] = React.useState<string>('master')
+    const router = useRouter();
+    const [filterOS, setFilterOS] = React.useState<string>('Select OS')
+    const [repoFilter, setRepoFilter] = React.useState<string>('comfyanonymous/ComfyUI')
+    const [branchFilter, setBranchFilter] = React.useState<string>('')
     const [commitId, setCommitId] = React.useState<string>('')
     const [workflowNameFilter, setWorkflowFilter] = React.useState<string>('')
     const { data: filteredJobResults, isLoading } = useGetGitcommit({
-        operatingSystem: filterOS == '' ? undefined : filterOS,
+        operatingSystem: filterOS == 'Select OS' ? undefined : filterOS,
         commitId: commitId == '' ? undefined : commitId,
         workflowName: workflowNameFilter == '' ? undefined : workflowNameFilter,
-        branch: branch,
+        branch: branchFilter == 'Select Branch' ? undefined : branchFilter,
         page: currentPage,
+        repoName: repoFilter,
         pageSize: 10,
     })
 
     const { data: branchesQueryResults, isLoading: loadingBranchs } = useGetBranch({
-        repo_name: 'comfyanonymous/ComfyUI'
+        repo_name: repoFilter
     })
+
+    React.useEffect(() => {
+        const repo = router.query.repo;
+        if (typeof repo === 'string') {
+            setRepoFilter(repo);
+        }
+    }, [router.query.repo]);
 
     return (
         <div style={{ padding: 20 }}>
@@ -41,14 +51,15 @@ function GitCommitsList() {
             </h1>
             <h3>Filters</h3>
             <div className="flex items-center gap-2 mb-4">
-                <Badge href="https://github.com/comfyanonymous/ComfyUI">
-                    comfyanonymous/ComfyUI
+                <Badge href={`https://github.com/${repoFilter}`}>
+                    {repoFilter}
                 </Badge>
                 <Select
                     id="branch-select"
-                    value={branch}
-                    onChange={(e) => setBranch(e.target.value)}
+                    value={branchFilter}
+                    onChange={(e) => setBranchFilter(e.target.value)}
                 >
+                    <option value="">Select Branch</option>
                     {branchesQueryResults?.branches?.map((branch, index) => (
                         <option key={index} value={branch}>
                             {branch}
@@ -82,7 +93,7 @@ function GitCommitsList() {
                     disabled
                 />
             </div>
-            {isLoading ? (
+            {(isLoading || loadingBranchs) ? (
                 <div className="flex justify-center items-center">
                     <Spinner />
                 </div>
