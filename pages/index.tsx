@@ -211,7 +211,7 @@ function GitCommitsList() {
 function calculateTimeDifferenceInMinutes(startTime: number, endTime: number): number {
     const differenceInSeconds = Math.abs(endTime - startTime);
     const differenceInMinutes = differenceInSeconds / 60;
-    return differenceInMinutes;
+    return parseFloat(differenceInMinutes.toFixed(1));
 }
 
 export default GitCommitsList
