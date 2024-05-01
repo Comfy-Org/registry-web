@@ -22,11 +22,6 @@ export type LoadWorkspaceSnapshot200 = {
   message?: string;
 };
 
-export type LoadWorkspaceSnapshotBody = {
-  /** The unique identifier for the workspace snapshot */
-  workspaceSnapshotId?: string;
-};
-
 export type CreateWorkspaceSnapshot201 = {
   /** The unique identifier for the workspace snapshot */
   workspaceSnapshotId?: string;
@@ -35,13 +30,10 @@ export type CreateWorkspaceSnapshot201 = {
 export type CreateWorkspaceSnapshotBody = {
   /** A description of the workspace snapshot */
   description?: string;
-  /** The unique identifier for the workspace */
-  workspaceId?: string;
 };
 
-export type CreateDefaultWorkspace201 = {
-  /** The unique identifier for the default workspace */
-  workspaceId?: string;
+export type GetWorkspaceSnapshots200 = {
+  workspaceSnapshots?: WorkspaceSnapshot[];
 };
 
 export type UpdateWorkspace200 = {
@@ -50,8 +42,16 @@ export type UpdateWorkspace200 = {
 };
 
 export type UpdateWorkspaceBody = {
+  machine?: Machine;
   workflow?: Workflow;
-  /** The unique identifier for the workspace */
+};
+
+export type GetWorkspace200 = {
+  workspace?: Workspace;
+};
+
+export type CreateDefaultWorkspace201 = {
+  /** The unique identifier for the default workspace */
   workspaceId?: string;
 };
 
@@ -172,6 +172,22 @@ export type PostUploadArtifactBody = {
   workflow_name: string;
 };
 
+export type CreatePersonalAccessToken201 = {
+  /** The newly created personal access token. */
+  token?: string;
+};
+
+export type PublishNodeVersion201 = {
+  node_version?: NodeVersion;
+  /** The signed URL to upload the node version token. */
+  signedUrl?: string;
+};
+
+export type PublishNodeVersionBody = {
+  node_version?: NodeVersion;
+  personal_access_token?: string;
+};
+
 export type GetGitcommit200 = {
   jobResults?: ActionJobResult[];
   totalNumberOfPages?: number;
@@ -219,13 +235,11 @@ export type GetBranchParams = {
 repo_name?: string;
 };
 
-export interface Workspace {
-  /** The unique id for this workspace. */
+export interface WorkspaceSnapshot {
+  /** A description of the workspace snapshot */
+  description?: string;
+  /** The unique id for this workflow snapshot. */
   id?: string;
-  machine?: Machine;
-  /** The name of the workspace. */
-  name?: string;
-  workflow?: Workflow;
 }
 
 /**
@@ -267,6 +281,15 @@ export interface Workflow {
   workflowName?: string;
 }
 
+export interface Workspace {
+  /** The unique id for this workspace. */
+  id?: string;
+  machine?: Machine;
+  /** The name of the workspace. */
+  name?: string;
+  workflow?: Workflow;
+}
+
 export interface User {
   /** The email address for this user. */
   email?: string;
@@ -303,6 +326,55 @@ export const SessionStatus = {
   active: 'active',
   inactive: 'inactive',
 } as const;
+
+export interface Publisher {
+  description?: string;
+  /** The unique identifier for the publisher. It's akin to a username. Should be lowercase. */
+  id?: string;
+  /** URL to the publisher's logo. */
+  logo?: string;
+  name?: string;
+  source_code_repo?: string;
+  support?: string;
+  website?: string;
+}
+
+export interface PersonalAccessToken {
+  /** [Output Only]The date and time the token was created. */
+  createdAt?: string;
+  /** Optional. A more detailed description of the token's intended use. */
+  description?: string;
+  /** Unique identifier for the GitCommit */
+  id?: string;
+  /** Required. The name of the token. Can be a simple description. */
+  name?: string;
+  /** [Output Only]. The personal access token. Only returned during creation. */
+  token?: string;
+}
+
+export interface NodeVersion {
+  /** Summary of changes made in this version */
+  changelog?: string;
+  /** [Output Only] URL to download this version of the node */
+  downloadUrl?: string;
+  id?: string;
+  /** [Output Only] Only returned when the NodeVersion is created. URL can be used to upload files for this version. */
+  signedUrl?: string;
+  /** The version identifier, following semantic versioning. Must be unique for the node. */
+  version?: string;
+}
+
+export interface Node {
+  author?: string;
+  description?: string;
+  /** [Output Only] The id of the node. */
+  id?: string;
+  license?: string;
+  name?: string;
+  /** The unique identifier for the node. Should be unique for the publisher. Should be lowercase. */
+  node_id?: string;
+  tags?: string[];
+}
 
 export type MachineType = typeof MachineType[keyof typeof MachineType];
 
@@ -365,17 +437,28 @@ export interface Session {
 }
 
 export interface Machine {
-  /** The number of GPUs attached to this machine. */
+  /** [Output only] The number of GPUs attached to this session. */
   gpuCount?: number;
   gpuType?: GPUType;
   /** The unique id for this machine. */
   id?: string;
   machineType?: MachineType;
+  /** This url to interface with this session. */
+  publicUrl?: string;
+  /** [Output only] The storage capacity of the session. */
+  storage?: string;
 }
 
 export interface ErrorResponse {
   error: string;
   message: string;
+}
+
+export interface Error {
+  /** Optional detailed information about the error or hints for resolving it. */
+  details?: string[];
+  /** A clear and concise description of the error. */
+  message?: string;
 }
 
 export interface ActionJobResult {
@@ -544,6 +627,989 @@ export const useGetGitcommit = <TData = Awaited<ReturnType<typeof getGitcommit>>
 
 
 
+/**
+ * @summary Retrieve all publishers
+ */
+export const listPublishers = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Publisher[]>(
+      {url: `/publishers`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListPublishersQueryKey = () => {
+    return [`/publishers`] as const;
+    }
+
+    
+export const getListPublishersQueryOptions = <TData = Awaited<ReturnType<typeof listPublishers>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPublishersQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPublishers>>> = ({ signal }) => listPublishers(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPublishers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPublishersQueryResult = NonNullable<Awaited<ReturnType<typeof listPublishers>>>
+export type ListPublishersQueryError = void
+
+/**
+ * @summary Retrieve all publishers
+ */
+export const useListPublishers = <TData = Awaited<ReturnType<typeof listPublishers>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListPublishersQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Create a new publisher
+ */
+export const createPublisher = (
+    publisher: Publisher,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Publisher>(
+      {url: `/publishers`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: publisher
+    },
+      options);
+    }
+  
+
+
+export const getCreatePublisherMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPublisher>>, {data: Publisher}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createPublisher(data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof createPublisher>>>
+    export type CreatePublisherMutationBody = Publisher
+    export type CreatePublisherMutationError = void
+
+    /**
+ * @summary Create a new publisher
+ */
+export const useCreatePublisher = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getCreatePublisherMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Delete a publisher
+ */
+export const deletePublisher = (
+    publisherId: string,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/publishers/${publisherId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeletePublisherMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePublisher>>, TError,{publisherId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePublisher>>, TError,{publisherId: string}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePublisher>>, {publisherId: string}> = (props) => {
+          const {publisherId} = props ?? {};
+
+          return  deletePublisher(publisherId,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof deletePublisher>>>
+    
+    export type DeletePublisherMutationError = Error
+
+    /**
+ * @summary Delete a publisher
+ */
+export const useDeletePublisher = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePublisher>>, TError,{publisherId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getDeletePublisherMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Retrieve a publisher by ID
+ */
+export const getPublisher = (
+    publisherId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Publisher>(
+      {url: `/publishers/${publisherId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetPublisherQueryKey = (publisherId: string,) => {
+    return [`/publishers/${publisherId}`] as const;
+    }
+
+    
+export const getGetPublisherQueryOptions = <TData = Awaited<ReturnType<typeof getPublisher>>, TError = void>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublisherQueryKey(publisherId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublisher>>> = ({ signal }) => getPublisher(publisherId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublisher>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublisherQueryResult = NonNullable<Awaited<ReturnType<typeof getPublisher>>>
+export type GetPublisherQueryError = void
+
+/**
+ * @summary Retrieve a publisher by ID
+ */
+export const useGetPublisher = <TData = Awaited<ReturnType<typeof getPublisher>>, TError = void>(
+ publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetPublisherQueryOptions(publisherId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Update a publisher
+ */
+export const updatePublisher = (
+    publisherId: string,
+    publisher: Publisher,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Publisher>(
+      {url: `/publishers/${publisherId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: publisher
+    },
+      options);
+    }
+  
+
+
+export const getUpdatePublisherMutationOptions = <TError = Error | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePublisher>>, TError,{publisherId: string;data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updatePublisher>>, TError,{publisherId: string;data: Publisher}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updatePublisher>>, {publisherId: string;data: Publisher}> = (props) => {
+          const {publisherId,data} = props ?? {};
+
+          return  updatePublisher(publisherId,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type UpdatePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof updatePublisher>>>
+    export type UpdatePublisherMutationBody = Publisher
+    export type UpdatePublisherMutationError = Error | void
+
+    /**
+ * @summary Update a publisher
+ */
+export const useUpdatePublisher = <TError = Error | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePublisher>>, TError,{publisherId: string;data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getUpdatePublisherMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Retrieve all nodes
+ */
+export const listNodes = (
+    publisherId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Node[]>(
+      {url: `/publishers/${publisherId}/nodes`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListNodesQueryKey = (publisherId: string,) => {
+    return [`/publishers/${publisherId}/nodes`] as const;
+    }
+
+    
+export const getListNodesQueryOptions = <TData = Awaited<ReturnType<typeof listNodes>>, TError = void>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListNodesQueryKey(publisherId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodes>>> = ({ signal }) => listNodes(publisherId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listNodes>>>
+export type ListNodesQueryError = void
+
+/**
+ * @summary Retrieve all nodes
+ */
+export const useListNodes = <TData = Awaited<ReturnType<typeof listNodes>>, TError = void>(
+ publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListNodesQueryOptions(publisherId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Create a new custom node
+ */
+export const createNode = (
+    publisherId: string,
+    node: Node,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/publishers/${publisherId}/nodes`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: node
+    },
+      options);
+    }
+  
+
+
+export const getCreateNodeMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNode>>, TError,{publisherId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createNode>>, TError,{publisherId: string;data: Node}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createNode>>, {publisherId: string;data: Node}> = (props) => {
+          const {publisherId,data} = props ?? {};
+
+          return  createNode(publisherId,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type CreateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof createNode>>>
+    export type CreateNodeMutationBody = Node
+    export type CreateNodeMutationError = Error
+
+    /**
+ * @summary Create a new custom node
+ */
+export const useCreateNode = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNode>>, TError,{publisherId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getCreateNodeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Delete a specific node
+ */
+export const deleteNode = (
+    publisherId: string,
+    nodeId: string,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteNodeMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNode>>, TError,{publisherId: string;nodeId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteNode>>, TError,{publisherId: string;nodeId: string}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteNode>>, {publisherId: string;nodeId: string}> = (props) => {
+          const {publisherId,nodeId} = props ?? {};
+
+          return  deleteNode(publisherId,nodeId,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteNodeMutationResult = NonNullable<Awaited<ReturnType<typeof deleteNode>>>
+    
+    export type DeleteNodeMutationError = Error
+
+    /**
+ * @summary Delete a specific node
+ */
+export const useDeleteNode = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNode>>, TError,{publisherId: string;nodeId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getDeleteNodeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Retrieve a specific node by ID
+ */
+export const getNode = (
+    publisherId: string,
+    nodeId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetNodeQueryKey = (publisherId: string,
+    nodeId: string,) => {
+    return [`/publishers/${publisherId}/nodes/${nodeId}`] as const;
+    }
+
+    
+export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(publisherId: string,
+    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNodeQueryKey(publisherId,nodeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNode>>> = ({ signal }) => getNode(publisherId,nodeId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNodeQueryResult = NonNullable<Awaited<ReturnType<typeof getNode>>>
+export type GetNodeQueryError = Error
+
+/**
+ * @summary Retrieve a specific node by ID
+ */
+export const useGetNode = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(
+ publisherId: string,
+    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetNodeQueryOptions(publisherId,nodeId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Update a specific node
+ */
+export const updateNode = (
+    publisherId: string,
+    nodeId: string,
+    node: Node,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: node
+    },
+      options);
+    }
+  
+
+
+export const getUpdateNodeMutationOptions = <TError = Error | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNode>>, TError,{publisherId: string;nodeId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateNode>>, TError,{publisherId: string;nodeId: string;data: Node}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateNode>>, {publisherId: string;nodeId: string;data: Node}> = (props) => {
+          const {publisherId,nodeId,data} = props ?? {};
+
+          return  updateNode(publisherId,nodeId,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof updateNode>>>
+    export type UpdateNodeMutationBody = Node
+    export type UpdateNodeMutationError = Error | void
+
+    /**
+ * @summary Update a specific node
+ */
+export const useUpdateNode = <TError = Error | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNode>>, TError,{publisherId: string;nodeId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getUpdateNodeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary List all versions of a node
+ */
+export const listNodeVersions = (
+    publisherId: string,
+    nodeId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<NodeVersion[]>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListNodeVersionsQueryKey = (publisherId: string,
+    nodeId: string,) => {
+    return [`/publishers/${publisherId}/nodes/${nodeId}/versions`] as const;
+    }
+
+    
+export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(publisherId: string,
+    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListNodeVersionsQueryKey(publisherId,nodeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodeVersions>>> = ({ signal }) => listNodeVersions(publisherId,nodeId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListNodeVersionsQueryResult = NonNullable<Awaited<ReturnType<typeof listNodeVersions>>>
+export type ListNodeVersionsQueryError = Error
+
+/**
+ * @summary List all versions of a node
+ */
+export const useListNodeVersions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(
+ publisherId: string,
+    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListNodeVersionsQueryOptions(publisherId,nodeId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Publish a new version of a node
+ */
+export const publishNodeVersion = (
+    publisherId: string,
+    nodeId: string,
+    publishNodeVersionBody: PublishNodeVersionBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PublishNodeVersion201>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: publishNodeVersionBody
+    },
+      options);
+    }
+  
+
+
+export const getPublishNodeVersionMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishNodeVersion>>, TError,{publisherId: string;nodeId: string;data: PublishNodeVersionBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof publishNodeVersion>>, TError,{publisherId: string;nodeId: string;data: PublishNodeVersionBody}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof publishNodeVersion>>, {publisherId: string;nodeId: string;data: PublishNodeVersionBody}> = (props) => {
+          const {publisherId,nodeId,data} = props ?? {};
+
+          return  publishNodeVersion(publisherId,nodeId,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type PublishNodeVersionMutationResult = NonNullable<Awaited<ReturnType<typeof publishNodeVersion>>>
+    export type PublishNodeVersionMutationBody = PublishNodeVersionBody
+    export type PublishNodeVersionMutationError = Error
+
+    /**
+ * @summary Publish a new version of a node
+ */
+export const usePublishNodeVersion = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishNodeVersion>>, TError,{publisherId: string;nodeId: string;data: PublishNodeVersionBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getPublishNodeVersionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Unpublish (delete) a specific version of a node
+ */
+export const deleteNodeVersion = (
+    publisherId: string,
+    nodeId: string,
+    versionId: string,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions/${versionId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteNodeVersionMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteNodeVersion>>, {publisherId: string;nodeId: string;versionId: string}> = (props) => {
+          const {publisherId,nodeId,versionId} = props ?? {};
+
+          return  deleteNodeVersion(publisherId,nodeId,versionId,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteNodeVersionMutationResult = NonNullable<Awaited<ReturnType<typeof deleteNodeVersion>>>
+    
+    export type DeleteNodeVersionMutationError = Error
+
+    /**
+ * @summary Unpublish (delete) a specific version of a node
+ */
+export const useDeleteNodeVersion = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getDeleteNodeVersionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Retrieve a specific version of a node
+ */
+export const getNodeVersion = (
+    publisherId: string,
+    nodeId: string,
+    versionId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<NodeVersion>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions/${versionId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetNodeVersionQueryKey = (publisherId: string,
+    nodeId: string,
+    versionId: string,) => {
+    return [`/publishers/${publisherId}/nodes/${nodeId}/versions/${versionId}`] as const;
+    }
+
+    
+export const getGetNodeVersionQueryOptions = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(publisherId: string,
+    nodeId: string,
+    versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNodeVersionQueryKey(publisherId,nodeId,versionId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNodeVersion>>> = ({ signal }) => getNodeVersion(publisherId,nodeId,versionId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId && versionId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNodeVersionQueryResult = NonNullable<Awaited<ReturnType<typeof getNodeVersion>>>
+export type GetNodeVersionQueryError = Error
+
+/**
+ * @summary Retrieve a specific version of a node
+ */
+export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(
+ publisherId: string,
+    nodeId: string,
+    versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetNodeVersionQueryOptions(publisherId,nodeId,versionId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Retrieve all personal access tokens for a publisher
+ */
+export const listPersonalAccessTokens = (
+    publisherId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PersonalAccessToken[]>(
+      {url: `/publishers/${publisherId}/tokens`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListPersonalAccessTokensQueryKey = (publisherId: string,) => {
+    return [`/publishers/${publisherId}/tokens`] as const;
+    }
+
+    
+export const getListPersonalAccessTokensQueryOptions = <TData = Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError = Error>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPersonalAccessTokensQueryKey(publisherId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPersonalAccessTokens>>> = ({ signal }) => listPersonalAccessTokens(publisherId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPersonalAccessTokensQueryResult = NonNullable<Awaited<ReturnType<typeof listPersonalAccessTokens>>>
+export type ListPersonalAccessTokensQueryError = Error
+
+/**
+ * @summary Retrieve all personal access tokens for a publisher
+ */
+export const useListPersonalAccessTokens = <TData = Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError = Error>(
+ publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListPersonalAccessTokensQueryOptions(publisherId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Create a new personal access token
+ */
+export const createPersonalAccessToken = (
+    publisherId: string,
+    personalAccessToken: PersonalAccessToken,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<CreatePersonalAccessToken201>(
+      {url: `/publishers/${publisherId}/tokens`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: personalAccessToken
+    },
+      options);
+    }
+  
+
+
+export const getCreatePersonalAccessTokenMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPersonalAccessToken>>, TError,{publisherId: string;data: PersonalAccessToken}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createPersonalAccessToken>>, TError,{publisherId: string;data: PersonalAccessToken}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPersonalAccessToken>>, {publisherId: string;data: PersonalAccessToken}> = (props) => {
+          const {publisherId,data} = props ?? {};
+
+          return  createPersonalAccessToken(publisherId,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type CreatePersonalAccessTokenMutationResult = NonNullable<Awaited<ReturnType<typeof createPersonalAccessToken>>>
+    export type CreatePersonalAccessTokenMutationBody = PersonalAccessToken
+    export type CreatePersonalAccessTokenMutationError = Error
+
+    /**
+ * @summary Create a new personal access token
+ */
+export const useCreatePersonalAccessToken = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPersonalAccessToken>>, TError,{publisherId: string;data: PersonalAccessToken}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getCreatePersonalAccessTokenMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Delete a specific personal access token
+ */
+export const deletePersonalAccessToken = (
+    publisherId: string,
+    tokenId: string,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/publishers/${publisherId}/tokens/${tokenId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeletePersonalAccessTokenMutationOptions = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePersonalAccessToken>>, TError,{publisherId: string;tokenId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deletePersonalAccessToken>>, TError,{publisherId: string;tokenId: string}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deletePersonalAccessToken>>, {publisherId: string;tokenId: string}> = (props) => {
+          const {publisherId,tokenId} = props ?? {};
+
+          return  deletePersonalAccessToken(publisherId,tokenId,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type DeletePersonalAccessTokenMutationResult = NonNullable<Awaited<ReturnType<typeof deletePersonalAccessToken>>>
+    
+    export type DeletePersonalAccessTokenMutationError = Error
+
+    /**
+ * @summary Delete a specific personal access token
+ */
+export const useDeletePersonalAccessToken = <TError = Error,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePersonalAccessToken>>, TError,{publisherId: string;tokenId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getDeletePersonalAccessTokenMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * @summary Receive artifacts (output files) from the ComfyUI GitHub Action
  */
@@ -1623,59 +2689,6 @@ export const useCreateWorkspace = <TError = void,
     }
     
 /**
- * @summary Update the workspace with the workflow content
- */
-export const updateWorkspace = (
-    updateWorkspaceBody: UpdateWorkspaceBody,
- options?: SecondParameter<typeof customInstance>,) => {
-      
-      
-      return customInstance<UpdateWorkspace200>(
-      {url: `/workspace`, method: 'PUT',
-      headers: {'Content-Type': 'application/json', },
-      data: updateWorkspaceBody
-    },
-      options);
-    }
-  
-
-
-export const getUpdateWorkspaceMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorkspace>>, TError,{data: UpdateWorkspaceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateWorkspace>>, TError,{data: UpdateWorkspaceBody}, TContext> => {
- const {mutation: mutationOptions, request: requestOptions} = options ?? {};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWorkspace>>, {data: UpdateWorkspaceBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  updateWorkspace(data,requestOptions)
-        }
-
-        
-
-
-   return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateWorkspaceMutationResult = NonNullable<Awaited<ReturnType<typeof updateWorkspace>>>
-    export type UpdateWorkspaceMutationBody = UpdateWorkspaceBody
-    export type UpdateWorkspaceMutationError = void
-
-    /**
- * @summary Update the workspace with the workflow content
- */
-export const useUpdateWorkspace = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorkspace>>, TError,{data: UpdateWorkspaceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-      const mutationOptions = getUpdateWorkspaceMutationOptions(options);
-
-      return useMutation(mutationOptions);
-    }
-    
-/**
  * @summary Create the default workspace. It retrieves the default workspace if it already exists.
  */
 export const createDefaultWorkspace = (
@@ -1727,15 +2740,194 @@ export const useCreateDefaultWorkspace = <TError = void,
     }
     
 /**
+ * @summary Get a workspace by ID
+ */
+export const getWorkspace = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetWorkspace200>(
+      {url: `/workspace/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetWorkspaceQueryKey = (id: string,) => {
+    return [`/workspace/${id}`] as const;
+    }
+
+    
+export const getGetWorkspaceQueryOptions = <TData = Awaited<ReturnType<typeof getWorkspace>>, TError = void>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkspace>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWorkspaceQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorkspace>>> = ({ signal }) => getWorkspace(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWorkspace>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWorkspaceQueryResult = NonNullable<Awaited<ReturnType<typeof getWorkspace>>>
+export type GetWorkspaceQueryError = void
+
+/**
+ * @summary Get a workspace by ID
+ */
+export const useGetWorkspace = <TData = Awaited<ReturnType<typeof getWorkspace>>, TError = void>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkspace>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetWorkspaceQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Update the workspace with the workflow content
+ */
+export const updateWorkspace = (
+    id: string,
+    updateWorkspaceBody: UpdateWorkspaceBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<UpdateWorkspace200>(
+      {url: `/workspace/${id}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: updateWorkspaceBody
+    },
+      options);
+    }
+  
+
+
+export const getUpdateWorkspaceMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorkspace>>, TError,{id: string;data: UpdateWorkspaceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateWorkspace>>, TError,{id: string;data: UpdateWorkspaceBody}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateWorkspace>>, {id: string;data: UpdateWorkspaceBody}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  updateWorkspace(id,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateWorkspaceMutationResult = NonNullable<Awaited<ReturnType<typeof updateWorkspace>>>
+    export type UpdateWorkspaceMutationBody = UpdateWorkspaceBody
+    export type UpdateWorkspaceMutationError = void
+
+    /**
+ * @summary Update the workspace with the workflow content
+ */
+export const useUpdateWorkspace = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateWorkspace>>, TError,{id: string;data: UpdateWorkspaceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getUpdateWorkspaceMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get all snapshots for the workspace
+ */
+export const getWorkspaceSnapshots = (
+    workspaceId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetWorkspaceSnapshots200>(
+      {url: `/workspace/${workspaceId}/snapshot`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetWorkspaceSnapshotsQueryKey = (workspaceId: string,) => {
+    return [`/workspace/${workspaceId}/snapshot`] as const;
+    }
+
+    
+export const getGetWorkspaceSnapshotsQueryOptions = <TData = Awaited<ReturnType<typeof getWorkspaceSnapshots>>, TError = void>(workspaceId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkspaceSnapshots>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWorkspaceSnapshotsQueryKey(workspaceId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorkspaceSnapshots>>> = ({ signal }) => getWorkspaceSnapshots(workspaceId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(workspaceId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWorkspaceSnapshots>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWorkspaceSnapshotsQueryResult = NonNullable<Awaited<ReturnType<typeof getWorkspaceSnapshots>>>
+export type GetWorkspaceSnapshotsQueryError = void
+
+/**
+ * @summary Get all snapshots for the workspace
+ */
+export const useGetWorkspaceSnapshots = <TData = Awaited<ReturnType<typeof getWorkspaceSnapshots>>, TError = void>(
+ workspaceId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkspaceSnapshots>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetWorkspaceSnapshotsQueryOptions(workspaceId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
  * @summary Create a snapshot of the current workspace
  */
 export const createWorkspaceSnapshot = (
+    workspaceId: string,
     createWorkspaceSnapshotBody: CreateWorkspaceSnapshotBody,
  options?: SecondParameter<typeof customInstance>,) => {
       
       
       return customInstance<CreateWorkspaceSnapshot201>(
-      {url: `/workspace/snapshot/create`, method: 'POST',
+      {url: `/workspace/${workspaceId}/snapshot/create`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: createWorkspaceSnapshotBody
     },
@@ -1745,17 +2937,17 @@ export const createWorkspaceSnapshot = (
 
 
 export const getCreateWorkspaceSnapshotMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, TError,{data: CreateWorkspaceSnapshotBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, TError,{data: CreateWorkspaceSnapshotBody}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, TError,{workspaceId: string;data: CreateWorkspaceSnapshotBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, TError,{workspaceId: string;data: CreateWorkspaceSnapshotBody}, TContext> => {
  const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, {data: CreateWorkspaceSnapshotBody}> = (props) => {
-          const {data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, {workspaceId: string;data: CreateWorkspaceSnapshotBody}> = (props) => {
+          const {workspaceId,data} = props ?? {};
 
-          return  createWorkspaceSnapshot(data,requestOptions)
+          return  createWorkspaceSnapshot(workspaceId,data,requestOptions)
         }
 
         
@@ -1771,7 +2963,7 @@ export const getCreateWorkspaceSnapshotMutationOptions = <TError = void,
  * @summary Create a snapshot of the current workspace
  */
 export const useCreateWorkspaceSnapshot = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, TError,{data: CreateWorkspaceSnapshotBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createWorkspaceSnapshot>>, TError,{workspaceId: string;data: CreateWorkspaceSnapshotBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
       const mutationOptions = getCreateWorkspaceSnapshotMutationOptions(options);
@@ -1783,14 +2975,13 @@ export const useCreateWorkspaceSnapshot = <TError = void,
  * @summary Load a workspace snapshot
  */
 export const loadWorkspaceSnapshot = (
-    loadWorkspaceSnapshotBody: LoadWorkspaceSnapshotBody,
+    workspaceId: string,
+    snapshotId: string,
  options?: SecondParameter<typeof customInstance>,) => {
       
       
       return customInstance<LoadWorkspaceSnapshot200>(
-      {url: `/workspace/snapshot/load/`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: loadWorkspaceSnapshotBody
+      {url: `/workspace/${workspaceId}/snapshot/${snapshotId}/load/`, method: 'POST'
     },
       options);
     }
@@ -1798,17 +2989,17 @@ export const loadWorkspaceSnapshot = (
 
 
 export const getLoadWorkspaceSnapshotMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, TError,{data: LoadWorkspaceSnapshotBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, TError,{data: LoadWorkspaceSnapshotBody}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, TError,{workspaceId: string;snapshotId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, TError,{workspaceId: string;snapshotId: string}, TContext> => {
  const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, {data: LoadWorkspaceSnapshotBody}> = (props) => {
-          const {data} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, {workspaceId: string;snapshotId: string}> = (props) => {
+          const {workspaceId,snapshotId} = props ?? {};
 
-          return  loadWorkspaceSnapshot(data,requestOptions)
+          return  loadWorkspaceSnapshot(workspaceId,snapshotId,requestOptions)
         }
 
         
@@ -1817,14 +3008,14 @@ export const getLoadWorkspaceSnapshotMutationOptions = <TError = void,
    return  { mutationFn, ...mutationOptions }}
 
     export type LoadWorkspaceSnapshotMutationResult = NonNullable<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>>
-    export type LoadWorkspaceSnapshotMutationBody = LoadWorkspaceSnapshotBody
+    
     export type LoadWorkspaceSnapshotMutationError = void
 
     /**
  * @summary Load a workspace snapshot
  */
 export const useLoadWorkspaceSnapshot = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, TError,{data: LoadWorkspaceSnapshotBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof loadWorkspaceSnapshot>>, TError,{workspaceId: string;snapshotId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
       const mutationOptions = getLoadWorkspaceSnapshotMutationOptions(options);
