@@ -1,10 +1,12 @@
-import React from 'react'
-import { useListNodes } from '../src/api/generated'
+import { useListAllNodes } from '../src/api/generated'
 
-
-// List all custom nodes.
 function NodeList() {
+    const getAllNodesQuery = useListAllNodes({
+        page: 1,
+        limit: 15
+    })
 
+    const nodes = getAllNodesQuery.data?.nodes || []
 }
 
 export default NodeList

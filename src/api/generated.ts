@@ -188,6 +188,29 @@ export type PublishNodeVersionBody = {
   personal_access_token?: string;
 };
 
+export type ListAllNodes200 = {
+  /** Maximum number of nodes per page */
+  limit?: number;
+  nodes?: Node[];
+  /** Current page number */
+  page?: number;
+  /** Total number of nodes available */
+  total?: number;
+  /** Total number of pages available */
+  totalPages?: number;
+};
+
+export type ListAllNodesParams = {
+/**
+ * Page number of the nodes list
+ */
+page?: number;
+/**
+ * Number of nodes to return per page
+ */
+limit?: number;
+};
+
 export type GetGitcommit200 = {
   jobResults?: ActionJobResult[];
   totalNumberOfPages?: number;
@@ -628,6 +651,70 @@ export const useGetGitcommit = <TData = Awaited<ReturnType<typeof getGitcommit>>
 
 
 /**
+ * Returns a paginated list of nodes across all publishers.
+ * @summary Retrieves a list of nodes
+ */
+export const listAllNodes = (
+    params?: ListAllNodesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListAllNodes200>(
+      {url: `/nodes`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListAllNodesQueryKey = (params?: ListAllNodesParams,) => {
+    return [`/nodes`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void>(params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllNodesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllNodes>>> = ({ signal }) => listAllNodes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAllNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listAllNodes>>>
+export type ListAllNodesQueryError = void
+
+/**
+ * @summary Retrieves a list of nodes
+ */
+export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void>(
+ params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListAllNodesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
  * @summary Retrieve all publishers
  */
 export const listPublishers = (
@@ -912,7 +999,7 @@ export const useUpdatePublisher = <TError = Error | void,
 /**
  * @summary Retrieve all nodes
  */
-export const listNodes = (
+export const listNodesForPublisher = (
     publisherId: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -925,41 +1012,41 @@ export const listNodes = (
     }
   
 
-export const getListNodesQueryKey = (publisherId: string,) => {
+export const getListNodesForPublisherQueryKey = (publisherId: string,) => {
     return [`/publishers/${publisherId}/nodes`] as const;
     }
 
     
-export const getListNodesQueryOptions = <TData = Awaited<ReturnType<typeof listNodes>>, TError = void>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListNodesForPublisherQueryOptions = <TData = Awaited<ReturnType<typeof listNodesForPublisher>>, TError = void>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListNodesQueryKey(publisherId);
+  const queryKey =  queryOptions?.queryKey ?? getListNodesForPublisherQueryKey(publisherId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodes>>> = ({ signal }) => listNodes(publisherId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodesForPublisher>>> = ({ signal }) => listNodesForPublisher(publisherId, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodes>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisher>>, TError, TData> & { queryKey: QueryKey }
 }
 
-export type ListNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listNodes>>>
-export type ListNodesQueryError = void
+export type ListNodesForPublisherQueryResult = NonNullable<Awaited<ReturnType<typeof listNodesForPublisher>>>
+export type ListNodesForPublisherQueryError = void
 
 /**
  * @summary Retrieve all nodes
  */
-export const useListNodes = <TData = Awaited<ReturnType<typeof listNodes>>, TError = void>(
- publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const useListNodesForPublisher = <TData = Awaited<ReturnType<typeof listNodesForPublisher>>, TError = void>(
+ publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  const queryOptions = getListNodesQueryOptions(publisherId,options)
+  const queryOptions = getListNodesForPublisherQueryOptions(publisherId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
