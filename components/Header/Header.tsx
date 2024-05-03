@@ -25,7 +25,7 @@ const Header = () => {
             </NavbarBrand>
             <div className="flex gap-2 bg-gray-900 md:order-2">
                 <Button
-                    href="/signin"
+                    href="/auth/login"
                     color="light"
                     className="bg-gray-900 border-none outline-none hover:bg-gray-900"
                 >

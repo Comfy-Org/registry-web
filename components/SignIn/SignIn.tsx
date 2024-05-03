@@ -1,7 +1,30 @@
 import { Button, Card, TextInput } from 'flowbite-react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 
-const SignInPage = () => {
+const SignIn = () => {
+    const router = useRouter()
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    })
+
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value,
+        })
+    }
+
+    const handleSignIn = async (e) => {
+        e.preventDefault()
+
+        // Perform sign-in logic here with formData
+
+        // Redirect to /publisher route after sign-in
+        router.push('/publisher')
+    }
     return (
         <section className="h-screen bg-gray-900 ">
             <div className="hidden px-10 py-5 lg:flex">
@@ -121,10 +144,13 @@ const SignInPage = () => {
                         <form
                             className="mt-4 space-y-4 lg:space-y-6"
                             action="#"
+                            onSubmit={handleSignIn}
                         >
                             <div>
                                 <TextInput
                                     id="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
                                     placeholder="Email"
                                     required
                                     type="email"
@@ -136,6 +162,8 @@ const SignInPage = () => {
                                     placeholder="Password"
                                     required
                                     type="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
                                 />
                             </div>
 
@@ -165,4 +193,5 @@ const SignInPage = () => {
         </section>
     )
 }
-export default SignInPage
+
+export default SignIn
