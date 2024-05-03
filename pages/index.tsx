@@ -1,3 +1,4 @@
+import NodesCard from '../components/nodes/NodesCard'
 import { useListAllNodes } from '../src/api/generated'
 
 function NodeList() {
@@ -7,6 +8,11 @@ function NodeList() {
     })
 
     const nodes = getAllNodesQuery.data?.nodes || []
+    return (
+        <>
+            <NodesCard />
+        </>
+    )
 }
 
 export default NodeList
