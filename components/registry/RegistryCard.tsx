@@ -1,21 +1,21 @@
 import Link from 'next/link'
 import React from 'react'
-interface NodesCard {
+interface RegistryCard {
     name: string
-
+    version: string
     id: string | number
-    node: string
-    image: string
+    license: string
     description: string
+    image: string
     rating: string | number
     downloads: string | number
 }
-const NodesCard: React.FC<NodesCard> = ({
+const RegistryCard: React.FC<RegistryCard> = ({
     name,
     id,
+    version,
+    license,
     description,
-
-    node,
     image,
     rating,
     downloads,
@@ -25,24 +25,28 @@ const NodesCard: React.FC<NodesCard> = ({
             <div>
                 {' '}
                 <img
-                    className="object-cover w-16 h-18 rounded-3lg sm:rounded-lg"
+                    className="object-cover w-20 h-20 rounded-3lg sm:rounded-lg"
                     src={image}
                     alt={`${name}'s Avatar`}
                 />
             </div>
 
-            <div className="flex flex-col px-4 max-w-[170px]">
+            <div className="flex flex-col px-4">
                 <h6 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">
                     {name}
                 </h6>
 
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {node}
-                </span>
-                <p className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-500 dark:text-gray-400 text-ellipsis whitespace-nowrap">
+                <p className="mb-1 text-xs tracking-tight text-gray-500">
+                    <span>{version}</span>
+                </p>
+
+                <p className="mb-1 text-xs font-light text-gray-500 dark:text-gray-400 text-nowrap">
                     {description}
                 </p>
-                <div className="flex mt-2">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                    License:{license}
+                </span>
+                <div className="flex items-center justify-between mt-2">
                     <div className="flex justify-center text-center align-center">
                         <svg
                             className="w-4 h-4 text-gray-800 dark:text-white"
@@ -66,7 +70,7 @@ const NodesCard: React.FC<NodesCard> = ({
                             {downloads}
                         </p>
                     </div>
-                    <div className="flex justify-center ml-2 text-center align-center">
+                    <div className="flex justify-center text-center align-center">
                         <svg
                             className="w-4 h-4 text-gray-800 dark:text-white"
                             aria-hidden="true"
@@ -92,4 +96,4 @@ const NodesCard: React.FC<NodesCard> = ({
         </div>
     )
 }
-export default NodesCard
+export default RegistryCard

@@ -1,4 +1,4 @@
-import Nodes from '../components/nodes/NodesCard'
+import Registry from '../components/registry/Registry'
 import { useListAllNodes } from '../src/api/generated'
 
 function NodeList() {
@@ -10,7 +10,7 @@ function NodeList() {
     const nodes = getAllNodesQuery.data?.nodes || []
     return (
         <>
-            <Nodes />
+            <Registry />
         </>
     )
 }

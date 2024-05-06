@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const FilterNodes: React.FC = () => {
+const FilterRegistry: React.FC = () => {
     return (
         <div className="items-center justify-between block my-8 lg:flex">
             <div className="flex text-white">
@@ -57,4 +57,4 @@ const FilterNodes: React.FC = () => {
     )
 }
 
-export default FilterNodes
+export default FilterRegistry
