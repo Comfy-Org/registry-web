@@ -7,10 +7,10 @@ export default function Layout({ children }: React.PropsWithChildren) {
     return (
         <>
             <Head>
-                <title>ComfyUI CI/CD</title>
+                <title>ComfyUI Registry</title>
                 <meta
                     name="description"
-                    content="ComfyUI CI/CD Dashboard for running workflows."
+                    content="ComfyUI Registry for publishing custom nodes."
                 ></meta>
 
                 <ThemeModeScript />
