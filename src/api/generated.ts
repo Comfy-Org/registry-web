@@ -184,8 +184,16 @@ export type PublishNodeVersion201 = {
 };
 
 export type PublishNodeVersionBody = {
-  node_version?: NodeVersion;
-  personal_access_token?: string;
+  node: Node;
+  node_version: NodeVersion;
+  personal_access_token: string;
+};
+
+export type InstallNodeParams = {
+/**
+ * Specific version of the node to retrieve. If omitted, the latest version is returned.
+ */
+version?: string;
 };
 
 export type ListAllNodes200 = {
@@ -378,11 +386,13 @@ export interface PersonalAccessToken {
 export interface NodeVersion {
   /** Summary of changes made in this version */
   changelog?: string;
+  /** A list of pip dependencies required by the node. */
+  dependencies?: string[];
+  /** Indicates if this version is deprecated. */
+  deprecated?: boolean;
   /** [Output Only] URL to download this version of the node */
   downloadUrl?: string;
   id?: string;
-  /** [Output Only] Only returned when the NodeVersion is created. URL can be used to upload files for this version. */
-  signedUrl?: string;
   /** The version identifier, following semantic versioning. Must be unique for the node. */
   version?: string;
 }
@@ -390,12 +400,16 @@ export interface NodeVersion {
 export interface Node {
   author?: string;
   description?: string;
-  /** [Output Only] The id of the node. */
+  /** URL to the node's icon. */
+  icon?: string;
+  /** The unique identifier of the node. */
   id?: string;
+  /** The path to the LICENSE file in the node's repository. */
   license?: string;
+  /** The display name of the node. */
   name?: string;
-  /** The unique identifier for the node. Should be unique for the publisher. Should be lowercase. */
-  node_id?: string;
+  /** URL to the node's repository. */
+  repository?: string;
   tags?: string[];
 }
 
@@ -703,6 +717,74 @@ export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getListAllNodesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Retrieves the node data for installation, either the latest or a specific version.
+ * @summary Returns a node version to be installed.
+ */
+export const installNode = (
+    nodeId: string,
+    params?: InstallNodeParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<NodeVersion>(
+      {url: `/nodes/${nodeId}/install`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getInstallNodeQueryKey = (nodeId: string,
+    params?: InstallNodeParams,) => {
+    return [`/nodes/${nodeId}/install`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getInstallNodeQueryOptions = <TData = Awaited<ReturnType<typeof installNode>>, TError = Error | void>(nodeId: string,
+    params?: InstallNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof installNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getInstallNodeQueryKey(nodeId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof installNode>>> = ({ signal }) => installNode(nodeId,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof installNode>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type InstallNodeQueryResult = NonNullable<Awaited<ReturnType<typeof installNode>>>
+export type InstallNodeQueryError = Error | void
+
+/**
+ * @summary Returns a node version to be installed.
+ */
+export const useInstallNode = <TData = Awaited<ReturnType<typeof installNode>>, TError = Error | void>(
+ nodeId: string,
+    params?: InstallNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof installNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getInstallNodeQueryOptions(nodeId,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
