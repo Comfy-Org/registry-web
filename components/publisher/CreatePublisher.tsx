@@ -4,10 +4,10 @@ import React from 'react'
 
 const CreatePublisher = () => {
     return (
-        <section className="h-screen bg-gray-900 ">
+        <section>
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
-                    <Card className="p-10 bg-white rounded-2xl">
+                    <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
                         <div className="mb-6 text-center lg:hidden">
                             <a
                                 href="#"
@@ -21,10 +21,10 @@ const CreatePublisher = () => {
                             </a>
                         </div>
 
-                        <h1 className="flex text-2xl font-bold text-gray-900 dark:text-white ">
+                        <h1 className="flex text-2xl font-bold text-white ">
                             Create a Publisher
                         </h1>
-                        <p className="flex justify-center text-sm font-medium text-gray-700 ">
+                        <p className="flex justify-center text-sm font-medium text-gray-400 ">
                             Register a publisher to begin distributing custom
                             nodes on Comfy.
                         </p>
@@ -34,44 +34,68 @@ const CreatePublisher = () => {
                             action="#"
                         >
                             <div>
-                                <label className="block mb-1 text-xs font-bold text-gray-700">
+                                <label className="block mb-1 text-xs font-bold text-white">
                                     Username
                                 </label>
                                 <TextInput
                                     id="name"
                                     placeholder="E.g.janedoe55"
                                     required
+                                    className=""
+                                    style={{
+                                        background: '#4B5563',
+                                        borderColor: '#4B5563',
+                                    }}
                                     type="name"
+                                    sizing="sm"
+                                    // color="failure"
+                                    helperText={
+                                        <>
+                                            <span className="text-[12px] font-medium text-red-600">
+                                                This username is not available.
+                                                Please try another one.
+                                            </span>{' '}
+                                        </>
+                                    }
                                 />
                             </div>
                             <div>
-                                <label className="block mb-1 text-xs font-bold text-gray-700">
+                                <label className="block mb-1 text-xs font-bold text-white">
                                     Display Name
                                 </label>
                                 <TextInput
+                                    sizing="sm"
+                                    style={{
+                                        background: '#4B5563',
+                                        borderColor: '#4B5563',
+                                    }}
                                     id="displayName"
-                                    placeholder="E.g. Jane Doe"
+                                    className="border-gray-700"
+                                    placeholder="E.g. Jane Doe "
                                     required
                                     type="displayName"
                                 />
                             </div>
 
-                            <Button
-                                type="submit"
-                                color="blue"
-                                className="w-full"
-                            >
-                                Create a Publisher
-                            </Button>
-
-                            <div className="flex justify-center ">
+                            <div className="flex justify-between ">
+                                <Button
+                                    href="#"
+                                    target="__blank"
+                                    color="light"
+                                    className="w-full bg-gray-900"
+                                >
+                                    <span className="text-white">Cancel</span>
+                                </Button>
                                 <Button
                                     type="submit"
-                                    outline
+                                    className="w-full ml-1 bg-gray-600 border-gray-600"
                                     color="light"
-                                    className="w-full text-white transition-colors border border-gray-300 rounded-md hover:text-black hover:bg-transparent hover:border-gray-300"
+                                    size="sm"
                                 >
-                                    <span> Cancel</span>
+                                    <span className="text-gray-700">
+                                        {' '}
+                                        Create
+                                    </span>
                                 </Button>
                             </div>
                         </form>

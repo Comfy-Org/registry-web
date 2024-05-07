@@ -1,9 +1,13 @@
 import Head from 'next/head'
 import { ThemeModeScript } from 'flowbite-react'
+import { useRouter } from 'next/router'
 import Header from './Header/Header'
 import Container from './common/Container'
 
 export default function Layout({ children }: React.PropsWithChildren) {
+    const router = useRouter()
+    const isLoginPage = router.pathname === '/auth/login'
+
     return (
         <>
             <Head>
@@ -11,13 +15,12 @@ export default function Layout({ children }: React.PropsWithChildren) {
                 <meta
                     name="description"
                     content="ComfyUI CI/CD Dashboard for running workflows."
-                ></meta>
-
+                />
                 <ThemeModeScript />
             </Head>
             <Container>
-                <Header />
-                <main className="">{children}</main>
+                {!isLoginPage && <Header />}
+                <main>{children}</main>
             </Container>
         </>
     )
