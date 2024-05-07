@@ -189,6 +189,18 @@ export type PublishNodeVersionBody = {
   personal_access_token: string;
 };
 
+export type ValidatePublisher200 = {
+  /** True if the username is available, false otherwise. */
+  isAvailable?: boolean;
+};
+
+export type ValidatePublisherParams = {
+/**
+ * The publisher username to validate.
+ */
+username: string;
+};
+
 export type InstallNodeParams = {
 /**
  * Specific version of the node to retrieve. If omitted, the latest version is returned.
@@ -358,12 +370,24 @@ export const SessionStatus = {
   inactive: 'inactive',
 } as const;
 
+export interface PublisherMember {
+  /** The unique identifier for the publisher member. */
+  id?: string;
+  /** The role of the user in the publisher. */
+  role?: string;
+  user?: User;
+}
+
 export interface Publisher {
+  /** The date and time the publisher was created. */
+  createdAt?: string;
   description?: string;
   /** The unique identifier for the publisher. It's akin to a username. Should be lowercase. */
   id?: string;
   /** URL to the publisher's logo. */
   logo?: string;
+  /** A list of members in the publisher. */
+  members?: PublisherMember[];
   name?: string;
   source_code_repo?: string;
   support?: string;
@@ -381,6 +405,13 @@ export interface PersonalAccessToken {
   name?: string;
   /** [Output Only]. The personal access token. Only returned during creation. */
   token?: string;
+}
+
+export interface NodeVersionUpdateRequest {
+  /** The changelog describing the version changes. */
+  changelog?: string;
+  /** Whether the version is deprecated. */
+  deprecated?: boolean;
 }
 
 export interface NodeVersion {
@@ -911,6 +942,70 @@ export const useCreatePublisher = <TError = void,
       return useMutation(mutationOptions);
     }
     
+/**
+ * Checks if the publisher username is already taken.
+ * @summary Validate if a publisher username is available
+ */
+export const validatePublisher = (
+    params: ValidatePublisherParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ValidatePublisher200>(
+      {url: `/publishers/validate`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getValidatePublisherQueryKey = (params: ValidatePublisherParams,) => {
+    return [`/publishers/validate`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getValidatePublisherQueryOptions = <TData = Awaited<ReturnType<typeof validatePublisher>>, TError = Error | void>(params: ValidatePublisherParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof validatePublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getValidatePublisherQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof validatePublisher>>> = ({ signal }) => validatePublisher(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof validatePublisher>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ValidatePublisherQueryResult = NonNullable<Awaited<ReturnType<typeof validatePublisher>>>
+export type ValidatePublisherQueryError = Error | void
+
+/**
+ * @summary Validate if a publisher username is available
+ */
+export const useValidatePublisher = <TData = Awaited<ReturnType<typeof validatePublisher>>, TError = Error | void>(
+ params: ValidatePublisherParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof validatePublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getValidatePublisherQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * @summary Delete a publisher
  */
@@ -1612,6 +1707,63 @@ export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersi
 
 
 /**
+ * Update only the changelog and deprecated status of a specific version of a node.
+ * @summary Update changelog and deprecation status of a node version
+ */
+export const updateNodeVersion = (
+    publisherId: string,
+    nodeId: string,
+    versionId: string,
+    nodeVersionUpdateRequest: NodeVersionUpdateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<NodeVersion>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions/${versionId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: nodeVersionUpdateRequest
+    },
+      options);
+    }
+  
+
+
+export const getUpdateNodeVersionMutationOptions = <TError = Error | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}, TContext> => {
+ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateNodeVersion>>, {publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}> = (props) => {
+          const {publisherId,nodeId,versionId,data} = props ?? {};
+
+          return  updateNodeVersion(publisherId,nodeId,versionId,data,requestOptions)
+        }
+
+        
+
+
+   return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateNodeVersionMutationResult = NonNullable<Awaited<ReturnType<typeof updateNodeVersion>>>
+    export type UpdateNodeVersionMutationBody = NodeVersionUpdateRequest
+    export type UpdateNodeVersionMutationError = Error | void
+
+    /**
+ * @summary Update changelog and deprecation status of a node version
+ */
+export const useUpdateNodeVersion = <TError = Error | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+      const mutationOptions = getUpdateNodeVersionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
  * @summary Retrieve all personal access tokens for a publisher
  */
 export const listPersonalAccessTokens = (
@@ -1883,6 +2035,68 @@ export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError =
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getGetUserQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Retrieve all publishers for a given user
+ */
+export const listPublishersForUser = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Publisher[]>(
+      {url: `/users/publishers/`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListPublishersForUserQueryKey = () => {
+    return [`/users/publishers/`] as const;
+    }
+
+    
+export const getListPublishersForUserQueryOptions = <TData = Awaited<ReturnType<typeof listPublishersForUser>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishersForUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListPublishersForUserQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPublishersForUser>>> = ({ signal }) => listPublishersForUser(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPublishersForUser>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListPublishersForUserQueryResult = NonNullable<Awaited<ReturnType<typeof listPublishersForUser>>>
+export type ListPublishersForUserQueryError = void
+
+/**
+ * @summary Retrieve all publishers for a given user
+ */
+export const useListPublishersForUser = <TData = Awaited<ReturnType<typeof listPublishersForUser>>, TError = void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishersForUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListPublishersForUserQueryOptions(options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
