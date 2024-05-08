@@ -64,7 +64,7 @@ const CreatePublisherForm = () => {
                                         borderColor: '#4B5563',
                                     }}
                                     id="displayName"
-                                    className="border-gray-700"
+                                    className="border-gray-700 focus:!border-blue-100 focus:!ring-blue-900"
                                     placeholder="E.g. Jane Doe "
                                     required
                                     type="text"

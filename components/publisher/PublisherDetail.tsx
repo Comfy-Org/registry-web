@@ -3,12 +3,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { ModalComponent } from '../common/Modal'
+import { PublisherModal } from './PublisherModal'
+import { EditPublisherModal } from './EditPublisherModal'
 
 const PublisherDetail = () => {
     const router = useRouter()
     const { id } = router.query
     const [openModal, setOpenModal] = useState(false)
+    const [openEditModal, setOpenEditModal] = useState(false) // State for controlling the EditPublisherModal
+
     const [email, setEmail] = useState('')
 
     const handleCreateButtonClick = () => {
@@ -18,6 +21,12 @@ const PublisherDetail = () => {
     const onCloseModal = () => {
         setOpenModal(false)
         setEmail('')
+    }
+    const handleEditButtonClick = () => {
+        setOpenEditModal(true)
+    }
+    const onCloseEditModal = () => {
+        setOpenEditModal(false)
     }
     // // Find the node object with the matching id
     // const node = NodesData.find((node) => node.id === id)
@@ -166,6 +175,12 @@ const PublisherDetail = () => {
                             />
                         </svg>
                         Create an API key
+                        <span
+                            onClick={handleEditButtonClick}
+                            className="ml-3 cursor-pointer"
+                        >
+                            +
+                        </span>
                     </h2>
                     <Button
                         target="__blank"
@@ -186,11 +201,15 @@ const PublisherDetail = () => {
                     </p>
                 </div>
             </div>
-            <ModalComponent
+            <PublisherModal
                 openModal={openModal}
                 onCloseModal={onCloseModal}
                 setEmail={setEmail}
                 email={email}
+            />
+            <EditPublisherModal
+                openModal={openEditModal} // Pass the state to the EditPublisherModal
+                onCloseModal={onCloseEditModal} // Pass the closing function to the EditPublisherModal
             />
         </div>
     )
