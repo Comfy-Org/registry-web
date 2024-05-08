@@ -10,7 +10,11 @@ import Image from 'next/image'
 
 const Header = () => {
     return (
-        <Navbar fluid className="mx-auto bg-gray-900 ">
+        <Navbar
+            fluid
+            className="mx-auto p-8"
+            style={{ backgroundColor: 'rgb(17 24 39)' }}
+        >
             <NavbarBrand href="/">
                 <Image
                     alt="Flowbite React Logo"
@@ -41,7 +45,7 @@ const Header = () => {
                     <span className="text-white">Your Nodes</span>
                 </Button>
                 <Button href="#" target="__blank" color="blue">
-                    join the Community
+                    Sign Up
                 </Button>
                 {/* <DarkThemeToggle /> */}
                 <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />

@@ -21,7 +21,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
     downloads,
 }) => {
     return (
-        <div className="flex rounded-lg shadow bg-gray-50 sm:flex dark:bg-gray-800 dark:border-gray-700 lg:p-4">
+        <div className="flex bg-gray-800 rounded-lg shadow sm:flex dark:border-gray-700 lg:p-4">
             <div>
                 {' '}
                 <img
@@ -32,24 +32,22 @@ const RegistryCard: React.FC<RegistryCard> = ({
             </div>
 
             <div className="flex flex-col px-4">
-                <h6 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">
+                <h6 className="mb-2 text-base font-bold tracking-tight text-white">
                     {name}
                 </h6>
 
-                <p className="mb-1 text-xs tracking-tight text-gray-500">
+                <p className="mb-1 text-xs tracking-tight text-white">
                     <span>{version}</span>
                 </p>
 
-                <p className="mb-1 text-xs font-light text-gray-500 dark:text-gray-400 text-nowrap">
+                <p className="mb-1 text-xs font-light text-white text-nowrap">
                     {description}
                 </p>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                    License:{license}
-                </span>
+                <span className="text-xs text-white">License:{license}</span>
                 <div className="flex items-center justify-between mt-2">
                     <div className="flex justify-center text-center align-center">
                         <svg
-                            className="w-4 h-4 text-gray-800 dark:text-white"
+                            className="w-4 h-4 text-white"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -66,13 +64,13 @@ const RegistryCard: React.FC<RegistryCard> = ({
                             />
                         </svg>
 
-                        <p className="ml-1 text-xs font-bold text-gray-900 dark:text-white">
+                        <p className="ml-1 text-xs font-bold text-white">
                             {downloads}
                         </p>
                     </div>
                     <div className="flex justify-center text-center align-center">
                         <svg
-                            className="w-4 h-4 text-gray-800 dark:text-white"
+                            className="w-4 h-4 text-white"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -87,8 +85,8 @@ const RegistryCard: React.FC<RegistryCard> = ({
                             />
                         </svg>
 
-                        <p className="ml-1 text-xs font-bold text-gray-900 dark:text-white">
-                            {rating}
+                        <p className="ml-1 text-xs font-bold text-white">
+                            {rating}sss
                         </p>
                     </div>
                 </div>

@@ -26,52 +26,25 @@ const SignIn = () => {
         router.push('/publisher')
     }
     return (
-        <section className="h-screen bg-gray-900 ">
-            <div className="hidden px-10 py-5 lg:flex">
-                <a href="https://flowbite.com" className="flex items-center">
-                    <img
-                        src="https://flowbite.com/docs/images/logo.svg"
-                        className="h-6 mr-3 sm:h-9"
-                        alt="Flowbite Logo"
-                    />
-                    <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
-                        Comfy
-                    </span>
-                </a>
-            </div>
-            <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20">
+        <section>
+            <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
-                    <Card className="p-10 bg-white rounded-2xl">
-                        <div className="mb-6 text-center lg:hidden">
-                            <a
-                                href="#"
-                                className="inline-flex items-center text-2xl font-semibold text-white lg:hidden"
-                            >
-                                <img
-                                    className="w-8 h-8 mr-2"
-                                    src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-                                    alt="logo"
-                                />
-                            </a>
-                        </div>
+                    <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
+                        <img
+                            src="https://flowbite.com/docs/images/logo.svg"
+                            className="h-10 sm:h-16"
+                            alt="Flowbite Logo"
+                        />
 
-                        <h1 className="flex justify-center text-2xl font-bold text-gray-900 dark:text-white ">
-                            Welcome back
+                        <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
+                            Log in to Comfy
                         </h1>
-                        <p className="flex justify-center text-sm font-medium text-gray-900 ">
-                            New to Comfy?&nbsp;
-                            <a
-                                href="#"
-                                className="font-medium text-blue-600 text-primary-500 hover:underline "
-                            >
-                                Sign up
-                            </a>
-                        </p>
-                        <div className="space-y-3 sm:space-x-4 sm:space-y-0 ">
+
+                        <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
                             <Button
                                 color="gray"
                                 href="#"
-                                className="font-bold text-white bg-black"
+                                className="font-bold "
                             >
                                 <svg
                                     className="w-5 h-5 mr-2"
@@ -108,7 +81,9 @@ const SignIn = () => {
                                         </clipPath>
                                     </defs>
                                 </svg>
-                                Sign in with Google
+                                <span className="text-gray-900">
+                                    Continue with Google
+                                </span>
                             </Button>
                         </div>
                         <Button
@@ -131,62 +106,19 @@ const SignIn = () => {
                                     clip-rule="evenodd"
                                 />
                             </svg>
-                            Sign in with Github
+                            <span className="text-gray-900">
+                                Continue with GitHub
+                            </span>
                         </Button>
-                        <div className="flex items-center mt-4">
-                            <div className="h-0.5 w-full bg-gray-200 dark:bg-gray-700"></div>
-                            <div className="px-5 text-center text-gray-500 dark:text-gray-400">
-                                or
-                            </div>
-                            <div className="h-0.5 w-full bg-gray-200 dark:bg-gray-700"></div>
-                        </div>
-
-                        <form
-                            className="mt-4 space-y-4 lg:space-y-6"
-                            action="#"
-                            onSubmit={handleSignIn}
-                        >
-                            <div>
-                                <TextInput
-                                    id="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    placeholder="Email"
-                                    required
-                                    type="email"
-                                />
-                            </div>
-                            <div>
-                                <TextInput
-                                    id="password"
-                                    placeholder="Password"
-                                    required
-                                    type="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-
-                            <Button
-                                type="submit"
-                                color="blue"
-                                className="w-full"
+                        <p className="flex justify-center mt-4 text-sm font-medium text-gray-50 ">
+                            New to Comfy Registry?&nbsp;
+                            <a
+                                href="#"
+                                className="font-medium text-blue-600 text-primary-500 hover:underline "
                             >
-                                Sign in
-                            </Button>
-
-                            <div className="flex justify-center ">
-                                <Link
-                                    color="blue"
-                                    href="#"
-                                    className="text-sm font-medium text-blue-600 hover:underline"
-                                >
-                                    <p className="font-bold text-blue-500">
-                                        Forgot your password?
-                                    </p>
-                                </Link>
-                            </div>
-                        </form>
+                                Sign up
+                            </a>
+                        </p>
                     </Card>
                 </div>
             </div>
