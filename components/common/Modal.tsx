@@ -64,9 +64,10 @@ export function ModalComponent({ openModal, onCloseModal, setEmail, email }) {
 
                         <div className="flex justify-between ">
                             <Button
+                                onClick={onCloseModal}
                                 type="button"
                                 color="light"
-                                className="w-full bg-gray-800"
+                                className="w-full bg-gray-800 hover:!bg-gray-800"
                             >
                                 <span className="text-white">Cancel</span>
                             </Button>
