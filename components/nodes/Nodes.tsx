@@ -122,6 +122,7 @@ const Nodes: React.FC = () => {
                 title="Your nodes"
                 subTitle="View and edit your nodes and publishers"
                 buttonText="New Publisher"
+                buttonLink=""
             />
             {/* <FilterRegistry /> */}
             <div className="grid gap-4 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4">
