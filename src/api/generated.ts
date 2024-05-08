@@ -435,6 +435,7 @@ export interface Node {
   icon?: string;
   /** The unique identifier of the node. */
   id?: string;
+  latest_version?: NodeVersion;
   /** The path to the LICENSE file in the node's repository. */
   license?: string;
   /** The display name of the node. */
