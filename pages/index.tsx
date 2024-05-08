@@ -9,20 +9,24 @@ import {
 import { useEffect } from 'react'
 
 function NodeList() {
-    const getAllNodesQuery = getListAllNodesQueryOptions({
+    // const getAllNodesQuery = getListAllNodesQueryOptions({
+    //     page: 1,
+    //     limit: 15,
+    // })
+    // if (getAllNodesQuery?.queryKey && getAllNodesQuery?.queryFn) {
+    //     //@ts-ignore
+    //     getAllNodesQuery.queryFn(getAllNodesQuery?.queryKey)
+    // }
+    // console.log(':')
+    const getAllNodesQuery = useListAllNodes({
         page: 1,
         limit: 15,
     })
-    if (getAllNodesQuery?.queryKey && getAllNodesQuery?.queryFn) {
-        //@ts-ignore
-        getAllNodesQuery.queryFn(getAllNodesQuery?.queryKey)
-    }
-    // console.log(":")
-    // const nodes = getAllNodesQuery.data?.nodes || []
+    const nodes = getAllNodesQuery.data?.nodes || []
     // const { data, error, laoding } = useListAllNodes
     useEffect(() => {
-        console.log('------------', getAllNodesQuery)
-    }, [getAllNodesQuery])
+        console.log('------------', nodes)
+    }, [nodes])
     return (
         <>
             <Registry />

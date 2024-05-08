@@ -673,23 +673,34 @@ export const getListAllNodesQueryKey = (params?: ListAllNodesParams,) => {
     }
 
     
-export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void>(params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListAllNodesQueryKey(params);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllNodes>>> = ({ signal }) => listAllNodes(params, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData> & { queryKey: QueryKey }
-}
+    export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void>(
+      params?: ListAllNodesParams,
+      options?: {
+        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>;
+        request?: SecondParameter<typeof customInstance>;
+      }
+    ) => {
+      const { query: queryOptions, request: requestOptions } = options ?? {};
+      const queryKey = queryOptions?.queryKey ?? getListAllNodesQueryKey(params);
+    
+      // Modify request headers to include the custom header
+      const updatedRequestOptions = {
+     
+        headers: {
+         
+          'ngrok-skip-browser-warning': 'skip-browser-warning'
+        }
+      };
+    
+      const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllNodes>>> = ({ signal }) =>
+        listAllNodes(params, updatedRequestOptions, signal);
+    
+      return {
+        queryKey,
+        queryFn,
+        ...queryOptions
+      } as UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData> & { queryKey: QueryKey };
+    }
 
 export type ListAllNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listAllNodes>>>
 export type ListAllNodesQueryError = void
