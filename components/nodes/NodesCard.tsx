@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import Image from 'next/image'
 interface NodesCard {
     name: string
 
@@ -9,43 +10,52 @@ interface NodesCard {
     description: string
     rating: string | number
     downloads: string | number
+    title?:string
 }
 const NodesCard: React.FC<NodesCard> = ({
     name,
     id,
     description,
-
+    title,
     node,
     image,
     rating,
     downloads,
 }) => {
     return (
-        <div className="flex rounded-lg shadow bg-gray-50 sm:flex dark:bg-gray-800 dark:border-gray-700 lg:p-4">
-            <div>
-                {' '}
-                <img
-                    className="object-cover w-16 h-18 rounded-3lg sm:rounded-lg"
+        <div className="flex rounded-lg shadow bg-gray-50 sm:flex bg-gray-800 border border-gray-700 p-2 lg:p-4">
+            <div className="w-[250px]">
+                <Image
+                    className="rounded-lg sm:rounded-lg"
                     src={image}
                     alt={`${name}'s Avatar`}
+                    width={200}
+                    height={200}
                 />
             </div>
 
-            <div className="flex flex-col px-4 max-w-[170px]">
-                <h6 className="mb-2 text-base font-bold tracking-tight text-gray-900 dark:text-white">
+            <div className="flex flex-col px-4">
+                <h6 className="mb-2 font-bold tracking-tight text-gray-900 text-white">
                     {name}
                 </h6>
 
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span className="text-xs text-gray-500 text-gray-400">
                     {node}
                 </span>
-                <p className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-500 dark:text-gray-400 text-ellipsis whitespace-nowrap">
-                    {description}
-                </p>
+                <div className="mt-3 mb-1 overflow-hidden text-xs text-gray-[300] font-light text-gray-500 text-gray-400 flex items-end">
+                    <p className="line-clamp-2 flex-grow">{description}</p>
+                    <p className="text-blue-500 cursor-pointer">
+                        {' '}
+                        <Link href={title === "Marker" ? `/nodes/${id}` : `/nodes/publisher-detail/${id}`}>
+                            <a>More</a>
+                        </Link>
+                    </p>
+                </div>
+
                 <div className="flex mt-2">
                     <div className="flex justify-center text-center align-center">
                         <svg
-                            className="w-4 h-4 text-gray-800 dark:text-white"
+                            className="w-4 h-4 text-gray-300"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -62,13 +72,13 @@ const NodesCard: React.FC<NodesCard> = ({
                             />
                         </svg>
 
-                        <p className="ml-1 text-xs font-bold text-gray-900 dark:text-white">
+                        <p className="ml-1 text-xs font-bold text-gray-300">
                             {downloads}
                         </p>
                     </div>
                     <div className="flex justify-center ml-2 text-center align-center">
                         <svg
-                            className="w-4 h-4 text-gray-800 dark:text-white"
+                            className="w-4 h-4 text-gray-300"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -83,7 +93,7 @@ const NodesCard: React.FC<NodesCard> = ({
                             />
                         </svg>
 
-                        <p className="ml-1 text-xs font-bold text-gray-900 dark:text-white">
+                        <p className="ml-1 text-xs font-bold  text-gray-300">
                             {rating}
                         </p>
                     </div>

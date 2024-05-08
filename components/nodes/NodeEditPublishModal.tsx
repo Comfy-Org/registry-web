@@ -1,7 +1,7 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React from 'react'
 
-export function NodeEditModal({ openModal, onCloseModal }) {
+export function NodeEditPublishModal({ openModal, onCloseModal }) {
     return (
         <Modal
             show={openModal}
@@ -13,42 +13,38 @@ export function NodeEditModal({ openModal, onCloseModal }) {
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8">
                 <div className="space-y-6">
                     <h3 className="text-2xl font-medium text-white">
-                        Edit secret key
+                        Edit publisher
                     </h3>
                     <form className="mt-4 space-y-4 lg:space-y-6">
                         <div>
-                            <label className="block mb-1 text-xs font-bold text-white">
-                                Name{' '}
-                                <span className="text-gray-400">Optional</span>
+                          <div>
+                          <label className=" mb-1 text-xs font-thin text-white">
+                                Username
+                                
                             </label>
-                            <TextInput
-                                id="name"
-                                placeholder="E.g. janedoe55"
-                                // required
-                                className=""
-                                style={{
-                                    background: '#4B5563',
-                                    borderColor: '#4B5563',
-                                }}
-                                type="text"
-                                sizing="sm"
-                                value=""
-                            />
+                          </div>
+                            <div>
+                            <label className="mb-1 text-xs font-thin text-white">
+                                @nodesmkaers
+                                
+                            </label>
+                            </div>
                         </div>
                         <div>
-                            <label className="block mb-1 text-xs font-bold text-white">
-                                Description{' '}
-                                <span className="text-gray-400">Optional</span>
+                            <label className=" mb-1 text-xs font-thin  text-white">
+                                Display Name
+                               
                             </label>
                             <TextInput
                                 sizing="sm"
                                 style={{
                                     background: '#4B5563',
                                     borderColor: '#4B5563',
+                                    color: 'white',
                                 }}
                                 id="displayName"
-                                className="border-gray-700"
-                                placeholder="E.g. Jane Doe "
+                                className="border-gray-700 placeholder-white"
+                                placeholder="Marker of Nodes "
                                 // required
                                 type="text"
                                 value=""

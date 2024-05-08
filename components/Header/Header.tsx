@@ -12,7 +12,7 @@ const Header = () => {
     return (
         <Navbar
             fluid
-            className="mx-auto"
+            className="mx-auto p-8"
             style={{ backgroundColor: 'rgb(17 24 39)' }}
         >
             <NavbarBrand href="/">

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { NodesData } from './Nodes'
-
+import nodesLogo from "../../public/images/nodesLogo.svg"
 const NodesDetails = () => {
     const router = useRouter()
     const { id } = router.query
@@ -15,35 +15,117 @@ const NodesDetails = () => {
     }
 
     return (
-        <div className="max-w-lg p-8 bg-gray-900 rounded-md">
-            <div className="flex items-center mb-4">
+        <div className="text-white max-w-lg p-8 bg-gray-900 rounded-md flex flex-wrap lg:flex-nowrap lg:justify-between lg:gap-4">
+            <div className='w-[500px]'>
                 <Image
-                    src={node?.image}
+                    src={nodesLogo}
                     alt="icon"
-                    width={64}
-                    height={64}
+                    width={500}  
+                    height={500}
                     className="rounded-md"
                 />
-                <div className="ml-4">
-                    <h2 className="text-xl font-bold text-white">
-                        {node.name}
-                    </h2>
-                    <p className="text-gray-400">
-                        Latest Version:{node.version}{' '}
-                    </p>
-                    <a href="#" className="text-blue-400 hover:underline">
-                        Version history
-                    </a>
-                    <p>{node.description}</p>
-                </div>
+
             </div>
-            <p className="text-gray-400"></p>
-            <div className="flex items-center justify-between mt-6">
-                <div className="flex items-center">
-                    <span className="ml-2 text-gray-400">{node.downloads}</span>
-                </div>
-                <div className="flex items-center">
-                    <span className="ml-2 text-gray-400">{node.rating}</span>
+            <div className="max-w-4xl mx-auto p-6">
+                <div className=" shadow rounded-lg">
+                    <div className="p-6">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <h1 className="text-2xl font-bold">
+                                    TalkingFace
+                                </h1>
+                                <p className="text-sm text--500">
+                                    Version 8.6 · Most recent version
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-4 my-4">
+                            <p className="flex items-center text--600 dark:text--400">
+                                <span className="material-icons-outlined text-base">
+                                    inventory_2
+                                </span>
+                                MIT license
+                            </p>
+                            <p className="flex items-center text--600 dark:text--400">
+                                <span className="material-icons-outlined text-base">
+                                    star_rate
+                                </span>
+                                4.8 rating
+                            </p>
+                            <p className="flex items-center text--600 dark:text--400">
+                                <span className="material-icons-outlined text-base">
+                                    cloud_download
+                                </span>
+                                86k downloads
+                            </p>
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-semibold mb-2">
+                                Description
+                            </h2>
+                            <p className="text--700 dark:text--300">
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua.
+                                Ipsum tempor incididunt ut labore et dolore
+                                magna aliqua. Lorem ipsum dolor sit amet,
+                                consectetur adipiscing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna
+                                aliqua.
+                            </p>
+                        </div>
+                        <div className="mt-6">
+                            <h2 className="text-xl font-semibold mb-2">
+                                Version history
+                            </h2>
+                            <div className="space-y-2">
+                                <div className="bg-gray-800 p-3 rounded">
+                                    <h3 className="font-semibold">
+                                        Version 8.6
+                                    </h3>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Released 4 days ago
+                                    </p>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Contains various minor bug fixes
+                                    </p>
+                                </div>
+                                <div className="bg-gray-800 p-3 rounded">
+                                    <h3 className="font-semibold">
+                                        Version 8.5
+                                    </h3>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Released November 23, 2023
+                                    </p>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Contains various minor bug fixes
+                                    </p>
+                                </div>
+                                <div className="bg-gray-800 p-3 rounded">
+                                    <h3 className="font-semibold">
+                                        Version 8.4
+                                    </h3>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Released October 16, 2023
+                                    </p>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Contains various minor bug fixes
+                                    </p>
+                                </div>
+                                <div className="bg-gray-800 p-3 rounded">
+                                    <h3 className="font-semibold">
+                                        Version 8.3
+                                    </h3>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Released September 2, 2023
+                                    </p>
+                                    <p className="text-sm text--600 dark:text--400">
+                                        Contains various minor bug fixes
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div className="mt-4">
