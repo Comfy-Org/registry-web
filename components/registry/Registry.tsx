@@ -128,10 +128,10 @@ const Registry: React.FC = () => {
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            <FilterRegistry />
-            <div className="grid gap-4 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4">
+            {/* <FilterRegistry /> */}
+            <div className="grid gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4">
                 {NodesData.map((member, index) => (
-                    <RegistryCard key={index} {...member} />
+                    <RegistryCard key={index} {...member} isLoggedIn={false} />
                 ))}
                 {/* {NodesData?.map((node, index) => {
                     console.log('--------------0', node)

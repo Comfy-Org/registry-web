@@ -1,3 +1,4 @@
+import withAuth from '@/components/common/HOC/newAuth'
 import Nodes from '../components/nodes/Nodes'
 
 function NodeList() {
@@ -8,4 +9,4 @@ function NodeList() {
     )
 }
 
-export default NodeList
+export default withAuth(NodeList)

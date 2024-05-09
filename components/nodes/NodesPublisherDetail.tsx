@@ -127,7 +127,7 @@ const NodesPublisherDetail: React.FC = () => {
                 </div>
                 <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
                     {repeatedNodes.map((member, index) => (
-                        <NodesCard key={index} {...member} />
+                        <NodesCard key={index} {...member}  buttonLink={"#"}/>
                     ))}
                 </div>
             </div>

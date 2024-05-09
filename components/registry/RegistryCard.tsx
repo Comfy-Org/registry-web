@@ -10,6 +10,7 @@ interface RegistryCard {
     image: string
     rating: string | number
     downloads: string | number
+    isLoggedIn?:boolean
 }
 const RegistryCard: React.FC<RegistryCard> = ({
     name,
@@ -20,10 +21,18 @@ const RegistryCard: React.FC<RegistryCard> = ({
     image,
     rating,
     downloads,
+    isLoggedIn
 }) => {
     const router=useRouter()
+    const handleClick = () => {
+        if (!isLoggedIn) {
+            router.push('/nodes/publisher-detail/1');
+        } else {
+            router.push('/nodes/1');
+        }
+    };
     return (
-        <div className="flex bg-gray-800 rounded-lg shadow sm:flex dark:border-gray-700 lg:p-4 cursor-pointer" onClick={()=>router.push("/nodes/publisher-detail/1")}>
+        <div className="flex bg-gray-800 rounded-lg shadow sm:flex dark:border-gray-700 lg:p-4 cursor-pointer" onClick={handleClick}>
             <div>
                 {' '}
                 <img

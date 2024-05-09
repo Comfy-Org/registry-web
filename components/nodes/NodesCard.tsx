@@ -10,15 +10,16 @@ interface NodesCard {
     description: string
     rating: string | number
     downloads: string | number
+    buttonLink?: string;
 }
 const NodesCard: React.FC<NodesCard> = ({
     name,
-    id,
     description,
     node,
     image,
     rating,
     downloads,
+    buttonLink="",
 }) => {
     return (
         <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
@@ -42,7 +43,7 @@ const NodesCard: React.FC<NodesCard> = ({
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
                         {' '}
-                        <Link href={`/nodes/${id}`}>
+                        <Link href={buttonLink}>
                             <a>More</a>
                         </Link>
                     </p>
