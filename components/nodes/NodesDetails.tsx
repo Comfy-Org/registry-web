@@ -66,11 +66,6 @@ const NodesDetails = () => {
     const onCloseEditModal = () => {
         setIsEditModal(false)
     }
-
-    const node = NodesData.find((node) => node.id === id)
-    if (!node) {
-        return <div>Node not found</div>
-    }
     useEffect(() => {
         // Find the node with the matching id
         const node = NodesData.find((node) => node.id === id)
@@ -82,6 +77,11 @@ const NodesDetails = () => {
             console.error('Node not found')
         }
     }, [id])
+    const node = NodesData.find((node) => node.id === id)
+    if (!node) {
+        return <div>Node not found</div>
+    }
+
     return (
         <>
             <div className="flex items-center justify-between mb-8">
