@@ -19,7 +19,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
                 <ThemeModeScript />
             </Head>
             <Container>
-                {!isLoginPage && <Header />}
+                {!isLoginPage && <Header isLoggedIn={true} title={"Your Nodes"}/>}
                 <main>{children}</main>
             </Container>
         </>
