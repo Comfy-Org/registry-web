@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import FilterRegistry from './FilterRegistry'
 import GenericHeader from '../common/GenericHeader'
 import RegistryCard from './RegistryCard'
 import { useListAllNodes } from '../../src/api/generated'
+import { CustomPagination } from '../common/CustomPagination'
 export const NodesData = [
     {
         id: '1',
@@ -107,30 +108,46 @@ export const NodesData = [
     },
 ]
 const Registry: React.FC = () => {
-    const {
-        data: getAllNodesData,
-        isLoading,
-        isError,
-    } = useListAllNodes({
-        page: 1,
-        limit: 15,
-    })
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
+    const limit = 9
+    // const {
+    //     data: getAllNodesData,
+    //     isLoading,
+    //     isError,
+    // } = useListAllNodes({
+    //     page: 1,
+    //     limit: 15,
+    // })
 
+    // useEffect(() => {
+    //     console.log('------------', getAllNodesData)
+    // }, [getAllNodesData])
     useEffect(() => {
-        console.log('------------', getAllNodesData)
-    }, [getAllNodesData])
+        const totalCount = NodesData.length
+        setTotalPages(Math.ceil(totalCount / limit))
+    }, [])
+
+    const onPageChange = (page: number) => {
+        setCurrentPage(page)
+    }
+
+    const startIndex = (currentPage - 1) * limit
+    const endIndex = startIndex + limit
+
+    const currentNodes = NodesData.slice(startIndex, endIndex)
 
     return (
-        <section className="h-full mt-8 bg-gray-900 lg:mt-20">
+        <section className="relative h-full mt-8 bg-gray-900 lg:mt-20">
             <GenericHeader
                 title="Welcome to the Registry"
                 subTitle="View nodes or sign in to create and publish your own"
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            {/* <FilterRegistry /> */}
+            {/* {/* <FilterRegistry /> */} */}
             <div className="grid gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4">
-                {NodesData.map((member, index) => (
+                {currentNodes.map((member, index) => (
                     <RegistryCard key={index} {...member} isLoggedIn={false} />
                 ))}
                 {/* {NodesData?.map((node, index) => {
@@ -150,6 +167,17 @@ const Registry: React.FC = () => {
                     )
                 })} */}
             </div>
+            <CustomPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={onPageChange}
+                style={{
+                    position: 'fixed',
+                    bottom: 30,
+                    right: '0%',
+                    transform: 'translateX(-50%)',
+                }}
+            />
         </section>
     )
 }
