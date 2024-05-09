@@ -229,7 +229,7 @@ const NodesDetails = () => {
                                     {versionData.versions.map(
                                         (version, index) => (
                                             <div
-                                                className=" bg-gray-800 border-gray-700 border p-[32px] rounded-xl "
+                                                className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
                                                 key={index}
                                             >
                                                 <h3 className="text-2xl font-semibold text-gray-200">
