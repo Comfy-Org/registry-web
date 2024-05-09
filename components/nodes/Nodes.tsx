@@ -44,6 +44,7 @@ const Nodes: React.FC = () => {
                     subTitle="View and edit your nodes and publishers."
                     buttonText="New Publisher"
                     showIcon={true}
+                    buttonLink='/publisher/create-publisher'
                 />
             </div>
             {/* <FilterRegistry /> */}
@@ -76,7 +77,7 @@ const Nodes: React.FC = () => {
 
                 <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
                     {repeatedNodes.map((member, index) => (
-                        <NodesCard key={index} {...member} type="marker" />
+                        <NodesCard key={index} {...member} />
                     ))}
                 </div>
             </div>
@@ -109,7 +110,7 @@ const Nodes: React.FC = () => {
 
                 <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
                     {publishingNodes.map((member, index) => (
-                        <NodesCard key={index} {...member} type="publisher" />
+                        <NodesCard key={index} {...member} />
                     ))}
                 </div>
             </div>

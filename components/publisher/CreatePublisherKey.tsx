@@ -2,7 +2,6 @@ import React from 'react'
 import { Button } from 'flowbite-react'
 
 const CreatePublisherKey = ({
-    handleEditButtonClick,
     handleCreateButtonClick,
 }) => {
     return (
@@ -26,15 +25,9 @@ const CreatePublisherKey = ({
                     />
                 </svg>
                 Create an API key
-                <span
-                    onClick={handleEditButtonClick}
-                    className="ml-3 cursor-pointer"
-                >
-                    +
-                </span>
             </h2>
             <Button
-                target="__blank"
+           
                 color="light"
                 className="w-40 mt-6 bg-gray-900 text-gray-400 bg-transparent hover:!bg-transparent focus:!bg-blue focus:!border-none focus:!outline-none"
                 onClick={handleCreateButtonClick}

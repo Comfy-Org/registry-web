@@ -8,7 +8,8 @@ const CreatePublisher = () => {
                 title="Create a Publisher"
                 subTitle="Create a publisher to begin publishing nodes from your CLI."
                 buttonText="New Publisher"
-                buttonLink="/createpublisher"
+                buttonLink="/publisher/create-publisher-form"
+                showIcon={true}
             />
         </section>
     )

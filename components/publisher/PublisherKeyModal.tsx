@@ -1,7 +1,12 @@
-import { Button, Modal, TextInput } from 'flowbite-react'
 import React from 'react'
-
+import { Button, Modal, TextInput } from 'flowbite-react'
+import { useRouter } from 'next/router'
 export function PublisherKeyModal({ openModal, onCloseModal }) {
+    const router = useRouter()
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        onCloseModal();
+    }
     return (
         <Modal
             show={openModal}
@@ -11,6 +16,10 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
             dismissible
         >
             <Modal.Body className="!bg-gray-800 p-8  md:px-9 md:py-8 rounded-2xl ">
+            <form
+                            className="mt-4 space-y-4 lg:space-y-6"
+                            onSubmit={handleSubmit}
+                        >
                 <div className="space-y-6">
                     <h3 className="text-2xl font-medium text-white">
                         Save you key
@@ -20,6 +29,7 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
                         accessible. If you lose this secret key, you'll need to
                         generate a new one. It can only be copied once.
                     </p>
+                  
                     <div className="grid grid-cols-8 gap-2 w-full max-w-[23rem]">
                         <label className="sr-only">Label</label>
                         <input
@@ -74,6 +84,7 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
                         <span className="text-xs text-white">Done</span>
                     </Button>
                 </div>
+                </form>
             </Modal.Body>
         </Modal>
     )

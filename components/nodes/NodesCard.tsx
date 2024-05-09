@@ -10,13 +10,11 @@ interface NodesCard {
     description: string
     rating: string | number
     downloads: string | number
-    type?: string
 }
 const NodesCard: React.FC<NodesCard> = ({
     name,
     id,
     description,
-    type,
     node,
     image,
     rating,
@@ -44,14 +42,7 @@ const NodesCard: React.FC<NodesCard> = ({
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
                         {' '}
-                        <Link
-                            href={
-                                type === 'marker'
-                                    ? `/nodes/${id}`
-                                    : type ==="publisher"? `/nodes/publisher-detail/${id}`:"#"
-                            }
-                            
-                        >
+                        <Link href={`/nodes/${id}`}>
                             <a>More</a>
                         </Link>
                     </p>

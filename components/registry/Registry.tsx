@@ -126,7 +126,7 @@ const Registry: React.FC = () => {
                 title="Welcome to the Registry"
                 subTitle="View nodes or sign in to create and publish your own"
                 buttonText="Get Started"
-                buttonLink=""
+                buttonLink="/nodes"
             />
             <FilterRegistry />
             <div className="grid gap-4 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4">

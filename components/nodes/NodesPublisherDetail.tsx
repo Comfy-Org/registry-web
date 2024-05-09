@@ -22,30 +22,30 @@ const NodesPublisherDetail: React.FC = () => {
     const repeatedNodes = Array(3).fill(NodesData[0])
     return (
         <div className="container p-6 mx-auto h-[90vh]">
-            <div className="flex items-center justify-between mb-8">
-                <Button
-                    className="text-gray-400 bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.back()}
+            <div className="flex items-center cursor-pointer  mb-8">
+                <svg
+                    className="w-4 h-4 text-gray-400 "
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
                 >
-                    <svg
-                        className="w-5 h-5 text-white"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="m15 19-7-7 7-7"
-                        />
-                    </svg>
-                    <span className="pl-1 text-[16px]"> Back to Registry</span>
-                </Button>
+                    <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="m15 19-7-7 7-7"
+                    />
+                </svg>
+                <span
+                    className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
+                    onClick={() => router.push('/')}
+                >
+                    <span>Back to Registry</span>
+                </span>
             </div>
 
             <div>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 interface RegistryCard {
     name: string
@@ -20,8 +21,9 @@ const RegistryCard: React.FC<RegistryCard> = ({
     rating,
     downloads,
 }) => {
+    const router=useRouter()
     return (
-        <div className="flex bg-gray-800 rounded-lg shadow sm:flex dark:border-gray-700 lg:p-4">
+        <div className="flex bg-gray-800 rounded-lg shadow sm:flex dark:border-gray-700 lg:p-4 cursor-pointer" onClick={()=>router.push("/nodes/publisher-detail/1")}>
             <div>
                 {' '}
                 <img

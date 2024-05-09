@@ -12,7 +12,7 @@ const CreatePublisherForm = () => {
         event.preventDefault()
 
         // Use the username as the dynamic parameter for navigation
-        router.push(`/publisherdetail/${username}`)
+        router.push(`/publisher/publisher-detail/${username}`)
     }
 
     return (
