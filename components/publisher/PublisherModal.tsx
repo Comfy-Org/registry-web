@@ -2,13 +2,19 @@ import { Button, Modal, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { PublisherKeyModal } from './PublisherKeyModal'
 
-export function PublisherModal({ openModal, onCloseModal, setEmail, email }) {
+export function PublisherModal({
+    openModal,
+    onCloseModal,
+
+    setKeyGenerated,
+}) {
     const [showSecondModal, setShowSecondModal] = useState(false)
 
     const openSecondModal = () => setShowSecondModal(true)
     const closeSecondModal = () => setShowSecondModal(false)
     const handleFormSubmit = (e) => {
         e.preventDefault() // Prevent the form from submitting traditionally
+        setKeyGenerated(true)
         onCloseModal() // Close the first modal
         openSecondModal() // Open the second modal
     }
