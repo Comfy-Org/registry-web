@@ -1,41 +1,37 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { NodesData } from './Nodes'
 import { Button } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'
 import Link from 'next/link'
+import { NodeEditModal } from './NodeEditModal'
 const versionData = {
     versions: [
         {
             name: 'Version 8.6',
-            description:
-                ' Contains various minor bug fixes',
+            description: ' Contains various minor bug fixes',
             created: 'Released 1 days ago.',
         },
         {
             name: 'Version 8.5',
-            description:
-                ' Contains various minor bug fixes',
+            description: ' Contains various minor bug fixes',
             created: 'Released 2 days ago.',
         },
         {
             name: 'Version 8.4',
-            description:
-                ' Contains various minor bug fixes,Improved flow',
+            description: ' Contains various minor bug fixes,Improved flow',
             created: 'Released 3 days ago.',
         },
         {
             name: 'Version 8.3',
-            description:
-                ' Contains various minor bug fixes,Improved flow',
+            description: ' Contains various minor bug fixes,Improved flow',
             created: 'Released 4 days ago.',
         },
         {
             name: 'Version 8.2',
-            description:
-                ' Contains various minor bug fixes,Improved flow',
+            description: ' Contains various minor bug fixes,Improved flow',
             created: 'Released 5 days ago.',
         },
     ],
@@ -47,12 +43,22 @@ const NodesDetails = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState(null)
     const [openEditModal, setIsEditModal] = useState(false)
-    const [nodeData, setNodeData] = useState(null)
+    const [nodeData, setNodeData] = useState({
+        id: '',
+        name: '',
+        version: '',
+        description: '',
+        node: '',
+        image: '',
+        rating: '',
+        downloads: '',
+    })
+
     const toggleDrawer = (version) => {
         setSelectedVersion(version)
         setIsDrawerOpen(!isDrawerOpen)
     }
-  
+
     const handleOpenModal = () => {
         setIsEditModal(true)
     }
@@ -62,14 +68,12 @@ const NodesDetails = () => {
     }
 
     const node = NodesData.find((node) => node.id === id)
-    console.log(node)
     if (!node) {
         return <div>Node not found</div>
     }
     useEffect(() => {
         // Find the node with the matching id
         const node = NodesData.find((node) => node.id === id)
-        console.log('-----------------------------------', node)
         if (node) {
             // Set the node data
             setNodeData(node)
@@ -118,7 +122,7 @@ const NodesDetails = () => {
                         className="rounded-md"
                     />
                 </div>
-                <div className="w-full lg:w-2/3 mx-auto">
+                <div className="w-full mx-auto lg:w-2/3">
                     <div className="rounded-lg shadow ">
                         <div className="">
                             <div className="flex items-start justify-between">
@@ -128,7 +132,7 @@ const NodesDetails = () => {
                                     </h1>
                                     <p className="text-[18px] pt-2 text-gray-300">
                                         Version 8.6{' '}
-                                        <span className="text-gray-400 pl-3">
+                                        <span className="pl-3 text-gray-400">
                                             {' '}
                                             Most recent version
                                         </span>
@@ -136,7 +140,7 @@ const NodesDetails = () => {
                                 </div>
                             </div>
                             <div className="flex flex-col mt-6 mb-10 ">
-                                <p className="flex items-center mt-1 text-xs text-center text-gray-400 py-2">
+                                <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400">
                                     <svg
                                         className="w-6 h-6 "
                                         aria-hidden="true"
@@ -158,7 +162,7 @@ const NodesDetails = () => {
                                         MIT license
                                     </span>
                                 </p>
-                                <p className="flex items-center mt-1 text-xs text-center text-gray-400 align-center  py-2">
+                                <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400 align-center">
                                     <svg
                                         className="w-6 h-6"
                                         aria-hidden="true"
@@ -179,7 +183,7 @@ const NodesDetails = () => {
                                         4.8 rating
                                     </span>
                                 </p>
-                                <p className="flex items-center mt-1 text-xs text-gray-400  py-2">
+                                <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                     <svg
                                         className="w-6 h-6"
                                         aria-hidden="true"
@@ -221,7 +225,7 @@ const NodesDetails = () => {
                                 <h2 className="mb-2 text-xl font-semibold">
                                     Version history
                                 </h2>
-                                <div className="w-2/3 space-y-3 mt-4 rounded-3xl">
+                                <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
                                     {versionData.versions.map(
                                         (version, index) => (
                                             <div
@@ -234,10 +238,10 @@ const NodesDetails = () => {
                                                 <p className="mt-3 text-lg font-normal text-gray-400 ">
                                                     {version.created}
                                                 </p>{' '}
-                                                <p className="mt-3 text-lg font-normal flex-grow line-clamp-2 text-gray-200">
+                                                <p className="flex-grow mt-3 text-lg font-normal text-gray-200 line-clamp-2">
                                                     {version.description}{' '}
                                                     <span
-                                                        className="text-blue-500 text-lg font-normal  cursor-pointer"
+                                                        className="text-lg font-normal text-blue-500 cursor-pointer"
                                                         onClick={() =>
                                                             toggleDrawer(
                                                                 version
@@ -255,13 +259,16 @@ const NodesDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-4 w-full lg:w-1/6 ">
+                <div className="w-full mt-4 lg:w-1/6 ">
                     <div className="flex flex-col gap-4">
                         <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
                             View Repository
                         </Button>
 
-                        <Button className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]" onClick={handleOpenModal}>
+                        <Button
+                            className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
+                            onClick={handleOpenModal}
+                        >
                             <svg
                                 className="w-5 h-5 mr-2 text-white"
                                 aria-hidden="true"

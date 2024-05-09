@@ -46,12 +46,14 @@ const NodeVDrawer = ({ version, isDrawerOpen, toggleDrawer }) => {
                     >
                         {version ? version.name : ''}{' '}
                         <span
-                            className={`inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 ${isVersionAvailable ? 'bg-green-900 text-green-800' : 'bg-red-100 text-red-800'} dark:bg-${isVersionAvailable ? 'green-900 text-green-300' : 'red-900 text-red-300'}`}
+                            className={`inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 ${isVersionAvailable ? 'bg-green-900 text-green-800' : 'bg-red-900 text-red-800'} dark:bg-${isVersionAvailable ? 'green-900 text-green-300' : 'red-900 text-red-300'}`}
                         >
                             <span
                                 className={`w-2 h-2 ${isVersionAvailable ? 'bg-green-500' : 'bg-red-500'} rounded-full me-1`}
                             ></span>
-                            {isVersionAvailable ? 'Live' : 'Deprecated'}
+                            <span className="text-white">
+                                {isVersionAvailable ? 'Live' : 'Deprecated'}
+                            </span>
                         </span>
                     </h5>
                     <p className="text-gray-400">
