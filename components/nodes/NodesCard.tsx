@@ -48,8 +48,9 @@ const NodesCard: React.FC<NodesCard> = ({
                             href={
                                 type === 'marker'
                                     ? `/nodes/${id}`
-                                    : `/nodes/publisher-detail/${id}`
+                                    : type ==="publisher"? `/nodes/publisher-detail/${id}`:"#"
                             }
+                            
                         >
                             <a>More</a>
                         </Link>

@@ -1,15 +1,24 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Button } from 'flowbite-react'
-import Link from 'next/link'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'flowbite-react';
+import Link from 'next/link';
 
-const GenericHeader = ({
+interface Props {
+    title: string;
+    subTitle: string;
+    buttonText: string;
+    buttonColor?: string;
+    buttonLink?: string;
+    showIcon?: boolean;
+}
+
+const GenericHeader: React.FC<Props> = ({
     title,
     subTitle,
     buttonText,
-    buttonColor,
-    buttonLink,
-    showIcon, // New prop to determine whether to show the icon or not
+    buttonColor = 'blue',
+    buttonLink="",
+    showIcon = false,
 }) => {
     return (
         <>
@@ -33,9 +42,9 @@ const GenericHeader = ({
                         >
                             <path
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M5 12h14m-7 7V5"
                             />
                         </svg>
@@ -44,12 +53,7 @@ const GenericHeader = ({
                 </Button>
             </Link>
         </>
-    )
-}
+    );
+};
 
-GenericHeader.defaultProps = {
-    buttonColor: 'blue',
-    showIcon: false, // Default value for the showIcon prop
-}
-
-export default GenericHeader
+export default GenericHeader;

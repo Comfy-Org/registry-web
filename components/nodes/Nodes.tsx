@@ -43,9 +43,7 @@ const Nodes: React.FC = () => {
                     title="Your nodes"
                     subTitle="View and edit your nodes and publishers."
                     buttonText="New Publisher"
-                    buttonLink=""
                     showIcon={true}
-                    buttonColor=""
                 />
             </div>
             {/* <FilterRegistry /> */}
