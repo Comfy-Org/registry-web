@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Card, Label, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { customThemeTextInput } from 'utils/comfyTheme'
 
 const CreatePublisherForm = () => {
     const router = useRouter()
@@ -12,7 +13,7 @@ const CreatePublisherForm = () => {
         event.preventDefault()
 
         // Use the username as the dynamic parameter for navigation
-        router.push(`/publisherdetail/${username}`)
+        router.push(`/publisher/publisher-detail/${username}`)
     }
 
     return (
@@ -40,11 +41,7 @@ const CreatePublisherForm = () => {
                                     id="name"
                                     placeholder="E.g. janedoe55"
                                     required
-                                    className=""
-                                    style={{
-                                        background: '#4B5563',
-                                        borderColor: '#4B5563',
-                                    }}
+                                    theme={customThemeTextInput}
                                     type="text"
                                     sizing="sm"
                                     value={username}
@@ -59,12 +56,9 @@ const CreatePublisherForm = () => {
                                 </label>
                                 <TextInput
                                     sizing="sm"
-                                    style={{
-                                        background: '#4B5563',
-                                        borderColor: '#4B5563',
-                                    }}
+                                    theme={customThemeTextInput}
                                     id="displayName"
-                                    className="border-gray-700 focus:!border-blue-100 focus:!ring-blue-900"
+                                    className="border-gray-700 "
                                     placeholder="E.g. Jane Doe "
                                     required
                                     type="text"

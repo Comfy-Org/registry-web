@@ -5,12 +5,15 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { PublisherModal } from './PublisherModal'
 import { EditPublisherModal } from './EditPublisherModal'
+import CreatePublisherKey from './CreatePublisherKey'
+import GeneratedPublisherKey from './GeneratedPublisherKey'
 
 const PublisherDetail = () => {
     const router = useRouter()
     const { id } = router.query
     const [openModal, setOpenModal] = useState(false)
     const [openEditModal, setOpenEditModal] = useState(false) // State for controlling the EditPublisherModal
+    const [keyGenerated, setKeyGenerated] = useState(false)
 
     const [email, setEmail] = useState('')
 
@@ -37,13 +40,9 @@ const PublisherDetail = () => {
 
     return (
         <div className="container p-6 mx-auto h-[90vh]">
-            <div className="flex items-center justify-between mb-8">
-                <Button
-                    className="text-gray-400 bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.back()}
-                >
-                    <svg
-                        className="w-5 h-5 text-gray-400 "
+            <div className="flex items-center cursor-pointer  mb-8">
+            <svg
+                        className="w-4 h-4 text-gray-400 "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -59,8 +58,13 @@ const PublisherDetail = () => {
                             d="m15 19-7-7 7-7"
                         />
                     </svg>
-                    Back to Publishers
-                </Button>
+                <span
+                    className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
+                    onClick={() => router.push("/nodes")}
+                >
+                  <span>
+                    Back to your nodes</span>
+                </span>
             </div>
 
             <div>
@@ -72,6 +76,7 @@ const PublisherDetail = () => {
                         size="xs"
                         className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
                         color="blue"
+                        onClick={handleEditButtonClick}
                     >
                         <svg
                             className="w-5 h-5 text-white"
@@ -154,44 +159,12 @@ const PublisherDetail = () => {
                         <span className="ml-2">Created 5/20/24</span>
                     </p>
                 </div>
-
-                <div className="mt-8">
-                    <h2 className="flex mb-2 text-xl font-semibold text-white">
-                        <svg
-                            className="w-6 h-6 text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M12 14v3m-3-6V7a3 3 0 1 1 6 0v4m-8 0h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"
-                            />
-                        </svg>
-                        Create an API key
-                        <span
-                            onClick={handleEditButtonClick}
-                            className="ml-3 cursor-pointer"
-                        >
-                            +
-                        </span>
-                    </h2>
-                    <Button
-                        target="__blank"
-                        color="light"
-                        className="w-40 mt-6 bg-gray-900 text-gray-400 bg-transparent  hover:!bg-transparent  focus:!bg-blue focus:!border-none focus:!outline-none"
-                        onClick={handleCreateButtonClick}
-                    >
-                        <span className="text-white"> + Create new key</span>
-                    </Button>
-                </div>
-
+                {!keyGenerated && (
+                    <CreatePublisherKey
+                        handleCreateButtonClick={handleCreateButtonClick}
+                    />
+                )}
+                {keyGenerated && <GeneratedPublisherKey />}
                 <div className="mt-12">
                     <h2 className="mb-2 text-xl font-semibold text-white ">
                         Your nodes
@@ -204,8 +177,7 @@ const PublisherDetail = () => {
             <PublisherModal
                 openModal={openModal}
                 onCloseModal={onCloseModal}
-                setEmail={setEmail}
-                email={email}
+                setKeyGenerated={setKeyGenerated}
             />
             <EditPublisherModal
                 openModal={openEditModal} // Pass the state to the EditPublisherModal

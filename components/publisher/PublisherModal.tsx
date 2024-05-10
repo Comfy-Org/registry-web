@@ -1,14 +1,21 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { PublisherKeyModal } from './PublisherKeyModal'
+import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
 
-export function PublisherModal({ openModal, onCloseModal, setEmail, email }) {
+export function PublisherModal({
+    openModal,
+    onCloseModal,
+
+    setKeyGenerated,
+}) {
     const [showSecondModal, setShowSecondModal] = useState(false)
 
     const openSecondModal = () => setShowSecondModal(true)
     const closeSecondModal = () => setShowSecondModal(false)
     const handleFormSubmit = (e) => {
         e.preventDefault() // Prevent the form from submitting traditionally
+        setKeyGenerated(true)
         onCloseModal() // Close the first modal
         openSecondModal() // Open the second modal
     }
@@ -19,6 +26,8 @@ export function PublisherModal({ openModal, onCloseModal, setEmail, email }) {
                 size="sm"
                 onClose={onCloseModal}
                 popup
+                //@ts-ignore
+                theme={customThemeTModal}
                 dismissible
             >
                 {/* <Modal.Header className="!bg-gray-800" /> */}
@@ -36,11 +45,7 @@ export function PublisherModal({ openModal, onCloseModal, setEmail, email }) {
                                     id="name"
                                     placeholder="E.g. janedoe55"
                                     // required
-                                    className=""
-                                    style={{
-                                        background: '#4B5563',
-                                        borderColor: '#4B5563',
-                                    }}
+                                    theme={customThemeTextInput}
                                     type="text"
                                     sizing="sm"
                                     value=""
@@ -55,12 +60,8 @@ export function PublisherModal({ openModal, onCloseModal, setEmail, email }) {
                                 </label>
                                 <TextInput
                                     sizing="sm"
-                                    style={{
-                                        background: '#4B5563',
-                                        borderColor: '#4B5563',
-                                    }}
+                                    theme={customThemeTextInput}
                                     id="displayName"
-                                    className="border-gray-700"
                                     placeholder="E.g. Jane Doe "
                                     // required
                                     type="text"

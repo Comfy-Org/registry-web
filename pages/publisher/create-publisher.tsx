@@ -1,10 +1,10 @@
 import React from 'react'
-import CreatePublisherForm from '../components/publisher/CreatePublisherForm'
+import CreatePublisher from '../../components/publisher/CreatePublisher'
 
 const createpublihser = () => {
     return (
         <>
-            <CreatePublisherForm />
+            <CreatePublisher />
         </>
     )
 }

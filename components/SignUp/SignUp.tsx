@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
-const SignIn = () => {
+const SignUp = () => {
     const router = useRouter()
     const [formData, setFormData] = useState({
         email: '',
@@ -17,12 +17,9 @@ const SignIn = () => {
         })
     }
 
-    const handleSignIn = async (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault()
 
-        // Perform sign-in logic here with formData
-
-        // Redirect to /publisher route after sign-in
         router.push('/publisher')
     }
 
@@ -43,10 +40,12 @@ const SignIn = () => {
                         </div>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
-                            Log in to Comfy
+                            Sign Up for Comfy
                         </h1>
-
-                        <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
+                        <p className="mt-10 text-xl text-center text-gray-400">
+                            Manage and share your nodes with the community.
+                        </p>
+                        <div className="mt-5 space-y-3 sm:space-x-4 sm:space-y-0">
                             <Button
                                 color="gray"
                                 href="#"
@@ -119,10 +118,10 @@ const SignIn = () => {
                         <p className="flex justify-center mt-4 text-sm font-medium text-gray-50 ">
                             New to Comfy Registry?&nbsp;
                             <a
-                                href="/auth/signup"
+                                href="/auth/login"
                                 className="font-medium text-blue-600 text-primary-500 hover:underline "
                             >
-                                Sign up
+                                Log In
                             </a>
                         </p>
                     </Card>
@@ -132,4 +131,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default SignUp

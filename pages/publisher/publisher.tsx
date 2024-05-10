@@ -1,5 +1,5 @@
 import React from 'react'
-import CreatePublisher from '../components/publisher/CreatePublisher'
+import CreatePublisher from '../../components/publisher/CreatePublisher'
 
 const publisher = () => {
     return (

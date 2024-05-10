@@ -10,20 +10,19 @@ interface NodesCard {
     description: string
     rating: string | number
     downloads: string | number
-    title?:string
+    buttonLink?: string;
 }
 const NodesCard: React.FC<NodesCard> = ({
     name,
-    id,
     description,
-    title,
     node,
     image,
     rating,
     downloads,
+    buttonLink="",
 }) => {
     return (
-        <div className="flex rounded-lg shadow bg-gray-50 sm:flex bg-gray-800 border border-gray-700 p-2 lg:p-4">
+        <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
             <div className="w-[250px]">
                 <Image
                     className="rounded-lg sm:rounded-lg"
@@ -35,18 +34,16 @@ const NodesCard: React.FC<NodesCard> = ({
             </div>
 
             <div className="flex flex-col px-4">
-                <h6 className="mb-2 font-bold tracking-tight text-gray-900 text-white">
+                <h6 className="mb-2 font-bold tracking-tight text-white text-gray-900">
                     {name}
                 </h6>
 
-                <span className="text-xs text-gray-500 text-gray-400">
-                    {node}
-                </span>
+                <span className="text-xs text-gray-300">{node}</span>
                 <div className="mt-3 mb-1 overflow-hidden text-xs text-gray-[300] font-light text-gray-500 text-gray-400 flex items-end">
-                    <p className="line-clamp-2 flex-grow">{description}</p>
+                    <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
                         {' '}
-                        <Link href={title === "Marker" ? `/nodes/${id}` : `/nodes/publisher-detail/${id}`}>
+                        <Link href={buttonLink}>
                             <a>More</a>
                         </Link>
                     </p>
@@ -93,7 +90,7 @@ const NodesCard: React.FC<NodesCard> = ({
                             />
                         </svg>
 
-                        <p className="ml-1 text-xs font-bold  text-gray-300">
+                        <p className="ml-1 text-xs font-bold text-gray-300">
                             {rating}
                         </p>
                     </div>
