@@ -81,17 +81,16 @@ const NodesDetails = () => {
     if (!node) {
         return (
             <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
-            <section className="bg-gray-900 text-white whitespace-nowrap">
-                <div className="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
-                    <div className="mx-auto max-w-screen-sm text-center">
-                        <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
-                            Node not found
-                        </h1>
+                <section className="text-white bg-gray-900 whitespace-nowrap">
+                    <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
+                        <div className="max-w-screen-sm mx-auto text-center">
+                            <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
+                                Node not found
+                            </h1>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </div>
-        
+                </section>
+            </div>
         )
     }
 

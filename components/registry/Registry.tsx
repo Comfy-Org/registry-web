@@ -106,11 +106,71 @@ export const NodesData = [
         rating: '4.8 ',
         downloads: '977k ',
     },
+    {
+        id: '9',
+        name: 'TalkingFace',
+        version: 'v4.0',
+        license: 'AB12345',
+        description: 'Node Publishing, Inc.',
+        image: '/images/nodelogo2.png',
+        rating: '4.8 ',
+        downloads: '977k ',
+    },
+    {
+        id: '9',
+        name: 'TalkingFace',
+        version: 'v4.0',
+        license: 'AB12345',
+        description: 'Node Publishing, Inc.',
+        image: '/images/nodelogo2.png',
+        rating: '4.8 ',
+        downloads: '977k ',
+    },
+    {
+        id: '9',
+        name: 'TalkingFace',
+        version: 'v4.0',
+        license: 'AB12345',
+        description: 'Node Publishing, Inc.',
+        image: '/images/nodelogo2.png',
+        rating: '4.8 ',
+        downloads: '977k ',
+    },
+    {
+        id: '10',
+        name: 'TalkingFace',
+        version: 'v4.0',
+        license: 'AB12345',
+        description: 'Node Publishing, Inc.',
+        image: '/images/nodelogo2.png',
+        rating: '4.8 ',
+        downloads: '977k ',
+    },
+    {
+        id: '11',
+        name: 'TalkingFace',
+        version: 'v4.0',
+        license: 'AB12345',
+        description: 'Node Publishing, Inc.',
+        image: '/images/nodelogo2.png',
+        rating: '4.8 ',
+        downloads: '977k ',
+    },
+    {
+        id: '12',
+        name: 'TalkingFace',
+        version: 'v4.0',
+        license: 'AB12345',
+        description: 'Node Publishing, Inc.',
+        image: '/images/nodelogo2.png',
+        rating: '4.8 ',
+        downloads: '977k ',
+    },
 ]
 const Registry: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
-    const limit = 9
+    const limit = 12
     // const {
     //     data: getAllNodesData,
     //     isLoading,
@@ -138,15 +198,16 @@ const Registry: React.FC = () => {
     const currentNodes = NodesData.slice(startIndex, endIndex)
 
     return (
-        <section className="relative h-full mt-8 bg-gray-900 lg:mt-20">
+        <div className="relative mt-8 bg-gray-900 lg:mt-20">
             <GenericHeader
                 title="Welcome to the Registry"
                 subTitle="View nodes or sign in to create and publish your own"
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            {/* {/* <FilterRegistry /> */} */}
-            <div className="grid gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4">
+            {/* {/* <FilterRegistry /> */}
+            {/* <div className="h-auto md:h-[59vh] "> */}
+            <div className="grid min-h-[500px] gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4 ">
                 {currentNodes.map((member, index) => (
                     <RegistryCard key={index} {...member} isLoggedIn={false} />
                 ))}
@@ -166,19 +227,16 @@ const Registry: React.FC = () => {
                         />
                     )
                 })} */}
+                {/* </div> */}
             </div>
-            <CustomPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={onPageChange}
-                style={{
-                    position: 'fixed',
-                    bottom: 30,
-                    right: '0%',
-                    transform: 'translateX(-50%)',
-                }}
-            />
-        </section>
+            <div className="absolute right-0 mt-3 -bottom-14">
+                <CustomPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={onPageChange}
+                />
+            </div>
+        </div>
     )
 }
 

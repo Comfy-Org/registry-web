@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, FileInput, Label, Modal } from 'flowbite-react'
 import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { customThemeTModal } from 'utils/comfyTheme'
 
 export function NodeLogoModal({ openLogoModal, onCloseModal }) {
     return (
@@ -10,6 +11,8 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                 size="2xl"
                 onClose={onCloseModal}
                 popup
+                //@ts-ignore
+                theme={customThemeTModal}
                 dismissible
             >
                 <Modal.Header className="!bg-gray-800 px-8 py-8">

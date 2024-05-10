@@ -4,6 +4,11 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodelogo2.png'
 import Image from 'next/image'
 import { NodeLogoModal } from './NodeLogoModal'
+import {
+    CustomThemeTextArea,
+    customThemeTextInput,
+    customThemeTModal,
+} from 'utils/comfyTheme'
 export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
     const [nodeName, setNodeName] = useState('')
     const [openLogoModal, setOpenLogoModal] = useState(false)
@@ -36,9 +41,11 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                 size="3xl"
                 onClose={onCloseEditModal}
                 popup
+                //@ts-ignore
+                theme={customThemeTModal}
                 dismissible
             >
-                <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 ">
+                <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
                     <Modal.Header className="!bg-gray-800 px-8">
                         <p className="text-white">Edit Node</p>
                     </Modal.Header>
@@ -78,9 +85,6 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                             </div>
                         </div>
                         <div className="space-y-6 min-w-[350px]">
-                            <h3 className="text-xl font-medium text-white">
-                                Sign in to our platform
-                            </h3>
                             <div>
                                 <div className="block mb-2">
                                     <Label
@@ -90,6 +94,8 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                                     />
                                 </div>
                                 <TextInput
+                                    //@ts-ignore
+                                    theme={customThemeTextInput}
                                     id="name"
                                     placeholder="Node name"
                                     onChange={(e) =>
@@ -109,6 +115,7 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                                 </div>
                                 <Textarea
                                     id="comment"
+                                    theme={CustomThemeTextArea}
                                     value={description}
                                     placeholder="Description"
                                     onChange={(e) =>
@@ -128,6 +135,7 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                                 </div>
                                 <TextInput
                                     id="license"
+                                    theme={customThemeTextInput}
                                     placeholder="Github Repository link"
                                     value={license}
                                     onChange={(e) => setLicense(e.target.value)}
@@ -144,6 +152,7 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                                 </div>
                                 <TextInput
                                     id="name"
+                                    theme={customThemeTextInput}
                                     placeholder="Github Repository link"
                                     value={githubLink}
                                     onChange={(e) =>

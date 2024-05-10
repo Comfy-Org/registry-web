@@ -28,22 +28,24 @@ const SignUp = () => {
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
                     <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
-                       <div className='flex justify-center' onClick={()=>router.push("/")}>
-                       <img
-                            src="https://flowbite.com/docs/images/logo.svg"
-                            className="h-10 sm:h-16 cursor-pointer"
-                            alt="Flowbite Logo"
-                            
-                        />
-                       </div>
+                        <div
+                            className="flex justify-center"
+                            onClick={() => router.push('/')}
+                        >
+                            <img
+                                src="https://flowbite.com/docs/images/logo.svg"
+                                className="h-10 cursor-pointer sm:h-16"
+                                alt="Flowbite Logo"
+                            />
+                        </div>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
                             Sign Up for Comfy
                         </h1>
-                        <p className="text-xl text-gray-400 text-center">
+                        <p className="mt-10 text-xl text-center text-gray-400">
                             Manage and share your nodes with the community.
                         </p>
-                        <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
+                        <div className="mt-5 space-y-3 sm:space-x-4 sm:space-y-0">
                             <Button
                                 color="gray"
                                 href="#"

@@ -1,5 +1,6 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React from 'react'
+import { customThemeTModal } from 'utils/comfyTheme'
 
 export function EditPublisherModal({ openModal, onCloseModal }) {
     return (
@@ -9,6 +10,8 @@ export function EditPublisherModal({ openModal, onCloseModal }) {
             onClose={onCloseModal}
             popup
             dismissible
+            //@ts-ignore
+            theme={customThemeTModal}
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8">
                 <div className="space-y-6">

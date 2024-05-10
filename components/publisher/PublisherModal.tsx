@@ -1,6 +1,7 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { PublisherKeyModal } from './PublisherKeyModal'
+import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
 
 export function PublisherModal({
     openModal,
@@ -25,6 +26,8 @@ export function PublisherModal({
                 size="sm"
                 onClose={onCloseModal}
                 popup
+                //@ts-ignore
+                theme={customThemeTModal}
                 dismissible
             >
                 {/* <Modal.Header className="!bg-gray-800" /> */}
@@ -42,11 +45,7 @@ export function PublisherModal({
                                     id="name"
                                     placeholder="E.g. janedoe55"
                                     // required
-                                    className=""
-                                    style={{
-                                        background: '#4B5563',
-                                        borderColor: '#4B5563',
-                                    }}
+                                    theme={customThemeTextInput}
                                     type="text"
                                     sizing="sm"
                                     value=""
@@ -61,12 +60,8 @@ export function PublisherModal({
                                 </label>
                                 <TextInput
                                     sizing="sm"
-                                    style={{
-                                        background: '#4B5563',
-                                        borderColor: '#4B5563',
-                                    }}
+                                    theme={customThemeTextInput}
                                     id="displayName"
-                                    className="border-gray-700"
                                     placeholder="E.g. Jane Doe "
                                     // required
                                     type="text"

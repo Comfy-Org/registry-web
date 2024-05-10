@@ -1,32 +1,30 @@
-
-import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router'
+import { useContext, useEffect } from 'react'
 // import { AuthContext } from './AuthContext'; // Assuming you have an AuthContext
 
 const withAuth = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
-        const router = useRouter();
+        const router = useRouter()
         // const { isLoggedIn } = useContext(AuthContext);
-        const isLoggedIn=false;
+        const isLoggedIn = true
         useEffect(() => {
             if (!isLoggedIn) {
-                router.push('/auth/login');
+                router.push('/auth/login')
             }
-        }, [isLoggedIn, router]);
+        }, [isLoggedIn, router])
 
         if (!isLoggedIn) {
-            return null; 
+            return null
         }
 
-        return <WrappedComponent {...props} />;
-    };
-
-
-    if (WrappedComponent.getInitialProps) {
-        HOC.getInitialProps = WrappedComponent.getInitialProps;
+        return <WrappedComponent {...props} />
     }
 
-    return HOC;
-};
+    if (WrappedComponent.getInitialProps) {
+        HOC.getInitialProps = WrappedComponent.getInitialProps
+    }
 
-export default withAuth;
+    return HOC
+}
+
+export default withAuth

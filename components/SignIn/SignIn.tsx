@@ -31,14 +31,16 @@ const SignIn = () => {
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
                     <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
-                       <div className='flex justify-center' onClick={()=>router.push("/")}>
-                       <img
-                            src="https://flowbite.com/docs/images/logo.svg"
-                            className="h-10 sm:h-16 cursor-pointer"
-                            alt="Flowbite Logo"
-                            
-                        />
-                       </div>
+                        <div
+                            className="flex justify-center"
+                            onClick={() => router.push('/')}
+                        >
+                            <img
+                                src="https://flowbite.com/docs/images/logo.svg"
+                                className="h-10 cursor-pointer sm:h-16"
+                                alt="Flowbite Logo"
+                            />
+                        </div>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
                             Log in to Comfy
