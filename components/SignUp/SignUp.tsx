@@ -1,4 +1,5 @@
 import { Button, Card, TextInput } from 'flowbite-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -32,7 +33,7 @@ const SignUp = () => {
                             className="flex justify-center"
                             onClick={() => router.push('/')}
                         >
-                            <img
+                            <Image
                                 src="https://flowbite.com/docs/images/logo.svg"
                                 className="h-10 cursor-pointer sm:h-16"
                                 alt="Flowbite Logo"
