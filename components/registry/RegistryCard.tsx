@@ -1,21 +1,22 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { NodeVersion } from 'src/api/generated'
 interface RegistryCard {
-    name: string
-    version: string
-    id: string | number
-    license: string
-    description: string
-    image: string
-    rating: string | number
-    downloads: string | number
+    name?: string
+    latest_version?: NodeVersion
+    id?: string
+    license?: string
+    description?: string
+    image?: string
+    rating?: string | number
+    downloads?: string | number
     isLoggedIn?: boolean
 }
 const RegistryCard: React.FC<RegistryCard> = ({
     name,
     id,
-    version,
+    latest_version,
     license,
     description,
     image,
@@ -37,12 +38,11 @@ const RegistryCard: React.FC<RegistryCard> = ({
             onClick={handleClick}
         >
             <div>
-                {' '}
-                <img
+                {image && <img
                     className="object-cover w-20 h-20 rounded-3lg sm:rounded-lg"
                     src={image}
                     alt={`${name}'s Avatar`}
-                />
+                />}
             </div>
 
             <div className="flex flex-col px-4">
@@ -50,16 +50,18 @@ const RegistryCard: React.FC<RegistryCard> = ({
                     {name}
                 </h6>
 
-                <p className="mb-1 text-xs tracking-tight text-white">
-                    <span>{version}</span>
-                </p>
+                {latest_version && <p className="mb-1 text-xs tracking-tight text-white">
+                    <span>v{latest_version.version}</span>
+                </p>}
 
                 <p className="mb-1 text-xs font-light text-white text-nowrap">
                     {description}
                 </p>
-                <span className="text-xs text-white">License:{license}</span>
+                {
+                    license && <span className="text-xs text-white">License:{license}</span>
+                }
                 <div className="flex items-center justify-between mt-2">
-                    <div className="flex justify-center text-center align-center">
+                    {downloads && (<div className="flex justify-center text-center align-center">
                         <svg
                             className="w-4 h-4 text-white"
                             aria-hidden="true"
@@ -78,11 +80,13 @@ const RegistryCard: React.FC<RegistryCard> = ({
                             />
                         </svg>
 
+
                         <p className="ml-1 text-xs font-bold text-white">
                             {downloads}
                         </p>
                     </div>
-                    <div className="flex justify-center text-center align-center">
+                    )}
+                    {rating && <div className="flex justify-center text-center align-center">
                         <svg
                             className="w-4 h-4 text-white"
                             aria-hidden="true"
@@ -102,7 +106,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
                         <p className="ml-1 text-xs font-bold text-white">
                             {rating}sss
                         </p>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>
