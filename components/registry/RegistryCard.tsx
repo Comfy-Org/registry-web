@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -39,7 +38,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
         >
             <div>
                 {' '}
-                <Image
+                <img
                     className="object-cover w-20 h-20 rounded-3lg sm:rounded-lg"
                     src={image}
                     alt={`${name}'s Avatar`}
