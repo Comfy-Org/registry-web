@@ -117,12 +117,12 @@ const SignUp = () => {
                         </Button>
                         <p className="flex justify-center mt-4 text-sm font-medium text-gray-50 ">
                             New to Comfy Registry?&nbsp;
-                            <a
+                            <Link
                                 href="/auth/login"
                                 className="font-medium text-blue-600 text-primary-500 hover:underline "
                             >
                                 Log In
-                            </a>
+                            </Link>
                         </p>
                     </Card>
                 </div>
