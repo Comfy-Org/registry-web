@@ -1,24 +1,56 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
-import { PublisherKeyModal } from './PublisherKeyModal'
+import { CopyAccessTokenModal } from './CopyAccessKeyModal'
 import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
+import { useCreatePersonalAccessToken } from 'src/api/generated'
+import { toast } from 'react-toastify'
 
-export function PublisherModal({
+type CreateSecretKeyModalProps = {
+    openModal: boolean
+    onCloseModal: () => void
+    onCreationSuccess: () => void
+    publisherId: string
+}
+
+export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
     openModal,
     onCloseModal,
-
-    setKeyGenerated,
-}) {
+    onCreationSuccess,
+    publisherId,
+}) => {
     const [showSecondModal, setShowSecondModal] = useState(false)
-
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+    const createAccessTokenMutation = useCreatePersonalAccessToken()
     const openSecondModal = () => setShowSecondModal(true)
     const closeSecondModal = () => setShowSecondModal(false)
     const handleFormSubmit = (e) => {
-        e.preventDefault() // Prevent the form from submitting traditionally
-        setKeyGenerated(true)
-        onCloseModal() // Close the first modal
-        openSecondModal() // Open the second modal
+        e.preventDefault()
+
+        createAccessTokenMutation.mutate(
+            {
+                publisherId,
+                data: {
+                    name,
+                    description,
+                },
+            },
+            {
+                onError: (error) => {
+                    toast.error('Failed to create secret key')
+                },
+                onSuccess: () => {
+                    toast.success('Secret key created')
+                    onCloseModal()
+                    openSecondModal()
+                    setName('')
+                    setDescription('')
+                    onCreationSuccess()
+                },
+            }
+        )
     }
+
     return (
         <>
             <Modal
@@ -48,7 +80,8 @@ export function PublisherModal({
                                     theme={customThemeTextInput}
                                     type="text"
                                     sizing="sm"
-                                    value=""
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
                             <div>
@@ -65,7 +98,10 @@ export function PublisherModal({
                                     placeholder="E.g. Jane Doe "
                                     // required
                                     type="text"
-                                    value=""
+                                    value={description}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
                                 />
                             </div>
 
@@ -82,12 +118,16 @@ export function PublisherModal({
                                 </Button>
                                 <Button
                                     type="submit"
-                                    className="w-full ml-1 bg-gray-600 border-gray-600"
+                                    className="w-full bg-gray-800 hover:!bg-gray-800"
                                     color="light"
                                     size="sm"
                                     onClick={handleFormSubmit}
+                                    disabled={
+                                        createAccessTokenMutation.isPending ||
+                                        !name
+                                    }
                                 >
-                                    <span className="text-xs text-gray-700">
+                                    <span className="text-xs text-white hover:text-gray-500">
                                         Create Secret Key
                                     </span>
                                 </Button>
@@ -97,9 +137,10 @@ export function PublisherModal({
                 </Modal.Body>
             </Modal>
             {showSecondModal && (
-                <PublisherKeyModal
+                <CopyAccessTokenModal
                     openModal={showSecondModal}
                     onCloseModal={closeSecondModal}
+                    accessToken={createAccessTokenMutation.data?.token || ''}
                 />
             )}
         </>

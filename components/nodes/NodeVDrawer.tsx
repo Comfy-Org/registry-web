@@ -25,14 +25,24 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             return
         }
         setIsVersionAvailable(!isVersionAvailable)
-        updateNodeVersionMutation.mutate({
-            versionId: version.id,
-            publisherId: publisherId,
-            nodeId: nodeId,
-            data: {
-                deprecated: !isVersionAvailable,
+        updateNodeVersionMutation.mutate(
+            {
+                versionId: version.id,
+                publisherId: publisherId,
+                nodeId: nodeId,
+                data: {
+                    deprecated: !isVersionAvailable,
+                },
             },
-        })
+            {
+                onError: (error) => {
+                    toast.error('Could not update version. Please try again.')
+                },
+                onSuccess: () => {
+                    toast.success('Version updated successfully')
+                },
+            }
+        )
     }
 
     return (

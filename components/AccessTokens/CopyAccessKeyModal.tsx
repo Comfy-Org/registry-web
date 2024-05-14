@@ -1,13 +1,33 @@
 import React from 'react'
-import { Button, Modal, TextInput } from 'flowbite-react'
-import { useRouter } from 'next/router'
+import { Button, Modal } from 'flowbite-react'
 import { customThemeTModal } from 'utils/comfyTheme'
-export function PublisherKeyModal({ openModal, onCloseModal }) {
-    const router = useRouter()
+
+type CopyAccessTokenModalProps = {
+    openModal: boolean
+    onCloseModal: () => void
+    accessToken: string
+}
+
+export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
+    openModal,
+    onCloseModal,
+    accessToken,
+}) => {
     const handleSubmit = (event) => {
         event.preventDefault()
-        onCloseModal()
     }
+    // Copy a string to the clipboard
+    const copyToClipboard = (accessToken: string) => {
+        navigator.clipboard.writeText(accessToken).then(() => {
+            const successMessage = document.getElementById('success-message')
+            const defaultMessage = document.getElementById('default-message')
+            if (successMessage && defaultMessage) {
+                successMessage.classList.remove('hidden')
+                defaultMessage.classList.add('hidden')
+            }
+        })
+    }
+
     return (
         <Modal
             show={openModal}
@@ -40,7 +60,7 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
                                 id="npm-install"
                                 type="text"
                                 className="col-span-6 size-10 bg-gray-50 border text-sm rounded-lg block w-full p-2.5bg-gray-700 border-gray-600 placeholder-gray-400 text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                value="sk-proj zgkRjfuYqf T3Blbafsdfsdfasd"
+                                value={accessToken}
                                 disabled
                                 style={{
                                     background: '#4B5563',
@@ -48,6 +68,7 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
                                 }}
                             />
                             <button
+                                onClick={() => copyToClipboard(accessToken)}
                                 data-copy-to-clipboard-target="npm-install"
                                 className="col-span-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 items-center inline-flex justify-center"
                             >
@@ -84,6 +105,7 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
                             className="w-1/3 mt-2 "
                             color="blue"
                             size="sm"
+                            onClick={onCloseModal}
                         >
                             <span className="text-xs text-white">Done</span>
                         </Button>

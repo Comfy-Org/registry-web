@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
-import { NodesData } from './Nodes'
 import { Button, Spinner } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'

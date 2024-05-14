@@ -1,10 +1,13 @@
 import Head from 'next/head'
+import { getAuth } from 'firebase/auth'
 import { ThemeModeScript } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import Header from './Header/Header'
 import Container from './common/Container'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import app from 'src/firebase'
 
 export default function Layout({ children }: React.PropsWithChildren) {
     const router = useRouter()
@@ -13,6 +16,8 @@ export default function Layout({ children }: React.PropsWithChildren) {
     const isReservedPath = /^\/(auth|api|_error|_app|_document)/.test(
         router.pathname
     )
+    const auth = getAuth(app)
+    const [user, error] = useAuthState(auth)
 
     return (
         <>
@@ -26,7 +31,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             </Head>
             <Container>
                 {!(isLoginPage || isSignupPage || isReservedPath) && (
-                    <Header isLoggedIn={false} title={'Your Nodes'} />
+                    <Header isLoggedIn={!!user} title={'Your Nodes'} />
                 )}
                 <main>{children}</main>
             </Container>

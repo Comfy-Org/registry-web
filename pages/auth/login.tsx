@@ -1,4 +1,5 @@
-import SignIn from '../../components/SignIn/SignIn'
+import React from 'react'
+import SignIn from '../../components/AuthUI/AuthUI'
 
 const SignInPage: React.FC = () => {
     return (

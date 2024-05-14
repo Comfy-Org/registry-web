@@ -1,40 +1,74 @@
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { PublisherModal } from './PublisherModal'
-import { EditPublisherModal } from './EditPublisherModal'
-import CreatePublisherKey from './CreatePublisherKey'
-import GeneratedPublisherKey from './GeneratedPublisherKey'
+import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
+import {
+    Publisher,
+    useDeletePersonalAccessToken,
+    useListNodesForPublisher,
+    useListPersonalAccessTokens,
+    useUpdatePublisher,
+} from 'src/api/generated'
+import EditPublisherModal from '../publisher/EditPublisherModal'
+import { toast } from 'react-toastify'
+import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 
-const PublisherDetail = () => {
+type PublisherDetailProps = {
+    publisher: Publisher
+}
+const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const router = useRouter()
-    const { id } = router.query
-    const [openModal, setOpenModal] = useState(false)
-    const [openEditModal, setOpenEditModal] = useState(false) // State for controlling the EditPublisherModal
-    const [keyGenerated, setKeyGenerated] = useState(false)
-
-    const [email, setEmail] = useState('')
+    const updatePublisherMutation = useUpdatePublisher()
+    const deleteTokenMutation = useDeletePersonalAccessToken()
+    const {
+        data: personalAccessTokens,
+        error,
+        isLoading: isLoadingAccessTokens,
+        refetch: refetchTokens,
+    } = useListPersonalAccessTokens(publisher.id as string)
+    const { data: nodes } = useListNodesForPublisher(publisher.id as string)
+    const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false)
+    const [openEditModal, setOpenEditModal] = useState(false)
 
     const handleCreateButtonClick = () => {
-        setOpenModal(true)
+        setOpenSecretKeyModal(true)
     }
 
-    const onCloseModal = () => {
-        setOpenModal(false)
-        setEmail('')
+    const onCloseCreateSecretKeyModal = () => {
+        setOpenSecretKeyModal(false)
     }
     const handleEditButtonClick = () => {
         setOpenEditModal(true)
     }
+
+    const handleSubmitEditPublisher = (displayName: string) => {
+        updatePublisherMutation.mutate(
+            {
+                publisherId: publisher?.id as string,
+                data: {
+                    name: displayName,
+                },
+            },
+            {
+                onError: (error) => {
+                    toast.error('Failed to update publisher')
+                },
+                onSuccess: () => {
+                    setOpenEditModal(false)
+                    router.push(`/publishers/${publisher.id}`)
+                },
+            }
+        )
+    }
     const onCloseEditModal = () => {
         setOpenEditModal(false)
     }
-    // // Find the node object with the matching id
-    // const node = NodesData.find((node) => node.id === id)
-    // console.log(node)
-    // if (!node) {
-    //     return <div>Node not found</div>
-    // }
+
+    const oneMemberOfPublisher = getFirstMemberName(publisher)
+
+    if (error || publisher === undefined || publisher.id === undefined) {
+        return <div className="container p-6 mx-auto h-[90vh]">Not Found</div>
+    }
 
     return (
         <div className="container p-6 mx-auto h-[90vh]">
@@ -58,7 +92,7 @@ const PublisherDetail = () => {
                 </svg>
                 <span
                     className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.push('/nodes')}
+                    onClick={() => router.push(`/nodes`)}
                 >
                     <span>Back to your nodes</span>
                 </span>
@@ -67,7 +101,7 @@ const PublisherDetail = () => {
             <div>
                 <div className="flex justify-between">
                     <h1 className="mb-4 text-5xl font-bold text-white">
-                        Nodes Makers
+                        {publisher.name}
                     </h1>
                     <Button
                         size="xs"
@@ -95,7 +129,7 @@ const PublisherDetail = () => {
                         <span className="text-[10px]">Edit details</span>
                     </Button>
                 </div>
-                <p className="text-gray-400">@nodesmakers</p>
+                <p className="text-gray-400">@{publisher.id}</p>
                 <div className="flex flex-col my-4 ">
                     <p className="flex items-center mt-1 text-xs text-center text-gray-400">
                         <svg
@@ -115,73 +149,80 @@ const PublisherDetail = () => {
                                 d="M8 8v8m0-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 0a4 4 0 0 1-4 4h-1a3 3 0 0 0-3 3"
                             />
                         </svg>
-                        <span className="ml-2">0 nodes</span>
+                        <span className="ml-2">
+                            {nodes ? `${nodes.length} nodes` : ''}
+                        </span>
                     </p>
-                    <p className="flex items-center mt-1 text-xs text-center text-gray-400 align-center">
-                        <svg
-                            className="w-5 h-5 text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke="currentColor"
-                                stroke-width="2"
-                                d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                            />
-                        </svg>
-                        <span className="ml-2">Robin Huang, Yoland Yan</span>
-                    </p>
-                    <p className="flex items-center mt-1 text-xs text-gray-400">
-                        <svg
-                            className="w-5 h-5 text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
-                            />
-                        </svg>{' '}
-                        <span className="ml-2">Created 5/20/24</span>
-                    </p>
+                    {oneMemberOfPublisher && (
+                        <p className="flex items-center mt-1 text-xs text-center text-gray-400 align-center">
+                            <svg
+                                className="w-5 h-5 text-white"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                />
+                            </svg>
+                            <span className="ml-2">{oneMemberOfPublisher}</span>
+                        </p>
+                    )}
                 </div>
-                {!keyGenerated && (
-                    <CreatePublisherKey
-                        handleCreateButtonClick={handleCreateButtonClick}
-                    />
-                )}
-                {keyGenerated && <GeneratedPublisherKey />}
-                <div className="mt-12">
-                    <h2 className="mb-2 text-xl font-semibold text-white ">
-                        Your nodes
-                    </h2>
-                    <p className="text-xs text-gray-400">
-                        No nodes created yet. Please create nodes from your CLI.
-                    </p>
-                </div>
+                <PersonalAccessTokenTable
+                    handleCreateButtonClick={handleCreateButtonClick}
+                    accessTokens={personalAccessTokens || []}
+                    isLoading={isLoadingAccessTokens}
+                    deleteToken={(tokenId: string) =>
+                        deleteTokenMutation.mutate(
+                            {
+                                publisherId: publisher.id as string,
+                                tokenId: tokenId,
+                            },
+                            {
+                                onError: (error) => {
+                                    toast.error('Failed to delete token')
+                                },
+                                onSuccess: () => {
+                                    toast.success('Token deleted')
+                                    refetchTokens()
+                                },
+                            }
+                        )
+                    }
+                />
             </div>
-            <PublisherModal
-                openModal={openModal}
-                onCloseModal={onCloseModal}
-                setKeyGenerated={setKeyGenerated}
+            <CreateSecretKeyModal
+                publisherId={publisher.id}
+                openModal={openSecretKeyModal}
+                onCloseModal={onCloseCreateSecretKeyModal}
+                onCreationSuccess={refetchTokens}
             />
             <EditPublisherModal
-                openModal={openEditModal} // Pass the state to the EditPublisherModal
-                onCloseModal={onCloseEditModal} // Pass the closing function to the EditPublisherModal
+                openModal={openEditModal}
+                onCloseModal={onCloseEditModal}
+                onSubmit={handleSubmitEditPublisher}
+                publisher={publisher}
             />
         </div>
     )
 }
 
 export default PublisherDetail
+
+function getFirstMemberName(publisher: Publisher): string | undefined {
+    // Check if the publisher has members and the first member has a user and name
+    if (publisher.members && publisher.members.length > 0) {
+        const firstMember = publisher.members[0]
+        if (firstMember.user && firstMember.user.name) {
+            return firstMember.user.name
+        }
+    }
+    // Return undefined if no member or no member name is found
+    return undefined
+}

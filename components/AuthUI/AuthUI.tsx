@@ -1,30 +1,49 @@
-import { Button, Card, TextInput } from 'flowbite-react'
+import { getAuth } from 'firebase/auth'
+import { Button, Card } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
+import app from '../../src/firebase'
+import { toast } from 'react-toastify'
 
-const SignIn = () => {
+const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    })
+    const auth = getAuth(app)
 
-    const handleInputChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.id]: e.target.value,
-        })
-    }
+    const [
+        signInWithGoogle,
+        googleUser,
+        loadingGoogleSignin,
+        googleSignInError,
+    ] = useSignInWithGoogle(auth)
+    const [
+        signInWithGithub,
+        githubUser,
+        loadingGithubSignIn,
+        githubSignInError,
+    ] = useSignInWithGoogle(auth)
 
-    const handleSignIn = async (e) => {
-        e.preventDefault()
+    React.useEffect(() => {
+        if (googleUser) {
+            router.push('/nodes')
+        }
+    }, [googleUser, router])
 
-        // Perform sign-in logic here with formData
+    React.useEffect(() => {
+        if (githubUser) {
+            router.push('/nodes')
+        }
+    }, [githubUser, router])
 
-        // Redirect to /publisher route after sign-in
-        router.push('/publisher')
-    }
+    React.useEffect(() => {
+        if (googleSignInError) {
+            toast.error(googleSignInError?.message)
+        }
+        if (githubSignInError) {
+            toast.error(githubSignInError?.message)
+        }
+    }, [googleSignInError, githubSignInError])
 
     return (
         <section>
@@ -43,7 +62,7 @@ const SignIn = () => {
                         </div>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
-                            Log in to Comfy
+                            Sign In
                         </h1>
 
                         <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
@@ -51,6 +70,7 @@ const SignIn = () => {
                                 color="gray"
                                 href="#"
                                 className="font-bold "
+                                onClick={() => signInWithGoogle()}
                             >
                                 <svg
                                     className="w-5 h-5 mr-2"
@@ -96,6 +116,7 @@ const SignIn = () => {
                             color="gray"
                             href="#"
                             className="mt-2 font-bold hover:bg-gray-50"
+                            onClick={() => signInWithGithub()}
                         >
                             <svg
                                 className="w-6 h-6 text-gray-800 dark:text-white"
@@ -116,15 +137,6 @@ const SignIn = () => {
                                 Continue with GitHub
                             </span>
                         </Button>
-                        <p className="flex justify-center mt-4 text-sm font-medium text-gray-50 ">
-                            New to Comfy Registry?&nbsp;
-                            <Link
-                                href="/auth/signup"
-                                className="font-medium text-blue-600 text-primary-500 hover:underline "
-                            >
-                                Sign up
-                            </Link>
-                        </p>
                     </Card>
                 </div>
             </div>
@@ -132,4 +144,4 @@ const SignIn = () => {
     )
 }
 
-export default SignIn
+export default AuthUI

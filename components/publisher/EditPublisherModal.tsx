@@ -1,8 +1,24 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React from 'react'
-import { customThemeTModal } from 'utils/comfyTheme'
+import { Publisher } from 'src/api/generated'
 
-export function EditPublisherModal({ openModal, onCloseModal }) {
+type EditPublisherModalProps = {
+    openModal: boolean
+    onCloseModal: () => void
+    onSubmit: (displayName: string) => void
+    publisher: Publisher
+}
+
+const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
+    openModal,
+    onCloseModal,
+    publisher,
+    onSubmit,
+}) => {
+    const [displayName, setDisplayName] = React.useState<string>(
+        publisher.name || ''
+    )
+
     return (
         <Modal
             show={openModal}
@@ -10,51 +26,42 @@ export function EditPublisherModal({ openModal, onCloseModal }) {
             onClose={onCloseModal}
             popup
             dismissible
-            //@ts-ignore
-            theme={customThemeTModal}
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8">
                 <div className="space-y-6">
                     <h3 className="text-2xl font-medium text-white">
-                        Edit secret key
+                        Edit Publisher
                     </h3>
                     <form className="mt-4 space-y-4 lg:space-y-6">
                         <div>
-                            <label className="block mb-1 text-xs font-bold text-white">
-                                Name{' '}
-                                <span className="text-gray-400">Optional</span>
-                            </label>
-                            <TextInput
-                                id="name"
-                                placeholder="E.g. janedoe55"
-                                // required
-                                className=""
-                                style={{
-                                    background: '#4B5563',
-                                    borderColor: '#4B5563',
-                                }}
-                                type="text"
-                                sizing="sm"
-                                value=""
-                            />
+                            <div>
+                                <label className=" mb-1 text-xs font-thin text-white">
+                                    Username
+                                </label>
+                            </div>
+                            <div>
+                                <label className="mb-1 text-xs font-thin text-white">
+                                    {publisher.id}
+                                </label>
+                            </div>
                         </div>
                         <div>
-                            <label className="block mb-1 text-xs font-bold text-white">
-                                Description{' '}
-                                <span className="text-gray-400">Optional</span>
+                            <label className=" mb-1 text-xs font-thin  text-white">
+                                Display Name
                             </label>
                             <TextInput
                                 sizing="sm"
                                 style={{
                                     background: '#4B5563',
                                     borderColor: '#4B5563',
+                                    color: 'white',
                                 }}
                                 id="displayName"
-                                className="border-gray-700"
-                                placeholder="E.g. Jane Doe "
-                                // required
+                                className="border-gray-700 placeholder-white"
+                                placeholder={publisher.name}
                                 type="text"
-                                value=""
+                                value={displayName}
+                                onChange={(e) => setDisplayName(e.target.value)}
                             />
                         </div>
 
@@ -74,6 +81,10 @@ export function EditPublisherModal({ openModal, onCloseModal }) {
                                 className="w-full ml-1 "
                                 color="blue"
                                 size="sm"
+                                onClick={(e) => {
+                                    e.preventDefault()
+                                    onSubmit(displayName)
+                                }}
                             >
                                 <span className="text-xs text-white">
                                     Save Changes
@@ -86,3 +97,4 @@ export function EditPublisherModal({ openModal, onCloseModal }) {
         </Modal>
     )
 }
+export default EditPublisherModal
