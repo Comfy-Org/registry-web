@@ -370,12 +370,33 @@ export const SessionStatus = {
   inactive: 'inactive',
 } as const;
 
+export interface Session {
+  /** [Output only] The number of GPUs attached to this session. */
+  gpuCount?: number;
+  gpuType?: GPUType;
+  id?: string;
+  machineType?: MachineType;
+  /** This url to interface with this session. */
+  publicUrl?: string;
+  /** [Output only] The storage capacity of the session. */
+  storage?: string;
+}
+
+export interface PublisherUser {
+  /** The email address for this user. */
+  email?: string;
+  /** The unique id for this user. */
+  id?: string;
+  /** The name for this user. */
+  name?: string;
+}
+
 export interface PublisherMember {
   /** The unique identifier for the publisher member. */
   id?: string;
   /** The role of the user in the publisher. */
   role?: string;
-  user?: User;
+  user?: PublisherUser;
 }
 
 export interface Publisher {
@@ -417,6 +438,8 @@ export interface NodeVersionUpdateRequest {
 export interface NodeVersion {
   /** Summary of changes made in this version */
   changelog?: string;
+  /** The date and time the version was created. */
+  createdAt?: string;
   /** A list of pip dependencies required by the node. */
   dependencies?: string[];
   /** Indicates if this version is deprecated. */
@@ -431,6 +454,8 @@ export interface NodeVersion {
 export interface Node {
   author?: string;
   description?: string;
+  /** The number of downloads of the node. */
+  downloads?: number;
   /** URL to the node's icon. */
   icon?: string;
   /** The unique identifier of the node. */
@@ -440,6 +465,8 @@ export interface Node {
   license?: string;
   /** The display name of the node. */
   name?: string;
+  /** The average rating of the node. */
+  rating?: number;
   /** URL to the node's repository. */
   repository?: string;
   tags?: string[];
@@ -492,18 +519,6 @@ export const GPUType = {
   'nvidia-tesla-p100': 'nvidia-tesla-p100',
   'nvidia-tesla-p4': 'nvidia-tesla-p4',
 } as const;
-
-export interface Session {
-  /** [Output only] The number of GPUs attached to this session. */
-  gpuCount?: number;
-  gpuType?: GPUType;
-  id?: string;
-  machineType?: MachineType;
-  /** This url to interface with this session. */
-  publicUrl?: string;
-  /** [Output only] The storage capacity of the session. */
-  storage?: string;
-}
 
 export interface Machine {
   /** [Output only] The number of GPUs attached to this session. */
@@ -719,34 +734,23 @@ export const getListAllNodesQueryKey = (params?: ListAllNodesParams,) => {
     }
 
     
-    export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void>(
-      params?: ListAllNodesParams,
-      options?: {
-        query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>;
-        request?: SecondParameter<typeof customInstance>;
-      }
-    ) => {
-      const { query: queryOptions, request: requestOptions } = options ?? {};
-      const queryKey = queryOptions?.queryKey ?? getListAllNodesQueryKey(params);
-    
-      // Modify request headers to include the custom header
-      const updatedRequestOptions = {
-     
-        headers: {
-         
-          'ngrok-skip-browser-warning': 'skip-browser-warning'
-        }
-      };
-    
-      const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllNodes>>> = ({ signal }) =>
-        listAllNodes(params, updatedRequestOptions, signal);
-    
-      return {
-        queryKey,
-        queryFn,
-        ...queryOptions
-      } as UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData> & { queryKey: QueryKey };
-    }
+export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void>(params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllNodesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllNodes>>> = ({ signal }) => listAllNodes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData> & { queryKey: QueryKey }
+}
 
 export type ListAllNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listAllNodes>>>
 export type ListAllNodesQueryError = void
@@ -760,6 +764,69 @@ export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getListAllNodesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Returns the details of a specific node.
+ * @summary Retrieve a specific node by ID
+ */
+export const getNode = (
+    nodeId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/nodes/${nodeId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetNodeQueryKey = (nodeId: string,) => {
+    return [`/nodes/${nodeId}`] as const;
+    }
+
+    
+export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNodeQueryKey(nodeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNode>>> = ({ signal }) => getNode(nodeId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNodeQueryResult = NonNullable<Awaited<ReturnType<typeof getNode>>>
+export type GetNodeQueryError = Error
+
+/**
+ * @summary Retrieve a specific node by ID
+ */
+export const useGetNode = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(
+ nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetNodeQueryOptions(nodeId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -828,6 +895,134 @@ export const useInstallNode = <TData = Awaited<ReturnType<typeof installNode>>, 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getInstallNodeQueryOptions(nodeId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary List all versions of a node
+ */
+export const listNodeVersions = (
+    nodeId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<NodeVersion[]>(
+      {url: `/nodes/${nodeId}/versions`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListNodeVersionsQueryKey = (nodeId: string,) => {
+    return [`/nodes/${nodeId}/versions`] as const;
+    }
+
+    
+export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListNodeVersionsQueryKey(nodeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodeVersions>>> = ({ signal }) => listNodeVersions(nodeId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListNodeVersionsQueryResult = NonNullable<Awaited<ReturnType<typeof listNodeVersions>>>
+export type ListNodeVersionsQueryError = Error
+
+/**
+ * @summary List all versions of a node
+ */
+export const useListNodeVersions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(
+ nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListNodeVersionsQueryOptions(nodeId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Retrieve a specific version of a node
+ */
+export const getNodeVersion = (
+    nodeId: string,
+    versionId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<NodeVersion>(
+      {url: `/nodes/${nodeId}/versions/${versionId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetNodeVersionQueryKey = (nodeId: string,
+    versionId: string,) => {
+    return [`/nodes/${nodeId}/versions/${versionId}`] as const;
+    }
+
+    
+export const getGetNodeVersionQueryOptions = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(nodeId: string,
+    versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNodeVersionQueryKey(nodeId,versionId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNodeVersion>>> = ({ signal }) => getNodeVersion(nodeId,versionId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(nodeId && versionId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNodeVersionQueryResult = NonNullable<Awaited<ReturnType<typeof getNodeVersion>>>
+export type GetNodeVersionQueryError = Error
+
+/**
+ * @summary Retrieve a specific version of a node
+ */
+export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(
+ nodeId: string,
+    versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetNodeVersionQueryOptions(nodeId,versionId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -919,7 +1114,7 @@ export const createPublisher = (
   
 
 
-export const getCreatePublisherMutationOptions = <TError = void,
+export const getCreatePublisherMutationOptions = <TError = void | Error,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext> => {
  const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -940,12 +1135,12 @@ export const getCreatePublisherMutationOptions = <TError = void,
 
     export type CreatePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof createPublisher>>>
     export type CreatePublisherMutationBody = Publisher
-    export type CreatePublisherMutationError = void
+    export type CreatePublisherMutationError = void | Error
 
     /**
  * @summary Create a new publisher
  */
-export const useCreatePublisher = <TError = void,
+export const useCreatePublisher = <TError = void | Error,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
@@ -1354,72 +1549,6 @@ export const useDeleteNode = <TError = Error,
     }
     
 /**
- * @summary Retrieve a specific node by ID
- */
-export const getNode = (
-    publisherId: string,
-    nodeId: string,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<Node>(
-      {url: `/publishers/${publisherId}/nodes/${nodeId}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-export const getGetNodeQueryKey = (publisherId: string,
-    nodeId: string,) => {
-    return [`/publishers/${publisherId}/nodes/${nodeId}`] as const;
-    }
-
-    
-export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(publisherId: string,
-    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetNodeQueryKey(publisherId,nodeId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNode>>> = ({ signal }) => getNode(publisherId,nodeId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetNodeQueryResult = NonNullable<Awaited<ReturnType<typeof getNode>>>
-export type GetNodeQueryError = Error
-
-/**
- * @summary Retrieve a specific node by ID
- */
-export const useGetNode = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(
- publisherId: string,
-    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-
-  const queryOptions = getGetNodeQueryOptions(publisherId,nodeId,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-/**
  * @summary Update a specific node
  */
 export const updateNode = (
@@ -1474,72 +1603,6 @@ export const useUpdateNode = <TError = Error | void,
       return useMutation(mutationOptions);
     }
     
-/**
- * @summary List all versions of a node
- */
-export const listNodeVersions = (
-    publisherId: string,
-    nodeId: string,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<NodeVersion[]>(
-      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-export const getListNodeVersionsQueryKey = (publisherId: string,
-    nodeId: string,) => {
-    return [`/publishers/${publisherId}/nodes/${nodeId}/versions`] as const;
-    }
-
-    
-export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(publisherId: string,
-    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListNodeVersionsQueryKey(publisherId,nodeId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodeVersions>>> = ({ signal }) => listNodeVersions(publisherId,nodeId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type ListNodeVersionsQueryResult = NonNullable<Awaited<ReturnType<typeof listNodeVersions>>>
-export type ListNodeVersionsQueryError = Error
-
-/**
- * @summary List all versions of a node
- */
-export const useListNodeVersions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(
- publisherId: string,
-    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-
-  const queryOptions = getListNodeVersionsQueryOptions(publisherId,nodeId,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
 /**
  * @summary Publish a new version of a node
  */
@@ -1648,76 +1711,6 @@ export const useDeleteNodeVersion = <TError = Error,
       return useMutation(mutationOptions);
     }
     
-/**
- * @summary Retrieve a specific version of a node
- */
-export const getNodeVersion = (
-    publisherId: string,
-    nodeId: string,
-    versionId: string,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<NodeVersion>(
-      {url: `/publishers/${publisherId}/nodes/${nodeId}/versions/${versionId}`, method: 'GET', signal
-    },
-      options);
-    }
-  
-
-export const getGetNodeVersionQueryKey = (publisherId: string,
-    nodeId: string,
-    versionId: string,) => {
-    return [`/publishers/${publisherId}/nodes/${nodeId}/versions/${versionId}`] as const;
-    }
-
-    
-export const getGetNodeVersionQueryOptions = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(publisherId: string,
-    nodeId: string,
-    versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetNodeVersionQueryKey(publisherId,nodeId,versionId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNodeVersion>>> = ({ signal }) => getNodeVersion(publisherId,nodeId,versionId, requestOptions, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId && versionId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetNodeVersionQueryResult = NonNullable<Awaited<ReturnType<typeof getNodeVersion>>>
-export type GetNodeVersionQueryError = Error
-
-/**
- * @summary Retrieve a specific version of a node
- */
-export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(
- publisherId: string,
-    nodeId: string,
-    versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-
-  const queryOptions = getGetNodeVersionQueryOptions(publisherId,nodeId,versionId,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
 /**
  * Update only the changelog and deprecated status of a specific version of a node.
  * @summary Update changelog and deprecation status of a node version

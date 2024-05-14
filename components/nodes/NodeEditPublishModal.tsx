@@ -17,23 +17,20 @@ export function NodeEditPublishModal({ openModal, onCloseModal }) {
                     </h3>
                     <form className="mt-4 space-y-4 lg:space-y-6">
                         <div>
-                          <div>
-                          <label className=" mb-1 text-xs font-thin text-white">
-                                Username
-                                
-                            </label>
-                          </div>
                             <div>
-                            <label className="mb-1 text-xs font-thin text-white">
-                                @nodesmkaers
-                                
-                            </label>
+                                <label className=" mb-1 text-xs font-thin text-white">
+                                    Username
+                                </label>
+                            </div>
+                            <div>
+                                <label className="mb-1 text-xs font-thin text-white">
+                                    @nodesmkaers
+                                </label>
                             </div>
                         </div>
                         <div>
                             <label className=" mb-1 text-xs font-thin  text-white">
                                 Display Name
-                               
                             </label>
                             <TextInput
                                 sizing="sm"

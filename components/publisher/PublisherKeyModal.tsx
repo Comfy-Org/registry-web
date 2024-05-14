@@ -29,8 +29,9 @@ export function PublisherKeyModal({ openModal, onCloseModal }) {
                         </h3>
                         <p className="text-gray-200 text-[14px]">
                             Please save this secret key somewhere safe and
-                            accessible. If you lose this secret key, you&apos;ll need
-                            to generate a new one. It can only be copied once.
+                            accessible. If you lose this secret key, you&apos;ll
+                            need to generate a new one. It can only be copied
+                            once.
                         </p>
 
                         <div className="grid grid-cols-8 gap-2 w-full max-w-[23rem]">

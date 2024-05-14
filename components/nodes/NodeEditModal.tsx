@@ -9,7 +9,24 @@ import {
     customThemeTextInput,
     customThemeTModal,
 } from 'utils/comfyTheme'
-export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
+import { Error, Node, useUpdateNode } from 'src/api/generated'
+import { toast } from 'react-toastify'
+import { AxiosError } from 'axios'
+
+type NodeEditModalProps = {
+    openEditModal: boolean
+    onCloseEditModal: () => void
+    nodeData: Node
+    publisherId: string
+}
+
+export const NodeEditModal: React.FC<NodeEditModalProps> = ({
+    publisherId,
+    openEditModal,
+    onCloseEditModal,
+    nodeData,
+}) => {
+    const updateNodeMutation = useUpdateNode({})
     const [nodeName, setNodeName] = useState('')
     const [openLogoModal, setOpenLogoModal] = useState(false)
     const [description, setDescription] = useState('')
@@ -17,12 +34,11 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
     const [githubLink, setGithubLink] = useState('')
 
     useEffect(() => {
-        // Update state when nodeData prop changes
         if (nodeData) {
             setNodeName(nodeData.name || '')
             setDescription(nodeData.description || '')
             setLicense(nodeData.license || '')
-            setGithubLink(nodeData.githubLink || '')
+            setGithubLink(nodeData.repository || '')
         }
     }, [nodeData])
     const handleOpenLogoModal = () => {
@@ -32,6 +48,36 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
 
     const handleCloseLogoModal = () => {
         setOpenLogoModal(false)
+    }
+
+    const handleUpdateNode = () => {
+        if (nodeData.id) {
+            updateNodeMutation.mutate(
+                {
+                    data: {
+                        name: nodeName,
+                        description: description,
+                        license: license,
+                        repository: githubLink,
+                    },
+                    nodeId: nodeData.id,
+                    publisherId: publisherId,
+                },
+                {
+                    onError: (error, variables, context) => {
+                        if (error instanceof AxiosError) {
+                            const axiosError: AxiosError<Error, any> = error
+                            toast.error(
+                                `Failed to update node. ${axiosError.response?.data?.message}`
+                            )
+                        } else {
+                            toast.error('Failed to update node')
+                        }
+                    },
+                }
+            )
+        }
+        onCloseEditModal()
     }
 
     return (
@@ -136,7 +182,7 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                                 <TextInput
                                     id="license"
                                     theme={customThemeTextInput}
-                                    placeholder="Github Repository link"
+                                    placeholder="Path To License File"
                                     value={license}
                                     onChange={(e) => setLicense(e.target.value)}
                                     required
@@ -165,12 +211,14 @@ export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
                                     <Button
                                         color="gray"
                                         className="w-full text-white bg-gray-800"
+                                        onClick={onCloseEditModal}
                                     >
                                         Decline
                                     </Button>
                                     <Button
                                         color="blue"
                                         className="w-full ml-5"
+                                        onClick={handleUpdateNode}
                                     >
                                         Save Changes
                                     </Button>

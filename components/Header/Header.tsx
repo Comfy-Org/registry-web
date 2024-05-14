@@ -67,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                             </span>
                         </Button>
 
-                        <Button href="/auth/signup"  color="blue">
+                        <Button href="/auth/signup" color="blue">
                             Sign up
                         </Button>
                     </>
