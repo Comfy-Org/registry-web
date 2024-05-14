@@ -59,11 +59,6 @@ const RegistryCard: React.FC<RegistryCard> = ({
                 <p className="mb-1 text-xs font-light text-white text-nowrap">
                     {description}
                 </p>
-                {license && (
-                    <span className="text-xs text-white">
-                        License:{license}
-                    </span>
-                )}
                 <div className="flex items-center justify-between mt-2">
                     {downloads && (
                         <div className="flex justify-center text-center align-center">
