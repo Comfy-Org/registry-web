@@ -53,7 +53,7 @@ const Nodes: React.FC = () => {
                     subTitle="View and edit your nodes and publishers."
                     buttonText="New Publisher"
                     showIcon={true}
-                    buttonLink="/publisher/create-publisher"
+                    buttonLink="/publishers/create"
                 />
             </div>
 

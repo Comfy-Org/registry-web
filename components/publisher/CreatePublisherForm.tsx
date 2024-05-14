@@ -1,20 +1,38 @@
 import { useState } from 'react'
-import { Button, Card, Label, TextInput } from 'flowbite-react'
-import Link from 'next/link'
+import { Button, Card, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { customThemeTextInput } from 'utils/comfyTheme'
+import { useCreatePublisher, useValidatePublisher } from 'src/api/generated'
+import { toast } from 'react-toastify'
 
 const CreatePublisherForm = () => {
     const router = useRouter()
     const [username, setUsername] = useState('')
     const [displayName, setDisplayName] = useState('')
 
+    const { data, isLoading: isLoadingValidation } = useValidatePublisher({
+        username: username
+    })
+    const createPublisherMutation = useCreatePublisher()
+
     const handleSubmit = (event) => {
         event.preventDefault()
-
-        // Use the username as the dynamic parameter for navigation
-        router.push(`/publisher/publisher-detail/${username}`)
+        createPublisherMutation.mutate({
+            data: {
+                id: username,
+                name: displayName
+            }
+        }, {
+            onError: (error) => {
+                toast.error("Could not create publisher. Please try again.")
+            },
+            onSuccess: () => {
+                router.push(`/publishers/${username}`)
+            }
+        })
     }
+
+    const userNameAvailable = isLoadingValidation || (data?.isAvailable !== undefined && data.isAvailable)
 
     return (
         <section>
@@ -48,6 +66,14 @@ const CreatePublisherForm = () => {
                                     onChange={(e) =>
                                         setUsername(e.target.value)
                                     }
+                                    color={userNameAvailable ? 'success' : 'failure'}
+                                    helperText={
+                                        <>
+                                            {(userNameAvailable) ?
+                                                <>Valid username</> : <><span className="font-medium">Oops!</span> Username already taken! </>
+                                            }
+                                        </>
+                                    }
                                 />
                             </div>
                             <div>
@@ -69,24 +95,22 @@ const CreatePublisherForm = () => {
                                 />
                             </div>
 
-                            <div className="flex justify-between ">
+                            <div className="flex center gap-4">
                                 <Button
                                     type="button"
                                     onClick={() => router.back()}
                                     color="light"
-                                    className="w-full bg-gray-900"
+                                    className=" bg-gray-900"
                                 >
                                     <span className="text-white">Cancel</span>
                                 </Button>
                                 <Button
                                     type="submit"
-                                    className="w-full ml-1 bg-gray-600 border-gray-600"
-                                    color="light"
+                                    color="blue"
                                     size="sm"
+                                    onClick={handleSubmit}
                                 >
-                                    <span className="text-gray-700">
-                                        Create
-                                    </span>
+                                    Create
                                 </Button>
                             </div>
                         </form>

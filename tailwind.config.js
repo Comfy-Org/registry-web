@@ -11,6 +11,7 @@ module.exports = {
     theme: {
         extend: {},
         colors: {
+            
             'button-rose': '#E6BCB5',
             'button-grass': '#E4E3AC',
             'button-sky': '#B8C8CB',
@@ -20,12 +21,13 @@ module.exports = {
             'secondary-pink': '#FFD3B8',
             'secondary-grey': '#D9D9D9',
             'black-regular': '#000000',
-            'primary-regular': '#D78190',
+            'primary-regular': '#1A56DB',
             'primary-dark': '#C76D7E',
             black: '#000000',
             'grey-regular': '#2D353F',
             'bright-charcoal': '#A4C4D2',
             ...colors,
+            'primary': '#1A56DB',
         },
         fontFamily: {
             sans: ['"glacial-indifference-regular"', 'sans-serif'],
