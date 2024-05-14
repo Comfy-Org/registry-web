@@ -1,9 +1,11 @@
-import SignUp from '../../components/SignUp/SignUp'
+import React from 'react'
+import SignIn from '../../components/AuthUI/AuthUI'
+
 
 const SignUpPage: React.FC = () => {
     return (
         <>
-            <SignUp />
+            <SignIn type="signup" />
         </>
     )
 }
