@@ -62,7 +62,10 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         </Button>
                     </>
                 )}
-                <Button href="https://comfydocs.org" color="blue">
+                <Button
+                    href="https://comfydocs.org/registry/overview"
+                    color="blue"
+                >
                     Documentation
                 </Button>
                 <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />
