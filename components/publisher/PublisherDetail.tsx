@@ -1,18 +1,21 @@
-import { Button } from 'flowbite-react'
+import { Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { PublisherModal } from './PublisherModal'
-import { EditPublisherModal } from './EditPublisherModal'
+import { EditPublisherModal } from './CreateSecretKeyModal'
 import CreatePublisherKey from './CreatePublisherKey'
 import GeneratedPublisherKey from './GeneratedPublisherKey'
+import { Publisher } from 'src/api/generated'
 
-const PublisherDetail = () => {
+type PublisherDetailProps = {
+    publisher: Publisher
+}
+const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const router = useRouter()
-    const { id } = router.query
-    const [openModal, setOpenModal] = useState(false)
-    const [openEditModal, setOpenEditModal] = useState(false) // State for controlling the EditPublisherModal
-    const [keyGenerated, setKeyGenerated] = useState(false)
 
+    const [openModal, setOpenModal] = useState(false)
+    const [openEditModal, setOpenEditModal] = useState(false)
+    const [keyGenerated, setKeyGenerated] = useState(false)
     const [email, setEmail] = useState('')
 
     const handleCreateButtonClick = () => {
@@ -29,12 +32,6 @@ const PublisherDetail = () => {
     const onCloseEditModal = () => {
         setOpenEditModal(false)
     }
-    // // Find the node object with the matching id
-    // const node = NodesData.find((node) => node.id === id)
-    // console.log(node)
-    // if (!node) {
-    //     return <div>Node not found</div>
-    // }
 
     return (
         <div className="container p-6 mx-auto h-[90vh]">
@@ -58,7 +55,7 @@ const PublisherDetail = () => {
                 </svg>
                 <span
                     className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.push('/nodes')}
+                    onClick={() => router.push(`/profile`)}
                 >
                     <span>Back to your nodes</span>
                 </span>

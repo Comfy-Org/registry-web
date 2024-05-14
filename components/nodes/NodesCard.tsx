@@ -1,44 +1,33 @@
 import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
+import { Node } from 'src/api/generated'
 interface NodesCard {
-    name: string
-
-    id: string | number
-    node: string
-    image: string
-    description: string
-    rating: string | number
-    downloads: string | number
-    buttonLink?: string
+    node: Node
+    buttonLink: string
 }
 const NodesCard: React.FC<NodesCard> = ({
-    name,
-    description,
-    node,
-    image,
-    rating,
-    downloads,
-    buttonLink = '',
+    node: { name, description, icon, downloads, rating, id },
+    buttonLink,
 }) => {
     return (
         <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
-            <div className="w-[250px]">
+            {icon && <div className="w-[250px]">
                 <Image
                     className="rounded-lg sm:rounded-lg"
-                    src={image}
+                    src={icon || ""}
                     alt={`${name}'s Avatar`}
                     width={200}
                     height={200}
                 />
-            </div>
+            </div>}
 
             <div className="flex flex-col px-4">
                 <h6 className="mb-2 font-bold tracking-tight text-white text-gray-900">
                     {name}
                 </h6>
 
-                <span className="text-xs text-gray-300">{node}</span>
+                <span className="text-xs text-gray-300">{name}</span>
                 <div className="mt-3 mb-1 overflow-hidden text-xs text-gray-[300] font-light text-gray-500 text-gray-400 flex items-end">
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
@@ -50,7 +39,7 @@ const NodesCard: React.FC<NodesCard> = ({
                 </div>
 
                 <div className="flex mt-2">
-                    <div className="flex justify-center text-center align-center">
+                    {downloads && <div className="flex justify-center text-center align-center">
                         <svg
                             className="w-4 h-4 text-gray-300"
                             aria-hidden="true"
@@ -72,8 +61,8 @@ const NodesCard: React.FC<NodesCard> = ({
                         <p className="ml-1 text-xs font-bold text-gray-300">
                             {downloads}
                         </p>
-                    </div>
-                    <div className="flex justify-center ml-2 text-center align-center">
+                    </div>}
+                    {rating && <div className="flex justify-center ml-2 text-center align-center">
                         <svg
                             className="w-4 h-4 text-gray-300"
                             aria-hidden="true"
@@ -93,7 +82,7 @@ const NodesCard: React.FC<NodesCard> = ({
                         <p className="ml-1 text-xs font-bold text-gray-300">
                             {rating}
                         </p>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>

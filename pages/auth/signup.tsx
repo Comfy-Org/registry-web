@@ -5,7 +5,7 @@ import SignIn from '../../components/AuthUI/AuthUI'
 const SignUpPage: React.FC = () => {
     return (
         <>
-            <SignIn type="signup" />
+            <SignIn />
         </>
     )
 }

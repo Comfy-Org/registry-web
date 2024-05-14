@@ -16,13 +16,13 @@ const AuthUI: React.FC<{}> = ({ }) => {
 
     React.useEffect(() => {
         if (googleUser) {
-            router.push('/publishers')
+            router.push('/nodes')
         }
     }, [googleUser, router])
 
     React.useEffect(() => {
         if (githubUser) {
-            router.push('/publishers')
+            router.push('/nodes')
         }
     }, [githubUser, router])
 
