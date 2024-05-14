@@ -16,7 +16,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
     openModal,
     onCloseModal,
     onCreationSuccess,
-    publisherId
+    publisherId,
 }) => {
     const [showSecondModal, setShowSecondModal] = useState(false)
     const [name, setName] = useState('')
@@ -27,27 +27,29 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
     const handleFormSubmit = (e) => {
         e.preventDefault()
 
-        createAccessTokenMutation.mutate({
-            publisherId,
-            data: {
-                name,
-                description
-            }
-        }, {
-            onError: (error) => {
-                toast.error('Failed to create secret key')
+        createAccessTokenMutation.mutate(
+            {
+                publisherId,
+                data: {
+                    name,
+                    description,
+                },
             },
-            onSuccess: () => {
-                toast.success('Secret key created')
-                onCloseModal()
-                openSecondModal()
-                setName('')
-                setDescription('')
-                onCreationSuccess()
+            {
+                onError: (error) => {
+                    toast.error('Failed to create secret key')
+                },
+                onSuccess: () => {
+                    toast.success('Secret key created')
+                    onCloseModal()
+                    openSecondModal()
+                    setName('')
+                    setDescription('')
+                    onCreationSuccess()
+                },
             }
-        })
+        )
     }
-
 
     return (
         <>
@@ -97,7 +99,9 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                                     // required
                                     type="text"
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
                                 />
                             </div>
 
@@ -118,7 +122,10 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                                     color="light"
                                     size="sm"
                                     onClick={handleFormSubmit}
-                                    disabled={createAccessTokenMutation.isPending || !name}
+                                    disabled={
+                                        createAccessTokenMutation.isPending ||
+                                        !name
+                                    }
                                 >
                                     <span className="text-xs text-white hover:text-gray-500">
                                         Create Secret Key
@@ -133,7 +140,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                 <CopyAccessTokenModal
                     openModal={showSecondModal}
                     onCloseModal={closeSecondModal}
-                    accessToken={createAccessTokenMutation.data?.token || ""}
+                    accessToken={createAccessTokenMutation.data?.token || ''}
                 />
             )}
         </>

@@ -11,28 +11,33 @@ const CreatePublisherForm = () => {
     const [displayName, setDisplayName] = useState('')
 
     const { data, isLoading: isLoadingValidation } = useValidatePublisher({
-        username: username
+        username: username,
     })
     const createPublisherMutation = useCreatePublisher()
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        createPublisherMutation.mutate({
-            data: {
-                id: username,
-                name: displayName
-            }
-        }, {
-            onError: (error) => {
-                toast.error("Could not create publisher. Please try again.")
+        createPublisherMutation.mutate(
+            {
+                data: {
+                    id: username,
+                    name: displayName,
+                },
             },
-            onSuccess: () => {
-                router.push(`/publishers/${username}`)
+            {
+                onError: (error) => {
+                    toast.error('Could not create publisher. Please try again.')
+                },
+                onSuccess: () => {
+                    router.push(`/publishers/${username}`)
+                },
             }
-        })
+        )
     }
 
-    const userNameAvailable = isLoadingValidation || (data?.isAvailable !== undefined && data.isAvailable)
+    const userNameAvailable =
+        isLoadingValidation ||
+        (data?.isAvailable !== undefined && data.isAvailable)
 
     return (
         <section>
@@ -66,12 +71,23 @@ const CreatePublisherForm = () => {
                                     onChange={(e) =>
                                         setUsername(e.target.value)
                                     }
-                                    color={userNameAvailable ? 'success' : 'failure'}
+                                    color={
+                                        userNameAvailable
+                                            ? 'success'
+                                            : 'failure'
+                                    }
                                     helperText={
                                         <>
-                                            {(userNameAvailable) ?
-                                                <>Valid username</> : <><span className="font-medium">Oops!</span> Username already taken! </>
-                                            }
+                                            {userNameAvailable ? (
+                                                <>Valid username</>
+                                            ) : (
+                                                <>
+                                                    <span className="font-medium">
+                                                        Oops!
+                                                    </span>{' '}
+                                                    Username already taken!{' '}
+                                                </>
+                                            )}
                                         </>
                                     }
                                 />

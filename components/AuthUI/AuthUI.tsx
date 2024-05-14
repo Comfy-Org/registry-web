@@ -3,16 +3,26 @@ import { Button, Card } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import app from '../../src/firebase'
 import { toast } from 'react-toastify'
 
-const AuthUI: React.FC<{}> = ({ }) => {
+const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
     const auth = getAuth(app)
 
-    const [signInWithGoogle, googleUser, loadingGoogleSignin, googleSignInError,] = useSignInWithGoogle(auth)
-    const [signInWithGithub, githubUser, loadingGithubSignIn, githubSignInError] = useSignInWithGoogle(auth)
+    const [
+        signInWithGoogle,
+        googleUser,
+        loadingGoogleSignin,
+        googleSignInError,
+    ] = useSignInWithGoogle(auth)
+    const [
+        signInWithGithub,
+        githubUser,
+        loadingGithubSignIn,
+        githubSignInError,
+    ] = useSignInWithGoogle(auth)
 
     React.useEffect(() => {
         if (googleUser) {

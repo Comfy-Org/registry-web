@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
 import GenericHeader from '../common/GenericHeader'
 import PublisherNodes from './PublisherNodes'
-import { Publisher, useListPublishersForUser, useUpdatePublisher } from 'src/api/generated'
+import {
+    Publisher,
+    useListPublishersForUser,
+    useUpdatePublisher,
+} from 'src/api/generated'
 import { Spinner } from 'flowbite-react'
 
 import EditPublisherModal from './EditPublisherModal'
@@ -10,7 +14,8 @@ import { toast } from 'react-toastify'
 const Nodes: React.FC = () => {
     const { data, isLoading, isError, refetch } = useListPublishersForUser()
     const updatePublisherMutation = useUpdatePublisher()
-    const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(null)
+    const [selectedPublisher, setSelectedPublisher] =
+        useState<Publisher | null>(null)
 
     const onCloseEditPublisherModal = () => {
         setSelectedPublisher(null)
@@ -20,21 +25,24 @@ const Nodes: React.FC = () => {
     }
 
     const handleSubmitEditPublisher = (displayName: string) => {
-        updatePublisherMutation.mutate({
-            publisherId: selectedPublisher?.id as string,
-            data: {
-                name: displayName,
+        updatePublisherMutation.mutate(
+            {
+                publisherId: selectedPublisher?.id as string,
+                data: {
+                    name: displayName,
+                },
             },
-        }, {
-            onError: (error) => {
-                toast.error('Failed to update publisher')
-            },
-            onSuccess: () => {
-                setSelectedPublisher(null)
-                refetch()
-                toast.success('Publisher updated successfully')
+            {
+                onError: (error) => {
+                    toast.error('Failed to update publisher')
+                },
+                onSuccess: () => {
+                    setSelectedPublisher(null)
+                    refetch()
+                    toast.success('Publisher updated successfully')
+                },
             }
-        })
+        )
     }
 
     if (isLoading) {
@@ -57,7 +65,6 @@ const Nodes: React.FC = () => {
                 />
             </div>
 
-
             {data?.map((publisher, index) => (
                 <PublisherNodes
                     key={index}
@@ -66,12 +73,14 @@ const Nodes: React.FC = () => {
                 />
             ))}
 
-            {selectedPublisher && <EditPublisherModal
-                openModal={!!selectedPublisher}
-                onCloseModal={onCloseEditPublisherModal}
-                onSubmit={handleSubmitEditPublisher}
-                publisher={selectedPublisher}
-            />}
+            {selectedPublisher && (
+                <EditPublisherModal
+                    openModal={!!selectedPublisher}
+                    onCloseModal={onCloseEditPublisherModal}
+                    onSubmit={handleSubmitEditPublisher}
+                    publisher={selectedPublisher}
+                />
+            )}
         </section>
     )
 }

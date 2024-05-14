@@ -9,17 +9,26 @@ type PublisherNodesProps = {
 }
 
 /**
- * 
+ *
  * Lists the nodes for a publisher
  */
-const PublisherNodes: React.FC<PublisherNodesProps> = ({ publisher, onEditPublisher }) => {
-    const { data: nodes, isError, isLoading } = useListNodesForPublisher(publisher.id as string)
+const PublisherNodes: React.FC<PublisherNodesProps> = ({
+    publisher,
+    onEditPublisher,
+}) => {
+    const {
+        data: nodes,
+        isError,
+        isLoading,
+    } = useListNodesForPublisher(publisher.id as string)
 
     return (
         <div className="pt-20">
             <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold leading-tight tracking-tight text-white sm:text-2xl">
-                    <Link href={`publishers/${publisher.id}`}>{publisher.name}</Link>
+                    <Link href={`publishers/${publisher.id}`}>
+                        {publisher.name}
+                    </Link>
                 </h1>
 
                 <div onClick={onEditPublisher}>

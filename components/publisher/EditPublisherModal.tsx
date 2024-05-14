@@ -9,8 +9,15 @@ type EditPublisherModalProps = {
     publisher: Publisher
 }
 
-const EditPublisherModal: React.FC<EditPublisherModalProps> = ({ openModal, onCloseModal, publisher, onSubmit }) => {
-    const [displayName, setDisplayName] = React.useState<string>(publisher.name || "")
+const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
+    openModal,
+    onCloseModal,
+    publisher,
+    onSubmit,
+}) => {
+    const [displayName, setDisplayName] = React.useState<string>(
+        publisher.name || ''
+    )
 
     return (
         <Modal
@@ -75,7 +82,7 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({ openModal, onCl
                                 color="blue"
                                 size="sm"
                                 onClick={(e) => {
-                                    e.preventDefault();
+                                    e.preventDefault()
                                     onSubmit(displayName)
                                 }}
                             >

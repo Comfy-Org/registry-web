@@ -2,11 +2,16 @@ import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
-import { Publisher, useDeletePersonalAccessToken, useListNodesForPublisher, useListPersonalAccessTokens, useUpdatePublisher } from 'src/api/generated'
+import {
+    Publisher,
+    useDeletePersonalAccessToken,
+    useListNodesForPublisher,
+    useListPersonalAccessTokens,
+    useUpdatePublisher,
+} from 'src/api/generated'
 import EditPublisherModal from '../publisher/EditPublisherModal'
 import { toast } from 'react-toastify'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
-
 
 type PublisherDetailProps = {
     publisher: Publisher
@@ -15,11 +20,15 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const router = useRouter()
     const updatePublisherMutation = useUpdatePublisher()
     const deleteTokenMutation = useDeletePersonalAccessToken()
-    const { data: personalAccessTokens, error, isLoading: isLoadingAccessTokens, refetch: refetchTokens } = useListPersonalAccessTokens(publisher.id as string)
+    const {
+        data: personalAccessTokens,
+        error,
+        isLoading: isLoadingAccessTokens,
+        refetch: refetchTokens,
+    } = useListPersonalAccessTokens(publisher.id as string)
     const { data: nodes } = useListNodesForPublisher(publisher.id as string)
     const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false)
     const [openEditModal, setOpenEditModal] = useState(false)
-
 
     const handleCreateButtonClick = () => {
         setOpenSecretKeyModal(true)
@@ -33,20 +42,23 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     }
 
     const handleSubmitEditPublisher = (displayName: string) => {
-        updatePublisherMutation.mutate({
-            publisherId: publisher?.id as string,
-            data: {
-                name: displayName,
+        updatePublisherMutation.mutate(
+            {
+                publisherId: publisher?.id as string,
+                data: {
+                    name: displayName,
+                },
             },
-        }, {
-            onError: (error) => {
-                toast.error('Failed to update publisher')
-            },
-            onSuccess: () => {
-                setOpenEditModal(false)
-                router.push(`/publishers/${publisher.id}`)
+            {
+                onError: (error) => {
+                    toast.error('Failed to update publisher')
+                },
+                onSuccess: () => {
+                    setOpenEditModal(false)
+                    router.push(`/publishers/${publisher.id}`)
+                },
             }
-        })
+        )
     }
     const onCloseEditModal = () => {
         setOpenEditModal(false)
@@ -55,11 +67,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const oneMemberOfPublisher = getFirstMemberName(publisher)
 
     if (error || publisher === undefined || publisher.id === undefined) {
-        return (
-            <div className="container p-6 mx-auto h-[90vh]">
-                Not Found
-            </div>
-        )
+        return <div className="container p-6 mx-auto h-[90vh]">Not Found</div>
     }
 
     return (
@@ -141,43 +149,52 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                                 d="M8 8v8m0-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 0a4 4 0 0 1-4 4h-1a3 3 0 0 0-3 3"
                             />
                         </svg>
-                        <span className="ml-2">{nodes ? `${nodes.length} nodes` : ""}</span>
+                        <span className="ml-2">
+                            {nodes ? `${nodes.length} nodes` : ''}
+                        </span>
                     </p>
-                    {oneMemberOfPublisher && <p className="flex items-center mt-1 text-xs text-center text-gray-400 align-center">
-                        <svg
-                            className="w-5 h-5 text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                stroke="currentColor"
-                                stroke-width="2"
-                                d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                            />
-                        </svg>
-                        <span className="ml-2">{oneMemberOfPublisher}</span>
-                    </p>}
+                    {oneMemberOfPublisher && (
+                        <p className="flex items-center mt-1 text-xs text-center text-gray-400 align-center">
+                            <svg
+                                className="w-5 h-5 text-white"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                                />
+                            </svg>
+                            <span className="ml-2">{oneMemberOfPublisher}</span>
+                        </p>
+                    )}
                 </div>
                 <PersonalAccessTokenTable
                     handleCreateButtonClick={handleCreateButtonClick}
                     accessTokens={personalAccessTokens || []}
                     isLoading={isLoadingAccessTokens}
-                    deleteToken={(tokenId: string) => deleteTokenMutation.mutate({
-                        publisherId: publisher.id as string,
-                        tokenId: tokenId
-                    }, {
-                        onError: (error) => {
-                            toast.error('Failed to delete token')
-                        },
-                        onSuccess: () => {
-                            toast.success('Token deleted')
-                            refetchTokens()
-                        }
-                    })}
+                    deleteToken={(tokenId: string) =>
+                        deleteTokenMutation.mutate(
+                            {
+                                publisherId: publisher.id as string,
+                                tokenId: tokenId,
+                            },
+                            {
+                                onError: (error) => {
+                                    toast.error('Failed to delete token')
+                                },
+                                onSuccess: () => {
+                                    toast.success('Token deleted')
+                                    refetchTokens()
+                                },
+                            }
+                        )
+                    }
                 />
             </div>
             <CreateSecretKeyModal
@@ -198,15 +215,14 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
 
 export default PublisherDetail
 
-
 function getFirstMemberName(publisher: Publisher): string | undefined {
     // Check if the publisher has members and the first member has a user and name
     if (publisher.members && publisher.members.length > 0) {
-        const firstMember = publisher.members[0];
+        const firstMember = publisher.members[0]
         if (firstMember.user && firstMember.user.name) {
-            return firstMember.user.name;
+            return firstMember.user.name
         }
     }
     // Return undefined if no member or no member name is found
-    return undefined;
+    return undefined
 }

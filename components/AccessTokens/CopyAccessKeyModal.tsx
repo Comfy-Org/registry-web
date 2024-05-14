@@ -8,7 +8,11 @@ type CopyAccessTokenModalProps = {
     accessToken: string
 }
 
-export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({ openModal, onCloseModal, accessToken }) => {
+export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
+    openModal,
+    onCloseModal,
+    accessToken,
+}) => {
     const handleSubmit = (event) => {
         event.preventDefault()
     }
@@ -23,7 +27,6 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({ open
             }
         })
     }
-
 
     return (
         <Modal

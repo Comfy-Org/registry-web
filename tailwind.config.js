@@ -11,7 +11,6 @@ module.exports = {
     theme: {
         extend: {},
         colors: {
-            
             'button-rose': '#E6BCB5',
             'button-grass': '#E4E3AC',
             'button-sky': '#B8C8CB',
@@ -27,7 +26,7 @@ module.exports = {
             'grey-regular': '#2D353F',
             'bright-charcoal': '#A4C4D2',
             ...colors,
-            'primary': '#1A56DB',
+            primary: '#1A56DB',
         },
         fontFamily: {
             sans: ['"glacial-indifference-regular"', 'sans-serif'],
