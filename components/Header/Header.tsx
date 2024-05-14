@@ -44,16 +44,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                                 {title}
                             </span>
                         </Button>
-
-                        <Button
-                            href="/auth/login"
-                            color="light"
-                            className="bg-gray-800 w-[50px] h-[50px] rounded-[999px] border-gray-700 outline-none "
-                        >
-                            <span className="text-white text-base font-medium">
-                                GE
-                            </span>
-                        </Button>
                     </>
                 ) : (
                     <>

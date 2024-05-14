@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Publisher, useListNodesForPublisher } from 'src/api/generated'
 import NodesCard from '../nodes/NodesCard'
+import Link from 'next/link'
 
 type PublisherNodesProps = {
     publisher: Publisher
@@ -18,7 +19,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({ publisher, onEditPublis
         <div className="pt-20">
             <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold leading-tight tracking-tight text-white sm:text-2xl">
-                    {publisher.name}
+                    <Link href={`publishers/${publisher.id}`}>{publisher.name}</Link>
                 </h1>
 
                 <div onClick={onEditPublisher}>

@@ -20,7 +20,6 @@ const Nodes: React.FC = () => {
     }
 
     const handleSubmitEditPublisher = (displayName: string) => {
-        console.log('Edit publisher')
         updatePublisherMutation.mutate({
             publisherId: selectedPublisher?.id as string,
             data: {
