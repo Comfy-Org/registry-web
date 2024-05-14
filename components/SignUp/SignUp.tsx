@@ -1,27 +1,26 @@
 import { Button, Card, TextInput } from 'flowbite-react'
-import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 
 const SignUp = () => {
     const router = useRouter()
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    })
 
-    const handleSignUpGoogle = async (provider) => {
-        try {
-            await signIn(provider)
-        } catch (error) {
-            console.error('Sign in error:', error)
-            // Handle sign-in error
-        }
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value,
+        })
     }
-    const handleSignUpGithub = async (provider) => {
-        try {
-            await signIn(provider, { callbackUrl: '/nodes' })
-        } catch (error) {
-            console.error('Sign in error:', error)
-            // Handle sign-in error
-        }
+
+    const handleSignUp = async (e) => {
+        e.preventDefault()
+
+        router.push('/publisher')
     }
 
     return (
@@ -49,8 +48,8 @@ const SignUp = () => {
                         <div className="mt-5 space-y-3 sm:space-x-4 sm:space-y-0">
                             <Button
                                 color="gray"
-                                onClick={() => handleSignUpGoogle('google')}
-                                className="w-full font-bold"
+                                href="#"
+                                className="font-bold "
                             >
                                 <svg
                                     className="w-5 h-5 mr-2"
@@ -94,7 +93,7 @@ const SignUp = () => {
                         </div>
                         <Button
                             color="gray"
-                            onClick={() => handleSignUpGithub('github')}
+                            href="#"
                             className="mt-2 font-bold hover:bg-gray-50"
                         >
                             <svg
@@ -118,11 +117,11 @@ const SignUp = () => {
                         </Button>
                         <p className="flex justify-center mt-4 text-sm font-medium text-gray-50 ">
                             New to Comfy Registry?&nbsp;
-                            <Link href="/auth/signin">
-                                <a className="font-medium text-blue-600 text-primary-500 hover:underline ">
-                                    {' '}
-                                    Log In
-                                </a>
+                            <Link
+                                href="/auth/login"
+                                className="font-medium text-blue-600 text-primary-500 hover:underline "
+                            >
+                                Log In
                             </Link>
                         </p>
                     </Card>
