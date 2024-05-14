@@ -55,7 +55,8 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                 },
                 onSuccess: () => {
                     setOpenEditModal(false)
-                    router.push(`/publishers/${publisher.id}`)
+                    // force reload the page
+                    router.reload()
                 },
             }
         )
