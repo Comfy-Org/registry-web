@@ -10,7 +10,13 @@ type NodeVDrawerProps = {
     nodeId: string
 }
 
-const NodeVDrawer: React.FC<NodeVDrawerProps> = ({ publisherId, nodeId, version, isDrawerOpen, toggleDrawer }) => {
+const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
+    publisherId,
+    nodeId,
+    version,
+    isDrawerOpen,
+    toggleDrawer,
+}) => {
     const [isVersionAvailable, setIsVersionAvailable] = useState(true)
     const updateNodeVersionMutation = useUpdateNodeVersion()
     const handleToggle = () => {
@@ -33,8 +39,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({ publisherId, nodeId, version,
         <>
             <div
                 id="drawer-create-product-default"
-                className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-                    } bg-gray-800`}
+                className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${
+                    isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+                } bg-gray-800`}
                 aria-labelledby="drawer-label"
                 aria-hidden={!isDrawerOpen}
             >
@@ -77,18 +84,18 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({ publisherId, nodeId, version,
                             </span>
                         </span>
                     </h5>
-                    {version.createdAt && <p className="text-gray-400">
-                        Released {formatRelativeDate(version.createdAt)}
-                    </p>}
+                    {version.createdAt && (
+                        <p className="text-gray-400">
+                            Released {formatRelativeDate(version.createdAt)}
+                        </p>
+                    )}
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
 
                     <div className="space-y-4">
                         {version && (
                             <div>
                                 <h2 className="font-bold">Updates</h2>
-                                <p>
-                                    {version.changelog}
-                                </p>
+                                <p>{version.changelog}</p>
                             </div>
                         )}
                     </div>

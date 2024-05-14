@@ -58,10 +58,9 @@ const PublisherDetail = () => {
                 </svg>
                 <span
                     className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.push("/nodes")}
+                    onClick={() => router.push('/nodes')}
                 >
-                    <span>
-                        Back to your nodes</span>
+                    <span>Back to your nodes</span>
                 </span>
             </div>
 

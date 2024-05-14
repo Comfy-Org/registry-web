@@ -1,9 +1,7 @@
 import React from 'react'
 import { Button } from 'flowbite-react'
 
-const CreatePublisherKey = ({
-    handleCreateButtonClick,
-}) => {
+const CreatePublisherKey = ({ handleCreateButtonClick }) => {
     return (
         <div className="mt-8">
             <h2 className="flex mb-2 text-xl font-semibold text-white">
@@ -27,7 +25,6 @@ const CreatePublisherKey = ({
                 Create an API key
             </h2>
             <Button
-           
                 color="light"
                 className="w-40 mt-6 bg-gray-900 text-gray-400 bg-transparent hover:!bg-transparent focus:!bg-blue focus:!border-none focus:!outline-none"
                 onClick={handleCreateButtonClick}

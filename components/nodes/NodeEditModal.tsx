@@ -20,7 +20,12 @@ type NodeEditModalProps = {
     publisherId: string
 }
 
-export const NodeEditModal: React.FC<NodeEditModalProps> = ({ publisherId, openEditModal, onCloseEditModal, nodeData }) => {
+export const NodeEditModal: React.FC<NodeEditModalProps> = ({
+    publisherId,
+    openEditModal,
+    onCloseEditModal,
+    nodeData,
+}) => {
     const updateNodeMutation = useUpdateNode({})
     const [nodeName, setNodeName] = useState('')
     const [openLogoModal, setOpenLogoModal] = useState(false)
@@ -47,26 +52,30 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({ publisherId, openE
 
     const handleUpdateNode = () => {
         if (nodeData.id) {
-            updateNodeMutation.mutate({
-                data: {
-                    name: nodeName,
-                    description: description,
-                    license: license,
-                    repository: githubLink,
+            updateNodeMutation.mutate(
+                {
+                    data: {
+                        name: nodeName,
+                        description: description,
+                        license: license,
+                        repository: githubLink,
+                    },
+                    nodeId: nodeData.id,
+                    publisherId: publisherId,
                 },
-                nodeId: nodeData.id,
-                publisherId: publisherId,
-            }, {
-                onError: (error, variables, context) => {
-                    if (error instanceof AxiosError) {
-                        const axiosError: AxiosError<Error, any> = error
-                        toast.error(`Failed to update node. ${axiosError.response?.data?.message}`)
-                    } else {
-                        toast.error('Failed to update node')
-                    }
-
+                {
+                    onError: (error, variables, context) => {
+                        if (error instanceof AxiosError) {
+                            const axiosError: AxiosError<Error, any> = error
+                            toast.error(
+                                `Failed to update node. ${axiosError.response?.data?.message}`
+                            )
+                        } else {
+                            toast.error('Failed to update node')
+                        }
+                    },
                 }
-            })
+            )
         }
         onCloseEditModal()
     }

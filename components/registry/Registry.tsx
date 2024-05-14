@@ -12,7 +12,12 @@ type RegistryProps = {
     nodes: Node[]
 }
 
-const Registry: React.FC<RegistryProps> = ({ currentPage, totalPages, setPage, nodes }) => {
+const Registry: React.FC<RegistryProps> = ({
+    currentPage,
+    totalPages,
+    setPage,
+    nodes,
+}) => {
     const onPageChange = (page: number) => {
         setPage(page)
     }
