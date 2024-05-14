@@ -10,7 +10,7 @@ interface NodesCard {
     description: string
     rating: string | number
     downloads: string | number
-    buttonLink?: string
+    buttonLink?: string;
 }
 const NodesCard: React.FC<NodesCard> = ({
     name,
@@ -19,7 +19,7 @@ const NodesCard: React.FC<NodesCard> = ({
     image,
     rating,
     downloads,
-    buttonLink = '',
+    buttonLink="",
 }) => {
     return (
         <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">

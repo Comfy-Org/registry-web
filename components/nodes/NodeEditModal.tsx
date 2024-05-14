@@ -9,24 +9,7 @@ import {
     customThemeTextInput,
     customThemeTModal,
 } from 'utils/comfyTheme'
-import { Error, Node, useUpdateNode } from 'src/api/generated'
-import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
-
-type NodeEditModalProps = {
-    openEditModal: boolean
-    onCloseEditModal: () => void
-    nodeData: Node
-    publisherId: string
-}
-
-export const NodeEditModal: React.FC<NodeEditModalProps> = ({
-    publisherId,
-    openEditModal,
-    onCloseEditModal,
-    nodeData,
-}) => {
-    const updateNodeMutation = useUpdateNode({})
+export function NodeEditModal({ openEditModal, onCloseEditModal, nodeData }) {
     const [nodeName, setNodeName] = useState('')
     const [openLogoModal, setOpenLogoModal] = useState(false)
     const [description, setDescription] = useState('')
@@ -34,11 +17,12 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
     const [githubLink, setGithubLink] = useState('')
 
     useEffect(() => {
+        // Update state when nodeData prop changes
         if (nodeData) {
             setNodeName(nodeData.name || '')
             setDescription(nodeData.description || '')
             setLicense(nodeData.license || '')
-            setGithubLink(nodeData.repository || '')
+            setGithubLink(nodeData.githubLink || '')
         }
     }, [nodeData])
     const handleOpenLogoModal = () => {
@@ -48,36 +32,6 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
 
     const handleCloseLogoModal = () => {
         setOpenLogoModal(false)
-    }
-
-    const handleUpdateNode = () => {
-        if (nodeData.id) {
-            updateNodeMutation.mutate(
-                {
-                    data: {
-                        name: nodeName,
-                        description: description,
-                        license: license,
-                        repository: githubLink,
-                    },
-                    nodeId: nodeData.id,
-                    publisherId: publisherId,
-                },
-                {
-                    onError: (error, variables, context) => {
-                        if (error instanceof AxiosError) {
-                            const axiosError: AxiosError<Error, any> = error
-                            toast.error(
-                                `Failed to update node. ${axiosError.response?.data?.message}`
-                            )
-                        } else {
-                            toast.error('Failed to update node')
-                        }
-                    },
-                }
-            )
-        }
-        onCloseEditModal()
     }
 
     return (
@@ -182,7 +136,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                 <TextInput
                                     id="license"
                                     theme={customThemeTextInput}
-                                    placeholder="Path To License File"
+                                    placeholder="Github Repository link"
                                     value={license}
                                     onChange={(e) => setLicense(e.target.value)}
                                     required
@@ -211,14 +165,12 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                     <Button
                                         color="gray"
                                         className="w-full text-white bg-gray-800"
-                                        onClick={onCloseEditModal}
                                     >
                                         Decline
                                     </Button>
                                     <Button
                                         color="blue"
                                         className="w-full ml-5"
-                                        onClick={handleUpdateNode}
                                     >
                                         Save Changes
                                     </Button>

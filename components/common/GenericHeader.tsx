@@ -1,15 +1,15 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Button } from 'flowbite-react'
-import Link from 'next/link'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Button } from 'flowbite-react';
+import Link from 'next/link';
 
 interface Props {
-    title: string
-    subTitle: string
-    buttonText: string
-    buttonColor?: string
-    buttonLink?: string
-    showIcon?: boolean
+    title: string;
+    subTitle: string;
+    buttonText: string;
+    buttonColor?: string;
+    buttonLink?: string;
+    showIcon?: boolean;
 }
 
 const GenericHeader: React.FC<Props> = ({
@@ -17,7 +17,7 @@ const GenericHeader: React.FC<Props> = ({
     subTitle,
     buttonText,
     buttonColor = 'blue',
-    buttonLink = '',
+    buttonLink="",
     showIcon = false,
 }) => {
     return (
@@ -53,7 +53,7 @@ const GenericHeader: React.FC<Props> = ({
                 </Button>
             </Link>
         </>
-    )
-}
+    );
+};
 
-export default GenericHeader
+export default GenericHeader;

@@ -1,38 +1,10 @@
 import React, { useState } from 'react'
-import { NodeVersion, useUpdateNodeVersion } from 'src/api/generated'
-import { formatRelativeDate } from './NodeDetails'
-import { toast } from 'react-toastify'
-type NodeVDrawerProps = {
-    version: NodeVersion
-    isDrawerOpen: boolean
-    toggleDrawer: () => void
-    publisherId: string
-    nodeId: string
-}
 
-const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
-    publisherId,
-    nodeId,
-    version,
-    isDrawerOpen,
-    toggleDrawer,
-}) => {
+const NodeVDrawer = ({ version, isDrawerOpen, toggleDrawer }) => {
     const [isVersionAvailable, setIsVersionAvailable] = useState(true)
-    const updateNodeVersionMutation = useUpdateNodeVersion()
+
     const handleToggle = () => {
-        if (!version || !version.id) {
-            toast.error('Version not found')
-            return
-        }
         setIsVersionAvailable(!isVersionAvailable)
-        updateNodeVersionMutation.mutate({
-            versionId: version.id,
-            publisherId: publisherId,
-            nodeId: nodeId,
-            data: {
-                deprecated: !isVersionAvailable,
-            },
-        })
     }
 
     return (
@@ -72,7 +44,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         id="drawer-label"
                         className="inline-flex items-center mb-6 text-xl font-semibold text-white "
                     >
-                        {version ? version.version : ''}{' '}
+                        {version ? version.name : ''}{' '}
                         <span
                             className={`inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 ${isVersionAvailable ? 'bg-green-900 text-green-800' : 'bg-red-900 text-red-800'} dark:bg-${isVersionAvailable ? 'green-900 text-green-300' : 'red-900 text-red-300'}`}
                         >
@@ -84,18 +56,26 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             </span>
                         </span>
                     </h5>
-                    {version.createdAt && (
-                        <p className="text-gray-400">
-                            Released {formatRelativeDate(version.createdAt)}
-                        </p>
-                    )}
+                    <p className="text-gray-400">
+                        {version ? version.created : ''}
+                    </p>
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
 
                     <div className="space-y-4">
                         {version && (
                             <div>
                                 <h2 className="font-bold">Updates</h2>
-                                <p>{version.changelog}</p>
+                                <p>
+                                    {version.description
+                                        .split(',')
+                                        .map((part, index) => (
+                                            <span key={index}>
+                                                <p className="mt-1">
+                                                    {part.trim()}
+                                                </p>
+                                            </span>
+                                        ))}
+                                </p>
                             </div>
                         )}
                     </div>

@@ -1,32 +1,35 @@
-import * as React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import Registry from '../components/registry/Registry'
-import { useListAllNodes } from '../src/api/generated'
-import { Spinner } from 'flowbite-react'
+import {
+    getListAllNodesQueryOptions,
+    getListPublishersQueryOptions,
+    listPublishers,
+    useListAllNodes,
+} from '../src/api/generated'
+import { useEffect } from 'react'
 
 function NodeList() {
-    const [page, setPage] = React.useState<number>(1)
+    // const getAllNodesQuery = getListAllNodesQueryOptions({
+    //     page: 1,
+    //     limit: 15,
+    // })
+    // if (getAllNodesQuery?.queryKey && getAllNodesQuery?.queryFn) {
+    //     //@ts-ignore
+    //     getAllNodesQuery.queryFn(getAllNodesQuery?.queryKey)
+    // }
+    // console.log(':')
     const getAllNodesQuery = useListAllNodes({
-        page: page,
+        page: 1,
         limit: 15,
     })
     const nodes = getAllNodesQuery.data?.nodes || []
-
-    if (getAllNodesQuery.isLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <Spinner className="" />
-            </div>
-        )
-    }
-
+    // const { data, error, laoding } = useListAllNodes
+    useEffect(() => {
+        console.log('------------', nodes)
+    }, [nodes])
     return (
         <>
-            <Registry
-                nodes={nodes}
-                totalPages={getAllNodesQuery.data?.totalPages || 1}
-                currentPage={getAllNodesQuery.data?.page || 1}
-                setPage={setPage}
-            />
+            <Registry />
         </>
     )
 }
