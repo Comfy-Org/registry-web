@@ -228,7 +228,7 @@ const NodeDetails = () => {
                             <Link href={data.repository || ""}>View Repository</Link>
                         </Button>
 
-                        <Button
+                        {publisherId && <Button
                             className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
                             onClick={handleOpenModal}
                         >
@@ -250,21 +250,23 @@ const NodeDetails = () => {
                                 />
                             </svg>
                             <span>Edit details</span>
-                        </Button>
+                        </Button>}
                     </div>
                 </div>
                 <NodeEditModal
                     onCloseEditModal={onCloseEditModal}
                     nodeData={data}
                     openEditModal={openEditModal}
+                    publisherId={publisherId as string}
                 />
 
-                {isDrawerOpen && selectedVersion && (
+                {isDrawerOpen && selectedVersion && publisherId && nodeId && (
                     <NodeVDrawer
                         version={selectedVersion}
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
-                        nodeId={data.id}
+                        nodeId={nodeId as string}
+                        publisherId={publisherId as string}
                     />
                 )}
             </div >
