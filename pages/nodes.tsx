@@ -8,5 +8,5 @@ function NodeList() {
         </>
     )
 }
-export default NodeList
-// export default withAuth(NodeList)
+
+export default withAuth(NodeList)

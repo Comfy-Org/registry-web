@@ -1,15 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
-import { signIn, signOut, useSession } from 'next-auth/react'
 import {
-    Avatar,
     Button,
     Navbar,
     NavbarBrand,
     NavbarCollapse,
     NavbarToggle,
 } from 'flowbite-react'
-import { useRouter } from 'next/router'
 
 interface HeaderProps {
     isLoggedIn?: boolean
@@ -17,25 +14,10 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
-    const { data: session } = useSession()
-    const router = useRouter()
-
-    const handleSignOut = async () => {
-        try {
-            await signOut({ callbackUrl: '/' })
-        } catch (error) {
-            console.error('Sign out error:', error)
-            // Handle sign-out error
-        }
-    }
-
-    const userName = session?.user?.name
-    const abbreviatedName = userName ? userName.slice(0, 2).toUpperCase() : ''
-
     return (
         <Navbar
             fluid
-            className="p-8 mx-auto"
+            className="mx-auto p-8"
             style={{ backgroundColor: 'rgb(17 24 39)' }}
         >
             <NavbarBrand href="/">
@@ -58,31 +40,29 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                             color="light"
                             className="bg-gray-900"
                         >
-                            <span className="text-base font-medium text-white">
+                            <span className="text-white text-base font-medium">
                                 {title}
                             </span>
                         </Button>
 
                         <Button
+                            href="/auth/login"
                             color="light"
-                            className="bg-gray-800 w-[50px] h-[50px] rounded-[999px] border-gray-700 outline-none hover:bg-gray-800 "
+                            className="bg-gray-800 w-[50px] h-[50px] rounded-[999px] border-gray-700 outline-none "
                         >
-                            <span className="text-base font-medium text-white">
-                                {abbreviatedName}
+                            <span className="text-white text-base font-medium">
+                                GE
                             </span>
-                        </Button>
-                        <Button onClick={handleSignOut} color="blue">
-                            Sign out
                         </Button>
                     </>
                 ) : (
                     <>
                         <Button
-                            href="/auth/signin"
+                            href="/auth/login"
                             color="light"
                             className="bg-gray-800 border-none outline-none "
                         >
-                            <span className="text-base font-medium text-white">
+                            <span className="text-white text-base font-medium">
                                 Log in
                             </span>
                         </Button>
@@ -94,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 )}
                 <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />
             </div>
-            {/* <NavbarCollapse></NavbarCollapse> */}
+            <NavbarCollapse></NavbarCollapse>
         </Navbar>
     )
 }
