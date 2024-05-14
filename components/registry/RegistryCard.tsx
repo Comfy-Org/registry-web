@@ -27,9 +27,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
     const router = useRouter()
     const handleClick = () => {
         if (!isLoggedIn) {
-            router.push('/nodes/publisher-detail/1')
-        } else {
-            router.push('/nodes/1')
+            router.push(`/nodes/${id}`)
         }
     }
     return (

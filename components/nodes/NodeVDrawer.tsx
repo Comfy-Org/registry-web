@@ -1,19 +1,40 @@
 import React, { useState } from 'react'
+import { NodeVersion, useUpdateNodeVersion } from 'src/api/generated'
+import { formatRelativeDate } from './NodeDetails'
+import { toast } from 'react-toastify'
+type NodeVDrawerProps = {
+    version: NodeVersion
+    isDrawerOpen: boolean
+    toggleDrawer: () => void
+    publisherId: string
+    nodeId: string
+}
 
-const NodeVDrawer = ({ version, isDrawerOpen, toggleDrawer }) => {
+const NodeVDrawer: React.FC<NodeVDrawerProps> = ({ publisherId, nodeId, version, isDrawerOpen, toggleDrawer }) => {
     const [isVersionAvailable, setIsVersionAvailable] = useState(true)
-
+    const updateNodeVersionMutation = useUpdateNodeVersion()
     const handleToggle = () => {
+        if (!version || !version.id) {
+            toast.error('Version not found')
+            return
+        }
         setIsVersionAvailable(!isVersionAvailable)
+        updateNodeVersionMutation.mutate({
+            versionId: version.id,
+            publisherId: publisherId,
+            nodeId: nodeId,
+            data: {
+                deprecated: !isVersionAvailable,
+            },
+        })
     }
 
     return (
         <>
             <div
                 id="drawer-create-product-default"
-                className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${
-                    isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-                } bg-gray-800`}
+                className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+                    } bg-gray-800`}
                 aria-labelledby="drawer-label"
                 aria-hidden={!isDrawerOpen}
             >
@@ -44,7 +65,7 @@ const NodeVDrawer = ({ version, isDrawerOpen, toggleDrawer }) => {
                         id="drawer-label"
                         className="inline-flex items-center mb-6 text-xl font-semibold text-white "
                     >
-                        {version ? version.name : ''}{' '}
+                        {version ? version.version : ''}{' '}
                         <span
                             className={`inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 ${isVersionAvailable ? 'bg-green-900 text-green-800' : 'bg-red-900 text-red-800'} dark:bg-${isVersionAvailable ? 'green-900 text-green-300' : 'red-900 text-red-300'}`}
                         >
@@ -56,9 +77,9 @@ const NodeVDrawer = ({ version, isDrawerOpen, toggleDrawer }) => {
                             </span>
                         </span>
                     </h5>
-                    <p className="text-gray-400">
-                        {version ? version.created : ''}
-                    </p>
+                    {version.createdAt && <p className="text-gray-400">
+                        Released {formatRelativeDate(version.createdAt)}
+                    </p>}
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
 
                     <div className="space-y-4">
@@ -66,15 +87,7 @@ const NodeVDrawer = ({ version, isDrawerOpen, toggleDrawer }) => {
                             <div>
                                 <h2 className="font-bold">Updates</h2>
                                 <p>
-                                    {version.description
-                                        .split(',')
-                                        .map((part, index) => (
-                                            <span key={index}>
-                                                <p className="mt-1">
-                                                    {part.trim()}
-                                                </p>
-                                            </span>
-                                        ))}
+                                    {version.changelog}
                                 </p>
                             </div>
                         )}

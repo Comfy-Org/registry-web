@@ -2,61 +2,52 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { NodesData } from './Nodes'
-import { Button } from 'flowbite-react'
+import { Button, Spinner } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'
 import Link from 'next/link'
 import { NodeEditModal } from './NodeEditModal'
-const versionData = {
-    versions: [
-        {
-            name: 'Version 8.6',
-            description: ' Contains various minor bug fixes',
-            created: 'Released 1 days ago.',
-        },
-        {
-            name: 'Version 8.5',
-            description: ' Contains various minor bug fixes',
-            created: 'Released 2 days ago.',
-        },
-        {
-            name: 'Version 8.4',
-            description: ' Contains various minor bug fixes,Improved flow',
-            created: 'Released 3 days ago.',
-        },
-        {
-            name: 'Version 8.3',
-            description: ' Contains various minor bug fixes,Improved flow',
-            created: 'Released 4 days ago.',
-        },
-        {
-            name: 'Version 8.2',
-            description: ' Contains various minor bug fixes,Improved flow',
-            created: 'Released 5 days ago.',
-        },
-    ],
+import { NodeVersion, useGetNode, useListNodeVersions } from 'src/api/generated'
+
+export function formatRelativeDate(dateString: string) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const oneDay = 24 * 60 * 60 * 1000; // milliseconds in one day
+    const difference = now.getTime() - date.getTime(); // difference in milliseconds
+    const daysAgo = Math.floor(difference / oneDay);
+
+    if (daysAgo < 7) {
+        if (daysAgo === 0) {
+            return "Today";
+        } else if (daysAgo === 1) {
+            return "Yesterday";
+        } else {
+            return `${daysAgo} days ago`;
+        }
+    } else {
+        // Formatting to YYYY-MM-DD
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 }
 
-const NodesDetails = () => {
+const NodeDetails = () => {
     const router = useRouter()
-    const { id } = router.query
+    const { publisherId, nodeId } = router.query
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const [selectedVersion, setSelectedVersion] = useState(null)
+    const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(null)
     const [openEditModal, setIsEditModal] = useState(false)
-    const [nodeData, setNodeData] = useState({
-        id: '',
-        name: '',
-        version: '',
-        description: '',
-        node: '',
-        image: '',
-        rating: '',
-        downloads: '',
-    })
-
-    const toggleDrawer = (version) => {
-        setSelectedVersion(version)
+    const { data, isLoading, isError } = useGetNode(nodeId as string)
+    const { data: nodeVersions, isLoading: loadingNodeVersions, error: listNodeVersionsError } = useListNodeVersions(nodeId as string)
+    const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen)
+    }
+
+    const selectVersion = (version: NodeVersion) => {
+        setSelectedVersion(version)
+        setIsDrawerOpen(true)
     }
 
     const handleOpenModal = () => {
@@ -66,19 +57,14 @@ const NodesDetails = () => {
     const onCloseEditModal = () => {
         setIsEditModal(false)
     }
-    useEffect(() => {
-        // Find the node with the matching id
-        const node = NodesData.find((node) => node.id === id)
-        if (node) {
-            // Set the node data
-            setNodeData(node)
-        } else {
-            // Node not found, handle accordingly
-            console.error('Node not found')
-        }
-    }, [id])
-    const node = NodesData.find((node) => node.id === id)
-    if (!node) {
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">
+            <Spinner className="" />
+        </div>
+    }
+
+    if (!data) {
         return (
             <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
                 <section className="text-white bg-gray-900 whitespace-nowrap">
@@ -96,34 +82,6 @@ const NodesDetails = () => {
 
     return (
         <>
-            <div className="flex items-center justify-between mb-8">
-                <Button
-                    className="text-gray-400 bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.back()}
-                >
-                    <svg
-                        className="w-5 h-5 text-gray-300"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="m15 19-7-7 7-7"
-                        />
-                    </svg>
-                    <span className="pl-1 text-[16px]">
-                        {' '}
-                        Back to your nodes
-                    </span>
-                </Button>
-            </div>
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
                 <div className="w-full lg:w-1/6 ">
                     <Image
@@ -140,19 +98,19 @@ const NodesDetails = () => {
                             <div className="flex items-start justify-between">
                                 <div>
                                     <h1 className="text-[48px] font-bold">
-                                        TalkingFace
+                                        {data.name}
                                     </h1>
-                                    <p className="text-[18px] pt-2 text-gray-300">
-                                        Version 8.6{' '}
+                                    {data.latest_version && <p className="text-[18px] pt-2 text-gray-300">
+                                        v{data.latest_version?.version}
                                         <span className="pl-3 text-gray-400">
                                             {' '}
                                             Most recent version
                                         </span>
-                                    </p>
+                                    </p>}
                                 </div>
                             </div>
                             <div className="flex flex-col mt-6 mb-10 ">
-                                <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400">
+                                {data.license && <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400">
                                     <svg
                                         className="w-6 h-6 "
                                         aria-hidden="true"
@@ -173,8 +131,8 @@ const NodesDetails = () => {
                                     <span className="ml-4 text-[18px]">
                                         MIT license
                                     </span>
-                                </p>
-                                <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400 align-center">
+                                </p>}
+                                {data.rating && <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400 align-center">
                                     <svg
                                         className="w-6 h-6"
                                         aria-hidden="true"
@@ -194,8 +152,8 @@ const NodesDetails = () => {
                                     <span className="ml-4 text-[18px]">
                                         4.8 rating
                                     </span>
-                                </p>
-                                <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
+                                </p>}
+                                {data.downloads && <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                     <svg
                                         className="w-6 h-6"
                                         aria-hidden="true"
@@ -216,21 +174,14 @@ const NodesDetails = () => {
                                     <span className="ml-4 text-[18px]">
                                         96k downloads
                                     </span>
-                                </p>
+                                </p>}
                             </div>
                             <div>
                                 <h2 className="mb-2 text-xl font-bold">
                                     Description
                                 </h2>
                                 <p className="text-lg font-normal text-gray-200">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit, sed do eiusmod tempor
-                                    incididunt ut labore et dolore magna aliqua.
-                                    Ipsum tempor incididunt ut labore et dolore
-                                    magna aliqua. Lorem ipsum dolor sit amet,
-                                    consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna
-                                    aliqua.
+                                    {data.description}
                                 </p>
                             </div>
                             <div className="mt-10">
@@ -238,24 +189,24 @@ const NodesDetails = () => {
                                     Version history
                                 </h2>
                                 <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
-                                    {versionData.versions.map(
+                                    {nodeVersions?.map(
                                         (version, index) => (
                                             <div
                                                 className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
                                                 key={index}
                                             >
                                                 <h3 className="text-2xl font-semibold text-gray-200">
-                                                    {version.name}
+                                                    Version {version.version}
                                                 </h3>
                                                 <p className="mt-3 text-lg font-normal text-gray-400 ">
-                                                    {version.created}
-                                                </p>{' '}
+                                                    {formatRelativeDate(version.createdAt || "")}
+                                                </p>
                                                 <p className="flex-grow mt-3 text-lg font-normal text-gray-200 line-clamp-2">
-                                                    {version.description}{' '}
+                                                    {version.changelog}
                                                     <span
                                                         className="text-lg font-normal text-blue-500 cursor-pointer"
                                                         onClick={() =>
-                                                            toggleDrawer(
+                                                            selectVersion(
                                                                 version
                                                             )
                                                         }
@@ -274,7 +225,7 @@ const NodesDetails = () => {
                 <div className="w-full mt-4 lg:w-1/6 ">
                     <div className="flex flex-col gap-4">
                         <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
-                            View Repository
+                            <Link href={data.repository || ""}>View Repository</Link>
                         </Button>
 
                         <Button
@@ -304,20 +255,21 @@ const NodesDetails = () => {
                 </div>
                 <NodeEditModal
                     onCloseEditModal={onCloseEditModal}
-                    nodeData={nodeData}
+                    nodeData={data}
                     openEditModal={openEditModal}
                 />
 
-                {isDrawerOpen && (
+                {isDrawerOpen && selectedVersion && (
                     <NodeVDrawer
                         version={selectedVersion}
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
+                        nodeId={data.id}
                     />
                 )}
-            </div>
+            </div >
         </>
     )
 }
 
-export default NodesDetails
+export default NodeDetails

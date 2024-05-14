@@ -25,29 +25,10 @@ const Registry: React.FC<RegistryProps> = ({ currentPage, totalPages, setPage, n
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            {/* {/* <FilterRegistry /> */}
-            {/* <div className="h-auto md:h-[59vh] "> */}
             <div className="grid min-h-[500px] gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4 ">
                 {nodes?.map((node, index) => (
                     <RegistryCard key={index} {...node} isLoggedIn={false} />
                 ))}
-                {/* {NodesData?.map((node, index) => {
-                    console.log('--------------0', node)
-                    return (
-                        <RegistryCard
-                            version={''}
-                            image={node.image}
-                            rating={''}
-                            downloads={''}
-                            key={index}
-                            name={node?.name}
-                            id={node?.id}
-                            license={node?.license}
-                            description={node?.description}
-                        />
-                    )
-                })} */}
-                {/* </div> */}
             </div>
             <div className="absolute right-0 mt-3 -bottom-14">
                 <CustomPagination

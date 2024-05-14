@@ -1,10 +1,10 @@
 import React from 'react'
-import NodesDetails from '../../components/nodes/NodesDetails'
+import NodeDetails from '../../components/nodes/NodeDetails'
 
 const NodeView = () => {
     return (
         <>
-            <NodesDetails />
+            <NodeDetails />
         </>
     )
 }
