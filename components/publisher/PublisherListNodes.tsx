@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import GenericHeader from '../common/GenericHeader'
-import PublisherNodes from '../publisher/PublisherNodes'
+import PublisherNodes from './PublisherNodes'
 import { Publisher, useListPublishersForUser, useUpdatePublisher } from 'src/api/generated'
 import { Spinner } from 'flowbite-react'
 
-import EditPublisherModal from '../publisher/EditPublisherModal'
+import EditPublisherModal from './EditPublisherModal'
 import { toast } from 'react-toastify'
 
 const Nodes: React.FC = () => {

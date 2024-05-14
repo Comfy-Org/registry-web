@@ -48,7 +48,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({ publisher, onEditPublis
                     <NodesCard
                         key={index}
                         node={node}
-                        buttonLink={`/nodes/${node.id}`}
+                        buttonLink={`publishers/${publisher.id}/nodes/${node.id}`}
                     />
                 ))}
             </div>

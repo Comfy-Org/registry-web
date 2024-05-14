@@ -1,10 +1,10 @@
 import withAuth from '@/components/common/HOC/newAuth'
-import Nodes from '../components/nodes/Nodes'
+import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function NodeList() {
     return (
         <>
-            <Nodes />
+            <PublisherListNodes />
         </>
     )
 }

@@ -32,6 +32,13 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             data: {
                 deprecated: !isVersionAvailable,
             },
+        }, {
+            onError: (error) => {
+                toast.error('Could not update version. Please try again.')
+            },
+            onSuccess: () => {
+                toast.success('Version updated successfully')
+            },
         })
     }
 
@@ -39,9 +46,8 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         <>
             <div
                 id="drawer-create-product-default"
-                className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${
-                    isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-                } bg-gray-800`}
+                className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+                    } bg-gray-800`}
                 aria-labelledby="drawer-label"
                 aria-hidden={!isDrawerOpen}
             >

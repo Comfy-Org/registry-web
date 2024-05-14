@@ -213,7 +213,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                         className="w-full text-white bg-gray-800"
                                         onClick={onCloseEditModal}
                                     >
-                                        Decline
+                                        Cancel
                                     </Button>
                                     <Button
                                         color="blue"
