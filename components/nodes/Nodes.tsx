@@ -117,7 +117,7 @@ const Nodes: React.FC = () => {
                         <NodesCard
                             key={index}
                             {...member}
-                            buttonLink={`/nodes/${member.id}`}
+                            buttonLink={`/nodes/publisher-detail/${member.id}`}
                         />
                     ))}
                 </div>

@@ -1,6 +1,8 @@
-import { Button, Card, TextInput } from 'flowbite-react'
+import { Button, Card } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+
+import { signIn, signOut, useSession } from 'next-auth/react'
 import React, { useState } from 'react'
 
 const SignIn = () => {
@@ -16,16 +18,22 @@ const SignIn = () => {
             [e.target.id]: e.target.value,
         })
     }
-
-    const handleSignIn = async (e) => {
-        e.preventDefault()
-
-        // Perform sign-in logic here with formData
-
-        // Redirect to /publisher route after sign-in
-        router.push('/publisher')
+    const handleSignInGoogle = async (provider) => {
+        try {
+            await signIn(provider, { callbackUrl: '/nodes' })
+        } catch (error) {
+            console.error('Sign in error:', error)
+            // Handle sign-in error
+        }
     }
-
+    const handleSignInGithub = async (provider) => {
+        try {
+            await signIn(provider, { callbackUrl: '/nodes' })
+        } catch (error) {
+            console.error('Sign in error:', error)
+            // Handle sign-in error
+        }
+    }
     return (
         <section>
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
@@ -49,8 +57,8 @@ const SignIn = () => {
                         <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
                             <Button
                                 color="gray"
-                                href="#"
-                                className="font-bold "
+                                onClick={() => handleSignInGoogle('google')}
+                                className="w-full font-bold"
                             >
                                 <svg
                                     className="w-5 h-5 mr-2"
@@ -94,7 +102,7 @@ const SignIn = () => {
                         </div>
                         <Button
                             color="gray"
-                            href="#"
+                            onClick={() => handleSignInGithub('github')}
                             className="mt-2 font-bold hover:bg-gray-50"
                         >
                             <svg
@@ -118,11 +126,10 @@ const SignIn = () => {
                         </Button>
                         <p className="flex justify-center mt-4 text-sm font-medium text-gray-50 ">
                             New to Comfy Registry?&nbsp;
-                            <Link
-                                href="/auth/signup"
-                                className="font-medium text-blue-600 text-primary-500 hover:underline "
-                            >
-                                Sign up
+                            <Link href="/auth/signup">
+                                <a className="font-medium text-blue-600 hover:underline">
+                                    Sign up
+                                </a>
                             </Link>
                         </p>
                     </Card>

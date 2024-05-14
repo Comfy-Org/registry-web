@@ -5,15 +5,17 @@ import Header from './Header/Header'
 import Container from './common/Container'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import { useSession } from 'next-auth/react'
 
 export default function Layout({ children }: React.PropsWithChildren) {
+    const { data: session } = useSession()
     const router = useRouter()
     const isLoginPage = router.pathname === '/auth/login'
     const isSignupPage = router.pathname === '/auth/signup'
     const isReservedPath = /^\/(auth|api|_error|_app|_document)/.test(
         router.pathname
     )
-
+    const isLoggedIn = !!session
     return (
         <>
             <Head>
@@ -26,7 +28,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
             </Head>
             <Container>
                 {!(isLoginPage || isSignupPage || isReservedPath) && (
-                    <Header isLoggedIn={false} title={'Your Nodes'} />
+                    <Header isLoggedIn={isLoggedIn} title={'Your Nodes'} />
                 )}
                 <main>{children}</main>
             </Container>
