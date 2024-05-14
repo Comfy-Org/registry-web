@@ -1,13 +1,15 @@
 import React from 'react'
-import { Button } from 'flowbite-react'
+import { Button, Spinner } from 'flowbite-react'
 import { PersonalAccessToken } from 'src/api/generated'
 
 type PersonAccessTokenTableProps = {
     accessTokens: PersonalAccessToken[]
     handleCreateButtonClick: () => void
+    deleteToken: (id: string) => void
+    isLoading: boolean
 }
 
-const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({ handleCreateButtonClick, accessTokens }) => {
+const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({ handleCreateButtonClick, accessTokens, isLoading, deleteToken }) => {
     return (
         <div className="mt-8">
             <h2 className="flex mb-2 text-xl font-semibold text-white">
@@ -30,7 +32,11 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({ handl
                 </svg>
                 API Keys
             </h2>
-            {accessTokens.length > 0 && <div className="px-0 py-4 text-white w-80 ">
+            {isLoading &&
+                <Spinner color="blue" size="lg" />
+            }
+
+            {!isLoading && accessTokens.length > 0 && <div className="px-0 py-4 text-white w-80 ">
                 <div className="overflow-hidden rounded-lg shadow-lg">
                     <table className="w-full">
                         <thead className="bg-gray-800">
@@ -53,7 +59,7 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({ handl
                                         <td className="px-4 py-3 text-left">{token.name}</td>
                                         <td className="px-4 py-3 text-left">{token.token}</td>
                                         <td className="px-4 py-3 text-right">
-                                            <button className="text-red-500 hover:text-red-700">
+                                            <button className="text-red-500 hover:text-red-700 " onClick={() => deleteToken(token.id as string)}>
                                                 <svg
                                                     className="w-6 h-6 text-red-500"
                                                     aria-hidden="true"

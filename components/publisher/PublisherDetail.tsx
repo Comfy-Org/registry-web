@@ -1,11 +1,12 @@
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { CreateSecretKeyModal } from './CreateSecretKeyModal'
-import { Publisher, useListNodesForPublisher, useListPersonalAccessTokens, useUpdatePublisher } from 'src/api/generated'
+import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
+import { Publisher, useDeletePersonalAccessToken, useListNodesForPublisher, useListPersonalAccessTokens, useUpdatePublisher } from 'src/api/generated'
 import EditPublisherModal from '../publisher/EditPublisherModal'
 import { toast } from 'react-toastify'
-import PersonalAccessTokenTable from './PersonalAccessTokenTable'
+import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
+
 
 type PublisherDetailProps = {
     publisher: Publisher
@@ -13,7 +14,8 @@ type PublisherDetailProps = {
 const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const router = useRouter()
     const updatePublisherMutation = useUpdatePublisher()
-    const { data: personalAccessTokens, error, isLoading } = useListPersonalAccessTokens(publisher.id as string)
+    const deleteTokenMutation = useDeletePersonalAccessToken()
+    const { data: personalAccessTokens, error, isLoading: isLoadingAccessTokens, refetch: refetchTokens } = useListPersonalAccessTokens(publisher.id as string)
     const { data: nodes } = useListNodesForPublisher(publisher.id as string)
     const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false)
     const [openEditModal, setOpenEditModal] = useState(false)
@@ -52,6 +54,14 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
 
     const oneMemberOfPublisher = getFirstMemberName(publisher)
 
+    if (error || publisher === undefined || publisher.id === undefined) {
+        return (
+            <div className="container p-6 mx-auto h-[90vh]">
+                Not Found
+            </div>
+        )
+    }
+
     return (
         <div className="container p-6 mx-auto h-[90vh]">
             <div className="flex items-center cursor-pointer  mb-8">
@@ -74,7 +84,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                 </svg>
                 <span
                     className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
-                    onClick={() => router.push(`/profile`)}
+                    onClick={() => router.push(`/nodes`)}
                 >
                     <span>Back to your nodes</span>
                 </span>
@@ -155,11 +165,26 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                 <PersonalAccessTokenTable
                     handleCreateButtonClick={handleCreateButtonClick}
                     accessTokens={personalAccessTokens || []}
+                    isLoading={isLoadingAccessTokens}
+                    deleteToken={(tokenId: string) => deleteTokenMutation.mutate({
+                        publisherId: publisher.id as string,
+                        tokenId: tokenId
+                    }, {
+                        onError: (error) => {
+                            toast.error('Failed to delete token')
+                        },
+                        onSuccess: () => {
+                            toast.success('Token deleted')
+                            refetchTokens()
+                        }
+                    })}
                 />
             </div>
             <CreateSecretKeyModal
+                publisherId={publisher.id}
                 openModal={openSecretKeyModal}
                 onCloseModal={onCloseCreateSecretKeyModal}
+                onCreationSuccess={refetchTokens}
             />
             <EditPublisherModal
                 openModal={openEditModal}
