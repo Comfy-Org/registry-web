@@ -2,6 +2,7 @@ import * as React from 'react'
 import Registry from '../components/registry/Registry'
 import { useListAllNodes } from '../src/api/generated'
 import { Spinner } from 'flowbite-react'
+import { toast } from 'react-toastify'
 
 function NodeList() {
     const [page, setPage] = React.useState<number>(1)
@@ -10,6 +11,12 @@ function NodeList() {
         limit: 15,
     })
     const nodes = getAllNodesQuery.data?.nodes || []
+
+    React.useEffect(() => {
+        if (getAllNodesQuery.isError) {
+            toast.error('Error getting custom nodes')
+        }
+    }, [getAllNodesQuery])
 
     if (getAllNodesQuery.isLoading) {
         return (

@@ -17,7 +17,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         router.pathname
     )
     const auth = getAuth(app)
-    const [user, error] = useAuthState(auth)
+    const [user, loading, error] = useAuthState(auth)
 
     return (
         <>
@@ -31,7 +31,10 @@ export default function Layout({ children }: React.PropsWithChildren) {
             </Head>
             <Container>
                 {!(isLoginPage || isSignupPage || isReservedPath) && (
-                    <Header isLoggedIn={!!user} title={'Your Nodes'} />
+                    <Header
+                        isLoggedIn={loading || !!user}
+                        title={'Your Nodes'}
+                    />
                 )}
                 <main>{children}</main>
             </Container>
