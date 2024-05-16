@@ -32,7 +32,12 @@ const Registry: React.FC<RegistryProps> = ({
             />
             <div className="grid min-h-[500px] gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4 ">
                 {nodes?.map((node, index) => (
-                    <RegistryCard key={index} {...node} isLoggedIn={false} />
+                    <RegistryCard
+                        key={index}
+                        {...node}
+                        publisherName={node.publisher?.id}
+                        isLoggedIn={false}
+                    />
                 ))}
             </div>
             <div className="absolute right-0 mt-3 -bottom-14">

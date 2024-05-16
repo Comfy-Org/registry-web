@@ -7,6 +7,7 @@ interface RegistryCard {
     latest_version?: NodeVersion
     id?: string
     license?: string
+    publisherName?: string
     description?: string
     image?: string
     rating?: string | number
@@ -18,6 +19,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
     id,
     latest_version,
     license,
+    publisherName,
     description,
     image,
     rating,
@@ -58,6 +60,9 @@ const RegistryCard: React.FC<RegistryCard> = ({
 
                 <p className="mb-1 text-xs font-light text-white text-nowrap">
                     {description}
+                </p>
+                <p className="mb-1 text-xs font-light text-white text-nowrap">
+                    {publisherName}
                 </p>
                 <div className="flex items-center justify-between mt-2">
                     {downloads && (
@@ -104,7 +109,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
                             </svg>
 
                             <p className="ml-1 text-xs font-bold text-white">
-                                {rating}sss
+                                {rating}
                             </p>
                         </div>
                     )}
