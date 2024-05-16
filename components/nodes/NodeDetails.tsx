@@ -158,7 +158,7 @@ const NodeDetails = () => {
                                         </svg>
 
                                         <span className="ml-4 text-[18px]">
-                                            4.8 rating
+                                            {data.rating} rating
                                         </span>
                                     </p>
                                 )}
@@ -182,7 +182,7 @@ const NodeDetails = () => {
                                             />
                                         </svg>
                                         <span className="ml-4 text-[18px]">
-                                            96k downloads
+                                            {data.downloads} downloads
                                         </span>
                                     </p>
                                 )}
@@ -273,13 +273,13 @@ const NodeDetails = () => {
                     publisherId={publisherId as string}
                 />
 
-                {isDrawerOpen && selectedVersion && publisherId && nodeId && (
+                {isDrawerOpen && selectedVersion && nodeId && (
                     <NodeVDrawer
                         version={selectedVersion}
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
                         nodeId={nodeId as string}
-                        publisherId={publisherId as string}
+                        publisherId={publisherId}
                     />
                 )}
             </div>

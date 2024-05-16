@@ -6,7 +6,7 @@ type NodeVDrawerProps = {
     version: NodeVersion
     isDrawerOpen: boolean
     toggleDrawer: () => void
-    publisherId: string
+    publisherId?: string // Means don't deprecate version.
     nodeId: string
 }
 
@@ -22,6 +22,10 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
     const handleToggle = () => {
         if (!version || !version.id) {
             toast.error('Version not found')
+            return
+        }
+        if (!publisherId) {
+            toast.error('Cannot Update')
             return
         }
         setIsVersionAvailable(!isVersionAvailable)
@@ -112,25 +116,27 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
                 </div>
 
-                <div className="flex items-center py-4 rounded-lg">
-                    <label className="inline-flex items-center mb-5 cursor-pointer">
-                        <input
-                            type="checkbox"
-                            value=""
-                            className="sr-only peer"
-                            onClick={handleToggle}
-                        />
-                        <div className=" mt-[10px] relative w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
+                {publisherId && (
+                    <div className="flex items-center py-4 rounded-lg">
+                        <label className="inline-flex items-center mb-5 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                value=""
+                                className="sr-only peer"
+                                onClick={handleToggle}
+                            />
+                            <div className=" mt-[10px] relative w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        </label>
 
-                    <div className="ml-2 text-white">
-                        <p className="font-semibold ">Deprecate version</p>
-                        <p className="text-xs text-gray-400">
-                            Users will see a warning prompting them to use
-                            another version.
-                        </p>
+                        <div className="ml-2 text-white">
+                            <p className="font-semibold ">Deprecate version</p>
+                            <p className="text-xs text-gray-400">
+                                Users will see a warning prompting them to use
+                                another version.
+                            </p>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )
