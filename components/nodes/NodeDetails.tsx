@@ -279,7 +279,7 @@ const NodeDetails = () => {
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
                         nodeId={nodeId as string}
-                        publisherId={publisherId}
+                        publisherId={publisherId as string}
                     />
                 )}
             </div>
