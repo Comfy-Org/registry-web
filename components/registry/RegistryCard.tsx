@@ -57,11 +57,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
                         <span>v{latest_version.version}</span>
                     </p>
                 )}
-
-                <p className="mb-1 text-xs font-light text-white text-nowrap">
-                    {description}
-                </p>
-                <p className="mb-1 text-xs font-light text-white text-nowrap">
+                <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">
                     {publisherName}
                 </p>
                 <div className="flex items-center justify-between mt-2">
