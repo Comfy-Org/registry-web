@@ -18,7 +18,11 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
         <Navbar
             fluid
             className="mx-auto p-8"
-            style={{ backgroundColor: 'rgb(17 24 39)' }}
+            style={{
+                backgroundColor: 'rgb(17 24 39)',
+                paddingLeft: 0,
+                paddingRight: 0,
+            }}
         >
             <NavbarBrand href="/">
                 <Image
