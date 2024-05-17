@@ -30,7 +30,7 @@ const Registry: React.FC<RegistryProps> = ({
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            <div className="grid min-h-[500px] gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4 ">
+            <div className="grid gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4 items-stretch">
                 {nodes?.map((node, index) => (
                     <RegistryCard
                         key={index}

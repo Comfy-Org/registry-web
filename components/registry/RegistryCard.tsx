@@ -34,7 +34,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
     }
     return (
         <div
-            className="flex bg-gray-800 rounded-lg shadow cursor-pointer h-fit sm:flex dark:border-gray-700 lg:p-4"
+            className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4"
             onClick={handleClick}
         >
             <div>
