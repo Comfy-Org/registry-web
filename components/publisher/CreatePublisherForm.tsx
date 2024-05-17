@@ -1,16 +1,22 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Card, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { customThemeTextInput } from 'utils/comfyTheme'
 import { useCreatePublisher, useValidatePublisher } from 'src/api/generated'
 import { toast } from 'react-toastify'
+import { isAxiosError } from 'axios'
 
 const CreatePublisherForm = () => {
     const router = useRouter()
     const [username, setUsername] = useState('')
-    const [displayName, setDisplayName] = useState('')
 
-    const { data, isLoading: isLoadingValidation } = useValidatePublisher({
+    const [displayName, setDisplayName] = useState('')
+    const [publisherValidationError, setPublisherValidationError] = useState('')
+    const {
+        data,
+        isLoading: isLoadingValidation,
+        error,
+    } = useValidatePublisher({
         username: username,
     })
     const createPublisherMutation = useCreatePublisher()
@@ -35,9 +41,13 @@ const CreatePublisherForm = () => {
         )
     }
 
-    const userNameAvailable =
-        isLoadingValidation ||
-        (data?.isAvailable !== undefined && data.isAvailable)
+    React.useEffect(() => {
+        if (isAxiosError(error)) {
+            setPublisherValidationError(error.response?.data?.message)
+        } else {
+            setPublisherValidationError('')
+        }
+    }, [error])
 
     return (
         <section>
@@ -72,22 +82,25 @@ const CreatePublisherForm = () => {
                                         setUsername(e.target.value)
                                     }
                                     color={
-                                        userNameAvailable
-                                            ? 'success'
-                                            : 'failure'
+                                        !isLoadingValidation &&
+                                        publisherValidationError
+                                            ? 'failure'
+                                            : 'success'
                                     }
                                     helperText={
                                         <>
-                                            {userNameAvailable ? (
-                                                <>Valid username</>
-                                            ) : (
-                                                <>
-                                                    <span className="font-medium">
-                                                        Oops!
-                                                    </span>{' '}
-                                                    Username already taken!{' '}
-                                                </>
+                                            {isLoadingValidation && (
+                                                <>Checking username...</>
                                             )}
+                                            {!isLoadingValidation &&
+                                                publisherValidationError && (
+                                                    <>
+                                                        <span className="font-medium"></span>{' '}
+                                                        {
+                                                            publisherValidationError
+                                                        }
+                                                    </>
+                                                )}
                                         </>
                                     }
                                 />
@@ -125,6 +138,10 @@ const CreatePublisherForm = () => {
                                     color="blue"
                                     size="sm"
                                     onClick={handleSubmit}
+                                    disabled={
+                                        isLoadingValidation ||
+                                        !!publisherValidationError
+                                    }
                                 >
                                     Create
                                 </Button>
