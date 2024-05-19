@@ -1,4 +1,4 @@
-# ComfyCI Dashboard
+# Comfy Registry Frontend
 
 Built using NextJS.
 
