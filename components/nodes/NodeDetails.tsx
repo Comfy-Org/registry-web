@@ -264,6 +264,13 @@ const NodeDetails = () => {
                                 <span>Edit details</span>
                             </Button>
                         )}
+                        {data.latest_version?.downloadUrl && (
+                            <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
+                                <Link href={data.latest_version?.downloadUrl}>
+                                    Download Latest
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                 </div>
                 <NodeEditModal
