@@ -15,7 +15,7 @@ const CopyableCodeBlock = ({ code }) => {
     }
 
     return (
-        <div className="relative p-4 bg-gray-800 text-white rounded-lg font-mono text-sm">
+        <div className="relative p-4 bg-gray-800 text-white rounded-lg font-mono text-xs">
             <div className="flex items-center gap-1">
                 <a
                     target="_blank"
