@@ -7,6 +7,7 @@ import NodeVDrawer from './NodeVDrawer'
 import Link from 'next/link'
 import { NodeEditModal } from './NodeEditModal'
 import { NodeVersion, useGetNode, useListNodeVersions } from 'src/api/generated'
+import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -118,8 +119,8 @@ const NodeDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className="flex flex-col mt-6 mb-10 ">
-                                {data.license && (
+                            <div className="flex flex-col mt-6 mb-6 ">
+                                {/* {data.license && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400">
                                         <svg
                                             className="w-6 h-6 "
@@ -161,7 +162,7 @@ const NodeDetails = () => {
                                             {data.rating} rating
                                         </span>
                                     </p>
-                                )}
+                                )} */}
                                 {data.downloads && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
@@ -186,6 +187,11 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )}
+                            </div>
+                            <div className="mt-5 mb-10">
+                                <CopyableCodeBlock
+                                    code={`comfy node install ${nodeId}`}
+                                />
                             </div>
                             <div>
                                 <h2 className="mb-2 text-xl font-bold">
@@ -262,6 +268,13 @@ const NodeDetails = () => {
                                     />
                                 </svg>
                                 <span>Edit details</span>
+                            </Button>
+                        )}
+                        {data.latest_version?.downloadUrl && (
+                            <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
+                                <Link href={data.latest_version?.downloadUrl}>
+                                    Download Latest
+                                </Link>
                             </Button>
                         )}
                     </div>
