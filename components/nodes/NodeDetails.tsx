@@ -194,15 +194,15 @@ const NodeDetails = () => {
                                 />
                             </div>
                             <div>
-                                <h2 className="mb-2 text-l font-bold">
+                                <h2 className="mb-2 text-lg font-bold">
                                     Description
                                 </h2>
-                                <p className="text-lg font-normal text-gray-200">
+                                <p className="text-base font-normal text-gray-200">
                                     {data.description}
                                 </p>
                             </div>
                             <div className="mt-10">
-                                <h2 className="mb-2 text-l font-semibold">
+                                <h2 className="mb-2 text-lg font-semibold">
                                     Version history
                                 </h2>
                                 <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
@@ -211,18 +211,18 @@ const NodeDetails = () => {
                                             className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
                                             key={index}
                                         >
-                                            <h3 className="text-lg font-semibold text-gray-200">
+                                            <h3 className="text-base font-semibold text-gray-200">
                                                 Version {version.version}
                                             </h3>
-                                            <p className="mt-3 text-base font-normal text-gray-400 ">
+                                            <p className="mt-3 text-sm font-normal text-gray-400 ">
                                                 {formatRelativeDate(
                                                     version.createdAt || ''
                                                 )}
                                             </p>
-                                            <p className="flex-grow mt-3 text-lg font-normal text-gray-200 line-clamp-2">
+                                            <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                                                 {version.changelog}
                                                 <span
-                                                    className="text-lg font-normal text-blue-500 cursor-pointer"
+                                                    className="text-sm font-normal text-blue-500 cursor-pointer"
                                                     onClick={() =>
                                                         selectVersion(version)
                                                     }
