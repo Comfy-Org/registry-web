@@ -8,7 +8,7 @@ function NodeList() {
     const [page, setPage] = React.useState<number>(1)
     const getAllNodesQuery = useListAllNodes({
         page: page,
-        limit: 15,
+        limit: 16,
     })
     const nodes = getAllNodesQuery.data?.nodes || []
 
