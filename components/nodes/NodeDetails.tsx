@@ -250,11 +250,13 @@ const NodeDetails = () => {
                 </div>
                 <div className="w-full mt-4 lg:w-1/6 ">
                     <div className="flex flex-col gap-4">
-                        <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
-                            <Link href={data.repository || ''}>
-                                View Repository
-                            </Link>
-                        </Button>
+                        {data.repository && (
+                            <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
+                                <a href={data.repository || ''}>
+                                    View Repository
+                                </a>
+                            </Button>
+                        )}
 
                         {permissions?.canEdit && (
                             <Button
