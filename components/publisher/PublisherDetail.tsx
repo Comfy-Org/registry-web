@@ -5,6 +5,7 @@ import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import {
     Publisher,
     useDeletePersonalAccessToken,
+    useGetPermissionOnPublisher,
     useListNodesForPublisher,
     useListPersonalAccessTokens,
     useUpdatePublisher,
@@ -27,6 +28,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         refetch: refetchTokens,
     } = useListPersonalAccessTokens(publisher.id as string)
     const { data: nodes } = useListNodesForPublisher(publisher.id as string)
+    const { data: permissions } = useGetPermissionOnPublisher(
+        publisher.id as string
+    )
     const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false)
     const [openEditModal, setOpenEditModal] = useState(false)
 
@@ -68,7 +72,11 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const oneMemberOfPublisher = getFirstMemberName(publisher)
 
     if (error || publisher === undefined || publisher.id === undefined) {
-        return <div className="container p-6 mx-auto h-[90vh]">Not Found</div>
+        return (
+            <div className="container p-6 mx-auto h-[90vh] text-white">
+                Not Found
+            </div>
+        )
     }
 
     return (
@@ -104,31 +112,33 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                     <h1 className="mb-4 text-5xl font-bold text-white">
                         {publisher.name}
                     </h1>
-                    <Button
-                        size="xs"
-                        className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
-                        color="blue"
-                        onClick={handleEditButtonClick}
-                    >
-                        <svg
-                            className="w-5 h-5 text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            fill="none"
-                            viewBox="0 0 24 24"
+                    {permissions?.canEdit && (
+                        <Button
+                            size="xs"
+                            className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
+                            color="blue"
+                            onClick={handleEditButtonClick}
                         >
-                            <path
-                                stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-                            />
-                        </svg>
-                        <span className="text-[10px]">Edit details</span>
-                    </Button>
+                            <svg
+                                className="w-5 h-5 text-white"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                                />
+                            </svg>
+                            <span className="text-[10px]">Edit details</span>
+                        </Button>
+                    )}
                 </div>
                 <p className="text-gray-400">@{publisher.id}</p>
                 <div className="flex flex-col my-4 ">
@@ -175,28 +185,30 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                         </p>
                     )}
                 </div>
-                <PersonalAccessTokenTable
-                    handleCreateButtonClick={handleCreateButtonClick}
-                    accessTokens={personalAccessTokens || []}
-                    isLoading={isLoadingAccessTokens}
-                    deleteToken={(tokenId: string) =>
-                        deleteTokenMutation.mutate(
-                            {
-                                publisherId: publisher.id as string,
-                                tokenId: tokenId,
-                            },
-                            {
-                                onError: (error) => {
-                                    toast.error('Failed to delete token')
+                {permissions?.canEdit && (
+                    <PersonalAccessTokenTable
+                        handleCreateButtonClick={handleCreateButtonClick}
+                        accessTokens={personalAccessTokens || []}
+                        isLoading={isLoadingAccessTokens}
+                        deleteToken={(tokenId: string) =>
+                            deleteTokenMutation.mutate(
+                                {
+                                    publisherId: publisher.id as string,
+                                    tokenId: tokenId,
                                 },
-                                onSuccess: () => {
-                                    toast.success('Token deleted')
-                                    refetchTokens()
-                                },
-                            }
-                        )
-                    }
-                />
+                                {
+                                    onError: (error) => {
+                                        toast.error('Failed to delete token')
+                                    },
+                                    onSuccess: () => {
+                                        toast.success('Token deleted')
+                                        refetchTokens()
+                                    },
+                                }
+                            )
+                        }
+                    />
+                )}
             </div>
             <CreateSecretKeyModal
                 publisherId={publisher.id}

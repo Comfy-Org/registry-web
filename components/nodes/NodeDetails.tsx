@@ -6,7 +6,14 @@ import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'
 import Link from 'next/link'
 import { NodeEditModal } from './NodeEditModal'
-import { NodeVersion, useGetNode, useListNodeVersions } from 'src/api/generated'
+import {
+    NodeVersion,
+    useGetNode,
+    useGetPermissionOnPublisherNodes,
+    useListNodeVersions,
+    useListNodesForPublisher,
+    useListPublishersForUser,
+} from 'src/api/generated'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 
 export function formatRelativeDate(dateString: string) {
@@ -39,6 +46,10 @@ const NodeDetails = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
+    )
+    const { data: permissions } = useGetPermissionOnPublisherNodes(
+        publisherId as string,
+        nodeId as string
     )
     const [openEditModal, setIsEditModal] = useState(false)
     const { data, isLoading, isError } = useGetNode(nodeId as string)
@@ -245,7 +256,7 @@ const NodeDetails = () => {
                             </Link>
                         </Button>
 
-                        {publisherId && (
+                        {permissions?.canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={handleOpenModal}

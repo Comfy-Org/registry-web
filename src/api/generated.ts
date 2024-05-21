@@ -153,6 +153,10 @@ export type PostUploadArtifactBody = {
   /** The path to ComfyUI logs. eg. gs://bucket-name/logs */
   comfy_logs_gcs_path?: string;
   commit_hash: string;
+  /** The commit message */
+  commit_message: string;
+  /** The time of the commit in the format of "YYYY-MM-DDTHH:MM:SSZ" (2016-10-10T00:00:00Z) */
+  commit_time: string;
   /** Cuda version. */
   cuda_version?: string;
   /** The end time of the job as a Unix timestamp. */
@@ -178,6 +182,10 @@ export type CreatePersonalAccessToken201 = {
   token?: string;
 };
 
+export type GetPermissionOnPublisher200 = {
+  canEdit?: boolean;
+};
+
 export type PublishNodeVersion201 = {
   node_version?: NodeVersion;
   /** The signed URL to upload the node version token. */
@@ -188,6 +196,10 @@ export type PublishNodeVersionBody = {
   node: Node;
   node_version: NodeVersion;
   personal_access_token: string;
+};
+
+export type GetPermissionOnPublisherNodes200 = {
+  canEdit?: boolean;
 };
 
 export type ValidatePublisher200 = {
@@ -554,6 +566,10 @@ export interface ActionJobResult {
   commit_hash?: string;
   /** The ID of the commit */
   commit_id?: string;
+  /** The message of the commit */
+  commit_message?: string;
+  /** The Unix timestamp when the commit was made */
+  commit_time?: number;
   /** The end time of the job as a Unix timestamp. */
   end_time?: number;
   /** The repository name */
@@ -730,7 +746,7 @@ export const getListAllNodesQueryKey = (params?: ListAllNodesParams,) => {
     }
 
     
-export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void | Error>(params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListAllNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void | ErrorResponse>(params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -749,12 +765,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListAllNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listAllNodes>>>
-export type ListAllNodesQueryError = void | Error
+export type ListAllNodesQueryError = void | ErrorResponse
 
 /**
  * @summary Retrieves a list of nodes
  */
-export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void | Error>(
+export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>, TError = void | ErrorResponse>(
  params?: ListAllNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -793,7 +809,7 @@ export const getGetNodeQueryKey = (nodeId: string,) => {
     }
 
     
-export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -812,12 +828,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetNodeQueryResult = NonNullable<Awaited<ReturnType<typeof getNode>>>
-export type GetNodeQueryError = Error
+export type GetNodeQueryError = ErrorResponse
 
 /**
  * @summary Retrieve a specific node by ID
  */
-export const useGetNode = <TData = Awaited<ReturnType<typeof getNode>>, TError = Error>(
+export const useGetNode = <TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(
  nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -859,7 +875,7 @@ export const getInstallNodeQueryKey = (nodeId: string,
     }
 
     
-export const getInstallNodeQueryOptions = <TData = Awaited<ReturnType<typeof installNode>>, TError = Error | void>(nodeId: string,
+export const getInstallNodeQueryOptions = <TData = Awaited<ReturnType<typeof installNode>>, TError = ErrorResponse>(nodeId: string,
     params?: InstallNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof installNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
@@ -879,12 +895,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type InstallNodeQueryResult = NonNullable<Awaited<ReturnType<typeof installNode>>>
-export type InstallNodeQueryError = Error | void
+export type InstallNodeQueryError = ErrorResponse
 
 /**
  * @summary Returns a node version to be installed.
  */
-export const useInstallNode = <TData = Awaited<ReturnType<typeof installNode>>, TError = Error | void>(
+export const useInstallNode = <TData = Awaited<ReturnType<typeof installNode>>, TError = ErrorResponse>(
  nodeId: string,
     params?: InstallNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof installNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -923,7 +939,7 @@ export const getListNodeVersionsQueryKey = (nodeId: string,) => {
     }
 
     
-export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error | ErrorResponse>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -942,12 +958,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListNodeVersionsQueryResult = NonNullable<Awaited<ReturnType<typeof listNodeVersions>>>
-export type ListNodeVersionsQueryError = Error
+export type ListNodeVersionsQueryError = Error | ErrorResponse
 
 /**
  * @summary List all versions of a node
  */
-export const useListNodeVersions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error>(
+export const useListNodeVersions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = Error | ErrorResponse>(
  nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -987,7 +1003,7 @@ export const getGetNodeVersionQueryKey = (nodeId: string,
     }
 
     
-export const getGetNodeVersionQueryOptions = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(nodeId: string,
+export const getGetNodeVersionQueryOptions = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error | ErrorResponse>(nodeId: string,
     versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
@@ -1007,12 +1023,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetNodeVersionQueryResult = NonNullable<Awaited<ReturnType<typeof getNodeVersion>>>
-export type GetNodeVersionQueryError = Error
+export type GetNodeVersionQueryError = Error | ErrorResponse
 
 /**
  * @summary Retrieve a specific version of a node
  */
-export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error>(
+export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersion>>, TError = Error | ErrorResponse>(
  nodeId: string,
     versionId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeVersion>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
@@ -1051,7 +1067,7 @@ export const getListPublishersQueryKey = () => {
     }
 
     
-export const getListPublishersQueryOptions = <TData = Awaited<ReturnType<typeof listPublishers>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListPublishersQueryOptions = <TData = Awaited<ReturnType<typeof listPublishers>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -1070,12 +1086,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListPublishersQueryResult = NonNullable<Awaited<ReturnType<typeof listPublishers>>>
-export type ListPublishersQueryError = void
+export type ListPublishersQueryError = ErrorResponse
 
 /**
  * @summary Retrieve all publishers
  */
-export const useListPublishers = <TData = Awaited<ReturnType<typeof listPublishers>>, TError = void>(
+export const useListPublishers = <TData = Awaited<ReturnType<typeof listPublishers>>, TError = ErrorResponse>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -1110,7 +1126,7 @@ export const createPublisher = (
   
 
 
-export const getCreatePublisherMutationOptions = <TError = void | Error,
+export const getCreatePublisherMutationOptions = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1131,12 +1147,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type CreatePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof createPublisher>>>
     export type CreatePublisherMutationBody = Publisher
-    export type CreatePublisherMutationError = void | Error
+    export type CreatePublisherMutationError = ErrorResponse | void
 
     /**
  * @summary Create a new publisher
  */
-export const useCreatePublisher = <TError = void | Error,
+export const useCreatePublisher = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPublisher>>, TError,{data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof createPublisher>>,
@@ -1173,7 +1189,7 @@ export const getValidatePublisherQueryKey = (params: ValidatePublisherParams,) =
     }
 
     
-export const getValidatePublisherQueryOptions = <TData = Awaited<ReturnType<typeof validatePublisher>>, TError = Error | void>(params: ValidatePublisherParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof validatePublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getValidatePublisherQueryOptions = <TData = Awaited<ReturnType<typeof validatePublisher>>, TError = ErrorResponse>(params: ValidatePublisherParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof validatePublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -1192,12 +1208,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ValidatePublisherQueryResult = NonNullable<Awaited<ReturnType<typeof validatePublisher>>>
-export type ValidatePublisherQueryError = Error | void
+export type ValidatePublisherQueryError = ErrorResponse
 
 /**
  * @summary Validate if a publisher username is available
  */
-export const useValidatePublisher = <TData = Awaited<ReturnType<typeof validatePublisher>>, TError = Error | void>(
+export const useValidatePublisher = <TData = Awaited<ReturnType<typeof validatePublisher>>, TError = ErrorResponse>(
  params: ValidatePublisherParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof validatePublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -1230,7 +1246,7 @@ export const deletePublisher = (
   
 
 
-export const getDeletePublisherMutationOptions = <TError = Error,
+export const getDeletePublisherMutationOptions = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePublisher>>, TError,{publisherId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof deletePublisher>>, TError,{publisherId: string}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1251,12 +1267,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type DeletePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof deletePublisher>>>
     
-    export type DeletePublisherMutationError = Error
+    export type DeletePublisherMutationError = ErrorResponse
 
     /**
  * @summary Delete a publisher
  */
-export const useDeletePublisher = <TError = Error,
+export const useDeletePublisher = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePublisher>>, TError,{publisherId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof deletePublisher>>,
@@ -1291,7 +1307,7 @@ export const getGetPublisherQueryKey = (publisherId: string,) => {
     }
 
     
-export const getGetPublisherQueryOptions = <TData = Awaited<ReturnType<typeof getPublisher>>, TError = void>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetPublisherQueryOptions = <TData = Awaited<ReturnType<typeof getPublisher>>, TError = ErrorResponse>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -1310,12 +1326,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetPublisherQueryResult = NonNullable<Awaited<ReturnType<typeof getPublisher>>>
-export type GetPublisherQueryError = void
+export type GetPublisherQueryError = ErrorResponse
 
 /**
  * @summary Retrieve a publisher by ID
  */
-export const useGetPublisher = <TData = Awaited<ReturnType<typeof getPublisher>>, TError = void>(
+export const useGetPublisher = <TData = Awaited<ReturnType<typeof getPublisher>>, TError = ErrorResponse>(
  publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -1351,7 +1367,7 @@ export const updatePublisher = (
   
 
 
-export const getUpdatePublisherMutationOptions = <TError = Error | void,
+export const getUpdatePublisherMutationOptions = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePublisher>>, TError,{publisherId: string;data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updatePublisher>>, TError,{publisherId: string;data: Publisher}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1372,12 +1388,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type UpdatePublisherMutationResult = NonNullable<Awaited<ReturnType<typeof updatePublisher>>>
     export type UpdatePublisherMutationBody = Publisher
-    export type UpdatePublisherMutationError = Error | void
+    export type UpdatePublisherMutationError = ErrorResponse | void
 
     /**
  * @summary Update a publisher
  */
-export const useUpdatePublisher = <TError = Error | void,
+export const useUpdatePublisher = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updatePublisher>>, TError,{publisherId: string;data: Publisher}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof updatePublisher>>,
@@ -1412,7 +1428,7 @@ export const getListNodesForPublisherQueryKey = (publisherId: string,) => {
     }
 
     
-export const getListNodesForPublisherQueryOptions = <TData = Awaited<ReturnType<typeof listNodesForPublisher>>, TError = void>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListNodesForPublisherQueryOptions = <TData = Awaited<ReturnType<typeof listNodesForPublisher>>, TError = ErrorResponse>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -1431,12 +1447,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListNodesForPublisherQueryResult = NonNullable<Awaited<ReturnType<typeof listNodesForPublisher>>>
-export type ListNodesForPublisherQueryError = void
+export type ListNodesForPublisherQueryError = ErrorResponse
 
 /**
  * @summary Retrieve all nodes
  */
-export const useListNodesForPublisher = <TData = Awaited<ReturnType<typeof listNodesForPublisher>>, TError = void>(
+export const useListNodesForPublisher = <TData = Awaited<ReturnType<typeof listNodesForPublisher>>, TError = ErrorResponse>(
  publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -1472,7 +1488,7 @@ export const createNode = (
   
 
 
-export const getCreateNodeMutationOptions = <TError = Error,
+export const getCreateNodeMutationOptions = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNode>>, TError,{publisherId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createNode>>, TError,{publisherId: string;data: Node}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1493,12 +1509,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type CreateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof createNode>>>
     export type CreateNodeMutationBody = Node
-    export type CreateNodeMutationError = Error
+    export type CreateNodeMutationError = ErrorResponse | void
 
     /**
  * @summary Create a new custom node
  */
-export const useCreateNode = <TError = Error,
+export const useCreateNode = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNode>>, TError,{publisherId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof createNode>>,
@@ -1529,7 +1545,7 @@ export const deleteNode = (
   
 
 
-export const getDeleteNodeMutationOptions = <TError = Error,
+export const getDeleteNodeMutationOptions = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNode>>, TError,{publisherId: string;nodeId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteNode>>, TError,{publisherId: string;nodeId: string}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1550,12 +1566,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type DeleteNodeMutationResult = NonNullable<Awaited<ReturnType<typeof deleteNode>>>
     
-    export type DeleteNodeMutationError = Error
+    export type DeleteNodeMutationError = ErrorResponse
 
     /**
  * @summary Delete a specific node
  */
-export const useDeleteNode = <TError = Error,
+export const useDeleteNode = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteNode>>, TError,{publisherId: string;nodeId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof deleteNode>>,
@@ -1589,7 +1605,7 @@ export const updateNode = (
   
 
 
-export const getUpdateNodeMutationOptions = <TError = Error | void,
+export const getUpdateNodeMutationOptions = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNode>>, TError,{publisherId: string;nodeId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updateNode>>, TError,{publisherId: string;nodeId: string;data: Node}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1610,12 +1626,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type UpdateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof updateNode>>>
     export type UpdateNodeMutationBody = Node
-    export type UpdateNodeMutationError = Error | void
+    export type UpdateNodeMutationError = ErrorResponse | void
 
     /**
  * @summary Update a specific node
  */
-export const useUpdateNode = <TError = Error | void,
+export const useUpdateNode = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNode>>, TError,{publisherId: string;nodeId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof updateNode>>,
@@ -1629,6 +1645,72 @@ export const useUpdateNode = <TError = Error | void,
       return useMutation(mutationOptions);
     }
     
+/**
+ * @summary Retrieve permissions the user has for a given publisher
+ */
+export const getPermissionOnPublisherNodes = (
+    publisherId: string,
+    nodeId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetPermissionOnPublisherNodes200>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/permissions`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetPermissionOnPublisherNodesQueryKey = (publisherId: string,
+    nodeId: string,) => {
+    return [`/publishers/${publisherId}/nodes/${nodeId}/permissions`] as const;
+    }
+
+    
+export const getGetPermissionOnPublisherNodesQueryOptions = <TData = Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>, TError = ErrorResponse>(publisherId: string,
+    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPermissionOnPublisherNodesQueryKey(publisherId,nodeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>> = ({ signal }) => getPermissionOnPublisherNodes(publisherId,nodeId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId && nodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPermissionOnPublisherNodesQueryResult = NonNullable<Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>>
+export type GetPermissionOnPublisherNodesQueryError = ErrorResponse
+
+/**
+ * @summary Retrieve permissions the user has for a given publisher
+ */
+export const useGetPermissionOnPublisherNodes = <TData = Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>, TError = ErrorResponse>(
+ publisherId: string,
+    nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPermissionOnPublisherNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetPermissionOnPublisherNodesQueryOptions(publisherId,nodeId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * @summary Publish a new version of a node
  */
@@ -1649,7 +1731,7 @@ export const publishNodeVersion = (
   
 
 
-export const getPublishNodeVersionMutationOptions = <TError = Error,
+export const getPublishNodeVersionMutationOptions = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishNodeVersion>>, TError,{publisherId: string;nodeId: string;data: PublishNodeVersionBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof publishNodeVersion>>, TError,{publisherId: string;nodeId: string;data: PublishNodeVersionBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1670,12 +1752,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type PublishNodeVersionMutationResult = NonNullable<Awaited<ReturnType<typeof publishNodeVersion>>>
     export type PublishNodeVersionMutationBody = PublishNodeVersionBody
-    export type PublishNodeVersionMutationError = Error
+    export type PublishNodeVersionMutationError = ErrorResponse
 
     /**
  * @summary Publish a new version of a node
  */
-export const usePublishNodeVersion = <TError = Error,
+export const usePublishNodeVersion = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof publishNodeVersion>>, TError,{publisherId: string;nodeId: string;data: PublishNodeVersionBody}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof publishNodeVersion>>,
@@ -1769,7 +1851,7 @@ export const updateNodeVersion = (
   
 
 
-export const getUpdateNodeVersionMutationOptions = <TError = Error | void,
+export const getUpdateNodeVersionMutationOptions = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof updateNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1790,12 +1872,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type UpdateNodeVersionMutationResult = NonNullable<Awaited<ReturnType<typeof updateNodeVersion>>>
     export type UpdateNodeVersionMutationBody = NodeVersionUpdateRequest
-    export type UpdateNodeVersionMutationError = Error | void
+    export type UpdateNodeVersionMutationError = ErrorResponse | void
 
     /**
  * @summary Update changelog and deprecation status of a node version
  */
-export const useUpdateNodeVersion = <TError = Error | void,
+export const useUpdateNodeVersion = <TError = ErrorResponse | void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateNodeVersion>>, TError,{publisherId: string;nodeId: string;versionId: string;data: NodeVersionUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof updateNodeVersion>>,
@@ -1809,6 +1891,68 @@ export const useUpdateNodeVersion = <TError = Error | void,
       return useMutation(mutationOptions);
     }
     
+/**
+ * @summary Retrieve permissions the user has for a given publisher
+ */
+export const getPermissionOnPublisher = (
+    publisherId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetPermissionOnPublisher200>(
+      {url: `/publishers/${publisherId}/permissions`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetPermissionOnPublisherQueryKey = (publisherId: string,) => {
+    return [`/publishers/${publisherId}/permissions`] as const;
+    }
+
+    
+export const getGetPermissionOnPublisherQueryOptions = <TData = Awaited<ReturnType<typeof getPermissionOnPublisher>>, TError = ErrorResponse>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPermissionOnPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPermissionOnPublisherQueryKey(publisherId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPermissionOnPublisher>>> = ({ signal }) => getPermissionOnPublisher(publisherId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPermissionOnPublisher>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPermissionOnPublisherQueryResult = NonNullable<Awaited<ReturnType<typeof getPermissionOnPublisher>>>
+export type GetPermissionOnPublisherQueryError = ErrorResponse
+
+/**
+ * @summary Retrieve permissions the user has for a given publisher
+ */
+export const useGetPermissionOnPublisher = <TData = Awaited<ReturnType<typeof getPermissionOnPublisher>>, TError = ErrorResponse>(
+ publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPermissionOnPublisher>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetPermissionOnPublisherQueryOptions(publisherId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * @summary Retrieve all personal access tokens for a publisher
  */
@@ -1830,7 +1974,7 @@ export const getListPersonalAccessTokensQueryKey = (publisherId: string,) => {
     }
 
     
-export const getListPersonalAccessTokensQueryOptions = <TData = Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError = Error>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListPersonalAccessTokensQueryOptions = <TData = Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError = ErrorResponse>(publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -1849,12 +1993,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListPersonalAccessTokensQueryResult = NonNullable<Awaited<ReturnType<typeof listPersonalAccessTokens>>>
-export type ListPersonalAccessTokensQueryError = Error
+export type ListPersonalAccessTokensQueryError = ErrorResponse
 
 /**
  * @summary Retrieve all personal access tokens for a publisher
  */
-export const useListPersonalAccessTokens = <TData = Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError = Error>(
+export const useListPersonalAccessTokens = <TData = Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError = ErrorResponse>(
  publisherId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPersonalAccessTokens>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -1890,7 +2034,7 @@ export const createPersonalAccessToken = (
   
 
 
-export const getCreatePersonalAccessTokenMutationOptions = <TError = Error,
+export const getCreatePersonalAccessTokenMutationOptions = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPersonalAccessToken>>, TError,{publisherId: string;data: PersonalAccessToken}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof createPersonalAccessToken>>, TError,{publisherId: string;data: PersonalAccessToken}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1911,12 +2055,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type CreatePersonalAccessTokenMutationResult = NonNullable<Awaited<ReturnType<typeof createPersonalAccessToken>>>
     export type CreatePersonalAccessTokenMutationBody = PersonalAccessToken
-    export type CreatePersonalAccessTokenMutationError = Error
+    export type CreatePersonalAccessTokenMutationError = ErrorResponse
 
     /**
  * @summary Create a new personal access token
  */
-export const useCreatePersonalAccessToken = <TError = Error,
+export const useCreatePersonalAccessToken = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPersonalAccessToken>>, TError,{publisherId: string;data: PersonalAccessToken}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof createPersonalAccessToken>>,
@@ -1947,7 +2091,7 @@ export const deletePersonalAccessToken = (
   
 
 
-export const getDeletePersonalAccessTokenMutationOptions = <TError = Error,
+export const getDeletePersonalAccessTokenMutationOptions = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePersonalAccessToken>>, TError,{publisherId: string;tokenId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof deletePersonalAccessToken>>, TError,{publisherId: string;tokenId: string}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
@@ -1968,12 +2112,12 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
     export type DeletePersonalAccessTokenMutationResult = NonNullable<Awaited<ReturnType<typeof deletePersonalAccessToken>>>
     
-    export type DeletePersonalAccessTokenMutationError = Error
+    export type DeletePersonalAccessTokenMutationError = ErrorResponse
 
     /**
  * @summary Delete a specific personal access token
  */
-export const useDeletePersonalAccessToken = <TError = Error,
+export const useDeletePersonalAccessToken = <TError = ErrorResponse,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deletePersonalAccessToken>>, TError,{publisherId: string;tokenId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof deletePersonalAccessToken>>,
@@ -2128,7 +2272,7 @@ export const getListPublishersForUserQueryKey = () => {
     }
 
     
-export const getListPublishersForUserQueryOptions = <TData = Awaited<ReturnType<typeof listPublishersForUser>>, TError = void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishersForUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListPublishersForUserQueryOptions = <TData = Awaited<ReturnType<typeof listPublishersForUser>>, TError = ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishersForUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -2147,12 +2291,12 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type ListPublishersForUserQueryResult = NonNullable<Awaited<ReturnType<typeof listPublishersForUser>>>
-export type ListPublishersForUserQueryError = void
+export type ListPublishersForUserQueryError = ErrorResponse
 
 /**
  * @summary Retrieve all publishers for a given user
  */
-export const useListPublishersForUser = <TData = Awaited<ReturnType<typeof listPublishersForUser>>, TError = void>(
+export const useListPublishersForUser = <TData = Awaited<ReturnType<typeof listPublishersForUser>>, TError = ErrorResponse>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPublishersForUser>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
