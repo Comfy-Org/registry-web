@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             <NavbarBrand href="/">
                 <Image
                     alt="Flowbite React Logo"
-                    src="https://flowbite.com/docs/images/logo.svg"
+                    src="https://storage.googleapis.com/comfy-assets/logo.png"
                     width={36}
                     height={36}
                     className="h-6 mr-3 sm:h-9"
