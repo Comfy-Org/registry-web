@@ -252,7 +252,11 @@ const NodeDetails = () => {
                     <div className="flex flex-col gap-4">
                         {data.repository && (
                             <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
-                                <a href={data.repository || ''}>
+                                <a
+                                    href={data.repository || ''}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     View Repository
                                 </a>
                             </Button>
