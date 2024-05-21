@@ -304,6 +304,7 @@ const NodeDetails = () => {
                         isDrawerOpen={isDrawerOpen}
                         nodeId={nodeId as string}
                         publisherId={publisherId as string}
+                        canEdit={permissions?.canEdit}
                     />
                 )}
             </div>

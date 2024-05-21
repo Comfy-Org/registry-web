@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { NodeVersion, useUpdateNodeVersion } from 'src/api/generated'
 import { formatRelativeDate } from './NodeDetails'
 import { toast } from 'react-toastify'
+import { Button } from 'flowbite-react'
 type NodeVDrawerProps = {
     version: NodeVersion
     isDrawerOpen: boolean
     toggleDrawer: () => void
     publisherId?: string // Means don't deprecate version.
+    canEdit?: boolean
     nodeId: string
 }
 
@@ -16,6 +18,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
     version,
     isDrawerOpen,
     toggleDrawer,
+    canEdit = false,
 }) => {
     const [isVersionAvailable, setIsVersionAvailable] = useState(true)
     const updateNodeVersionMutation = useUpdateNodeVersion()
@@ -103,6 +106,13 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             Released {formatRelativeDate(version.createdAt)}
                         </p>
                     )}
+                    {version.downloadUrl && (
+                        <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5">
+                            <a href={version.downloadUrl}>
+                                Download Version {version.version}
+                            </a>
+                        </Button>
+                    )}
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
 
                     <div className="space-y-4">
@@ -116,7 +126,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
                 </div>
 
-                {publisherId && (
+                {canEdit && (
                     <div className="flex items-center py-4 rounded-lg">
                         <label className="inline-flex items-center mb-5 cursor-pointer">
                             <input
