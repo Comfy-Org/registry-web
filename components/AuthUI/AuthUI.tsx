@@ -2,7 +2,10 @@ import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
+import {
+    useSignInWithGithub,
+    useSignInWithGoogle,
+} from 'react-firebase-hooks/auth'
 import app from '../../src/firebase'
 import { toast } from 'react-toastify'
 
@@ -21,7 +24,7 @@ const AuthUI: React.FC<{}> = ({}) => {
         githubUser,
         loadingGithubSignIn,
         githubSignInError,
-    ] = useSignInWithGoogle(auth)
+    ] = useSignInWithGithub(auth)
 
     React.useEffect(() => {
         if (googleUser) {
@@ -37,10 +40,26 @@ const AuthUI: React.FC<{}> = ({}) => {
 
     React.useEffect(() => {
         if (googleSignInError) {
-            toast.error(googleSignInError?.message)
+            if (
+                googleSignInError.code ===
+                'auth/account-exists-with-different-credential'
+            ) {
+                toast.error('Account already exists with different credential')
+            } else {
+                toast.error(googleSignInError?.message)
+                console.log(googleSignInError)
+            }
         }
         if (githubSignInError) {
-            toast.error(githubSignInError?.message)
+            if (
+                githubSignInError.code ===
+                'auth/account-exists-with-different-credential'
+            ) {
+                toast.error('Account already exists with different credential')
+            } else {
+                toast.error(githubSignInError?.message)
+                console.log(githubSignInError)
+            }
         }
     }, [googleSignInError, githubSignInError])
 
