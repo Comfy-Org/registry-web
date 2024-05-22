@@ -3,6 +3,7 @@ import { NodeVersion, useUpdateNodeVersion } from 'src/api/generated'
 import { formatRelativeDate } from './NodeDetails'
 import { toast } from 'react-toastify'
 import { Button } from 'flowbite-react'
+import mixpanel from 'mixpanel-browser'
 type NodeVDrawerProps = {
     version: NodeVersion
     isDrawerOpen: boolean
@@ -31,6 +32,11 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             toast.error('Cannot Update')
             return
         }
+        mixpanel.track('Deprecate Node Version', {
+            version: version.version,
+            publisherId: publisherId,
+            nodeId: nodeId,
+        })
         setIsVersionAvailable(!isVersionAvailable)
         updateNodeVersionMutation.mutate(
             {
@@ -107,7 +113,16 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         </p>
                     )}
                     {version.downloadUrl && (
-                        <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5">
+                        <Button
+                            className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
+                            onClick={() => {
+                                mixpanel.track('Download Node Version', {
+                                    version: version.version,
+                                    publisherId: publisherId,
+                                    nodeId: nodeId,
+                                })
+                            }}
+                        >
                             <a href={version.downloadUrl}>
                                 Download Version {version.version}
                             </a>

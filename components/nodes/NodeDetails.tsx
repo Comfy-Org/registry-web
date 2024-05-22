@@ -15,6 +15,7 @@ import {
     useListPublishersForUser,
 } from 'src/api/generated'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
+import mixpanel from 'mixpanel-browser'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -59,6 +60,7 @@ const NodeDetails = () => {
         error: listNodeVersionsError,
     } = useListNodeVersions(nodeId as string)
     const toggleDrawer = () => {
+        mixpanel.track('View Node Version Details')
         setIsDrawerOpen(!isDrawerOpen)
     }
 
@@ -68,6 +70,7 @@ const NodeDetails = () => {
     }
 
     const handleOpenModal = () => {
+        mixpanel.track('Edit Node')
         setIsEditModal(true)
     }
 
@@ -251,7 +254,12 @@ const NodeDetails = () => {
                 <div className="w-full mt-4 lg:w-1/6 ">
                     <div className="flex flex-col gap-4">
                         {data.repository && (
-                            <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
+                            <Button
+                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                onClick={() => {
+                                    mixpanel.track('View Repository')
+                                }}
+                            >
                                 <a
                                     href={data.repository || ''}
                                     target="_blank"
@@ -288,7 +296,14 @@ const NodeDetails = () => {
                             </Button>
                         )}
                         {data.latest_version?.downloadUrl && (
-                            <Button className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]">
+                            <Button
+                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                onClick={() =>
+                                    mixpanel.track(
+                                        'Download Latest Node Version'
+                                    )
+                                }
+                            >
                                 <Link href={data.latest_version?.downloadUrl}>
                                     Download Latest
                                 </Link>

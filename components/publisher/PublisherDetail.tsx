@@ -13,6 +13,7 @@ import {
 import EditPublisherModal from '../publisher/EditPublisherModal'
 import { toast } from 'react-toastify'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
+import mixpanel from 'mixpanel-browser'
 
 type PublisherDetailProps = {
     publisher: Publisher
@@ -35,6 +36,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     const [openEditModal, setOpenEditModal] = useState(false)
 
     const handleCreateButtonClick = () => {
+        mixpanel.track('Create Publisher API Token Clicked')
         setOpenSecretKeyModal(true)
     }
 
@@ -42,6 +44,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         setOpenSecretKeyModal(false)
     }
     const handleEditButtonClick = () => {
+        mixpanel.track('Edit Publisher Clicked')
         setOpenEditModal(true)
     }
 

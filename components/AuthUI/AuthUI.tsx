@@ -1,3 +1,4 @@
+import mixpanel from 'mixpanel-browser'
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -88,7 +89,12 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 color="gray"
                                 href="#"
                                 className="font-bold "
-                                onClick={() => signInWithGoogle()}
+                                onClick={() => {
+                                    mixpanel.track('Sign In', {
+                                        provider: 'Google',
+                                    })
+                                    signInWithGoogle()
+                                }}
                             >
                                 <svg
                                     className="w-5 h-5 mr-2"
@@ -134,7 +140,12 @@ const AuthUI: React.FC<{}> = ({}) => {
                             color="gray"
                             href="#"
                             className="mt-2 font-bold hover:bg-gray-50"
-                            onClick={() => signInWithGithub()}
+                            onClick={() => {
+                                mixpanel.track('Sign In', {
+                                    provider: 'Github',
+                                })
+                                signInWithGithub()
+                            }}
                         >
                             <svg
                                 className="w-6 h-6 text-gray-800 dark:text-white"

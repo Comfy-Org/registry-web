@@ -23,7 +23,7 @@ dependencies:
     specifier: 0.7.5
     version: 0.7.5(react-dom@18.2.0)(react@18.2.0)(tailwindcss@3.4.3)
   mixpanel-browser:
-    specifier: ^2.45.0
+    specifier: ^2.50.0
     version: 2.50.0
   next:
     specifier: 12.3.1
@@ -66,6 +66,9 @@ devDependencies:
   '@types/async-busboy':
     specifier: ^1.1.1
     version: 1.1.4
+  '@types/mixpanel-browser':
+    specifier: ^2.49.0
+    version: 2.49.0
   '@types/node':
     specifier: 18.8.3
     version: 18.8.3
@@ -1934,6 +1937,10 @@ packages:
 
   /@types/mdx@2.0.13:
     resolution: {integrity: sha512-+OWZQfAYyio6YkJb3HLxDrvnx6SWWDbC0zVPfBRzUk0/nqoDyf6dNxQi3eArPe8rJ473nobTMQ/8Zk+LxJ+Yuw==}
+
+  /@types/mixpanel-browser@2.49.0:
+    resolution: {integrity: sha512-StmgUnS58d44DmIAEX9Kk8qwisAYCl6E2qulIjYyHXUPuJCPOuyUMTTKBp+aU2F2do+kxAzCxiBtsB4fnBT9Fg==}
+    dev: true
 
   /@types/ms@0.7.34:
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}

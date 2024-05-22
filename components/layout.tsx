@@ -1,3 +1,5 @@
+import mixpanel from 'mixpanel-browser'
+import React from 'react'
 import Head from 'next/head'
 import { getAuth } from 'firebase/auth'
 import { ThemeModeScript } from 'flowbite-react'
@@ -9,6 +11,12 @@ import { ToastContainer } from 'react-toastify'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import app from 'src/firebase'
 
+mixpanel.init('f919d1b9da9a57482453c72ef7b16d88', {
+    debug: true,
+    track_pageview: true,
+    persistence: 'localStorage',
+})
+
 export default function Layout({ children }: React.PropsWithChildren) {
     const router = useRouter()
     const isLoginPage = router.pathname === '/auth/login'
@@ -18,6 +26,16 @@ export default function Layout({ children }: React.PropsWithChildren) {
     )
     const auth = getAuth(app)
     const [user, loading, error] = useAuthState(auth)
+
+    React.useEffect(() => {
+        if (user) {
+            mixpanel.identify(user.uid)
+            mixpanel.people.set({
+                $email: user.email,
+                $name: user.displayName,
+            })
+        }
+    }, [user])
 
     return (
         <>
