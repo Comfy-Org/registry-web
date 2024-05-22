@@ -48,7 +48,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
             </div>
 
             <div className="flex flex-col px-4">
-                <h6 className="mb-2 text-base font-bold tracking-tight text-white">
+                <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
                     {name}
                 </h6>
 

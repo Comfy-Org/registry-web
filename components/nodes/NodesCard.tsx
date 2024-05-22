@@ -25,7 +25,7 @@ const NodesCard: React.FC<NodesCard> = ({
             )}
 
             <div className="flex flex-col px-4">
-                <h6 className="mb-2 font-bold tracking-tight text-white text-gray-900">
+                <h6 className="mb-2 font-bold tracking-tight text-white">
                     {name}
                 </h6>
 
