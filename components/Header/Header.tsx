@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     className="h-6 mr-3 sm:h-9"
                 />
                 <span className="self-center ml-2 text-xl font-semibold text-white whitespace-nowrap">
-                    Comfy
+                    Comfy Registry
                 </span>
             </NavbarBrand>
             <div className="flex gap-2 bg-gray-900 md:order-2">
