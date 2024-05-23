@@ -25,7 +25,7 @@ class MixpanelAnalytics {
 
     public track(event: string, properties?: object): void {
         if (this.isProduction) {
-            analytic.track(event, properties)
+            mixpanel.track(event, properties)
         } else {
             console.log(
                 `Mixpanel Track - Event: ${event}, Properties: ${JSON.stringify(properties)}`
