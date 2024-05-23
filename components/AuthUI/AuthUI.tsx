@@ -1,4 +1,3 @@
-import mixpanel from 'mixpanel-browser'
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -9,6 +8,7 @@ import {
 } from 'react-firebase-hooks/auth'
 import app from '../../src/firebase'
 import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
@@ -90,7 +90,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 href="#"
                                 className="font-bold "
                                 onClick={() => {
-                                    mixpanel.track('Sign In', {
+                                    analytic.track('Sign In', {
                                         provider: 'Google',
                                     })
                                     signInWithGoogle()
@@ -141,7 +141,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                             href="#"
                             className="mt-2 font-bold hover:bg-gray-50"
                             onClick={() => {
-                                mixpanel.track('Sign In', {
+                                analytic.track('Sign In', {
                                     provider: 'Github',
                                 })
                                 signInWithGithub()
