@@ -47,6 +47,17 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         />
                     </a>
                 </Link>
+                <Link href="https://github.com/Comfy-Org/registry-web">
+                    <a className="ml-1 mt-1">
+                        <Image
+                            alt="Github Icon"
+                            src="/images/github.png"
+                            width={24}
+                            height={24}
+                            className="h-6"
+                        />
+                    </a>
+                </Link>
             </NavbarBrand>
             <div className="flex gap-2 bg-gray-900 md:order-2">
                 {isLoggedIn ? (
