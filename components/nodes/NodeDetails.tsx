@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button, Spinner } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'
@@ -11,11 +11,9 @@ import {
     useGetNode,
     useGetPermissionOnPublisherNodes,
     useListNodeVersions,
-    useListNodesForPublisher,
-    useListPublishersForUser,
 } from 'src/api/generated'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
-import mixpanel from 'mixpanel-browser'
+import analytic from 'src/analytic/analytic'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -60,7 +58,7 @@ const NodeDetails = () => {
         error: listNodeVersionsError,
     } = useListNodeVersions(nodeId as string)
     const toggleDrawer = () => {
-        mixpanel.track('View Node Version Details')
+        analytic.track('View Node Version Details')
         setIsDrawerOpen(!isDrawerOpen)
     }
 
@@ -70,7 +68,7 @@ const NodeDetails = () => {
     }
 
     const handleOpenModal = () => {
-        mixpanel.track('Edit Node')
+        analytic.track('Edit Node')
         setIsEditModal(true)
     }
 
@@ -257,7 +255,7 @@ const NodeDetails = () => {
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => {
-                                    mixpanel.track('View Repository')
+                                    analytic.track('View Repository')
                                 }}
                             >
                                 <a
@@ -299,7 +297,7 @@ const NodeDetails = () => {
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                 onClick={() =>
-                                    mixpanel.track(
+                                    analytic.track(
                                         'Download Latest Node Version'
                                     )
                                 }
