@@ -9,6 +9,7 @@ import {
 import app from '../../src/firebase'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
+import Image from 'next/image'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
@@ -73,10 +74,12 @@ const AuthUI: React.FC<{}> = ({}) => {
                             className="flex justify-center"
                             onClick={() => router.push('/')}
                         >
-                            <img
-                                src="https://flowbite.com/docs/images/logo.svg"
-                                className="h-10 cursor-pointer sm:h-16"
-                                alt="Flowbite Logo"
+                            <Image
+                                alt="Comfy Logo"
+                                src="https://storage.googleapis.com/comfy-assets/logo.png"
+                                className="h-6 mr-3 sm:h-16"
+                                width={80}
+                                height={80}
                             />
                         </div>
 
