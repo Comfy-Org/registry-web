@@ -93,9 +93,9 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 href="#"
                                 className="font-bold "
                                 onClick={() => {
-                                    // analytic.track('Sign In', {
-                                    //     provider: 'Google',
-                                    // })
+                                    analytic.track('Sign In', {
+                                        provider: 'Google',
+                                    })
                                     signInWithGoogle()
                                 }}
                             >
