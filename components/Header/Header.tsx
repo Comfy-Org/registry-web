@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
     Button,
     Navbar,
@@ -35,6 +36,17 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 <span className="self-center ml-2 text-xl font-semibold text-white whitespace-nowrap">
                     Comfy Registry
                 </span>
+                <Link href="/discord">
+                    <a className="ml-1 mt-1">
+                        <Image
+                            alt="Discord Icon"
+                            src="/images/discord.png"
+                            width={24}
+                            height={24}
+                            className="h-6"
+                        />
+                    </a>
+                </Link>
             </NavbarBrand>
             <div className="flex gap-2 bg-gray-900 md:order-2">
                 {isLoggedIn ? (
@@ -72,6 +84,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 >
                     Documentation
                 </Button>
+
                 <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />
             </div>
             <NavbarCollapse></NavbarCollapse>
