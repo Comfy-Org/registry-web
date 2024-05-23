@@ -43,7 +43,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
                 <title>ComfyUI Registry</title>
                 <meta
                     name="description"
-                    content="ComfyUI CI/CD Dashboard for running workflows."
+                    content="Discover and install ComfyUI custom nodes."
                 />
                 <ThemeModeScript />
             </Head>
