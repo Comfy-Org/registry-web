@@ -1,4 +1,3 @@
-import mixpanel from 'mixpanel-browser'
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -9,6 +8,8 @@ import {
 } from 'react-firebase-hooks/auth'
 import app from '../../src/firebase'
 import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
+import Image from 'next/image'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
@@ -73,10 +74,12 @@ const AuthUI: React.FC<{}> = ({}) => {
                             className="flex justify-center"
                             onClick={() => router.push('/')}
                         >
-                            <img
-                                src="https://flowbite.com/docs/images/logo.svg"
-                                className="h-10 cursor-pointer sm:h-16"
-                                alt="Flowbite Logo"
+                            <Image
+                                alt="Comfy Logo"
+                                src="https://storage.googleapis.com/comfy-assets/logo.png"
+                                className="h-6 mr-3 sm:h-16"
+                                width={80}
+                                height={80}
                             />
                         </div>
 
@@ -90,7 +93,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 href="#"
                                 className="font-bold "
                                 onClick={() => {
-                                    mixpanel.track('Sign In', {
+                                    analytic.track('Sign In', {
                                         provider: 'Google',
                                     })
                                     signInWithGoogle()
@@ -141,7 +144,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                             href="#"
                             className="mt-2 font-bold hover:bg-gray-50"
                             onClick={() => {
-                                mixpanel.track('Sign In', {
+                                analytic.track('Sign In', {
                                     provider: 'Github',
                                 })
                                 signInWithGithub()

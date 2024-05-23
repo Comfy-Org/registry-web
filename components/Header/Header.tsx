@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             <Navbar.Brand href="/">
                 <div className="flex items-center gap-1">
                     <Image
-                        alt="Flowbite React Logo"
+                        alt="Comfy Logo"
                         src="https://storage.googleapis.com/comfy-assets/logo.png"
                         width={36}
                         height={36}
