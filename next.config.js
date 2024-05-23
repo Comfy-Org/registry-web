@@ -30,6 +30,16 @@ const conf = {
         config.experiments.topLevelAwait = true
         return config
     },
+    async redirects() {
+        return [
+            {
+                source: '/discord',
+                destination: 'https://discord.gg/comfycontrib',
+                permanent: false,
+            },
+        ];
+    },
+
 }
 // export default withMDX(conf);
 module.exports = withMDX(conf)
