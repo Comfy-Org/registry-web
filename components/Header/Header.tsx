@@ -36,8 +36,11 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 <span className="self-center ml-2 text-xl font-semibold text-white whitespace-nowrap">
                     Comfy Registry
                 </span>
+                <span className="self-center ml-0.5 mt-0.5 p-0.5 text-xs font-semibold text-white whitespace-nowrap bg-blue-500 rounded-md">
+                    beta
+                </span>
                 <Link href="/discord">
-                    <a className="ml-1 mt-1">
+                    <a className="ml-2 mt-1">
                         <Image
                             alt="Discord Icon"
                             src="/images/discord.png"
@@ -47,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         />
                     </a>
                 </Link>
-                
+
                 <Link href="https://github.com/Comfy-Org/registry-web">
                     <a className="ml-1 mt-1">
                         <Image
