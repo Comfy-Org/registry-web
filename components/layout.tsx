@@ -10,7 +10,12 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import app from 'src/firebase'
-import analytic from 'src/analytic/analytic'
+
+mixpanel.init('f919d1b9da9a57482453c72ef7b16d88', {
+    debug: true,
+    track_pageview: true,
+    persistence: 'localStorage',
+})
 
 export default function Layout({ children }: React.PropsWithChildren) {
     const router = useRouter()
@@ -24,8 +29,8 @@ export default function Layout({ children }: React.PropsWithChildren) {
 
     React.useEffect(() => {
         if (user) {
-            analytic.identify(user.uid)
-            analytic.setProfile({
+            mixpanel.identify(user.uid)
+            mixpanel.people.set({
                 $email: user.email,
                 $name: user.displayName,
             })

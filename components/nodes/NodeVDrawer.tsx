@@ -4,7 +4,6 @@ import { formatRelativeDate } from './NodeDetails'
 import { toast } from 'react-toastify'
 import { Button } from 'flowbite-react'
 import mixpanel from 'mixpanel-browser'
-import analytic from 'src/analytic/analytic'
 type NodeVDrawerProps = {
     version: NodeVersion
     isDrawerOpen: boolean
@@ -33,7 +32,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             toast.error('Cannot Update')
             return
         }
-        analytic.track('Deprecate Node Version', {
+        mixpanel.track('Deprecate Node Version', {
             version: version.version,
             publisherId: publisherId,
             nodeId: nodeId,
@@ -117,7 +116,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         <Button
                             className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
                             onClick={() => {
-                                analytic.track('Download Node Version', {
+                                mixpanel.track('Download Node Version', {
                                     version: version.version,
                                     publisherId: publisherId,
                                     nodeId: nodeId,
