@@ -1,13 +1,14 @@
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import {
+    Badge,
     Button,
     Navbar,
-    NavbarBrand,
     NavbarCollapse,
     NavbarToggle,
 } from 'flowbite-react'
+import { FaDiscord } from 'react-icons/fa'
+import { FaGithub } from 'react-icons/fa'
 
 interface HeaderProps {
     isLoggedIn?: boolean
@@ -25,44 +26,33 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 paddingRight: 0,
             }}
         >
-            <NavbarBrand href="/">
-                <Image
-                    alt="Flowbite React Logo"
-                    src="https://storage.googleapis.com/comfy-assets/logo.png"
-                    width={36}
-                    height={36}
-                    className="h-6 mr-3 sm:h-9"
-                />
-                <span className="self-center ml-2 text-xl font-semibold text-white whitespace-nowrap">
-                    Comfy Registry
-                </span>
-                <span className="self-center ml-0.5 mt-0.5 p-0.5 text-xs font-semibold text-white whitespace-nowrap bg-blue-500 rounded-md">
-                    beta
-                </span>
-                <Link href="/discord">
-                    <a className="ml-2 mt-1">
-                        <Image
-                            alt="Discord Icon"
-                            src="/images/discord.png"
-                            width={24}
-                            height={24}
-                            className="h-6"
-                        />
-                    </a>
-                </Link>
-
-                <Link href="https://github.com/Comfy-Org/registry-web">
-                    <a className="ml-1 mt-1">
-                        <Image
-                            alt="Github Icon"
-                            src="/images/github.png"
-                            width={24}
-                            height={24}
-                            className="h-6"
-                        />
-                    </a>
-                </Link>
-            </NavbarBrand>
+            <Navbar.Brand href="/">
+                <div className="flex items-center gap-1">
+                    <Image
+                        alt="Flowbite React Logo"
+                        src="https://storage.googleapis.com/comfy-assets/logo.png"
+                        width={36}
+                        height={36}
+                        className="h-6 mr-3 sm:h-9"
+                    />
+                    <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
+                        Comfy Registry
+                    </span>
+                    <span className="self-center mt-0.5 p-0.5 text-xs font-semibold text-white whitespace-nowrap bg-blue-500 rounded-md">
+                        beta
+                    </span>
+                    <Badge
+                        icon={FaDiscord}
+                        color="gray"
+                        href="/discord"
+                    ></Badge>
+                    <Badge
+                        icon={FaGithub}
+                        color="gray"
+                        href="https://github.com/Comfy-Org/registry-web"
+                    ></Badge>
+                </div>
+            </Navbar.Brand>
             <div className="flex gap-2 bg-gray-900 md:order-2">
                 {isLoggedIn ? (
                     <>
