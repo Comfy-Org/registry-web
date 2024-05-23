@@ -23,7 +23,6 @@ class MixpanelAnalytics {
         }
     }
 
-    // Track an event with optional properties
     public track(event: string, properties?: object): void {
         if (this.isProduction) {
             analytic.track(event, properties)
@@ -34,7 +33,6 @@ class MixpanelAnalytics {
         }
     }
 
-    // Identify a user with a distinct ID
     public identify(distinctId: string): void {
         if (this.isProduction) {
             mixpanel.identify(distinctId)
