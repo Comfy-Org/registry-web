@@ -204,7 +204,7 @@ const NodeDetails = () => {
                             </div>
                             <div className="mt-5 mb-10">
                                 <CopyableCodeBlock
-                                    code={`comfy node install ${nodeId}`}
+                                    code={`comfy node registry-install ${nodeId}`}
                                 />
                             </div>
                             <div>
