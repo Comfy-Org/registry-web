@@ -12,7 +12,7 @@ class MixpanelAnalytics {
     private isProduction: boolean
 
     constructor() {
-        this.isProduction = process.env.NODE_ENV === 'production'
+        this.isProduction = process.env.NEXT_PUBLIC_ENV === 'production'
 
         if (this.isProduction && process.env.NEXT_PUBLIC_MIXPANEL_KEY) {
             mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY, {
