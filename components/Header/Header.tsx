@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     </a>
                 </Link>
 
-                <Link href="https://github.com/Comfy-Org/registry-web">
+                <Link href="https://github.com/Comfy-Org/registry-backend">
                     <a className="ml-1 mt-1">
                         <Image
                             alt="Github Icon"
