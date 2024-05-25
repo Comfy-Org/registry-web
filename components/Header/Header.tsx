@@ -15,6 +15,14 @@ interface HeaderProps {
     title?: string
 }
 
+const GithubIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <FaGithub {...props} className="text-xl" />
+)
+
+const DiscordIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <FaDiscord {...props} className="text-xl" />
+)
+
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
     return (
         <Navbar
@@ -27,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             }}
         >
             <Navbar.Brand href="/">
-                <div className="flex items-center gap-1">
+                <div className="flex gap-1">
                     <Image
                         alt="Comfy Logo"
                         src="https://storage.googleapis.com/comfy-assets/logo.png"
@@ -41,19 +49,21 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <span className="self-center mt-0.5 p-0.5 text-xs font-semibold text-white whitespace-nowrap bg-blue-500 rounded-md">
                         beta
                     </span>
-                    <Badge
-                        icon={FaDiscord}
-                        color="gray"
-                        href="/discord"
-                    ></Badge>
-                    <Badge
-                        icon={FaGithub}
-                        color="gray"
-                        href="https://github.com/Comfy-Org/registry-backend"
-                    ></Badge>
                 </div>
             </Navbar.Brand>
-            <div className="flex gap-2 bg-gray-900 md:order-2">
+            <div className="flex items-center gap-2 bg-gray-900 md:order-2">
+                <Badge
+                    icon={DiscordIcon}
+                    color="gray"
+                    className="p-3"
+                    href="/discord"
+                ></Badge>
+                <Badge
+                    icon={GithubIcon}
+                    color="gray"
+                    className="p-3"
+                    href="https://github.com/Comfy-Org/registry-backend"
+                ></Badge>
                 {isLoggedIn ? (
                     <>
                         <Button
