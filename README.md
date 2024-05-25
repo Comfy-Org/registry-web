@@ -3,6 +3,7 @@
 The frontend React App for [Comfy Registry](https://comfyregistry.org).
 
 Registry React Frontend [Github](https://github.com/Comfy-Org/registry-web)
+
 Registry CLI [Github](https://github.com/yoland68/comfy-cli)
 
 
