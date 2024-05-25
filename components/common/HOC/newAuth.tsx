@@ -10,16 +10,11 @@ const withAuth = (WrappedComponent) => {
         const auth = getAuth(app)
         const [user, loading, error] = useAuthState(auth)
 
-        const isLoggedIn = !!user
         useEffect(() => {
-            if (!isLoggedIn) {
+            if (!loading && !user) {
                 router.push('/auth/login')
             }
-        }, [isLoggedIn, router])
-
-        if (!isLoggedIn) {
-            return null
-        }
+        }, [user, router, loading])
 
         return <WrappedComponent {...props} />
     }
