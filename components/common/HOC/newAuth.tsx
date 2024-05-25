@@ -1,12 +1,16 @@
+import { getAuth } from 'firebase/auth'
 import { useRouter } from 'next/router'
-import { useContext, useEffect } from 'react'
-// import { AuthContext } from './AuthContext'; // Assuming you have an AuthContext
+import { useEffect } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import app from 'src/firebase'
 
 const withAuth = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        // const { isLoggedIn } = useContext(AuthContext);
-        const isLoggedIn = true
+        const auth = getAuth(app)
+        const [user, loading, error] = useAuthState(auth)
+
+        const isLoggedIn = !!user
         useEffect(() => {
             if (!isLoggedIn) {
                 router.push('/auth/login')
