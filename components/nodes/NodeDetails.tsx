@@ -56,6 +56,7 @@ const NodeDetails = () => {
         data: nodeVersions,
         isLoading: loadingNodeVersions,
         error: listNodeVersionsError,
+        refetch: refetchVersions,
     } = useListNodeVersions(nodeId as string)
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
@@ -318,12 +319,15 @@ const NodeDetails = () => {
 
                 {isDrawerOpen && selectedVersion && nodeId && (
                     <NodeVDrawer
-                        version={selectedVersion}
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
                         nodeId={nodeId as string}
                         publisherId={publisherId as string}
+                        versionNumber={selectedVersion.version as string}
                         canEdit={permissions?.canEdit}
+                        onUpdate={() => {
+                            refetchVersions()
+                        }}
                     />
                 )}
             </div>

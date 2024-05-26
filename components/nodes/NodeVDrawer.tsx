@@ -1,28 +1,39 @@
 import React, { useState } from 'react'
-import { NodeVersion, useUpdateNodeVersion } from 'src/api/generated'
+import {
+    NodeVersion,
+    useGetNodeVersion,
+    useUpdateNodeVersion,
+} from 'src/api/generated'
 import { formatRelativeDate } from './NodeDetails'
 import { toast } from 'react-toastify'
-import { Button } from 'flowbite-react'
-import mixpanel from 'mixpanel-browser'
+import { Button, Spinner } from 'flowbite-react'
 import analytic from 'src/analytic/analytic'
 type NodeVDrawerProps = {
-    version: NodeVersion
     isDrawerOpen: boolean
     toggleDrawer: () => void
     publisherId?: string // Means don't deprecate version.
     canEdit?: boolean
+    onUpdate: (version: NodeVersion) => void
     nodeId: string
+    versionNumber: string
 }
 
 const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
     publisherId,
     nodeId,
-    version,
+    versionNumber,
     isDrawerOpen,
     toggleDrawer,
+    onUpdate,
     canEdit = false,
 }) => {
-    const [isVersionAvailable, setIsVersionAvailable] = useState(true)
+    const {
+        data: version,
+        isLoading,
+        refetch,
+    } = useGetNodeVersion(nodeId, versionNumber)
+
+    const isVersionAvailable = version && !version.deprecated
     const updateNodeVersionMutation = useUpdateNodeVersion()
     const handleToggle = () => {
         if (!version || !version.id) {
@@ -38,24 +49,34 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             publisherId: publisherId,
             nodeId: nodeId,
         })
-        setIsVersionAvailable(!isVersionAvailable)
+
         updateNodeVersionMutation.mutate(
             {
                 versionId: version.id,
                 publisherId: publisherId,
                 nodeId: nodeId,
                 data: {
-                    deprecated: !isVersionAvailable,
+                    deprecated: !version.deprecated,
                 },
             },
             {
                 onError: (error) => {
                     toast.error('Could not update version. Please try again.')
                 },
-                onSuccess: () => {
+                onSuccess: (version) => {
                     toast.success('Version updated successfully')
+                    onUpdate(version)
+                    refetch()
                 },
             }
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Spinner className="" />
+            </div>
         )
     }
 
@@ -108,12 +129,12 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             </span>
                         </span>
                     </h5>
-                    {version.createdAt && (
+                    {version?.createdAt && (
                         <p className="text-gray-400">
                             Released {formatRelativeDate(version.createdAt)}
                         </p>
                     )}
-                    {version.downloadUrl && (
+                    {version?.downloadUrl && (
                         <Button
                             className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
                             onClick={() => {
@@ -147,7 +168,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         <label className="inline-flex items-center mb-5 cursor-pointer">
                             <input
                                 type="checkbox"
-                                value=""
+                                checked={!isVersionAvailable}
                                 className="sr-only peer"
                                 onClick={handleToggle}
                             />
