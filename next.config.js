@@ -34,7 +34,7 @@ const conf = {
         return [
             {
                 source: '/discord',
-                destination: 'https://discord.gg/comfycontrib',
+                destination: 'https://discord.gg/comfyorg',
                 permanent: false,
             },
         ];
