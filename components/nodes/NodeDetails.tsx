@@ -110,6 +110,7 @@ const NodeDetails = () => {
                         alt="icon"
                         width={240}
                         height={240}
+                        layout="fixed"
                         className="rounded-md"
                     />
                 </div>
