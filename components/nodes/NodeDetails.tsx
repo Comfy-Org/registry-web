@@ -104,7 +104,7 @@ const NodeDetails = () => {
     return (
         <>
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
-                <div className="w-full lg:w-1/6 ">
+                <div className="w-full lg:w-1/5 ">
                     <Image
                         src={nodesLogo}
                         alt="icon"
