@@ -28,4 +28,4 @@ function PublisherDetails() {
     )
 }
 
-export default withAuth(PublisherDetails)
+export default PublisherDetails

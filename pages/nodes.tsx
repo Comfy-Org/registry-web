@@ -1,7 +1,7 @@
 import withAuth from '@/components/common/HOC/newAuth'
 import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
-function NodeList() {
+function PublisherNodeList() {
     return (
         <>
             <PublisherListNodes />
@@ -9,4 +9,4 @@ function NodeList() {
     )
 }
 
-export default withAuth(NodeList)
+export default withAuth(PublisherNodeList)
