@@ -10,8 +10,8 @@ interface RegistryCard {
     publisherName?: string
     description?: string
     image?: string
-    rating?: string | number
-    downloads?: string | number
+    rating?: number
+    downloads?: number
     isLoggedIn?: boolean
 }
 const RegistryCard: React.FC<RegistryCard> = ({
@@ -32,6 +32,12 @@ const RegistryCard: React.FC<RegistryCard> = ({
             router.push(`/nodes/${id}`)
         }
     }
+    console.log(rating)
+    console.log(downloads)
+    // log the type of downloads
+    console.log(typeof downloads)
+    console.log(typeof rating)
+    if (rating !== undefined) console.log(rating > 0)
     return (
         <div
             className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4"
@@ -60,9 +66,9 @@ const RegistryCard: React.FC<RegistryCard> = ({
                 <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">
                     {publisherName}
                 </p>
-                <div className="flex items-center justify-between mt-2">
-                    {downloads && (
-                        <div className="flex justify-center text-center align-center">
+                <div className="flex items-center flex-start align-center gap-1 mt-2">
+                    {downloads != 0 && (
+                        <p className="flex justify-center text-center align-center">
                             <svg
                                 className="w-4 h-4 text-white"
                                 aria-hidden="true"
@@ -80,13 +86,13 @@ const RegistryCard: React.FC<RegistryCard> = ({
                                     d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"
                                 />
                             </svg>
-
                             <p className="ml-1 text-xs font-bold text-white">
                                 {downloads}
                             </p>
-                        </div>
+                        </p>
                     )}
-                    {rating && (
+
+                    {rating != 0 && (
                         <div className="flex justify-center text-center align-center">
                             <svg
                                 className="w-4 h-4 text-white"

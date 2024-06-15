@@ -10,6 +10,7 @@ const NodesCard: React.FC<NodesCard> = ({
     node: { name, description, icon, downloads, rating, id },
     buttonLink,
 }) => {
+    console.log(rating)
     return (
         <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
             {icon && (
@@ -41,7 +42,7 @@ const NodesCard: React.FC<NodesCard> = ({
                 </div>
 
                 <div className="flex mt-2">
-                    {downloads && (
+                    {downloads != 0 && (
                         <div className="flex justify-center text-center align-center">
                             <svg
                                 className="w-4 h-4 text-gray-300"
@@ -66,7 +67,7 @@ const NodesCard: React.FC<NodesCard> = ({
                             </p>
                         </div>
                     )}
-                    {rating && (
+                    {rating != 0 && (
                         <div className="flex justify-center ml-2 text-center align-center">
                             <svg
                                 className="w-4 h-4 text-gray-300"

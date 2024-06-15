@@ -84,7 +84,7 @@ const NodeDetails = () => {
             </div>
         )
     }
-
+    console.log(data)
     if (!data) {
         return (
             <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
@@ -153,8 +153,8 @@ const NodeDetails = () => {
                                             />
                                         </svg>
                                     </p>
-                                )}
-                                {data.rating && (
+                                )}*/}
+                                {/*{data.rating && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400 align-center">
                                         <svg
                                             className="w-6 h-6"
@@ -177,7 +177,7 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )} */}
-                                {data.downloads && (
+                                {data.downloads != 0 && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
                                             className="w-6 h-6"
@@ -197,7 +197,7 @@ const NodeDetails = () => {
                                             />
                                         </svg>
                                         <span className="ml-4 text-[18px]">
-                                            {data.downloads} downloads
+                                            downloads
                                         </span>
                                     </p>
                                 )}
