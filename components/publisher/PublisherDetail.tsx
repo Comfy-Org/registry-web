@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import {
     Publisher,
+    PublisherStatus,
     useDeletePersonalAccessToken,
     useGetPermissionOnPublisher,
     useListNodesForPublisher,
@@ -14,6 +15,7 @@ import EditPublisherModal from '../publisher/EditPublisherModal'
 import { toast } from 'react-toastify'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 import analytic from 'src/analytic/analytic'
+import PublisherStatusBadge from './PublisherStatusBadge'
 
 type PublisherDetailProps = {
     publisher: Publisher
@@ -144,6 +146,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                     )}
                 </div>
                 <p className="text-gray-400">@{publisher.id}</p>
+                <div className="flex mt-2">
+                    <PublisherStatusBadge status={publisher.status} />
+                </div>
                 <div className="flex flex-col my-4 ">
                     <p className="flex items-center mt-1 text-xs text-center text-gray-400">
                         <svg

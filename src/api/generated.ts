@@ -216,6 +216,12 @@ export type GetBranchParams = {
 repo_name?: string;
 };
 
+export type AdminUpdateNodeVersionBody = {
+  status?: NodeVersionStatus;
+  /** The reason for the status change. */
+  status_reason?: string;
+};
+
 export interface User {
   /** The email address for this user. */
   email?: string;
@@ -247,6 +253,15 @@ export interface PublisherUser {
   name?: string;
 }
 
+export type PublisherStatus = typeof PublisherStatus[keyof typeof PublisherStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PublisherStatus = {
+  PublisherStatusActive: 'PublisherStatusActive',
+  PublisherStatusBanned: 'PublisherStatusBanned',
+} as const;
+
 export interface PublisherMember {
   /** The unique identifier for the publisher member. */
   id?: string;
@@ -267,6 +282,7 @@ export interface Publisher {
   members?: PublisherMember[];
   name?: string;
   source_code_repo?: string;
+  status?: PublisherStatus;
   support?: string;
   website?: string;
 }
@@ -315,6 +331,8 @@ export interface NodeVersion {
   downloadUrl?: string;
   id?: string;
   status?: NodeVersionStatus;
+  /** The reason for the status change. */
+  status_reason?: string;
   /** The version identifier, following semantic versioning. Must be unique for the node. */
   version?: string;
 }
@@ -331,6 +349,8 @@ export const NodeStatus = {
 
 export interface Node {
   author?: string;
+  /** The category of the node. */
+  category?: string;
   description?: string;
   /** The number of downloads of the node. */
   downloads?: number;
@@ -349,6 +369,8 @@ export interface Node {
   /** URL to the node's repository. */
   repository?: string;
   status?: NodeStatus;
+  /** The status detail of the node. */
+  status_detail?: string;
   tags?: string[];
 }
 
@@ -400,6 +422,67 @@ export interface ActionJobResult {
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * Only admins can approve a node version.
+ * @summary Admin Update Node Version Status
+ */
+export const adminUpdateNodeVersion = (
+    nodeId: string,
+    versionNumber: string,
+    adminUpdateNodeVersionBody: AdminUpdateNodeVersionBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<NodeVersion>(
+      {url: `/admin/nodes/${nodeId}/versions/${versionNumber}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: adminUpdateNodeVersionBody
+    },
+      options);
+    }
+  
+
+
+export const getAdminUpdateNodeVersionMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateNodeVersion>>, TError,{nodeId: string;versionNumber: string;data: AdminUpdateNodeVersionBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminUpdateNodeVersion>>, TError,{nodeId: string;versionNumber: string;data: AdminUpdateNodeVersionBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminUpdateNodeVersion>>, {nodeId: string;versionNumber: string;data: AdminUpdateNodeVersionBody}> = (props) => {
+          const {nodeId,versionNumber,data} = props ?? {};
+
+          return  adminUpdateNodeVersion(nodeId,versionNumber,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminUpdateNodeVersionMutationResult = NonNullable<Awaited<ReturnType<typeof adminUpdateNodeVersion>>>
+    export type AdminUpdateNodeVersionMutationBody = AdminUpdateNodeVersionBody
+    export type AdminUpdateNodeVersionMutationError = ErrorResponse | void
+
+    /**
+ * @summary Admin Update Node Version Status
+ */
+export const useAdminUpdateNodeVersion = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateNodeVersion>>, TError,{nodeId: string;versionNumber: string;data: AdminUpdateNodeVersionBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof adminUpdateNodeVersion>>,
+        TError,
+        {nodeId: string;versionNumber: string;data: AdminUpdateNodeVersionBody},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminUpdateNodeVersionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Returns all branches for a given repo.
  * @summary Retrieve all distinct branches for a given repo
