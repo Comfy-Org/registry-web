@@ -76,7 +76,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
 
     const oneMemberOfPublisher = getFirstMemberName(publisher)
 
-    if (error || publisher === undefined || publisher.id === undefined) {
+    if (publisher === undefined || publisher.id === undefined) {
         return (
             <div className="container p-6 mx-auto h-[90vh] text-white">
                 Not Found
@@ -193,6 +193,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                         </p>
                     )}
                 </div>
+                {error && (
+                    <div className="text-red-500">Failed to load tokens</div>
+                )}
                 {permissions?.canEdit && (
                     <PersonalAccessTokenTable
                         handleCreateButtonClick={handleCreateButtonClick}
