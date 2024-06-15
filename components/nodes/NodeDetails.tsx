@@ -14,6 +14,7 @@ import {
 } from 'src/api/generated'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import analytic from 'src/analytic/analytic'
+import NodeStatusBadge from './NodeStatusBadge'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -133,6 +134,7 @@ const NodeDetails = () => {
                                     )}
                                 </div>
                             </div>
+                            <NodeStatusBadge status={data.status} />
                             <div className="flex flex-col mt-6 mb-6 ">
                                 {/* {data.license && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400">

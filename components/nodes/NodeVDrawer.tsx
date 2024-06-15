@@ -8,6 +8,7 @@ import { formatRelativeDate } from './NodeDetails'
 import { toast } from 'react-toastify'
 import { Button, Spinner } from 'flowbite-react'
 import analytic from 'src/analytic/analytic'
+import NodeVersionStatusBadge from './NodeVersionStatusBadge'
 type NodeVDrawerProps = {
     isDrawerOpen: boolean
     toggleDrawer: () => void
@@ -118,16 +119,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         className="inline-flex items-center mb-6 text-xl font-semibold text-white "
                     >
                         {version ? version.version : ''}{' '}
-                        <span
-                            className={`inline-flex items-center text-xs font-medium px-2.5 py-0.5 rounded-full ml-2 ${isVersionAvailable ? 'bg-green-900 text-green-800' : 'bg-red-900 text-red-800'} dark:bg-${isVersionAvailable ? 'green-900 text-green-300' : 'red-900 text-red-300'}`}
-                        >
-                            <span
-                                className={`w-2 h-2 ${isVersionAvailable ? 'bg-green-500' : 'bg-red-500'} rounded-full me-1`}
-                            ></span>
-                            <span className="text-white">
-                                {isVersionAvailable ? 'Live' : 'Deprecated'}
-                            </span>
-                        </span>
+                        <div className="ml-1">
+                            <NodeVersionStatusBadge status={version?.status} />
+                        </div>
                     </h5>
                     {version?.createdAt && (
                         <p className="text-gray-400">
