@@ -193,9 +193,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                         </p>
                     )}
                 </div>
-                {error && (
-                    <div className="text-red-500">Failed to load tokens</div>
-                )}
+
                 {permissions?.canEdit && (
                     <PersonalAccessTokenTable
                         handleCreateButtonClick={handleCreateButtonClick}
