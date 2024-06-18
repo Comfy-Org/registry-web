@@ -29,11 +29,8 @@ module.exports = {
             primary: '#1A56DB',
         },
         fontFamily: {
-            sans: ['"glacial-indifference-regular"', 'sans-serif'],
-            'sans-bold': ['"glacial-indifference-bold"', 'sans-serif'],
-            'sans-ita': ['"glacial-indifference-bold"', 'sans-serif'],
-            title: ['"league-spartan"', 'sans-serif'],
-            // ttnorms: ['"tt-norms"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            title: ['"Inter"', 'sans-serif'],
         },
         fontWeight: {
             'extra-light': 100,
