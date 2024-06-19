@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import {
     Publisher,
-    PublisherStatus,
     useDeletePersonalAccessToken,
     useGetPermissionOnPublisher,
     useListNodesForPublisher,
