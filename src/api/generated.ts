@@ -18,6 +18,31 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query'
 import { customInstance } from './mutator/axios-instance';
+export type ListAllNodeVersions200 = {
+  /** Current page number */
+  page?: number;
+  /** Maximum number of node versions per page. Maximum is 100. */
+  pageSize?: number;
+  /** Total number of node versions available */
+  total?: number;
+  /** Total number of pages available */
+  totalPages?: number;
+  versions?: NodeVersion[];
+};
+
+export type ListAllNodeVersionsParams = {
+nodeId?: string;
+statuses?: NodeVersionStatus[];
+/**
+ * The page number to retrieve.
+ */
+page?: number;
+/**
+ * The number of items to include per page.
+ */
+pageSize?: number;
+};
+
 export type PostUploadArtifact200 = {
   message?: string;
 };
@@ -95,6 +120,10 @@ export type ValidatePublisherParams = {
  * The publisher username to validate.
  */
 username: string;
+};
+
+export type ListNodeVersionsParams = {
+statuses?: NodeVersionStatus[];
 };
 
 export type PostNodeReviewParams = {
@@ -316,6 +345,7 @@ export const NodeVersionStatus = {
   NodeVersionStatusDeleted: 'NodeVersionStatusDeleted',
   NodeVersionStatusBanned: 'NodeVersionStatusBanned',
   NodeVersionStatusPending: 'NodeVersionStatusPending',
+  NodeVersionStatusFlagged: 'NodeVersionStatusFlagged',
 } as const;
 
 export interface NodeVersion {
@@ -933,32 +963,36 @@ export const usePostNodeReview = <TError = void | Error | ErrorResponse,
  */
 export const listNodeVersions = (
     nodeId: string,
+    params?: ListNodeVersionsParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
       return customInstance<NodeVersion[]>(
-      {url: `/nodes/${nodeId}/versions`, method: 'GET', signal
+      {url: `/nodes/${nodeId}/versions`, method: 'GET',
+        params, signal
     },
       options);
     }
   
 
-export const getListNodeVersionsQueryKey = (nodeId: string,) => {
-    return [`/nodes/${nodeId}/versions`] as const;
+export const getListNodeVersionsQueryKey = (nodeId: string,
+    params?: ListNodeVersionsParams,) => {
+    return [`/nodes/${nodeId}/versions`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = ErrorResponse | Error>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getListNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = ErrorResponse | Error>(nodeId: string,
+    params?: ListNodeVersionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListNodeVersionsQueryKey(nodeId);
+  const queryKey =  queryOptions?.queryKey ?? getListNodeVersionsQueryKey(nodeId,params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodeVersions>>> = ({ signal }) => listNodeVersions(nodeId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodeVersions>>> = ({ signal }) => listNodeVersions(nodeId,params, requestOptions, signal);
 
       
 
@@ -974,11 +1008,12 @@ export type ListNodeVersionsQueryError = ErrorResponse | Error
  * @summary List all versions of a node
  */
 export const useListNodeVersions = <TData = Awaited<ReturnType<typeof listNodeVersions>>, TError = ErrorResponse | Error>(
- nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ nodeId: string,
+    params?: ListNodeVersionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  const queryOptions = getListNodeVersionsQueryOptions(nodeId,options)
+  const queryOptions = getListNodeVersionsQueryOptions(nodeId,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -2260,6 +2295,69 @@ export const useDeletePersonalAccessToken = <TError = ErrorResponse,
     }
     
 /**
+ * Pull all pending node versions and conduct security scans.
+ * @summary Security Scan
+ */
+export const securityScan = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/security-scan`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getSecurityScanQueryKey = () => {
+    return [`/security-scan`] as const;
+    }
+
+    
+export const getSecurityScanQueryOptions = <TData = Awaited<ReturnType<typeof securityScan>>, TError = ErrorResponse | void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSecurityScanQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof securityScan>>> = ({ signal }) => securityScan(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type SecurityScanQueryResult = NonNullable<Awaited<ReturnType<typeof securityScan>>>
+export type SecurityScanQueryError = ErrorResponse | void
+
+/**
+ * @summary Security Scan
+ */
+export const useSecurityScan = <TData = Awaited<ReturnType<typeof securityScan>>, TError = ErrorResponse | void>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getSecurityScanQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
  * @summary Receive artifacts (output files) from the ComfyUI GitHub Action
  */
 export const postUploadArtifact = (
@@ -2430,6 +2528,69 @@ export const useListPublishersForUser = <TData = Awaited<ReturnType<typeof listP
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getListPublishersForUserQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary List all node versions given some filters.
+ */
+export const listAllNodeVersions = (
+    params?: ListAllNodeVersionsParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListAllNodeVersions200>(
+      {url: `/versions`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListAllNodeVersionsQueryKey = (params?: ListAllNodeVersionsParams,) => {
+    return [`/versions`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListAllNodeVersionsQueryOptions = <TData = Awaited<ReturnType<typeof listAllNodeVersions>>, TError = ErrorResponse>(params?: ListAllNodeVersionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllNodeVersionsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllNodeVersions>>> = ({ signal }) => listAllNodeVersions(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllNodeVersions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAllNodeVersionsQueryResult = NonNullable<Awaited<ReturnType<typeof listAllNodeVersions>>>
+export type ListAllNodeVersionsQueryError = ErrorResponse
+
+/**
+ * @summary List all node versions given some filters.
+ */
+export const useListAllNodeVersions = <TData = Awaited<ReturnType<typeof listAllNodeVersions>>, TError = ErrorResponse>(
+ params?: ListAllNodeVersionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllNodeVersions>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListAllNodeVersionsQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

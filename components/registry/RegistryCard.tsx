@@ -32,12 +32,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
             router.push(`/nodes/${id}`)
         }
     }
-    console.log(rating)
-    console.log(downloads)
-    // log the type of downloads
-    console.log(typeof downloads)
-    console.log(typeof rating)
-    if (rating !== undefined) console.log(rating > 0)
+
     return (
         <div
             className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4"
