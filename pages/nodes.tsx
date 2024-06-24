@@ -1,4 +1,4 @@
-import withAuth from '@/components/common/HOC/newAuth'
+import withAuth from '@/components/common/HOC/withAuth'
 import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function PublisherNodeList() {
