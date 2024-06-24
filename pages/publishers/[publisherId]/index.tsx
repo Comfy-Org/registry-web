@@ -1,4 +1,4 @@
-import withAuth from '@/components/common/HOC/newAuth'
+import withAuth from '@/components/common/HOC/withAuth'
 import PublisherDetail from '@/components/publisher/PublisherDetail'
 import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'

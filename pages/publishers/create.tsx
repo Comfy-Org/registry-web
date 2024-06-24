@@ -1,6 +1,6 @@
 import React from 'react'
 import CreatePublisherForm from '../../components/publisher/CreatePublisherForm'
-import withAuth from '@/components/common/HOC/newAuth'
+import withAuth from '@/components/common/HOC/withAuth'
 
 const createpublisher = () => {
     return (
