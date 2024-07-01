@@ -94,7 +94,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     </>
                 )}
                 <Button
-                    href="https://comfydocs.org/registry/overview"
+                    href="https://docs.comfy.org/registry/overview"
                     color="blue"
                 >
                     Documentation
