@@ -27,6 +27,7 @@ module.exports = {
             'bright-charcoal': '#A4C4D2',
             ...colors,
             primary: '#1A56DB',
+            'gray-300': '#D1D5DB',
         },
         fontFamily: {
             sans: ['"Inter"', 'sans-serif'],

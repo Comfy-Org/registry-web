@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react'
-
+import React from 'react'
+import { NODES_SEARCH_INDEX } from 'src/constants'
 import GenericHeader from '../common/GenericHeader'
 import RegistryCard from './RegistryCard'
 import { CustomPagination } from '../common/CustomPagination'
 import { Node } from 'src/api/generated'
 import algoliasearch from 'algoliasearch/lite'
-import { InstantSearch, SearchBox, Hits, Highlight } from 'react-instantsearch'
+import { InstantSearch, Hits, RefinementList } from 'react-instantsearch'
+
 import Hit from '../Search/SearchHit'
+import EmptyQueryBoundary from '../Search/EmptyQueryBoundary'
+import Autocomplete from '../Search/Autocomplete'
 
 const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
@@ -38,14 +41,24 @@ const Registry: React.FC<RegistryProps> = ({
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            <div>
+            <div className="mt-2 md:w-1/2 w-full">
                 <InstantSearch
                     searchClient={searchClient}
-                    indexName="nodes_index"
-                    insights
+                    indexName={NODES_SEARCH_INDEX}
+                    routing
                 >
-                    <SearchBox />
-                    <Hits hitComponent={Hit} />
+                    <Autocomplete
+                        placeholder="Search custom nodes"
+                        detachedMediaQuery="none"
+                        searchClient={searchClient}
+                        openOnFocus
+                    />
+                    <div>
+                        <RefinementList attribute="name" />
+                    </div>
+                    <EmptyQueryBoundary fallback={null}>
+                        <Hits className="mt-1" hitComponent={Hit} />
+                    </EmptyQueryBoundary>
                 </InstantSearch>
             </div>
             <div className="grid gap-4 pt-20 mb-6 lg:mb-5 md:grid-cols-3 xl:grid-cols-4 items-stretch">
