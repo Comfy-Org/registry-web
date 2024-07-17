@@ -48,11 +48,17 @@ export type PostUploadArtifact200 = {
 };
 
 export type PostUploadArtifactBody = {
+  /** The author of the commit */
+  author: string;
+  /** The average amount of VRAM used in the run. */
+  avg_vram?: number;
   branch_name: string;
   /** The name of the bucket where the output files are stored */
   bucket_name?: string;
   /** The path to ComfyUI logs. eg. gs://bucket-name/logs */
   comfy_logs_gcs_path?: string;
+  /** The flags used in the comfy run */
+  comfy_run_flags?: string;
   commit_hash: string;
   /** The commit message */
   commit_message: string;
@@ -64,18 +70,35 @@ export type PostUploadArtifactBody = {
   end_time: number;
   /** Unique identifier for the job */
   job_id: string;
+  /** The user who triggered the job */
+  job_trigger_user: string;
+  machine_stats?: MachineStats;
   /** Operating system used in the run */
   os: string;
   /** A comma separated string that contains GCS path(s) to output files. eg. gs://bucket-name/output, gs://bucket-name/output2 */
   output_files_gcs_paths?: string;
+  /** The peak amount of VRAM used in the run. */
+  peak_vram?: number;
+  /** The pull request number */
+  pr_number: string;
+  /** The python version used in the run */
+  python_version: string;
+  /** The pytorch version used in the run */
+  pytorch_version?: string;
   /** Repository name */
   repo: string;
   /** Unique identifier for the run */
   run_id: string;
   /** The start time of the job as a Unix timestamp. */
   start_time: number;
+  status: WorkflowRunStatus;
   /** The name of the workflow */
   workflow_name: string;
+};
+
+export type SecurityScanParams = {
+minAge?: string;
+maxNodes?: number;
 };
 
 export type CreatePersonalAccessToken201 = {
@@ -245,11 +268,15 @@ export type GetBranchParams = {
 repo_name?: string;
 };
 
-export type AdminUpdateNodeVersionBody = {
-  status?: NodeVersionStatus;
-  /** The reason for the status change. */
-  status_reason?: string;
-};
+export type WorkflowRunStatus = typeof WorkflowRunStatus[keyof typeof WorkflowRunStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const WorkflowRunStatus = {
+  WorkflowRunStatusStarted: 'WorkflowRunStatusStarted',
+  WorkflowRunStatusFailed: 'WorkflowRunStatusFailed',
+  WorkflowRunStatusCompleted: 'WorkflowRunStatusCompleted',
+} as const;
 
 export interface User {
   /** The email address for this user. */
@@ -348,6 +375,12 @@ export const NodeVersionStatus = {
   NodeVersionStatusFlagged: 'NodeVersionStatusFlagged',
 } as const;
 
+export type AdminUpdateNodeVersionBody = {
+  status?: NodeVersionStatus;
+  /** The reason for the status change. */
+  status_reason?: string;
+};
+
 export interface NodeVersion {
   /** Summary of changes made in this version */
   changelog?: string;
@@ -404,6 +437,36 @@ export interface Node {
   tags?: string[];
 }
 
+/**
+ * Time series of VRAM usage.
+ */
+export type MachineStatsVramTimeSeries = { [key: string]: any };
+
+export interface MachineStats {
+  /** Total CPU on the machine. */
+  cpu_capacity?: string;
+  /** Total disk capacity on the machine. */
+  disk_capacity?: string;
+  /** The GPU type. eg. NVIDIA Tesla K80 */
+  gpu_type?: string;
+  /** Initial CPU available before the job starts. */
+  initial_cpu?: string;
+  /** Initial disk available before the job starts. */
+  initial_disk?: string;
+  /** Initial RAM available before the job starts. */
+  initial_ram?: string;
+  /** Name of the machine. */
+  machine_name?: string;
+  /** Total memory on the machine. */
+  memory_capacity?: string;
+  /** The operating system version. eg. Ubuntu Linux 20.04 */
+  os_version?: string;
+  /** The pip freeze output */
+  pip_freeze?: string;
+  /** Time series of VRAM usage. */
+  vram_time_series?: MachineStatsVramTimeSeries;
+}
+
 export interface ErrorResponse {
   error: string;
   message: string;
@@ -417,8 +480,16 @@ export interface Error {
 }
 
 export interface ActionJobResult {
+  /** Identifier of the job this result belongs to */
+  action_job_id?: string;
   /** Identifier of the run this result belongs to */
   action_run_id?: string;
+  /** The author of the commit */
+  author?: string;
+  /** The average VRAM used by the job */
+  avg_vram?: number;
+  /** The comfy run flags. E.g. `--low-vram` */
+  comfy_run_flags?: string;
   /** The hash of the commit */
   commit_hash?: string;
   /** The ID of the commit */
@@ -427,20 +498,30 @@ export interface ActionJobResult {
   commit_message?: string;
   /** The Unix timestamp when the commit was made */
   commit_time?: number;
+  /** CUDA version used */
+  cuda_version?: string;
   /** The end time of the job as a Unix timestamp. */
   end_time?: number;
   /** The repository name */
   git_repo?: string;
-  /** GPU type used */
-  gpu_type?: string;
   /** Unique identifier for the job result */
   id?: string;
+  /** The user who triggered the job. */
+  job_trigger_user?: string;
+  machine_stats?: MachineStats;
   /** Operating system used */
   operating_system?: string;
+  /** The peak VRAM used by the job */
+  peak_vram?: number;
+  /** The pull request number */
+  pr_number?: string;
+  /** PyTorch version used */
+  python_version?: string;
   /** PyTorch version used */
   pytorch_version?: string;
   /** The start time of the job as a Unix timestamp. */
   start_time?: number;
+  status?: WorkflowRunStatus;
   storage_file?: StorageFile;
   /** Name of the workflow */
   workflow_name?: string;
@@ -705,6 +786,62 @@ export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>
 
 
 
+/**
+ * @summary Reindex all nodes for searching.
+ */
+export const reindexNodes = (
+    
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/nodes/reindex`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getReindexNodesMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,void, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reindexNodes>>, void> = () => {
+          
+
+          return  reindexNodes(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReindexNodesMutationResult = NonNullable<Awaited<ReturnType<typeof reindexNodes>>>
+    
+    export type ReindexNodesMutationError = ErrorResponse
+
+    /**
+ * @summary Reindex all nodes for searching.
+ */
+export const useReindexNodes = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof reindexNodes>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getReindexNodesMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Returns a paginated list of nodes across all publishers.
  * @summary Retrieves a list of nodes
@@ -2299,33 +2436,34 @@ export const useDeletePersonalAccessToken = <TError = ErrorResponse,
  * @summary Security Scan
  */
 export const securityScan = (
-    
+    params?: SecurityScanParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
       return customInstance<void>(
-      {url: `/security-scan`, method: 'GET', signal
+      {url: `/security-scan`, method: 'GET',
+        params, signal
     },
       options);
     }
   
 
-export const getSecurityScanQueryKey = () => {
-    return [`/security-scan`] as const;
+export const getSecurityScanQueryKey = (params?: SecurityScanParams,) => {
+    return [`/security-scan`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getSecurityScanQueryOptions = <TData = Awaited<ReturnType<typeof securityScan>>, TError = ErrorResponse | void>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getSecurityScanQueryOptions = <TData = Awaited<ReturnType<typeof securityScan>>, TError = ErrorResponse | void>(params?: SecurityScanParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getSecurityScanQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getSecurityScanQueryKey(params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof securityScan>>> = ({ signal }) => securityScan(requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof securityScan>>> = ({ signal }) => securityScan(params, requestOptions, signal);
 
       
 
@@ -2341,11 +2479,11 @@ export type SecurityScanQueryError = ErrorResponse | void
  * @summary Security Scan
  */
 export const useSecurityScan = <TData = Awaited<ReturnType<typeof securityScan>>, TError = ErrorResponse | void>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ params?: SecurityScanParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof securityScan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  const queryOptions = getSecurityScanQueryOptions(options)
+  const queryOptions = getSecurityScanQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -2591,6 +2729,68 @@ export const useListAllNodeVersions = <TData = Awaited<ReturnType<typeof listAll
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getListAllNodeVersionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Retrieve a specific commit by ID
+ */
+export const getWorkflowResult = (
+    workflowResultId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ActionJobResult>(
+      {url: `/workflowresult/${workflowResultId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetWorkflowResultQueryKey = (workflowResultId: string,) => {
+    return [`/workflowresult/${workflowResultId}`] as const;
+    }
+
+    
+export const getGetWorkflowResultQueryOptions = <TData = Awaited<ReturnType<typeof getWorkflowResult>>, TError = ErrorResponse>(workflowResultId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkflowResult>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWorkflowResultQueryKey(workflowResultId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWorkflowResult>>> = ({ signal }) => getWorkflowResult(workflowResultId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(workflowResultId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWorkflowResult>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWorkflowResultQueryResult = NonNullable<Awaited<ReturnType<typeof getWorkflowResult>>>
+export type GetWorkflowResultQueryError = ErrorResponse
+
+/**
+ * @summary Retrieve a specific commit by ID
+ */
+export const useGetWorkflowResult = <TData = Awaited<ReturnType<typeof getWorkflowResult>>, TError = ErrorResponse>(
+ workflowResultId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWorkflowResult>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetWorkflowResultQueryOptions(workflowResultId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
