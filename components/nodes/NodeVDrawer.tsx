@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {
     NodeVersion,
+    NodeVersionStatus,
     useGetNodeVersion,
     useUpdateNodeVersion,
 } from 'src/api/generated'
@@ -123,9 +124,14 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             <NodeVersionStatusBadge status={version?.status} />
                         </div>
                     </h5>
-                    {version?.status_reason && (
-                        <p className="text-gray-400">{version.status_reason}</p>
-                    )}
+                    {version?.status &&
+                        version?.status !=
+                            NodeVersionStatus.NodeVersionStatusActive &&
+                        version?.status_reason && (
+                            <p className="text-gray-400">
+                                {version.status_reason}
+                            </p>
+                        )}
                     {version?.createdAt && (
                         <p className="text-gray-400">
                             Released {formatRelativeDate(version.createdAt)}
