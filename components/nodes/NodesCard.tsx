@@ -10,7 +10,6 @@ const NodesCard: React.FC<NodesCard> = ({
     node: { name, description, icon, downloads, rating, id },
     buttonLink,
 }) => {
-    console.log(rating)
     return (
         <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
             {icon && (

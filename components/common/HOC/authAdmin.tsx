@@ -9,7 +9,6 @@ const withAdmin = (WrappedComponent) => {
 
         useEffect(() => {
             if (!isLoading && !user?.isAdmin) {
-                console.log('redirecting')
                 router.push('/')
             }
         }, [user, router, isLoading])

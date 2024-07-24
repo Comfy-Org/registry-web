@@ -85,7 +85,7 @@ const NodeDetails = () => {
             </div>
         )
     }
-    console.log(data)
+
     if (!data) {
         return (
             <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
