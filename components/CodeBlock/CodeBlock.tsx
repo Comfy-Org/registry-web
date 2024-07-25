@@ -19,7 +19,7 @@ const CopyableCodeBlock = ({ code }) => {
             <div className="flex items-center gap-1">
                 <a
                     target="_blank"
-                    href="https://www.comfydocs.org/comfy-cli/getting-started#install-cli"
+                    href="https://docs.comfy.org/comfy-cli/getting-started#install-cli"
                     rel="noopener noreferrer"
                 >
                     <IoIosInformationCircle
