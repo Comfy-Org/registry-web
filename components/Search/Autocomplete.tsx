@@ -1,17 +1,24 @@
 import React, { useMemo } from 'react'
 import { createElement, Fragment, useEffect, useRef, useState } from 'react'
 import { createRoot, Root } from 'react-dom/client'
+
+import type { BaseItem } from '@algolia/autocomplete-core'
+import type { AutocompleteOptions } from '@algolia/autocomplete-js'
+import {
+    useSearchBox,
+} from 'react-instantsearch'
+import { autocomplete } from '@algolia/autocomplete-js'
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
+
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
-import { useSearchBox } from 'react-instantsearch'
-import { autocomplete, AutocompleteOptions } from '@algolia/autocomplete-js'
-import { BaseItem } from '@algolia/autocomplete-core'
+import { debounce } from '@algolia/autocomplete-shared'
+import type { SearchClient } from 'algoliasearch/lite'
 
 import '@algolia/autocomplete-theme-classic'
 import {
     NODES_QUERY_SUGGESTIONS_INDEX,
     NODES_SEARCH_INDEX,
 } from 'src/constants'
-import { SearchClient } from 'algoliasearch/lite'
 
 type AutocompleteProps = Partial<AutocompleteOptions<BaseItem>> & {
     className?: string
@@ -35,21 +42,39 @@ export function Autocomplete({
 
     const [instantSearchUiState, setInstantSearchUiState] =
         useState<SetInstantSearchUiStateOptions>({ query })
+    const debouncedSetInstantSearchUiState = debounce(
+        setInstantSearchUiState,
+        500
+    )
 
     useEffect(() => {
         setQuery(instantSearchUiState.query)
     }, [instantSearchUiState])
 
     const plugins = useMemo(() => {
+        const recentSearches = createLocalStorageRecentSearchesPlugin({
+            key: 'instantsearch',
+            limit: 3,
+            transformSource({ source }) {
+                return {
+                    ...source,
+                    onSelect({ item }) {
+                        setInstantSearchUiState({
+                            query: item.label,
+                        })
+                    },
+                }
+            },
+        })
+
         const querySuggestions = createQuerySuggestionsPlugin({
             searchClient,
             indexName: NODES_QUERY_SUGGESTIONS_INDEX,
             getSearchParams() {
-                return {
+                return recentSearches.data!.getAlgoliaSearchParams({
                     hitsPerPage: 6,
-                }
+                })
             },
-            categoryAttribute: [NODES_SEARCH_INDEX, 'facets', 'exact_matches'],
             transformSource({ source }) {
                 return {
                     ...source,
@@ -66,12 +91,26 @@ export function Autocomplete({
 
                         return source.getItems(params)
                     },
+                    templates: {
+                        ...source.templates,
+                        header({ items }) {
+                            if (items.length === 0) {
+                                return <Fragment />
+                            }
+
+                            return (
+                                <Fragment>
+                                    <span className="aa-SourceHeaderLine" />
+                                </Fragment>
+                            )
+                        },
+                    },
                 }
             },
         })
 
-        return [querySuggestions]
-    }, [searchClient, setInstantSearchUiState])
+        return [recentSearches, querySuggestions]
+    }, [])
 
     useEffect(() => {
         if (!autocompleteContainer.current) {
@@ -82,6 +121,7 @@ export function Autocomplete({
             ...autocompleteProps,
             container: autocompleteContainer.current,
             initialState: { query },
+            insights: true,
             plugins,
             onReset() {
                 setInstantSearchUiState({ query: '' })
@@ -91,7 +131,7 @@ export function Autocomplete({
             },
             onStateChange({ prevState, state }) {
                 if (prevState.query !== state.query) {
-                    setInstantSearchUiState({
+                    debouncedSetInstantSearchUiState({
                         query: state.query,
                     })
                 }
@@ -107,29 +147,10 @@ export function Autocomplete({
 
                 panelRootRef.current.render(children)
             },
-            navigator: {
-                navigate({ itemUrl }) {
-                    window.location.assign(itemUrl)
-                },
-                navigateNewTab({ itemUrl }) {
-                    const windowReference = window.open(
-                        itemUrl,
-                        '_blank',
-                        'noopener'
-                    )
-
-                    if (windowReference) {
-                        windowReference.focus()
-                    }
-                },
-                navigateNewWindow({ itemUrl }) {
-                    window.open(itemUrl, '_blank', 'noopener')
-                },
-            },
         })
 
         return () => autocompleteInstance.destroy()
-    }, [])
+    }, [plugins])
 
     return <div className={className} ref={autocompleteContainer} />
 }

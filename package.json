@@ -20,6 +20,7 @@
     "@algolia/autocomplete-core": "^1.17.2",
     "@algolia/autocomplete-js": "^1.17.2",
     "@algolia/autocomplete-plugin-query-suggestions": "^1.17.2",
+    "@algolia/autocomplete-plugin-recent-searches": "^1.17.4",
     "@algolia/autocomplete-theme-classic": "^1.17.2",
     "@mdx-js/loader": "^3.0.1",
     "@next/mdx": "12.3.1",
@@ -39,7 +40,8 @@
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-icons": "^5.0.1",
-    "react-instantsearch": "^7.12.0",
+    "react-instantsearch": "^7.12.2",
+    "react-instantsearch-hooks-web": "^6.47.3",
     "react-router-dom": "^6.23.0",
     "react-toastify": "^9.1.3"
   },

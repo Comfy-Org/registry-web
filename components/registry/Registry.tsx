@@ -1,15 +1,28 @@
 import React from 'react'
-import { NODES_SEARCH_INDEX } from 'src/constants'
 import GenericHeader from '../common/GenericHeader'
 import RegistryCard from './RegistryCard'
 import { CustomPagination } from '../common/CustomPagination'
 import { Node } from 'src/api/generated'
 import algoliasearch from 'algoliasearch/lite'
-import { InstantSearch, Hits, RefinementList } from 'react-instantsearch'
-
+import {
+    Configure,
+    HierarchicalMenu,
+    Hits,
+    InstantSearch,
+    Pagination,
+    RefinementList,
+} from 'react-instantsearch'
+// import { Autocomplete } from '@/components/Search'
+import Autocomplete from '@/components/Search/Autocomplete'
 import Hit from '../Search/SearchHit'
+
 import EmptyQueryBoundary from '../Search/EmptyQueryBoundary'
-import Autocomplete from '../Search/Autocomplete'
+
+import {
+    NODES_QUERY_SUGGESTIONS_INDEX,
+    NODES_SEARCH_INDEX,
+    INSTANT_SEARCH_INDEX_NAME,
+} from 'src/constants'
 
 const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
@@ -41,17 +54,21 @@ const Registry: React.FC<RegistryProps> = ({
                 buttonText="Get Started"
                 buttonLink="/nodes"
             />
-            <div className="mt-2 md:w-1/2 w-full">
+            <div className="mt-2 md:w-1/2 w-full mt-5">
                 <InstantSearch
                     searchClient={searchClient}
                     indexName={NODES_SEARCH_INDEX}
                     routing
                 >
                     <Autocomplete
-                        placeholder="Search custom nodes"
-                        detachedMediaQuery="none"
                         searchClient={searchClient}
+                        placeholder="Search products"
+                        detachedMediaQuery="none"
                         openOnFocus
+                    />
+                    <Configure
+                        attributesToSnippet={['name:7', 'description:15']}
+                        snippetEllipsisText="…"
                     />
                     <div>
                         <RefinementList attribute="name" />
