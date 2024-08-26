@@ -1,23 +1,23 @@
-import React from 'react';
-import { Snippet } from 'react-instantsearch';
-import { useRouter } from 'next/router';
+import React from 'react'
+import { Snippet } from 'react-instantsearch'
+import { useRouter } from 'next/router'
 
 type HitProps = {
     hit: {
-        id: string;
-        name: string;
-        publisher_id: string;
-        total_install: number;
-        version: string;
-    };
-};
+        id: string
+        name: string
+        publisher_id: string
+        total_install: number
+        version: string
+    }
+}
 
 const Hit: React.FC<HitProps> = ({ hit }) => {
-    const router = useRouter();
+    const router = useRouter()
 
     const handleClick = () => {
-        router.push(`/nodes/${hit.id}`);
-    };
+        router.push(`/nodes/${hit.id}`)
+    }
 
     return (
         <div
@@ -67,7 +67,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Hit;
+export default Hit

@@ -1,43 +1,37 @@
-import React from 'react';
-import GenericHeader from '../common/GenericHeader';
-import {CustomPagination} from '../common/CustomPagination';
-import {Node} from 'src/api/generated';
-import algoliasearch from 'algoliasearch/lite';
-import {
-    Configure,
-    Hits,
-    InstantSearch,
-} from 'react-instantsearch';
-import Autocomplete from '@/components/Search/Autocomplete';
-import Hit from '../Search/SearchHit';
+import React from 'react'
+import GenericHeader from '../common/GenericHeader'
+import { CustomPagination } from '../common/CustomPagination'
+import { Node } from 'src/api/generated'
+import algoliasearch from 'algoliasearch/lite'
+import { Configure, Hits, InstantSearch } from 'react-instantsearch'
+import Autocomplete from '@/components/Search/Autocomplete'
+import Hit from '../Search/SearchHit'
 
-import {
-    INSTANT_SEARCH_INDEX_NAME,
-} from 'src/constants';
+import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
 
 // Initialize Algolia search client
 const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
     process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string
-);
+)
 
 type RegistryProps = {
-    totalPages: number;
-    currentPage: number;
-    setPage: (page: number) => void;
-    nodes: Node[];
-};
+    totalPages: number
+    currentPage: number
+    setPage: (page: number) => void
+    nodes: Node[]
+}
 
 const Registry: React.FC<RegistryProps> = ({
-                                               currentPage,
-                                               totalPages,
-                                               setPage,
-                                               nodes,
-                                           }) => {
+    currentPage,
+    totalPages,
+    setPage,
+    nodes,
+}) => {
     // Handle page change for pagination
     const onPageChange = (page: number) => {
-        setPage(page);
-    };
+        setPage(page)
+    }
 
     return (
         <div className="relative mt-8 bg-gray-900 lg:mt-20">
@@ -84,7 +78,7 @@ const Registry: React.FC<RegistryProps> = ({
                     {/* Display search results */}
                     <div className="container wrapper">
                         <div>
-                            <Hits hitComponent={Hit}/>
+                            <Hits hitComponent={Hit} />
                         </div>
                     </div>
 
@@ -99,7 +93,7 @@ const Registry: React.FC<RegistryProps> = ({
                 </InstantSearch>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Registry;
+export default Registry
