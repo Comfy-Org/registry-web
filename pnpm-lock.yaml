@@ -46,9 +46,6 @@ importers:
       '@algolia/autocomplete-plugin-recent-searches':
         specifier: ^1.17.4
         version: 1.17.4(@algolia/client-search@5.1.1)(algoliasearch@4.24.0)(search-insights@2.17.0)
-      '@algolia/autocomplete-shared':
-        specifier: ^1.17.4
-        version: 1.17.4(@algolia/client-search@5.1.1)(algoliasearch@4.24.0)
       '@algolia/autocomplete-theme-classic':
         specifier: ^1.17.2
         version: 1.17.4
