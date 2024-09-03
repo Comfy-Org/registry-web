@@ -1,13 +1,10 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import axios from 'axios'
 import download from 'downloadjs'
-import fileDownload from 'js-file-download'
 import { Button, Spinner } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'
-import Link from 'next/link'
 import { NodeEditModal } from './NodeEditModal'
 import {
     NodeVersion,
