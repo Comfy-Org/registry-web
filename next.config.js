@@ -37,9 +37,8 @@ const conf = {
                 destination: 'https://discord.gg/comfyorg',
                 permanent: false,
             },
-        ];
+        ]
     },
-
 }
 // export default withMDX(conf);
 module.exports = withMDX(conf)

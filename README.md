@@ -6,7 +6,6 @@ Registry React Frontend [Github](https://github.com/Comfy-Org/registry-web)
 
 Registry CLI [Github](https://github.com/yoland68/comfy-cli)
 
-
 ## Getting Started
 
 ### Set up IDE
@@ -45,7 +44,6 @@ This generates react queries that you can use in your Components.
 #### Production
 
 Make a PR to the `main` branch. Once merged, Vercel will deploy to https://comfyregistry.org
-
 
 ### CORS
 
