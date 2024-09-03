@@ -6,7 +6,6 @@ Registry React Frontend [Github](https://github.com/Comfy-Org/registry-web)
 
 Registry CLI [Github](https://github.com/yoland68/comfy-cli)
 
-
 ## Getting Started
 
 ### Set up IDE
@@ -45,3 +44,9 @@ This generates react queries that you can use in your Components.
 #### Production
 
 Make a PR to the `main` branch. Once merged, Vercel will deploy to https://comfyregistry.org
+
+### CORS
+
+To enable CORS on the google cloud storage bucket, reference the `cors.json` file. More info [here](https://cloud.google.com/storage/docs/cross-origin#cors-components).
+
+`gcloud storage buckets update gs://comfy-registry --cors-file=cors.json`

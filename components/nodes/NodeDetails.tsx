@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import download from 'downloadjs'
 import { Button, Spinner } from 'flowbite-react'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import NodeVDrawer from './NodeVDrawer'
-import Link from 'next/link'
 import { NodeEditModal } from './NodeEditModal'
 import {
     NodeVersion,
@@ -37,6 +37,17 @@ export function formatRelativeDate(dateString: string) {
         const month = (date.getMonth() + 1).toString().padStart(2, '0')
         const day = date.getDate().toString().padStart(2, '0')
         return `${year}-${month}-${day}`
+    }
+}
+
+const downloadFile = async (url: string, filename: string) => {
+    try {
+        console.log('downloading file from:', url)
+        const response = await fetch(url)
+        const blob = await response.blob()
+        download(blob, filename, 'application/gzip')
+    } catch (error) {
+        console.error('Error downloading file:', error)
     }
 }
 
@@ -300,15 +311,26 @@ const NodeDetails = () => {
                         {data.latest_version?.downloadUrl && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                onClick={() =>
+                                onClick={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => {
+                                    e.preventDefault()
+                                    console.log('clicked download')
+                                    if (
+                                        data &&
+                                        data.latest_version?.downloadUrl
+                                    ) {
+                                        downloadFile(
+                                            data.latest_version?.downloadUrl,
+                                            `${data.name}_${data.latest_version.version}.zip`
+                                        )
+                                    }
                                     analytic.track(
                                         'Download Latest Node Version'
                                     )
-                                }
+                                }}
                             >
-                                <Link href={data.latest_version?.downloadUrl}>
-                                    Download Latest
-                                </Link>
+                                <a>Download Latest</a>
                             </Button>
                         )}
                     </div>
