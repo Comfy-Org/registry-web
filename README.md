@@ -45,3 +45,10 @@ This generates react queries that you can use in your Components.
 #### Production
 
 Make a PR to the `main` branch. Once merged, Vercel will deploy to https://comfyregistry.org
+
+
+### CORS
+
+To enable CORS on the google cloud storage bucket, reference the `cors.json` file. More info [here](https://cloud.google.com/storage/docs/cross-origin#cors-components).
+
+`gcloud storage buckets update gs://comfy-registry --cors-file=cors.json`

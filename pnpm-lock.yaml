@@ -20,6 +20,9 @@ importers:
       axios:
         specifier: ^1.6.5
         version: 1.6.8
+      downloadjs:
+        specifier: ^1.4.7
+        version: 1.4.7
       firebase:
         specifier: ^10.11.1
         version: 10.12.0
@@ -75,6 +78,9 @@ importers:
       '@types/async-busboy':
         specifier: ^1.1.1
         version: 1.1.4
+      '@types/downloadjs':
+        specifier: ^1.4.6
+        version: 1.4.6
       '@types/mixpanel-browser':
         specifier: ^2.49.0
         version: 2.49.0
@@ -988,6 +994,9 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
+  '@types/downloadjs@1.4.6':
+    resolution: {integrity: sha512-mp3w70vsaiLRT9ix92fmI9Ob2yJAPZm6tShJtofo2uHbN11G2i6a0ApIEjBl/kv3e9V7Pv7jMjk1bUwYWvMHvA==}
+
   '@types/es-aggregate-error@1.0.6':
     resolution: {integrity: sha512-qJ7LIFp06h1QE1aVxbVd+zJP2wdaugYXYfd6JxsyRMrYHaxb6itXPogW2tz+ylUJ1n1b+JF1PHyYCfYHm0dvUg==}
 
@@ -1606,6 +1615,9 @@ packages:
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
+
+  downloadjs@1.4.7:
+    resolution: {integrity: sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==}
 
   eachr@3.3.0:
     resolution: {integrity: sha512-yKWuGwOE283CTgbEuvqXXusLH4VBXnY2nZbDkeWev+cpAXY6zCIADSPLdvfkAROc0t8S4l07U1fateCdEDuuvg==}
@@ -4657,6 +4669,8 @@ snapshots:
     dependencies:
       '@types/ms': 0.7.34
 
+  '@types/downloadjs@1.4.6': {}
+
   '@types/es-aggregate-error@1.0.6':
     dependencies:
       '@types/node': 18.8.3
@@ -5347,6 +5361,8 @@ snapshots:
   doctrine@3.0.0:
     dependencies:
       esutils: 2.0.3
+
+  downloadjs@1.4.7: {}
 
   eachr@3.3.0:
     dependencies:
