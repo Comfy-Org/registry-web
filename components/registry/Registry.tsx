@@ -1,6 +1,6 @@
 import React from 'react'
 import GenericHeader from '../common/GenericHeader'
-import { CustomPagination } from '../common/CustomPagination'
+import CustomSearchPagination from '../common/CustomSearchPagination'
 import { Node } from 'src/api/generated'
 import algoliasearch from 'algoliasearch/lite'
 import { Configure, Hits, InstantSearch } from 'react-instantsearch'
@@ -22,17 +22,7 @@ type RegistryProps = {
     nodes: Node[]
 }
 
-const Registry: React.FC<RegistryProps> = ({
-    currentPage,
-    totalPages,
-    setPage,
-    nodes,
-}) => {
-    // Handle page change for pagination
-    const onPageChange = (page: number) => {
-        setPage(page)
-    }
-
+const Registry: React.FC<RegistryProps> = ({}) => {
     return (
         <div className="relative mt-8 bg-gray-900 lg:mt-20">
             {/* Header section */}
@@ -65,6 +55,7 @@ const Registry: React.FC<RegistryProps> = ({
                                 placeholder="Search Nodes"
                                 detachedMediaQuery="none"
                                 openOnFocus
+                                autoFocus
                             />
                         </div>
                     </header>
@@ -82,14 +73,7 @@ const Registry: React.FC<RegistryProps> = ({
                         </div>
                     </div>
 
-                    {/* Custom pagination for search results */}
-                    <div className="absolute right-0 mt-3 -bottom-14">
-                        <CustomPagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={onPageChange}
-                        />
-                    </div>
+                    <CustomSearchPagination />
                 </InstantSearch>
             </div>
         </div>

@@ -22,7 +22,7 @@ import { debounce } from '@algolia/autocomplete-shared'
 import {
     INSTANT_SEARCH_INDEX_NAME,
     INSTANT_SEARCH_QUERY_SUGGESTIONS,
-} from 'src/constants' // Only import necessary constants
+} from 'src/constants'
 
 type AutocompleteProps = Partial<AutocompleteOptions<BaseItem>> & {
     searchClient: SearchClient
@@ -38,15 +38,13 @@ export function Autocomplete({
     className,
     ...autocompleteProps
 }: AutocompleteProps) {
-    // Refs for DOM elements and the root for rendering the panel
     const autocompleteContainer = useRef<HTMLDivElement>(null)
     const panelRootRef = useRef<Root | null>(null)
     const rootRef = useRef<HTMLElement | null>(null)
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
-    // Hooks for managing state from Algolia's useSearchBox and usePagination
     const { query, refine: setQuery } = useSearchBox()
 
-    // Local state to manage instant search UI state with debounced updates
     const [instantSearchUiState, setInstantSearchUiState] =
         useState<SetInstantSearchUiStateOptions>({ query })
     const debouncedSetInstantSearchUiState = debounce(
@@ -54,12 +52,16 @@ export function Autocomplete({
         500
     )
 
-    // Update the query in Algolia's useSearchBox when the instant search UI state changes
     useEffect(() => {
         setQuery(instantSearchUiState.query)
     }, [instantSearchUiState, setQuery])
 
-    // Memoize the creation of plugins for recent searches and query suggestions
+    const focusInput = () => {
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
+    }
+
     const plugins = useMemo(() => {
         const recentSearches = createLocalStorageRecentSearchesPlugin({
             key: 'instantsearch',
@@ -69,6 +71,7 @@ export function Autocomplete({
                     ...source,
                     onSelect({ item }) {
                         setInstantSearchUiState({ query: item.label })
+                        focusInput()
                     },
                 }
             },
@@ -87,16 +90,12 @@ export function Autocomplete({
                     ...source,
                     sourceId: 'querySuggestionsPlugin',
                     onSelect({ item }) {
-                        // Update the instant search state with the selected suggestion
                         setInstantSearchUiState({ query: item.name })
 
-                        // Update the input field with the selected suggestion
-                        const inputElement = document.querySelector('.aa-Input')
-                        if (inputElement) {
-                            inputElement.value = item.name
+                        if (inputRef.current) {
+                            inputRef.current.value = item.name
                         }
 
-                        // Perform a search on the main index and add the query to recent searches
                         searchClient
                             .search([
                                 {
@@ -110,6 +109,7 @@ export function Autocomplete({
                                     id: item.name,
                                     label: item.name,
                                 })
+                                focusInput()
                             })
                             .catch((err) => {
                                 console.error('Search failed:', err)
@@ -137,7 +137,6 @@ export function Autocomplete({
         return [recentSearches, querySuggestions]
     }, [searchClient, debouncedSetInstantSearchUiState])
 
-    // Initialize the autocomplete instance with the specified plugins and options
     useEffect(() => {
         if (!autocompleteContainer.current) {
             return
@@ -149,9 +148,8 @@ export function Autocomplete({
             insights: true,
             plugins,
             onSubmit({ state }) {
-                // Perform a search on form submission
                 setInstantSearchUiState({ query: state.query })
-
+                console.log('On Submit')
                 searchClient
                     .search([
                         {
@@ -160,13 +158,16 @@ export function Autocomplete({
                             params: { hitsPerPage: 10 },
                         },
                     ])
+                    .then(() => {
+                        focusInput()
+                    })
                     .catch((err) => {
                         console.error('Search failed:', err)
                     })
             },
             onStateChange({ prevState, state }) {
-                // Update the instant search UI state on query change
                 if (prevState.query !== state.query) {
+                    console.log('State changed')
                     debouncedSetInstantSearchUiState({ query: state.query })
                 }
             },
@@ -176,7 +177,6 @@ export function Autocomplete({
                 render: () => {},
             },
             render({ children }, root) {
-                // Ensure the root is mounted correctly for rendering
                 if (!panelRootRef.current || rootRef.current !== root) {
                     rootRef.current = root
                     panelRootRef.current?.unmount()
@@ -186,6 +186,10 @@ export function Autocomplete({
                 panelRootRef.current.render(children)
             },
         })
+
+        // Store a reference to the input element
+        inputRef.current =
+            autocompleteContainer.current.querySelector('.aa-Input')
 
         return () => autocompleteInstance.destroy()
     }, [
