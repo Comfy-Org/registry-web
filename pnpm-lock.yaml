@@ -32,6 +32,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.17.19
         version: 5.54.1(react@18.2.0)
+      '@types/react-instantsearch':
+        specifier: ^6.10.4
+        version: 6.10.4
       algoliasearch:
         specifier: ^4.24.0
         version: 4.24.0
@@ -1171,6 +1174,18 @@ packages:
 
   '@types/react-dom@18.0.6':
     resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
+
+  '@types/react-instantsearch-core@6.26.10':
+    resolution: {integrity: sha512-izn21BqXtO3GA5Tx3x7SP6kfk1GJppkVdowuenKIOUj1sCJ3VHwoggsqVWv1DYVcsS8wydjR8Ra91XtI2a12rw==}
+
+  '@types/react-instantsearch-dom@6.12.8':
+    resolution: {integrity: sha512-LKrV3yqtar29TqkG76sfw7k6s95BXRvESKIarNiniXdC+6pioZ23KOx71WJNnwiWbHfeyeSILsKStwDpVWry4A==}
+
+  '@types/react-instantsearch-native@6.3.5':
+    resolution: {integrity: sha512-Zc37ufbTZVEvZlp+yWGcl298kgsz0leUhC1My2LQHsMayXqES4Y7XuVJSXyHaMOItOyLnJM+yUOS/JdHeLDVGw==}
+
+  '@types/react-instantsearch@6.10.4':
+    resolution: {integrity: sha512-I2at92uSs4ZDMb2Tplh6HMCC23WvJ5684i8BNOD8Rwl/a+P7UpfnJDYpaFE9uyGerIrhArHmRe8oIFPGRSe5sA==}
 
   '@types/react@18.0.21':
     resolution: {integrity: sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA==}
@@ -5133,6 +5148,28 @@ snapshots:
   '@types/react-dom@18.0.6':
     dependencies:
       '@types/react': 18.0.21
+
+  '@types/react-instantsearch-core@6.26.10':
+    dependencies:
+      '@types/react': 18.0.21
+      algoliasearch: 4.24.0
+      algoliasearch-helper: 3.22.4(algoliasearch@4.24.0)
+
+  '@types/react-instantsearch-dom@6.12.8':
+    dependencies:
+      '@types/react': 18.0.21
+      '@types/react-instantsearch-core': 6.26.10
+
+  '@types/react-instantsearch-native@6.3.5':
+    dependencies:
+      '@types/react': 18.0.21
+      '@types/react-instantsearch-core': 6.26.10
+
+  '@types/react-instantsearch@6.10.4':
+    dependencies:
+      '@types/react-instantsearch-core': 6.26.10
+      '@types/react-instantsearch-dom': 6.12.8
+      '@types/react-instantsearch-native': 6.3.5
 
   '@types/react@18.0.21':
     dependencies:
