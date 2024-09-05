@@ -9,19 +9,19 @@ importers:
   .:
     dependencies:
       '@algolia/autocomplete-core':
-        specifier: ^1.17.2
+        specifier: ^1.17.4
         version: 1.17.4(@algolia/client-search@4.24.0)(algoliasearch@4.24.0)(search-insights@2.17.1)
       '@algolia/autocomplete-js':
-        specifier: ^1.17.2
+        specifier: ^1.17.4
         version: 1.17.4(@algolia/client-search@4.24.0)(algoliasearch@4.24.0)(search-insights@2.17.1)
       '@algolia/autocomplete-plugin-query-suggestions':
-        specifier: ^1.17.2
+        specifier: 1.17.4
         version: 1.17.4(@algolia/client-search@4.24.0)(algoliasearch@4.24.0)(search-insights@2.17.1)
       '@algolia/autocomplete-plugin-recent-searches':
         specifier: ^1.17.4
         version: 1.17.4(@algolia/client-search@4.24.0)(algoliasearch@4.24.0)(search-insights@2.17.1)
       '@algolia/autocomplete-theme-classic':
-        specifier: ^1.17.2
+        specifier: 1.17.4
         version: 1.17.4
       '@mdx-js/loader':
         specifier: ^3.0.1
@@ -38,6 +38,9 @@ importers:
       algoliasearch:
         specifier: ^4.24.0
         version: 4.24.0
+      autocomplete-shared:
+        specifier: link:@types/@algolia/autocomplete-shared
+        version: link:@types/@algolia/autocomplete-shared
       axios:
         specifier: ^1.6.5
         version: 1.7.7

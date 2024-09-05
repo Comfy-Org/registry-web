@@ -25,7 +25,6 @@ type RegistryProps = {
 const Registry: React.FC<RegistryProps> = ({}) => {
     return (
         <div className="relative mt-8 bg-gray-900 lg:mt-20">
-            {/* Header section */}
             <GenericHeader
                 title="Welcome to the Registry"
                 subTitle="View nodes or sign in to create and publish your own"
@@ -33,7 +32,6 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                 buttonLink="/nodes"
             />
 
-            {/* InstantSearch component for Algolia search */}
             <div className="md:w-full w-full mt-5">
                 <InstantSearch
                     searchClient={searchClient}
@@ -47,7 +45,6 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                         preserveSharedStateOnUnmount: true,
                     }}
                 >
-                    {/* Autocomplete search bar */}
                     <header className="header">
                         <div className="header-wrapper wrapper">
                             <Autocomplete
