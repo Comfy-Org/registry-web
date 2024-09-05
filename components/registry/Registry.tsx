@@ -36,11 +36,13 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                 <InstantSearch
                     searchClient={searchClient}
                     indexName={INSTANT_SEARCH_INDEX_NAME}
-                    routing={{
-                        history: {
-                            cleanUrlOnDispose: false,
-                        },
-                    }}
+                    routing={
+                        {
+                            history: {
+                                cleanUrlOnDispose: false,
+                            },
+                        } as any
+                    }
                     future={{
                         preserveSharedStateOnUnmount: true,
                     }}

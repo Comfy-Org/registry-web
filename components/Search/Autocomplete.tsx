@@ -16,12 +16,10 @@ import { usePagination, useSearchBox } from 'react-instantsearch'
 import { autocomplete } from '@algolia/autocomplete-js'
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
+// @ts-ignore
 import { debounce } from '@algolia/autocomplete-shared'
 
-import {
-    INSTANT_SEARCH_INDEX_NAME,
-    INSTANT_SEARCH_QUERY_SUGGESTIONS,
-} from 'src/constants'
+import { INSTANT_SEARCH_QUERY_SUGGESTIONS } from 'src/constants'
 
 import '@algolia/autocomplete-theme-classic'
 

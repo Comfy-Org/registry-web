@@ -21,7 +21,7 @@ export default function CustomSearchPagination(props: UsePaginationProps) {
     return (
         <div className="flex mt-2 sm:justify-center">
             <FlowbitePagination
-                theme={CustomThemePagination}
+                theme={CustomThemePagination as any} // Add 'as any' to bypass type checking
                 currentPage={currentRefinement + 1}
                 totalPages={nbPages}
                 onPageChange={handlePageChange}

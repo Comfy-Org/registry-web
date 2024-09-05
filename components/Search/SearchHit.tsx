@@ -1,15 +1,18 @@
 import React from 'react'
 import { Snippet } from 'react-instantsearch'
+
 import { useRouter } from 'next/router'
 
+interface NodeHit {
+    id: string
+    name: string
+    publisher_id: string
+    total_install: number
+    version: string
+}
+
 type HitProps = {
-    hit: {
-        id: string
-        name: string
-        publisher_id: string
-        total_install: number
-        version: string
-    }
+    hit: NodeHit
 }
 
 const Hit: React.FC<HitProps> = ({ hit }) => {
@@ -26,6 +29,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
         >
             <div className="flex flex-col px-4">
                 <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
+                    {/* @ts-ignore */}
                     <Snippet hit={hit} attribute="name" />
                 </h6>
 
