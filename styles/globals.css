@@ -9,3 +9,17 @@ body {
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.ais-Hits-list {
+    @apply grid grid-cols-4 gap-2;
+}
+
+.ais-Hits-item {
+    @apply bg-gray-800 my-2 p-4 rounded-lg shadow-md;
+}
+
+.ais-Hits-item:hover,
+.ais-Snippet:hover,
+.ais-Hits-item h1:hover {
+    cursor: pointer;
+}
