@@ -190,7 +190,7 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )} */}
-                                {data.downloads != 0 && (
+                                {/* {data.downloads != 0 && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
                                             className="w-6 h-6"
@@ -213,7 +213,7 @@ const NodeDetails = () => {
                                             downloads
                                         </span>
                                     </p>
-                                )}
+                                )} */}
                             </div>
                             <div className="mt-5 mb-10">
                                 <CopyableCodeBlock
