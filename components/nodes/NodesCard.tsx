@@ -41,7 +41,7 @@ const NodesCard: React.FC<NodesCard> = ({
                 </div>
 
                 <div className="flex mt-2">
-                    {downloads != 0 && (
+                    {/* {downloads != 0 && (
                         <div className="flex justify-center text-center align-center">
                             <svg
                                 className="w-4 h-4 text-gray-300"
@@ -65,7 +65,7 @@ const NodesCard: React.FC<NodesCard> = ({
                                 {downloads}
                             </p>
                         </div>
-                    )}
+                    )} */}
                     {rating != 0 && (
                         <div className="flex justify-center ml-2 text-center align-center">
                             <svg
