@@ -51,7 +51,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
                         {publisherName}
                     </p>
                     <div className="flex items-center flex-start align-center gap-1 mt-2">
-                        {downloads != 0 && (
+                        {/* {downloads != 0 && (
                             <p className="flex justify-center text-center align-center">
                                 <svg
                                     className="w-4 h-4 text-white"
@@ -74,7 +74,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
                                     {downloads}
                                 </p>
                             </p>
-                        )}
+                        )} */}
 
                         {rating != 0 && (
                             <div className="flex justify-center text-center align-center">
