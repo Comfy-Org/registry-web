@@ -24,7 +24,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
 
     return (
         <div
-            className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4"
+            className="flex flex-col bg-gray-800 rounded-lg cursor-pointer h-full dark:border-gray-700 lg:p-4"
             onClick={handleClick}
         >
             <div className="flex flex-col px-4">
