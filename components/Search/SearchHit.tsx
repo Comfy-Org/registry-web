@@ -43,7 +43,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                     {hit.publisher_id}
                 </p>
 
-                <div className="flex items-center flex-start align-center gap-1 mt-2">
+                {/* <div className="flex items-center flex-start align-center gap-1 mt-2">
                     {hit.total_install != 0 && (
                         <p className="flex justify-center text-center align-center">
                             <svg
@@ -68,7 +68,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                             </p>
                         </p>
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     )
