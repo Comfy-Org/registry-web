@@ -19,6 +19,7 @@ class MixpanelAnalytics {
                 debug: true,
                 track_pageview: true,
                 persistence: 'localStorage',
+                api_host: 'https://mp.comfy.org',
             })
         }
     }
