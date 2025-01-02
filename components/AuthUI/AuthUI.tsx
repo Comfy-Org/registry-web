@@ -147,7 +147,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 analytic.track('Sign In', {
                                     provider: 'Github',
                                 })
-                                signInWithGithub()
+                                signInWithGithub(['email'])
                             }}
                         >
                             <svg
