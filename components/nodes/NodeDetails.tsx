@@ -8,6 +8,7 @@ import NodeVDrawer from './NodeVDrawer'
 import { NodeEditModal } from './NodeEditModal'
 import {
     NodeVersion,
+    NodeVersionStatus,
     useGetNode,
     useGetPermissionOnPublisherNodes,
     useListNodeVersions,
@@ -69,7 +70,13 @@ const NodeDetails = () => {
         isLoading: loadingNodeVersions,
         error: listNodeVersionsError,
         refetch: refetchVersions,
-    } = useListNodeVersions(nodeId as string)
+    } = useListNodeVersions(nodeId as string, {
+        statuses: [
+            NodeVersionStatus.NodeVersionStatusActive,
+            NodeVersionStatus.NodeVersionStatusPending,
+            NodeVersionStatus.NodeVersionStatusFlagged,
+        ],
+    })
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
         setIsDrawerOpen(!isDrawerOpen)
