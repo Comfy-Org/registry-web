@@ -46,9 +46,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
                         Comfy Registry
                     </span>
-                    <span className="self-center mt-0.5 p-0.5 text-xs font-semibold text-white whitespace-nowrap bg-blue-500 rounded-md">
-                        beta
-                    </span>
                 </div>
             </Navbar.Brand>
             <div className="flex items-center gap-2 bg-gray-900 md:order-2">
