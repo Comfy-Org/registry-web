@@ -11,6 +11,7 @@ import {
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
+import { useQueryClient } from '@tanstack/react-query'
 
 function NodeVersionList({}) {
     const router = useRouter()
@@ -36,6 +37,7 @@ function NodeVersionList({}) {
     const versions = getAllNodeVersionsQuery.data?.versions || []
 
     const updateNodeVersionMutation = useAdminUpdateNodeVersion()
+    const queryClient = useQueryClient()
 
     React.useEffect(() => {
         if (getAllNodeVersionsQuery.isError) {
@@ -64,6 +66,9 @@ function NodeVersionList({}) {
             {
                 onSuccess: () => {
                     toast.success('Node version approved')
+                    queryClient.invalidateQueries({
+                        queryKey: ['/versions'],
+                    })
                 },
                 onError: () => {
                     toast.error('Error approving node version')
@@ -85,6 +90,12 @@ function NodeVersionList({}) {
             {
                 onSuccess: () => {
                     toast.success('Node version rejected')
+                    queryClient.invalidateQueries({
+                        queryKey: ['/versions'],
+                    })
+                    queryClient.refetchQueries({
+                        queryKey: ['/versions'],
+                    })
                 },
                 onError: () => {
                     toast.error('Error rejecting node version')
@@ -216,7 +227,7 @@ function NodeVersionList({}) {
                             color="failure"
                             onClick={() =>
                                 onReject(
-                                    nodeVersion as string,
+                                    nodeVersion.node_id as string,
                                     nodeVersion.version as string
                                 )
                             }
