@@ -33,6 +33,7 @@ function NodeVersionList({}) {
         page: page,
         pageSize: 16,
         statuses: selectedStatus,
+        include_status_reason: true,
     })
     const versions = getAllNodeVersionsQuery.data?.versions || []
 
