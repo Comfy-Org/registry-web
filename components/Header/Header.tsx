@@ -55,12 +55,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     className="p-3"
                     href="/discord"
                 ></Badge>
-                <Badge
-                    icon={GithubIcon}
-                    color="gray"
-                    className="p-3"
-                    href="https://github.com/Comfy-Org/registry-backend"
-                ></Badge>
                 {isLoggedIn ? (
                     <>
                         <Button
