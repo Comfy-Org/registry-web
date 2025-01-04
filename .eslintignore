@@ -1,8 +1,4 @@
 !.storybook
 /worktrees
-/pages/admin/demoday/frames/*
 NativeApp/*
-public/zedge-82323/*
-components/demoday/*
-pages/admin/demoday/*
 src/api/generated.ts
