@@ -123,6 +123,9 @@ function NodeVersionList({}) {
                 <h1 className="text-2xl font-bold text-gray-200">
                     Node Versions
                 </h1>
+                <h1 className="text-lg font-bold text-gray-200">
+                    Total Results : {getAllNodeVersionsQuery.data?.total}
+                </h1>
                 <div className="flex gap-2">
                     <Button
                         color={
