@@ -52,6 +52,27 @@ const downloadFile = async (url: string, filename: string) => {
     }
 }
 
+export function formatDownloadCount(count: number): string {
+    if (count === 0) return '0'
+
+    const units = ['', 'K', 'M', 'B']
+    const unitSize = 1000
+    const unitIndex = Math.floor(Math.log10(count) / Math.log10(unitSize))
+
+    // Don't format if less than 1000
+    if (unitIndex === 0) return count.toString()
+
+    // Calculate the formatted number with one decimal place
+    const formattedNum = (count / Math.pow(unitSize, unitIndex)).toFixed(1)
+
+    // Remove .0 if it exists
+    const cleanNum = formattedNum.endsWith('.0')
+        ? formattedNum.slice(0, -2)
+        : formattedNum
+
+    return `${cleanNum}${units[unitIndex]}`
+}
+
 const NodeDetails = () => {
     const router = useRouter()
     const { publisherId, nodeId } = router.query
@@ -217,6 +238,9 @@ const NodeDetails = () => {
                                             />
                                         </svg>
                                         <span className="ml-4 text-[18px]">
+                                            {formatDownloadCount(
+                                                data.downloads || 0
+                                            )}{' '}
                                             downloads
                                         </span>
                                     </p>
