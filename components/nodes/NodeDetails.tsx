@@ -197,7 +197,7 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )} */}
-                                {/* {data.downloads != 0 && (
+                                {data.downloads != 0 && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
                                             className="w-6 h-6"
@@ -220,7 +220,7 @@ const NodeDetails = () => {
                                             downloads
                                         </span>
                                     </p>
-                                )} */}
+                                )}
                             </div>
                             <div className="mt-5 mb-10">
                                 <CopyableCodeBlock
@@ -315,6 +315,7 @@ const NodeDetails = () => {
                                 <span>Edit details</span>
                             </Button>
                         )}
+
                         {data.latest_version?.downloadUrl && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
