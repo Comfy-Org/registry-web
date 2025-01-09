@@ -10,7 +10,7 @@ type NodeVersionDeleteModalProps = {
     onCloseDeleteModal: () => void
     nodeId: string
     versionId: string
-    publisherId: string
+    publisherId?: string
 }
 
 export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
@@ -23,6 +23,10 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
     const deleteVersionMutation = useDeleteNodeVersion({})
 
     const handleDeleteVersion = () => {
+      if (!publisherId) {
+          toast.error('Cannot delete version.')
+          return
+      }
         deleteVersionMutation.mutate(
             {
                 nodeId: nodeId,

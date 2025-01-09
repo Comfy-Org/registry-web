@@ -83,7 +83,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         )
     }
 
-    if (!version || !version.id || !publisherId) {
+    if (!version || !version.id) {
         return null
     }
 
@@ -202,7 +202,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                 onCloseDeleteModal={() => setIsDeleteModalOpen(false)}
                 nodeId={nodeId}
                 versionId={version.id}
-                publisherId={publisherId}
+                publisherId={publisherId as string}
             />
         </>
     )
