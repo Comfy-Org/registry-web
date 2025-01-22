@@ -66,7 +66,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                     />
 
                     {/* Display search results */}
-                    <div className="container wrapper">
+                    <div className="container wrapper mt-2">
                         <div>
                             <Hits hitComponent={Hit} />
                         </div>
