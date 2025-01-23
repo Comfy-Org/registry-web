@@ -15,12 +15,7 @@ const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string
 )
 
-type RegistryProps = {
-    totalPages: number
-    currentPage: number
-    setPage: (page: number) => void
-    nodes: Node[]
-}
+type RegistryProps = {}
 
 const Registry: React.FC<RegistryProps> = ({}) => {
     return (
