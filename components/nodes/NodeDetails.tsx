@@ -98,6 +98,8 @@ const NodeDetails = () => {
             NodeVersionStatus.NodeVersionStatusFlagged,
         ],
     })
+
+    const { data: node } = useGetNode(nodeId as string)
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
         setIsDrawerOpen(!isDrawerOpen)
@@ -146,7 +148,7 @@ const NodeDetails = () => {
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
                 <div className="w-full lg:w-1/5 ">
                     <Image
-                        src={nodesLogo}
+                        src={node?.icon || nodesLogo}
                         alt="icon"
                         width={240}
                         height={240}
