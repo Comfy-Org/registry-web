@@ -1,11 +1,9 @@
+import download from 'downloadjs'
+import { Button, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import download from 'downloadjs'
-import { Button, Spinner } from 'flowbite-react'
-import nodesLogo from '../../public/images/nodesLogo.svg'
-import NodeVDrawer from './NodeVDrawer'
-import { NodeEditModal } from './NodeEditModal'
+import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
     NodeVersionStatus,
@@ -13,9 +11,11 @@ import {
     useGetPermissionOnPublisherNodes,
     useListNodeVersions,
 } from 'src/api/generated'
+import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
-import analytic from 'src/analytic/analytic'
+import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
+import NodeVDrawer from './NodeVDrawer'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)

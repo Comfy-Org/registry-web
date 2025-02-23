@@ -47,3 +47,6 @@ NativeApp/yarn.lock
 sidekick.yaml
 
 .idea/
+
+# ignore bun lock file
+bun.lock

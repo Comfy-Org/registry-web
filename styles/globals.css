@@ -23,3 +23,8 @@ body {
 .ais-Hits-item h1:hover {
     cursor: pointer;
 }
+
+/* render highlight */
+strong {
+    @apply text-blue-500;
+}
