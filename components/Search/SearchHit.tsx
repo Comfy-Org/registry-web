@@ -1,46 +1,98 @@
+import { Tooltip } from 'flowbite-react'
+import type {
+    HitAttributeHighlightResult,
+    HitAttributeSnippetResult,
+    Hit as HitType,
+} from 'instantsearch.js'
+import Link from 'next/link'
 import React from 'react'
 import { Snippet } from 'react-instantsearch'
-
-import { useRouter } from 'next/router'
-
+import Markdown from 'react-markdown'
 interface NodeHit {
     id: string
     name: string
+    description: string
     publisher_id: string
     total_install: number
-    version: string
+    latest_version: string
+
+    comfy_nodes?: string[]
 }
 
 type HitProps = {
-    hit: NodeHit
+    hit: HitType<NodeHit>
 }
 
 const Hit: React.FC<HitProps> = ({ hit }) => {
-    const router = useRouter()
-
-    const handleClick = () => {
-        router.push(`/nodes/${hit.id}`)
-    }
-
+    const matchedNodes = (
+        hit._highlightResult?.comfy_nodes as
+            | HitAttributeHighlightResult[]
+            | undefined
+    )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
-        <div
+        <Link
             className="flex flex-col bg-gray-800 rounded-lg cursor-pointer h-full dark:border-gray-700 lg:p-4"
-            onClick={handleClick}
+            href={`/nodes/${hit.id}`}
+            rel="noopener noreferrer"
+            // target="_blank"
         >
-            <div className="flex flex-col px-4">
+            <div className="flex flex-col">
                 <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
-                    {/* @ts-ignore */}
                     <Snippet hit={hit} attribute="name" />
                 </h6>
 
-                {hit.version && (
-                    <p className="mb-1 text-xs tracking-tight text-white">
-                        <span>v{hit.version}</span>
-                    </p>
+                {/* description */}
+                <p className="mb-1 text-xs font-light text-white mt-2">
+                    <Markdown>
+                        {/* <Snippet hit={hit} attribute="description" /> */}
+                        {(
+                            hit._snippetResult
+                                ?.description as HitAttributeSnippetResult
+                        )?.value.replace(/<\/?mark>/g, '**')}
+                    </Markdown>
+                </p>
+
+                {/* nodes */}
+                {hit.comfy_nodes?.length && (
+                    <div className="mb-1 text-xs font-light text-white mt-2 flex-row flex gap-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                        <Tooltip
+                            content={
+                                <pre>{hit.comfy_nodes?.join(', \n') ?? ''}</pre>
+                            }
+                            placement="bottom"
+                        >
+                            {matchedNodes?.length ? (
+                                <>
+                                    {matchedNodes?.length ?? 0}/
+                                    {hit.comfy_nodes?.length ?? 0} Nodes matched:
+                                    {matchedNodes
+                                        ?.map((e) =>
+                                            e.value?.replace(/<\/?mark>/g, '**')
+                                        )
+                                        .filter((e) => e)
+                                        .map((name) => (
+                                            <div key={name}>
+                                                <Markdown>{name}</Markdown>
+                                            </div>
+                                        ))}
+                                </>
+                            ) : (
+                                <>{hit.comfy_nodes?.length ?? 0} Nodes</>
+                            )}
+                        </Tooltip>
+                    </div>
                 )}
 
+                {/* meta info */}
                 <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">
-                    {hit.publisher_id}
+                    @{hit.publisher_id}
+                    {hit.latest_version && (
+                        <span className="mb-1 text-xs tracking-tight text-white">
+                            {' | '}
+                            <span>v{hit.latest_version}</span>
+                        </span>
+                    )}
+                    {hit.total_install}
                 </p>
 
                 {/* <div className="flex items-center flex-start align-center gap-1 mt-2">
@@ -70,7 +122,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                     )}
                 </div> */}
             </div>
-        </div>
+        </Link>
     )
 }
 
