@@ -64,7 +64,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                             {matchedNodes?.length ? (
                                 <>
                                     {matchedNodes?.length ?? 0}/
-                                    {hit.comfy_nodes?.length ?? 0} Nodes:
+                                    {hit.comfy_nodes?.length ?? 0} Nodes matched:
                                     {matchedNodes
                                         ?.map((e) =>
                                             e.value?.replace(/<\/?mark>/g, '**')
