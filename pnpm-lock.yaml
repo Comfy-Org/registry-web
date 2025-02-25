@@ -23,6 +23,9 @@ importers:
       '@algolia/autocomplete-theme-classic':
         specifier: 1.17.4
         version: 1.17.4
+      '@lytieuphong/short-number':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@mdx-js/loader':
         specifier: ^3.0.1
         version: 3.0.1(webpack@5.94.0)
@@ -801,6 +804,9 @@ packages:
     engines: {node: '>= 10.16.0'}
     peerDependencies:
       jsep: ^0.4.0||^1.0.0
+
+  '@lytieuphong/short-number@1.2.3':
+    resolution: {integrity: sha512-nfknP0ZAMDweGJh5/myRHNGK7PyIQrjmuQdok188gZtwkH2N/aVpofZvGHP1otDHwxNAnO+7Fl8d2HdoVeUs5A==}
 
   '@mdx-js/loader@3.0.1':
     resolution: {integrity: sha512-YbYUt7YyEOdFxhyuCWmLKf5vKhID/hJAojEUnheJk4D8iYVLFQw+BAoBWru/dHGch1omtmZOPstsmKPyBF68Tw==}
@@ -4636,6 +4642,8 @@ snapshots:
   '@jsep-plugin/ternary@1.1.3(jsep@1.3.9)':
     dependencies:
       jsep: 1.3.9
+
+  '@lytieuphong/short-number@1.2.3': {}
 
   '@mdx-js/loader@3.0.1(webpack@5.94.0)':
     dependencies:

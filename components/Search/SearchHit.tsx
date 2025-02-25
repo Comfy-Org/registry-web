@@ -1,3 +1,4 @@
+import { ShortNumber } from '@lytieuphong/short-number'
 import { Tooltip } from 'flowbite-react'
 import type {
     HitAttributeHighlightResult,
@@ -6,6 +7,7 @@ import type {
 } from 'instantsearch.js'
 import Link from 'next/link'
 import React from 'react'
+import { HiDownload } from 'react-icons/hi'
 import { Snippet } from 'react-instantsearch'
 import Markdown from 'react-markdown'
 interface NodeHit {
@@ -26,15 +28,15 @@ type HitProps = {
 const Hit: React.FC<HitProps> = ({ hit }) => {
     const matchedNodes = (
         hit._highlightResult?.comfy_nodes as
-            | HitAttributeHighlightResult[]
-            | undefined
+        | HitAttributeHighlightResult[]
+        | undefined
     )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
         <Link
             className="flex flex-col bg-gray-800 rounded-lg cursor-pointer h-full dark:border-gray-700 lg:p-4"
             href={`/nodes/${hit.id}`}
             rel="noopener noreferrer"
-            // target="_blank"
+        // target="_blank"
         >
             <div className="flex flex-col">
                 <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
@@ -84,15 +86,20 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 )}
 
                 {/* meta info */}
-                <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">
+                <p className="mb-1 text-xs font-light text-nowrap mt-2 text-gray-400">
                     @{hit.publisher_id}
                     {hit.latest_version && (
-                        <span className="mb-1 text-xs tracking-tight text-white">
+                        <span className="">
                             {' | '}
                             <span>v{hit.latest_version}</span>
                         </span>
                     )}
-                    {hit.total_install}
+                    {hit.total_install && (
+                        <span className="">
+                            {' | '}
+                            <HiDownload className='inline h-3 w-3' title='Installs' /> {ShortNumber(hit.total_install)}
+                        </span>
+                    )}
                 </p>
 
                 {/* <div className="flex items-center flex-start align-center gap-1 mt-2">
