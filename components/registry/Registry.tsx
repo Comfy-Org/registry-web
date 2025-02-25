@@ -1,7 +1,6 @@
 import React from 'react'
 import GenericHeader from '../common/GenericHeader'
 import CustomSearchPagination from '../common/CustomSearchPagination'
-import { Node } from 'src/api/generated'
 import algoliasearch from 'algoliasearch/lite'
 import { Configure, Hits, InstantSearch } from 'react-instantsearch'
 import Autocomplete from '@/components/Search/Autocomplete'
@@ -61,7 +60,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                     />
 
                     {/* Display search results */}
-                    <div className="container wrapper mt-2">
+                    <div className="wrapper mt-2 w-full">
                         <div>
                             <Hits hitComponent={Hit} />
                         </div>
