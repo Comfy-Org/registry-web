@@ -114,6 +114,27 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                         )}
                     </p>
 
+                    {/* meta info */}
+                    <p className="mb-1 text-xs font-light text-nowrap mt-2 text-gray-400">
+                        @{hit.publisher_id}
+                        {hit.latest_version && (
+                            <span className="">
+                                {' | '}
+                                <span>v{hit.latest_version}</span>
+                            </span>
+                        )}
+                        {hit.total_install && (
+                            <span className="">
+                                {' | '}
+                                <HiDownload
+                                    className="inline h-3 w-3"
+                                    title="Installs"
+                                />{' '}
+                                {ShortNumber(hit.total_install)}
+                            </span>
+                        )}
+                    </p>
+
                     {/* <div className="flex items-center flex-start align-center gap-1 mt-2">
                     {hit.total_install != 0 && (
                         <p className="flex justify-center text-center align-center">
