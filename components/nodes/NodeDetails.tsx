@@ -1,20 +1,21 @@
+import download from 'downloadjs'
+import { Button, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import download from 'downloadjs'
-import { Button, Spinner } from 'flowbite-react'
-import nodesLogo from '../../public/images/nodesLogo.svg'
-import NodeVDrawer from './NodeVDrawer'
-import { NodeEditModal } from './NodeEditModal'
+import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
+    NodeVersionStatus,
     useGetNode,
     useGetPermissionOnPublisherNodes,
     useListNodeVersions,
 } from 'src/api/generated'
+import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
-import analytic from 'src/analytic/analytic'
+import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
+import NodeVDrawer from './NodeVDrawer'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -51,6 +52,27 @@ const downloadFile = async (url: string, filename: string) => {
     }
 }
 
+export function formatDownloadCount(count: number): string {
+    if (count === 0) return '0'
+
+    const units = ['', 'K', 'M', 'B']
+    const unitSize = 1000
+    const unitIndex = Math.floor(Math.log10(count) / Math.log10(unitSize))
+
+    // Don't format if less than 1000
+    if (unitIndex === 0) return count.toString()
+
+    // Calculate the formatted number with one decimal place
+    const formattedNum = (count / Math.pow(unitSize, unitIndex)).toFixed(1)
+
+    // Remove .0 if it exists
+    const cleanNum = formattedNum.endsWith('.0')
+        ? formattedNum.slice(0, -2)
+        : formattedNum
+
+    return `${cleanNum}${units[unitIndex]}`
+}
+
 const NodeDetails = () => {
     const router = useRouter()
     const { publisherId, nodeId } = router.query
@@ -69,7 +91,15 @@ const NodeDetails = () => {
         isLoading: loadingNodeVersions,
         error: listNodeVersionsError,
         refetch: refetchVersions,
-    } = useListNodeVersions(nodeId as string)
+    } = useListNodeVersions(nodeId as string, {
+        statuses: [
+            NodeVersionStatus.NodeVersionStatusActive,
+            NodeVersionStatus.NodeVersionStatusPending,
+            NodeVersionStatus.NodeVersionStatusFlagged,
+        ],
+    })
+
+    const { data: node } = useGetNode(nodeId as string)
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
         setIsDrawerOpen(!isDrawerOpen)
@@ -118,7 +148,7 @@ const NodeDetails = () => {
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
                 <div className="w-full lg:w-1/5 ">
                     <Image
-                        src={nodesLogo}
+                        src={node?.icon || nodesLogo}
                         alt="icon"
                         width={240}
                         height={240}
@@ -190,7 +220,7 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )} */}
-                                {/* {data.downloads != 0 && (
+                                {data.downloads != 0 && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
                                             className="w-6 h-6"
@@ -210,10 +240,13 @@ const NodeDetails = () => {
                                             />
                                         </svg>
                                         <span className="ml-4 text-[18px]">
+                                            {formatDownloadCount(
+                                                data.downloads || 0
+                                            )}{' '}
                                             downloads
                                         </span>
                                     </p>
-                                )} */}
+                                )}
                             </div>
                             <div className="mt-5 mb-10">
                                 <CopyableCodeBlock
@@ -308,6 +341,7 @@ const NodeDetails = () => {
                                 <span>Edit details</span>
                             </Button>
                         )}
+
                         {data.latest_version?.downloadUrl && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"

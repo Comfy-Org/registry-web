@@ -5,7 +5,18 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 
 export default function App({ Component, pageProps }: AppProps) {
-    const queryClient = new QueryClient()
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: (failureCount, error: any) => {
+                    // Don't retry on 404s
+                    if (error?.response?.status === 404) return false
+                    // Retry up to 3 times for other errors
+                    return failureCount < 3
+                },
+            },
+        },
+    })
 
     return (
         <QueryClientProvider client={queryClient}>

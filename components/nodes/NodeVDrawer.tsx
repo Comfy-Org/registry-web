@@ -8,7 +8,7 @@ import { formatRelativeDate } from './NodeDetails'
 import { toast } from 'react-toastify'
 import { Button, Spinner } from 'flowbite-react'
 import analytic from 'src/analytic/analytic'
-import NodeVersionStatusBadge from './NodeVersionStatusBadge'
+import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
 type NodeVDrawerProps = {
     isDrawerOpen: boolean
     toggleDrawer: () => void
@@ -36,7 +36,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
     const isVersionAvailable = version && !version.deprecated
     const updateNodeVersionMutation = useUpdateNodeVersion()
-    const handleToggle = () => {
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+    const handleToggleDeprecate = () => {
         if (!version || !version.id) {
             toast.error('Version not found')
             return
@@ -81,6 +83,10 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         )
     }
 
+    if (!version || !version.id) {
+        return null
+    }
+
     return (
         <>
             <div
@@ -114,7 +120,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     </button>
                 </div>
                 <div>
-                    <h5
+                    {/* <h5
                         id="drawer-label"
                         className="inline-flex items-center mb-6 text-xl font-semibold text-white "
                     >
@@ -122,29 +128,40 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         <div className="ml-1">
                             <NodeVersionStatusBadge status={version?.status} />
                         </div>
-                    </h5>
+                    </h5> */}
 
                     {version?.createdAt && (
                         <p className="text-gray-400">
                             Released {formatRelativeDate(version.createdAt)}
                         </p>
                     )}
-                    {version?.downloadUrl && (
-                        <Button
-                            className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
-                            onClick={() => {
-                                analytic.track('Download Node Version', {
-                                    version: version.version,
-                                    publisherId: publisherId,
-                                    nodeId: nodeId,
-                                })
-                            }}
-                        >
-                            <a href={version.downloadUrl}>
-                                Download Version {version.version}
-                            </a>
-                        </Button>
-                    )}
+
+                    <div className="flex gap-4">
+                        {version?.downloadUrl && (
+                            <Button
+                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
+                                onClick={() => {
+                                    analytic.track('Download Node Version', {
+                                        version: version.version,
+                                        publisherId: publisherId,
+                                        nodeId: nodeId,
+                                    })
+                                }}
+                            >
+                                <a href={version.downloadUrl}>
+                                    Download Version {version.version}
+                                </a>
+                            </Button>
+                        )}
+                        {canEdit && (
+                            <Button
+                                className="flex-shrink-0 px-4 text-white bg-red-600 rounded whitespace-nowrap text-[16px] mt-5"
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
+                                Delete Version
+                            </Button>
+                        )}
+                    </div>
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
 
                     <div className="space-y-4">
@@ -165,7 +182,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                                 type="checkbox"
                                 checked={!isVersionAvailable}
                                 className="sr-only peer"
-                                onClick={handleToggle}
+                                onClick={handleToggleDeprecate}
                             />
                             <div className=" mt-[10px] relative w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                         </label>
@@ -180,6 +197,13 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     </div>
                 )}
             </div>
+            <NodeVersionDeleteModal
+                openDeleteModal={isDeleteModalOpen}
+                onCloseDeleteModal={() => setIsDeleteModalOpen(false)}
+                nodeId={nodeId}
+                versionId={version.id}
+                publisherId={publisherId as string}
+            />
         </>
     )
 }

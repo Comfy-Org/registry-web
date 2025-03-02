@@ -22,6 +22,7 @@
     "@algolia/autocomplete-plugin-query-suggestions": "1.17.4",
     "@algolia/autocomplete-plugin-recent-searches": "^1.17.4",
     "@algolia/autocomplete-theme-classic": "1.17.4",
+    "@lytieuphong/short-number": "^1.2.3",
     "@mdx-js/loader": "^3.0.1",
     "@next/mdx": "12.3.1",
     "@tanstack/react-query": "^5.17.19",
@@ -31,6 +32,7 @@
     "firebase": "^10.11.1",
     "flowbite": "^2.3.0",
     "flowbite-react": "0.7.5",
+    "instantsearch.js": "^4.77.3",
     "mixpanel-browser": "^2.50.0",
     "next": "12.3.1",
     "nextjs-cors": "^2.1.1",
@@ -42,6 +44,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-icons": "^5.0.1",
     "react-instantsearch": "^7.12.2",
+    "react-markdown": "^10.0.0",
     "react-router-dom": "^6.23.0",
     "react-toastify": "^9.1.3"
   },

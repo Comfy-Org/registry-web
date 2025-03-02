@@ -1,7 +1,6 @@
 import React from 'react'
 import GenericHeader from '../common/GenericHeader'
 import CustomSearchPagination from '../common/CustomSearchPagination'
-import { Node } from 'src/api/generated'
 import algoliasearch from 'algoliasearch/lite'
 import { Configure, Hits, InstantSearch } from 'react-instantsearch'
 import Autocomplete from '@/components/Search/Autocomplete'
@@ -15,12 +14,7 @@ const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string
 )
 
-type RegistryProps = {
-    totalPages: number
-    currentPage: number
-    setPage: (page: number) => void
-    nodes: Node[]
-}
+type RegistryProps = {}
 
 const Registry: React.FC<RegistryProps> = ({}) => {
     return (
@@ -66,7 +60,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                     />
 
                     {/* Display search results */}
-                    <div className="container wrapper">
+                    <div className="wrapper mt-2 w-full">
                         <div>
                             <Hits hitComponent={Hit} />
                         </div>

@@ -11,7 +11,7 @@ body {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 .ais-Hits-list {
-    @apply grid grid-cols-4 gap-2;
+    @apply grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2;
 }
 
 .ais-Hits-item {
@@ -22,4 +22,9 @@ body {
 .ais-Snippet:hover,
 .ais-Hits-item h1:hover {
     cursor: pointer;
+}
+
+/* render highlight */
+strong {
+    @apply text-blue-500;
 }
