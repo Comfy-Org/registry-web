@@ -57,14 +57,17 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                     <div className="mb-1 text-xs font-light text-white mt-2 flex-row flex gap-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
                         <Tooltip
                             content={
-                                <pre>{hit.comfy_nodes?.join(', \n') ?? ''}</pre>
+                                <pre className="max-w-[20em] max-h-[8em] overflow-auto whitespace-pre-wrap break-all">
+                                    {hit.comfy_nodes?.join(', \n') ?? ''}
+                                </pre>
                             }
                             placement="bottom"
                         >
                             {matchedNodes?.length ? (
                                 <>
                                     {matchedNodes?.length ?? 0}/
-                                    {hit.comfy_nodes?.length ?? 0} Nodes matched:
+                                    {hit.comfy_nodes?.length ?? 0} Nodes
+                                    matched:
                                     {matchedNodes
                                         ?.map((e) =>
                                             e.value?.replace(/<\/?mark>/g, '**')
