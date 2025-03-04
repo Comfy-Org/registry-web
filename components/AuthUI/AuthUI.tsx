@@ -1,15 +1,15 @@
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
     useSignInWithGithub,
     useSignInWithGoogle,
 } from 'react-firebase-hooks/auth'
-import app from '../../src/firebase'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
-import Image from 'next/image'
+import app from '../../src/firebase'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
@@ -147,11 +147,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 analytic.track('Sign In', {
                                     provider: 'Github',
                                 })
-                                signInWithGithub(['user:email']).then(
-                                    (user) => {
-                                        console.log(user)
-                                    }
-                                )
+                                signInWithGithub(['user:email'])
                             }}
                         >
                             <svg
