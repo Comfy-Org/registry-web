@@ -8,6 +8,9 @@ on:
 
 jobs:
     build:
+        permissions:
+          # Give the default GITHUB_TOKEN write permission to commit and push the prettier changed files back to the repository.
+          contents: write
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
@@ -22,6 +25,10 @@ jobs:
             - name: Run Next.js Lint
               run: pnpm run lint
             - name: Check Formatting with Prettier
-              run: npx prettier --check .
+              run: npx prettier --write .
             - name: Build the Next.js Project
               run: pnpm run build
+            # commit prettier fixed code
+            - uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                commit_message: "format: Apply prettier --fix changes"
