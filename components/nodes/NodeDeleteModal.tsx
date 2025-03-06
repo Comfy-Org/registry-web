@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios'
-import { Button, Modal } from 'flowbite-react'
-import React from 'react'
+import { Button, Label, Modal, TextInput } from 'flowbite-react'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDeleteNode } from 'src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
@@ -20,12 +20,12 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
 }) => {
     const mutation = useDeleteNode({})
 
-    const handleDeleteVersion = () => {
+    const handleDeleteVersion = async () => {
         if (!publisherId) {
             toast.error('Cannot delete node.')
             return
         }
-        mutation.mutate(
+        return mutation.mutate(
             {
                 nodeId: nodeId,
                 publisherId: publisherId,
@@ -48,6 +48,8 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
         )
     }
 
+    const validateText = `${publisherId}/${nodeId}`
+    const [confirmationText, setConfirmationText] = useState('')
     return (
         <Modal
             show={openDeleteModal}
@@ -59,14 +61,37 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
             dismissible
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
-                <Modal.Header className="!bg-gray-800 px-8">
+                <Modal.Header className="!bg-gray-800">
                     <p className="text-white">Delete Node</p>
                 </Modal.Header>
-                <div className="space-y-6">
+                <form
+                    className="space-y-6 p-2"
+                    onSubmit={async (e) => {
+                        e.preventDefault()
+                        await handleDeleteVersion()
+                        onClose()
+                    }}
+                >
                     <p className="text-white">
                         Are you sure you want to delete this node? This action
                         cannot be undone.
                     </p>
+                    <div>
+                        <Label className="text-white">
+                            Type{' '}
+                            <code className="text-red-300 inline">
+                                {validateText}
+                            </code>{' '}
+                            to confirm:
+                        </Label>
+                        <TextInput
+                            className="input"
+                            name="confirmation"
+                            onChange={(e) =>
+                                setConfirmationText(e.target.value)
+                            }
+                        />
+                    </div>
                     <div className="flex">
                         <Button
                             color="gray"
@@ -78,12 +103,13 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                         <Button
                             color="red"
                             className="w-full ml-5"
-                            onClick={handleDeleteVersion}
+                            type="submit"
+                            disabled={validateText !== confirmationText}
                         >
                             Delete
                         </Button>
                     </div>
-                </div>
+                </form>
             </Modal.Body>
         </Modal>
     )

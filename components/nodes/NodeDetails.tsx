@@ -345,7 +345,7 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        { (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-error rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
