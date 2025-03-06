@@ -1,9 +1,11 @@
-import React from 'react'
-import GenericHeader from '../common/GenericHeader'
-import CustomSearchPagination from '../common/CustomSearchPagination'
-import algoliasearch from 'algoliasearch/lite'
-import { Configure, Hits, InstantSearch } from 'react-instantsearch'
 import Autocomplete from '@/components/Search/Autocomplete'
+import algoliasearch from 'algoliasearch/lite'
+import singletonRouter from 'next/router'
+import React from 'react'
+import { Configure, Hits, InstantSearch } from 'react-instantsearch'
+import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs'
+import CustomSearchPagination from '../common/CustomSearchPagination'
+import GenericHeader from '../common/GenericHeader'
 import Hit from '../Search/SearchHit'
 
 import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
@@ -30,13 +32,14 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                 <InstantSearch
                     searchClient={searchClient}
                     indexName={INSTANT_SEARCH_INDEX_NAME}
-                    routing={
-                        {
-                            history: {
-                                cleanUrlOnDispose: false,
-                            },
-                        } as any
-                    }
+                    routing={{
+                        router: Object.assign(
+                            createInstantSearchRouterNext({
+                                singletonRouter,
+                            }),
+                            { cleanUrlOnDispose: false }
+                        ),
+                    }}
                     future={{
                         preserveSharedStateOnUnmount: true,
                     }}
