@@ -20,7 +20,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
 }) => {
     const mutation = useDeleteNode({})
 
-    const handleDeleteVersion = async () => {
+    const handleSubmit = async () => {
         if (!publisherId) {
             toast.error('Cannot delete node.')
             return
@@ -41,7 +41,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                     }
                 },
                 onSuccess: () => {
-                    toast.success('Version deleted successfully')
+                    toast.success('Node deleted successfully')
                     onClose()
                 },
             }
@@ -68,7 +68,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                     className="space-y-6 p-2"
                     onSubmit={async (e) => {
                         e.preventDefault()
-                        await handleDeleteVersion()
+                        await handleSubmit()
                     }}
                 >
                     <p className="text-white">
