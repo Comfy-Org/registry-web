@@ -89,6 +89,9 @@ importers:
       react-instantsearch:
         specifier: ^7.12.2
         version: 7.13.0(algoliasearch@4.24.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-instantsearch-router-nextjs:
+        specifier: ^7.15.3
+        version: 7.15.3(algoliasearch@4.24.0)(next@12.3.1(@babel/core@7.19.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       react-markdown:
         specifier: ^10.0.0
         version: 10.0.0(@types/react@18.0.21)(react@18.2.0)
@@ -3194,6 +3197,17 @@ packages:
     peerDependencies:
       algoliasearch: '>= 3.1 < 6'
       react: '>= 16.8.0 < 19'
+
+  react-instantsearch-core@7.15.3:
+    resolution: {integrity: sha512-pr8Ro40KOb6aJHUePL0RLVICWYQLXvKL5OoFlS2Dgpske5swRyz/M1vhtUk+MtCPYEuxVDcFeQWwTX3tS2CQcw==}
+    peerDependencies:
+      algoliasearch: '>= 3.1 < 6'
+      react: '>= 16.8.0 < 20'
+
+  react-instantsearch-router-nextjs@7.15.3:
+    resolution: {integrity: sha512-8yKIAM3tGTnGmETVm0OpBFnJ92QGA4pr67gTEN1Ey5QYYRo1XlzB9ZmK6g+kZ//saAq21NVVVlef+7U7UIsqyw==}
+    peerDependencies:
+      next: '>= 9 && < 16'
 
   react-instantsearch@7.13.0:
     resolution: {integrity: sha512-12auG0AI4oS8yuu2IfA61JjmTNk+pd9KkKvCJukMI+3t6U16sHUJsPMj9/zAHrDm+Zgdgr9ZsszIKtr9/VQ/CQ==}
@@ -7732,6 +7746,24 @@ snapshots:
       instantsearch.js: 4.74.0(algoliasearch@4.24.0)
       react: 18.2.0
       use-sync-external-store: 1.2.2(react@18.2.0)
+
+  react-instantsearch-core@7.15.3(algoliasearch@4.24.0)(react@18.2.0):
+    dependencies:
+      '@babel/runtime': 7.25.6
+      algoliasearch: 4.24.0
+      algoliasearch-helper: 3.24.1(algoliasearch@4.24.0)
+      instantsearch.js: 4.77.3(algoliasearch@4.24.0)
+      react: 18.2.0
+      use-sync-external-store: 1.2.2(react@18.2.0)
+
+  react-instantsearch-router-nextjs@7.15.3(algoliasearch@4.24.0)(next@12.3.1(@babel/core@7.19.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
+    dependencies:
+      instantsearch.js: 4.77.3(algoliasearch@4.24.0)
+      next: 12.3.1(@babel/core@7.19.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react-instantsearch-core: 7.15.3(algoliasearch@4.24.0)(react@18.2.0)
+    transitivePeerDependencies:
+      - algoliasearch
+      - react
 
   react-instantsearch@7.13.0(algoliasearch@4.24.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
