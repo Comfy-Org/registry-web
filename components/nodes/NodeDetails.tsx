@@ -345,12 +345,12 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        { (
+                        {permissions?.canEdit && (
                             <Button
-                                className="flex-shrink-0 px-4  flex items-center text-white bg-error rounded whitespace-nowrap text-[16px]"
+                                className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
-                                <HiTrash className="w-5 h-5 text-white mr-2 fill-white" />
+                                <HiTrash className="w-5 h-5 mr-2" />
                                 <span>Delete</span>
                             </Button>
                         )}
@@ -391,7 +391,7 @@ const NodeDetails = () => {
 
                 <NodeDeleteModal
                     openDeleteModal={isDeleteModalOpen}
-                    onClose={onCloseEditModal}
+                    onClose={() => setIsDeleteModalOpen(false)}
                     nodeId={nodeId as string}
                     publisherId={publisherId as string}
                 />

@@ -69,7 +69,6 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                     onSubmit={async (e) => {
                         e.preventDefault()
                         await handleDeleteVersion()
-                        onClose()
                     }}
                 >
                     <p className="text-white">
