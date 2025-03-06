@@ -3,10 +3,7 @@ import { Button, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-<<<<<<< HEAD
 import { HiTrash } from 'react-icons/hi'
-=======
->>>>>>> 6e9590beffee41729c825b24ff14575e17f6f971
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -17,10 +14,7 @@ import {
 } from 'src/api/generated'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
-<<<<<<< HEAD
 import { NodeDeleteModal } from './NodeDeleteModal'
-=======
->>>>>>> 6e9590beffee41729c825b24ff14575e17f6f971
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
