@@ -3,6 +3,7 @@ import { Button, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { HiTrash } from 'react-icons/hi'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -13,6 +14,7 @@ import {
 } from 'src/api/generated'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
+import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
@@ -84,7 +86,8 @@ const NodeDetails = () => {
         publisherId as string,
         nodeId as string
     )
-    const [openEditModal, setIsEditModal] = useState(false)
+    const [isEditModalOpen, setIsEditModal] = useState(false)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const { data, isLoading, isError } = useGetNode(nodeId as string)
     const {
         data: nodeVersions,
@@ -342,6 +345,16 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
+                        {permissions?.canEdit && (
+                            <Button
+                                className="flex-shrink-0 px-4  flex items-center text-white bg-error rounded whitespace-nowrap text-[16px]"
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
+                                <HiTrash className="w-5 h-5 text-white mr-2 fill-white" />
+                                <span>Delete</span>
+                            </Button>
+                        )}
+
                         {data.latest_version?.downloadUrl && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
@@ -372,7 +385,14 @@ const NodeDetails = () => {
                 <NodeEditModal
                     onCloseEditModal={onCloseEditModal}
                     nodeData={data}
-                    openEditModal={openEditModal}
+                    openEditModal={isEditModalOpen}
+                    publisherId={publisherId as string}
+                />
+
+                <NodeDeleteModal
+                    openDeleteModal={isDeleteModalOpen}
+                    onClose={onCloseEditModal}
+                    nodeId={nodeId as string}
                     publisherId={publisherId as string}
                 />
 
