@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, TextInput } from 'flowbite-react'
+import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDeleteNode } from 'src/api/generated'
@@ -19,7 +20,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
     publisherId,
 }) => {
     const mutation = useDeleteNode({})
-
+    const router = useRouter()
     const handleSubmit = async () => {
         if (!publisherId) {
             toast.error('Cannot delete node.')
@@ -43,6 +44,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                 onSuccess: () => {
                     toast.success('Node deleted successfully')
                     onClose()
+                    router.push('/nodes')
                 },
             }
         )
