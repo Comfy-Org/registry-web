@@ -28,15 +28,15 @@ type HitProps = {
 const Hit: React.FC<HitProps> = ({ hit }) => {
     const matchedNodes = (
         hit._highlightResult?.comfy_nodes as
-        | HitAttributeHighlightResult[]
-        | undefined
+            | HitAttributeHighlightResult[]
+            | undefined
     )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
         <Link
             className="flex flex-col bg-gray-800 rounded-lg cursor-pointer h-full dark:border-gray-700 lg:p-4"
             href={`/nodes/${hit.id}`}
             rel="noopener noreferrer"
-        // target="_blank"
+            // target="_blank"
         >
             <div className="flex flex-col">
                 <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
@@ -100,7 +100,11 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                     {hit.total_install && (
                         <span className="">
                             {' | '}
-                            <HiDownload className='inline h-3 w-3' title='Installs' /> {ShortNumber(hit.total_install)}
+                            <HiDownload
+                                className="inline h-3 w-3"
+                                title="Installs"
+                            />{' '}
+                            {ShortNumber(hit.total_install)}
                         </span>
                     )}
                 </p>
