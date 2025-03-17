@@ -99,6 +99,7 @@ export type PostUploadArtifactBody = {
 
 export type SecurityScanParams = {
 minAge?: string;
+minSecurityScanAge?: string;
 maxNodes?: number;
 };
 
@@ -149,7 +150,11 @@ username: string;
 export type CreateComfyNodesBodyNodes = {[key: string]: ComfyNode};
 
 export type CreateComfyNodesBody = {
+  cloud_build_info?: ComfyNodeCloudBuildInfo;
   nodes?: CreateComfyNodesBodyNodes;
+  reason?: string;
+  status?: string;
+  success?: boolean;
 };
 
 export type ListNodeVersionsParams = {
@@ -197,9 +202,24 @@ limit?: number;
  */
 search?: string;
 /**
+ * Keyword to search the nodes by comfy node name
+ */
+comfy_node_search?: string;
+/**
  * Number of nodes to return per page
  */
 include_banned?: boolean;
+};
+
+export type ReindexNodesParams = {
+/**
+ * Maximum number of nodes to send to algolia at a time
+ */
+max_batch?: number;
+/**
+ * Minimum interval from the last time the nodes were indexed to algolia
+ */
+min_age?: string;
 };
 
 export type ListAllNodes200 = {
@@ -227,6 +247,22 @@ limit?: number;
  * Number of nodes to return per page
  */
 include_banned?: boolean;
+/**
+ * Retrieve nodes created or updated after this timestamp (ISO 8601 format)
+ */
+timestamp?: string;
+/**
+ * Whether to fetch fresh result from database or use cached one if false
+ */
+latest?: boolean;
+/**
+ * Database column to use as ascending ordering. Add `;desc` as suffix on each column for descending sort
+ */
+sort?: string[];
+/**
+ * The platform requesting the nodes
+ */
+form_factor?: string;
 };
 
 export type GetGitcommitsummary500 = {
@@ -421,12 +457,11 @@ export const NodeVersionStatus = {
   NodeVersionStatusFlagged: 'NodeVersionStatusFlagged',
 } as const;
 
-export type NodeVersionComfyNodes = {[key: string]: ComfyNode};
-
 export interface NodeVersion {
   /** Summary of changes made in this version */
   changelog?: string;
-  comfy_nodes?: NodeVersionComfyNodes;
+  /** The status of comfy node extraction process. */
+  comfy_node_extract_status?: string;
   /** The date and time the version was created. */
   createdAt?: string;
   /** A list of pip dependencies required by the node. */
@@ -544,11 +579,18 @@ export interface Error {
   message?: string;
 }
 
+export interface ComfyNodeCloudBuildInfo {
+  build_id?: string;
+  location?: string;
+  project_id?: string;
+  project_number?: string;
+}
+
 export interface ComfyNode {
   /** UI category where the node is listed, used for grouping nodes. */
   category?: string;
   /** Unique identifier for the node */
-  comfy_node_id?: string;
+  comfy_node_name?: string;
   /** Indicates if the node is deprecated. Deprecated nodes are hidden in the UI. */
   deprecated?: boolean;
   /** Brief description of the node's functionality or purpose. */
@@ -562,7 +604,7 @@ export interface ComfyNode {
   /** Boolean values indicating if each output is a list. */
   output_is_list?: boolean[];
   /** Names of the outputs for clarity in workflows. */
-  return_names?: string[];
+  return_names?: string;
   /** Specifies the types of outputs produced by the node. */
   return_types?: string;
 }
@@ -623,6 +665,64 @@ export interface ActionJobResult {
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 
+/**
+ * @summary Create a new custom node using admin priviledge
+ */
+export const adminCreateNode = (
+    node: Node,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/admin/nodes`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: node
+    },
+      options);
+    }
+  
+
+
+export const getAdminCreateNodeMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateNode>>, TError,{data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminCreateNode>>, TError,{data: Node}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminCreateNode>>, {data: Node}> = (props) => {
+          const {data} = props ?? {};
+
+          return  adminCreateNode(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminCreateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof adminCreateNode>>>
+    export type AdminCreateNodeMutationBody = Node
+    export type AdminCreateNodeMutationError = ErrorResponse | void
+
+    /**
+ * @summary Create a new custom node using admin priviledge
+ */
+export const useAdminCreateNode = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateNode>>, TError,{data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof adminCreateNode>>,
+        TError,
+        {data: Node},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminCreateNodeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * Only admins can approve a node version.
  * @summary Admin Update Node Version Status
@@ -1001,12 +1101,13 @@ export const useListAllNodes = <TData = Awaited<ReturnType<typeof listAllNodes>>
  * @summary Reindex all nodes for searching.
  */
 export const reindexNodes = (
-    
+    params?: ReindexNodesParams,
  options?: SecondParameter<typeof customInstance>,) => {
       
       
       return customInstance<void>(
-      {url: `/nodes/reindex`, method: 'POST'
+      {url: `/nodes/reindex`, method: 'POST',
+        params
     },
       options);
     }
@@ -1014,17 +1115,17 @@ export const reindexNodes = (
 
 
 export const getReindexNodesMutationOptions = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,void, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,{params?: ReindexNodesParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,{params?: ReindexNodesParams}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reindexNodes>>, void> = () => {
-          
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reindexNodes>>, {params?: ReindexNodesParams}> = (props) => {
+          const {params} = props ?? {};
 
-          return  reindexNodes(requestOptions)
+          return  reindexNodes(params,requestOptions)
         }
 
         
@@ -1040,11 +1141,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
  * @summary Reindex all nodes for searching.
  */
 export const useReindexNodes = <TError = ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reindexNodes>>, TError,{params?: ReindexNodesParams}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationResult<
         Awaited<ReturnType<typeof reindexNodes>>,
         TError,
-        void,
+        {params?: ReindexNodesParams},
         TContext
       > => {
 
@@ -1505,13 +1606,13 @@ export const useCreateComfyNodes = <TError = void | ErrorResponse,
 export const getComfyNode = (
     nodeId: string,
     version: string,
-    comfyNodeId: string,
+    comfyNodeName: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
       return customInstance<ComfyNode>(
-      {url: `/nodes/${nodeId}/versions/${version}/comfy-nodes/${comfyNodeId}`, method: 'GET', signal
+      {url: `/nodes/${nodeId}/versions/${version}/comfy-nodes/${comfyNodeName}`, method: 'GET', signal
     },
       options);
     }
@@ -1519,29 +1620,29 @@ export const getComfyNode = (
 
 export const getGetComfyNodeQueryKey = (nodeId: string,
     version: string,
-    comfyNodeId: string,) => {
-    return [`/nodes/${nodeId}/versions/${version}/comfy-nodes/${comfyNodeId}`] as const;
+    comfyNodeName: string,) => {
+    return [`/nodes/${nodeId}/versions/${version}/comfy-nodes/${comfyNodeName}`] as const;
     }
 
     
 export const getGetComfyNodeQueryOptions = <TData = Awaited<ReturnType<typeof getComfyNode>>, TError = void | ErrorResponse>(nodeId: string,
     version: string,
-    comfyNodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getComfyNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+    comfyNodeName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getComfyNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetComfyNodeQueryKey(nodeId,version,comfyNodeId);
+  const queryKey =  queryOptions?.queryKey ?? getGetComfyNodeQueryKey(nodeId,version,comfyNodeName);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getComfyNode>>> = ({ signal }) => getComfyNode(nodeId,version,comfyNodeId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getComfyNode>>> = ({ signal }) => getComfyNode(nodeId,version,comfyNodeName, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(nodeId && version && comfyNodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getComfyNode>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, enabled: !!(nodeId && version && comfyNodeName), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getComfyNode>>, TError, TData> & { queryKey: QueryKey }
 }
 
 export type GetComfyNodeQueryResult = NonNullable<Awaited<ReturnType<typeof getComfyNode>>>
@@ -1553,11 +1654,11 @@ export type GetComfyNodeQueryError = void | ErrorResponse
 export const useGetComfyNode = <TData = Awaited<ReturnType<typeof getComfyNode>>, TError = void | ErrorResponse>(
  nodeId: string,
     version: string,
-    comfyNodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getComfyNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+    comfyNodeName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getComfyNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  const queryOptions = getGetComfyNodeQueryOptions(nodeId,version,comfyNodeId,options)
+  const queryOptions = getGetComfyNodeQueryOptions(nodeId,version,comfyNodeName,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

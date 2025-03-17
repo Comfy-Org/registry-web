@@ -28,3 +28,7 @@ body {
 strong {
     @apply text-blue-500;
 }
+
+.text-error{
+    @apply text-red-400 font-bold;
+}
