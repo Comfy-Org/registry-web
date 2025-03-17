@@ -4,13 +4,7 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import {
-    Node,
-    useAdminCreateNode,
-    useGetNode,
-    useListPublishers,
-    useSearchNodes,
-} from 'src/api/generated'
+import { Node, useAdminCreateNode, useGetNode } from 'src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { z } from 'zod'
 
@@ -29,6 +23,11 @@ const adminCreateNodeSchema = z.object({
     description: z.string().nonempty('Description is required'),
     category: z.string().nonempty('Category is required'),
     author: z.string().nonempty('Author is required'),
+    repository: z.string().nonempty('Repository URL is required'),
+    license: z
+        .string()
+        .nonempty('License is required')
+        .default('{file="LICENSE"}'),
 })
 // .passthrough() // allow unknown key
 
@@ -84,25 +83,24 @@ export function AdminCreateNodeModal({
         tags,
     } = getValues()
     const onSubmit = handleSubmit((data: Node) => mutation.mutate({ data }))
-    const { data: allPublishers } = useListPublishers({})
+    const allPublishers = []
+    // const { data: allPublishers } = useListPublishers({})
     const { data: duplicatedNode } = useGetNode(watch('id') ?? '', {
         query: { enabled: !!watch('id') },
     })
-
-    const { data: similarNodes } = useSearchNodes(
-        {
-            include_banned: true,
-            comfy_node_search: watch('name'),
-            // search: name,
-        },
-        { query: { enabled: !!watch('name') } }
-    )
-    console.log({
-        allPublishers,
-        duplicatedNode,
-        similarNodes,
-    })
-    const required = 'This is required'
+    // const { data: similarNodes } = useSearchNodes(
+    //     {
+    //         include_banned: true,
+    //         comfy_node_search: watch('name'),
+    //         // search: name,
+    //     },
+    //     { query: { enabled: !!watch('name') } }
+    // )
+    // console.log({
+    //     allPublishers,
+    //     duplicatedNode,
+    //     similarNodes,
+    // })
     return (
         <Modal
             show={open}
@@ -158,6 +156,7 @@ export function AdminCreateNodeModal({
                     <div>
                         <Label htmlFor="name">Name</Label>
                         <TextInput id="name" {...register('name')} />
+                        {/*
                         <span className="text-yellow-300">
                             {name &&
                                 similarNodes?.nodes
@@ -165,9 +164,9 @@ export function AdminCreateNodeModal({
                                     .join('')
                                     .replace(
                                         /^(?=.)/,
-                                        'Found some similar name nodes: '
+                                        'Found some similar nodes with name: '
                                     )}
-                        </span>
+                        </span> */}
                         <span className="text-error">
                             {errors.name?.message}
                         </span>
@@ -198,6 +197,25 @@ export function AdminCreateNodeModal({
                         <TextInput id="author" {...register('author')} />
                         <span className="text-error">
                             {errors.author?.message}
+                        </span>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="repository">Repository</Label>
+                        <TextInput
+                            id="repository"
+                            {...register('repository')}
+                        />
+                        <span className="text-error">
+                            {errors.repository?.message}
+                        </span>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="license">License</Label>
+                        <TextInput id="license" {...register('license')} />
+                        <span className="text-error">
+                            {errors.license?.message}
                         </span>
                     </div>
 
