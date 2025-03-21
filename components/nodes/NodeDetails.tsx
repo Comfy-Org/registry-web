@@ -125,6 +125,10 @@ const NodeDetails = () => {
         setIsEditModal(false)
     }
 
+    if (isError) {
+        // TODO: show error message and allow navigate back to the list
+    }
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
@@ -317,6 +321,7 @@ const NodeDetails = () => {
                         {node.repository && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                hidden
                                 onClick={() => {
                                     analytic.track('View Repository')
                                 }}
@@ -374,7 +379,6 @@ const NodeDetails = () => {
                                     e: React.MouseEvent<HTMLButtonElement>
                                 ) => {
                                     e.preventDefault()
-                                    console.log('clicked download')
                                     if (node?.latest_version?.downloadUrl) {
                                         downloadFile(
                                             node.latest_version?.downloadUrl,
