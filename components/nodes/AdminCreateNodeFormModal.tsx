@@ -62,7 +62,7 @@ export function AdminCreateNodeFormModal({
             },
             onSuccess: () => {
                 toast.success('Node create successfully')
-                onClose?.()
+                // onClose?.()
             },
         },
     })
@@ -74,12 +74,15 @@ export function AdminCreateNodeFormModal({
         getValues,
         formState: { errors },
         watch,
+        reset,
     } = useForm<Node>({
         resolver: zodResolver(adminCreateNodeSchema) as any,
         defaultValues: adminCreateNodeDefaultValues,
     })
 
-    const onSubmit = handleSubmit((data: Node) => mutation.mutate({ data }))
+    const onSubmit = handleSubmit((data: Node) =>
+        mutation.mutateAsync({ data }).then(() => reset())
+    )
 
     const { data: allPublishers } = useListPublishers({
         query: { enabled: false },
