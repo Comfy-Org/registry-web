@@ -6,5 +6,7 @@ export default withAdmin(AddUnclaimedNodePage)
 
 function AddUnclaimedNodePage() {
     const router = useRouter()
-    return <AdminCreateNodeFormModal open onClose={() => router.push('/admin/')} />
+    return (
+        <AdminCreateNodeFormModal open onClose={() => router.push('/admin/')} />
+    )
 }

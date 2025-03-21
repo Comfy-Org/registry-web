@@ -29,9 +29,9 @@ strong {
     @apply text-blue-500;
 }
 
-.text-error{
+.text-error {
     @apply text-red-400 font-bold;
 }
-.text-warning{
+.text-warning {
     @apply text-yellow-300 font-bold;
 }
