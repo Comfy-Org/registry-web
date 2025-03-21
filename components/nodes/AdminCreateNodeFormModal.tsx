@@ -4,7 +4,13 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import { Node, useAdminCreateNode, useGetNode } from 'src/api/generated'
+import {
+    Node,
+    useAdminCreateNode,
+    useGetNode,
+    useListPublishers,
+    useSearchNodes,
+} from 'src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { z } from 'zod'
 
@@ -29,9 +35,14 @@ const adminCreateNodeSchema = z.object({
         .nonempty('License is required')
         .default('{file="LICENSE"}'),
 })
-// .passthrough() // allow unknown key
 
-export function AdminCreateNodeModal({
+const adminCreateNodeDefaultValues: Partial<
+    typeof adminCreateNodeSchema._input
+> = {
+    license: '{file="LICENSE"}',
+}
+
+export function AdminCreateNodeFormModal({
     open,
     onClose,
 }: {
@@ -55,47 +66,36 @@ export function AdminCreateNodeModal({
             },
         },
     })
+
     const router = useRouter()
-    const schema = z.object({})
     const {
         register,
         handleSubmit,
         getValues,
         formState: { errors },
         watch,
-    } = useForm<Node>({ resolver: zodResolver(adminCreateNodeSchema) as any })
+    } = useForm<Node>({
+        resolver: zodResolver(adminCreateNodeSchema) as any,
+        defaultValues: adminCreateNodeDefaultValues,
+    })
 
-    const {
-        author,
-        category,
-        description,
-        downloads,
-        icon,
-        id,
-        latest_version,
-        license,
-        name,
-        publisher,
-        rating,
-        repository,
-        status,
-        status_detail,
-        tags,
-    } = getValues()
     const onSubmit = handleSubmit((data: Node) => mutation.mutate({ data }))
-    const allPublishers = []
-    // const { data: allPublishers } = useListPublishers({})
+
+    const { data: allPublishers } = useListPublishers({
+        query: { enabled: false },
+    }) // list publishers for unclaimed user
+
     const { data: duplicatedNode } = useGetNode(watch('id') ?? '', {
         query: { enabled: !!watch('id') },
     })
-    // const { data: similarNodes } = useSearchNodes(
-    //     {
-    //         include_banned: true,
-    //         comfy_node_search: watch('name'),
-    //         // search: name,
-    //     },
-    //     { query: { enabled: !!watch('name') } }
-    // )
+    const { data: similarNodes } = useSearchNodes(
+        {
+            include_banned: true,
+            comfy_node_search: watch('name'),
+            // search: name,
+        },
+        { query: { enabled: !!watch('name') } }
+    )
     // console.log({
     //     allPublishers,
     //     duplicatedNode,
@@ -124,12 +124,11 @@ export function AdminCreateNodeModal({
                     <div>
                         <Label htmlFor="id">ID</Label>
                         <TextInput id="id" {...register('id')} />
-                        <span className="text-yellow-300">
-                            {id &&
-                                duplicatedNode?.id?.replace(
-                                    /^(?=.)/,
-                                    'Duplicated node: '
-                                )}
+                        <span className="text-warning">
+                            {duplicatedNode?.id?.replace(
+                                /^(?!$)/,
+                                'Duplicated node: '
+                            )}
                         </span>
                         <span className="text-error">{errors.id?.message}</span>
                     </div>
@@ -156,17 +155,15 @@ export function AdminCreateNodeModal({
                     <div>
                         <Label htmlFor="name">Name</Label>
                         <TextInput id="name" {...register('name')} />
-                        {/*
-                        <span className="text-yellow-300">
-                            {name &&
-                                similarNodes?.nodes
-                                    ?.map((node) => node.name)
-                                    .join('')
-                                    .replace(
-                                        /^(?=.)/,
-                                        'Found some similar nodes with name: '
-                                    )}
-                        </span> */}
+                        <span className="text-warning">
+                            {similarNodes?.nodes
+                                ?.map((node) => `${node.id} ${node.name}`)
+                                .join('\n')
+                                .replace(
+                                    /^(?!$)/,
+                                    'Warning: found some similar nodes: \n'
+                                )}
+                        </span>
                         <span className="text-error">
                             {errors.name?.message}
                         </span>

@@ -1,6 +1,6 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
-import { AdminCreateNodeModal } from '@/components/nodes/AdminCreateNodeModal'
+import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
 import { useQueryClient } from '@tanstack/react-query'
 import { Badge, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -201,7 +201,7 @@ function NodeVersionList({}) {
                         Add Unclaimed Node
                     </Button>
 
-                    <AdminCreateNodeModal
+                    <AdminCreateNodeFormModal
                         open={isAdminCreateNodeModalOpen}
                         onClose={() => setIsAdminCreateNodeModalOpen(false)}
                     />

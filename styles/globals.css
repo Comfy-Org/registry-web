@@ -32,3 +32,6 @@ strong {
 .text-error{
     @apply text-red-400 font-bold;
 }
+.text-warning{
+    @apply text-yellow-300 font-bold;
+}
