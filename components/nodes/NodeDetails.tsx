@@ -12,6 +12,7 @@ import {
     useGetPermissionOnPublisherNodes,
     useListNodeVersions,
 } from 'src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
@@ -88,7 +89,7 @@ const NodeDetails = () => {
     )
     const [isEditModalOpen, setIsEditModal] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-    const { data, isLoading, isError } = useGetNode(nodeId as string)
+    const { data: node, isLoading, isError } = useGetNode(nodeId as string)
     const {
         data: nodeVersions,
         isLoading: loadingNodeVersions,
@@ -102,7 +103,9 @@ const NodeDetails = () => {
         ],
     })
 
-    const { data: node } = useGetNode(nodeId as string)
+    const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
+    const disclaimerUnclaimed = 'This node can only be installed via git'
+
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
         setIsDrawerOpen(!isDrawerOpen)
@@ -130,7 +133,7 @@ const NodeDetails = () => {
         )
     }
 
-    if (!data) {
+    if (!node) {
         return (
             <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
                 <section className="text-white bg-gray-900 whitespace-nowrap">
@@ -165,11 +168,14 @@ const NodeDetails = () => {
                             <div className="flex items-start justify-between">
                                 <div>
                                     <h1 className="text-[48px] font-bold">
-                                        {data.name}
+                                        {node.name}
                                     </h1>
-                                    {data.latest_version && (
-                                        <p className="text-[18px] pt-2 text-gray-300">
-                                            v{data.latest_version?.version}
+                                    {node.latest_version && (
+                                        <p
+                                            className="text-[18px] pt-2 text-gray-300"
+                                            hidden={isUnclaimed}
+                                        >
+                                            v{node.latest_version?.version}
                                             <span className="pl-3 text-gray-400">
                                                 {' '}
                                                 Most recent version
@@ -178,7 +184,7 @@ const NodeDetails = () => {
                                     )}
                                 </div>
                             </div>
-                            <NodeStatusBadge status={data.status} />
+                            <NodeStatusBadge status={node.status} />
                             <div className="flex flex-col mt-6 mb-6 ">
                                 {/* {data.license && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-center text-gray-400">
@@ -223,7 +229,7 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )} */}
-                                {data.downloads != 0 && (
+                                {node.downloads != 0 && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
                                             className="w-6 h-6"
@@ -244,7 +250,7 @@ const NodeDetails = () => {
                                         </svg>
                                         <span className="ml-4 text-[18px]">
                                             {formatDownloadCount(
-                                                data.downloads || 0
+                                                node.downloads || 0
                                             )}{' '}
                                             downloads
                                         </span>
@@ -252,19 +258,25 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                <CopyableCodeBlock
-                                    code={`comfy node registry-install ${nodeId}`}
-                                />
+                                {isUnclaimed ? (
+                                    <p className="text-base font-normal text-gray-200">
+                                        {disclaimerUnclaimed}
+                                    </p>
+                                ) : (
+                                    <CopyableCodeBlock
+                                        code={`comfy node registry-install ${nodeId}`}
+                                    />
+                                )}
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">
                                     Description
                                 </h2>
                                 <p className="text-base font-normal text-gray-200">
-                                    {data.description}
+                                    {node.description}
                                 </p>
                             </div>
-                            <div className="mt-10">
+                            <div className="mt-10" hidden={isUnclaimed}>
                                 <h2 className="mb-2 text-lg font-semibold">
                                     Version history
                                 </h2>
@@ -300,9 +312,9 @@ const NodeDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full mt-4 lg:w-1/6 ">
+                <div className="w-full mt-4 lg:w-1/6 " hidden={isUnclaimed}>
                     <div className="flex flex-col gap-4">
-                        {data.repository && (
+                        {node.repository && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => {
@@ -310,7 +322,7 @@ const NodeDetails = () => {
                                 }}
                             >
                                 <a
-                                    href={data.repository || ''}
+                                    href={node.repository || ''}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
@@ -355,7 +367,7 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {data.latest_version?.downloadUrl && (
+                        {!!node.latest_version?.downloadUrl && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                 onClick={(
@@ -363,13 +375,10 @@ const NodeDetails = () => {
                                 ) => {
                                     e.preventDefault()
                                     console.log('clicked download')
-                                    if (
-                                        data &&
-                                        data.latest_version?.downloadUrl
-                                    ) {
+                                    if (node?.latest_version?.downloadUrl) {
                                         downloadFile(
-                                            data.latest_version?.downloadUrl,
-                                            `${data.name}_${data.latest_version.version}.zip`
+                                            node.latest_version?.downloadUrl,
+                                            `${node.name}_${node.latest_version.version}.zip`
                                         )
                                     }
                                     analytic.track(
@@ -382,9 +391,10 @@ const NodeDetails = () => {
                         )}
                     </div>
                 </div>
+
                 <NodeEditModal
                     onCloseEditModal={onCloseEditModal}
-                    nodeData={data}
+                    nodeData={node}
                     openEditModal={isEditModalOpen}
                     publisherId={publisherId as string}
                 />
