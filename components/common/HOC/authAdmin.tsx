@@ -25,7 +25,7 @@ const withAdmin = (WrappedComponent) => {
             return <WrappedComponent {...props} />
         }
 
-        // Show 403 when user === undefined
+        // Show 403 when user === undefined and user.isAdmin === false
         return (
             <div className="text-white dark:text-white">
                 403 Forbidden: You have no permission to this page. Redirecting
