@@ -7,28 +7,25 @@ import { useGetUser } from 'src/api/generated'
 const withAdmin = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        const { data: user, isLoading, error } = useGetUser()
+        const { data: user, isLoading } = useGetUser()
         useEffect(() => {
             console.log({ user })
             if (!isLoading && !user?.isAdmin) {
                 router.push('/')
             }
         }, [user, router, isLoading])
-        if (error)
-            return (
-                <div className="flex-grow flex justify-center items-center h-[50vh]">
-                    Oops! fail to get user
-                </div>
-            )
         if (isLoading)
             return (
                 <div className="flex-grow flex justify-center items-center h-[50vh]">
                     <Spinner />
                 </div>
             )
+
         if (user?.isAdmin) {
             return <WrappedComponent {...props} />
         }
+
+        // Show 403 when user === undefined and user.isAdmin === false
         return (
             <div className="text-white dark:text-white">
                 403 Forbidden: You have no permission to this page. Redirecting
