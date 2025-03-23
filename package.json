@@ -27,7 +27,7 @@
     "@next/mdx": "12.3.1",
     "@tanstack/react-query": "^5.17.19",
     "algoliasearch": "^4.24.0",
-    "axios": "^1.6.5",
+    "axios": "^1.8.2",
     "downloadjs": "^1.4.7",
     "firebase": "^10.11.1",
     "flowbite": "^2.3.0",
