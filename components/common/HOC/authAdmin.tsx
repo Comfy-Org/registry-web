@@ -14,6 +14,7 @@ const withAdmin = (WrappedComponent) => {
                 router.push('/')
             }
         }, [user, router, isLoading])
+
         if (isLoading)
             return (
                 <div className="flex-grow flex justify-center items-center h-[50vh]">
