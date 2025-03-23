@@ -4,12 +4,14 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
+import { MdWarning } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
     NodeVersionStatus,
     useGetNode,
     useGetPermissionOnPublisherNodes,
+    useGetUser,
     useListNodeVersions,
 } from 'src/api/generated'
 import nodesLogo from '../../public/images/nodesLogo.svg'
@@ -101,6 +103,11 @@ const NodeDetails = () => {
             NodeVersionStatus.NodeVersionStatusFlagged,
         ],
     })
+
+    const { data: user } = useGetUser()
+    const isAdmin = user?.isAdmin
+    const canEdit = isAdmin || permissions?.canEdit
+    const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
@@ -323,11 +330,14 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={handleOpenModal}
                             >
+                                {warningForAdminEdit && (
+                                    <MdWarning className="w-5 h-5 text-warning" />
+                                )}
                                 <svg
                                     className="w-5 h-5 mr-2 text-white"
                                     aria-hidden="true"
@@ -349,11 +359,14 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
+                                {warningForAdminEdit && (
+                                    <MdWarning className="w-5 h-5 text-warning" />
+                                )}
                                 <HiTrash className="w-5 h-5 mr-2" />
                                 <span>Delete</span>
                             </Button>
@@ -405,7 +418,7 @@ const NodeDetails = () => {
                         nodeId={nodeId as string}
                         publisherId={publisherId as string}
                         versionNumber={selectedVersion.version as string}
-                        canEdit={permissions?.canEdit}
+                        canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()
                         }}
