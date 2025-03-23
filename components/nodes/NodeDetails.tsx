@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
-import { MdWarning } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -335,9 +334,6 @@ const NodeDetails = () => {
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={handleOpenModal}
                             >
-                                {warningForAdminEdit && (
-                                    <MdWarning className="w-5 h-5 text-warning" />
-                                )}
                                 <svg
                                     className="w-5 h-5 mr-2 text-white"
                                     aria-hidden="true"
@@ -355,6 +351,7 @@ const NodeDetails = () => {
                                         d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                                     />
                                 </svg>
+                                {warningForAdminEdit && <>Force&nbsp;</>}
                                 <span>Edit details</span>
                             </Button>
                         )}
@@ -364,10 +361,8 @@ const NodeDetails = () => {
                                 className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
-                                {warningForAdminEdit && (
-                                    <MdWarning className="w-5 h-5 text-warning" />
-                                )}
                                 <HiTrash className="w-5 h-5 mr-2" />
+                                {warningForAdminEdit && <>Force&nbsp;</>}
                                 <span>Delete</span>
                             </Button>
                         )}
