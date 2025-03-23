@@ -316,12 +316,11 @@ const NodeDetails = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full mt-4 lg:w-1/6 " hidden={isUnclaimed}>
+                <div className="w-full mt-4 lg:w-1/6 ">
                     <div className="flex flex-col gap-4">
                         {node.repository && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                hidden
                                 onClick={() => {
                                     analytic.track('View Repository')
                                 }}
@@ -374,6 +373,7 @@ const NodeDetails = () => {
 
                         {!!node.latest_version?.downloadUrl && (
                             <Button
+                                hidden={isUnclaimed}
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                 onClick={(
                                     e: React.MouseEvent<HTMLButtonElement>
