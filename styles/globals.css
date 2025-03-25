@@ -24,6 +24,11 @@ body {
     cursor: pointer;
 }
 
+/* props utils */
+[hidden] {
+    display: none;
+}
+
 /* render highlight */
 strong {
     @apply text-blue-500;
