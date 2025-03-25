@@ -108,7 +108,7 @@ const NodeDetails = () => {
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
     const warningForAdminEdit = isAdmin && !permissions?.canEdit
-    
+
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
     const disclaimerUnclaimed = 'This node can only be installed via git'
 
