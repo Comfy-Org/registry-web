@@ -13,6 +13,7 @@ import {
     useGetUser,
     useListNodeVersions,
 } from 'src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
@@ -107,6 +108,9 @@ const NodeDetails = () => {
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
     const warningForAdminEdit = isAdmin && !permissions?.canEdit
+    
+    const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
+    const disclaimerUnclaimed = 'This node can only be installed via git'
 
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
@@ -177,7 +181,10 @@ const NodeDetails = () => {
                                         {node.name}
                                     </h1>
                                     {node.latest_version && (
-                                        <p className="text-[18px] pt-2 text-gray-300">
+                                        <p
+                                            className="text-[18px] pt-2 text-gray-300"
+                                            hidden={isUnclaimed}
+                                        >
                                             v{node.latest_version?.version}
                                             <span className="pl-3 text-gray-400">
                                                 {' '}
@@ -261,9 +268,15 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                <CopyableCodeBlock
-                                    code={`comfy node registry-install ${nodeId}`}
-                                />
+                                {isUnclaimed ? (
+                                    <p className="text-base font-normal text-gray-200">
+                                        {disclaimerUnclaimed}
+                                    </p>
+                                ) : (
+                                    <CopyableCodeBlock
+                                        code={`comfy node registry-install ${nodeId}`}
+                                    />
+                                )}
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">
@@ -273,7 +286,7 @@ const NodeDetails = () => {
                                     {node.description}
                                 </p>
                             </div>
-                            <div className="mt-10">
+                            <div className="mt-10" hidden={isUnclaimed}>
                                 <h2 className="mb-2 text-lg font-semibold">
                                     Version history
                                 </h2>
@@ -314,7 +327,6 @@ const NodeDetails = () => {
                         {node.repository && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                hidden
                                 onClick={() => {
                                     analytic.track('View Repository')
                                 }}
@@ -367,14 +379,14 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {node.latest_version?.downloadUrl && (
+                        {!!node.latest_version?.downloadUrl && (
                             <Button
+                                hidden={isUnclaimed}
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                 onClick={(
                                     e: React.MouseEvent<HTMLButtonElement>
                                 ) => {
                                     e.preventDefault()
-
                                     if (node?.latest_version?.downloadUrl) {
                                         downloadFile(
                                             node.latest_version?.downloadUrl,
