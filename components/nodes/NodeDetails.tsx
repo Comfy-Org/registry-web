@@ -108,7 +108,7 @@ const NodeDetails = () => {
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
     const warningForAdminEdit = isAdmin && !permissions?.canEdit
-    
+
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
     const disclaimerUnclaimed = 'This node can only be installed via git'
 
@@ -363,8 +363,8 @@ const NodeDetails = () => {
                                         d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                                     />
                                 </svg>
-                                {warningForAdminEdit && <>Force&nbsp;</>}
                                 <span>Edit details</span>
+                                {warningForAdminEdit && <>&nbsp;(admin)</>}
                             </Button>
                         )}
 
@@ -374,8 +374,8 @@ const NodeDetails = () => {
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
                                 <HiTrash className="w-5 h-5 mr-2" />
-                                {warningForAdminEdit && <>Force&nbsp;</>}
                                 <span>Delete</span>
+                                {warningForAdminEdit && <>&nbsp;(admin)</>}
                             </Button>
                         )}
 
