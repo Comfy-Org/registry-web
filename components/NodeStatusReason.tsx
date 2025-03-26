@@ -1,4 +1,5 @@
 import { Editor } from '@monaco-editor/react'
+import { compareBy } from 'comparing'
 import { Button } from 'flowbite-react'
 import Link from 'next/link'
 import prettierPluginBabel from 'prettier/plugins/babel'
@@ -81,20 +82,19 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const fullfilledErrorList = errorList
         // guess url
         ?.map((e) => {
-            const repo = node?.repository || ''
-            const fn =
-                repo &&
+            const reopUrl = node?.repository || ''
+            const pathname =
+                reopUrl &&
                 (e.file_name || '') &&
                 `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
-            const ln = fn && (e.line_number || '') && `#L${e.line_number}`
-            const url = repo + fn + ln
+            const hash =
+                pathname && (e.line_number || '') && `#L${e.line_number}`
+            const url = reopUrl + pathname + hash
             return { ...e, url }
         })
-    const cmpBy = function <T>(f: (s: T) => string) {
-        return (a: T, b: T) => f(a).localeCompare(f(b))
-    }
+
     const problemsSummary = fullfilledErrorList
-        ?.toSorted(cmpBy((e) => e.url ?? ''))
+        ?.toSorted(compareBy((e) => e.url ?? ''))
         .map((e, i) => (
             <li key={i}>
                 <Link href={e.url} passHref className="button">
