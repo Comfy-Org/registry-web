@@ -1,3 +1,5 @@
+import { NextConfig } from 'next'
+
 const withMDX = (await import('@next/mdx')).default({
     extension: /\.mdx?$/,
     options: {
@@ -8,10 +10,11 @@ const withMDX = (await import('@next/mdx')).default({
     },
 })
 
-/** @type {import('next').NextConfig} */
-const conf = {
+const conf: NextConfig = {
     reactStrictMode: true,
+    // swcMinify: true,
     swcMinify: true,
+    
     // Append the default value with md extensions
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
     images: {
