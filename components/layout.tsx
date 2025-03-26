@@ -39,7 +39,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
                     name="description"
                     content="Discover and install ComfyUI custom nodes."
                 />
-                <Link legacyBehavior rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="/favicon.ico" />
                 <ThemeModeScript />
             </Head>
             <Container>
