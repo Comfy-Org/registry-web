@@ -1,4 +1,4 @@
-const withMDX = (await import("@next/mdx")).default({
+const withMDX = (await import('@next/mdx')).default({
     extension: /\.mdx?$/,
     options: {
         remarkPlugins: [],
@@ -39,4 +39,4 @@ const conf = {
         ]
     },
 }
-export default withMDX(conf);
+export default withMDX(conf)
