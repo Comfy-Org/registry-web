@@ -1,17 +1,17 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
 
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { useQueryClient } from '@tanstack/react-query'
 import { Badge, Button, Spinner } from 'flowbite-react'
 import {
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
     useListAllNodeVersions,
 } from 'src/api/generated'
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
-import { useQueryClient } from '@tanstack/react-query'
 
 function NodeVersionList({}) {
     const router = useRouter()
@@ -35,7 +35,7 @@ function NodeVersionList({}) {
         statuses: selectedStatus,
         include_status_reason: true,
     })
-    const versions = getAllNodeVersionsQuery.data?.versions || []
+    const versions = (getAllNodeVersionsQuery.data?.versions || [])?.toSorted()
 
     const updateNodeVersionMutation = useAdminUpdateNodeVersion()
     const queryClient = useQueryClient()
