@@ -1,4 +1,5 @@
-// import jsonFormat from 'json-stringify-pretty-compact'
+import { Editor } from '@monaco-editor/react'
+import { Button } from 'flowbite-react'
 import Link from 'next/link'
 import prettierPluginBabel from 'prettier/plugins/babel'
 import prettierPluginEstree from 'prettier/plugins/estree'
@@ -6,6 +7,7 @@ import prettierPluginYaml from 'prettier/plugins/yaml'
 import { format } from 'prettier/standalone'
 import { tryCatch } from 'rambda'
 import { useEffect, useState } from 'react'
+import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
@@ -76,47 +78,66 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     })()
     const errorList = errorArraySchema.safeParse(reasonJson).data
 
-    const renderErrorList = errorList?.map((error, i) => {
-        const repo = node?.repository || ''
-        const fn =
-            repo && (error.file_name || '') && `/blob/HEAD/${error.file_name}`
-        const ln = fn && (error.line_number || '') && `#L${error.line_number}`
-        const guessLocation = repo + fn + ln
-
-        return (
-            <div key={i}>
-                <span className="m-1">{error.file_name}</span>
-                <span className="m-1">{error.line}</span>
-
-                <span className="m-1">{error.error_type}</span>
-                <span className="m-1">{error.scanner}</span>
-
-                <>Meta: {JSON.stringify(error.meta, null, 2)}</>
-
-                <Link href={guessLocation} passHref className="btn">
-                    <a>Check REPO</a>
+    const fullfilledErrorList = errorList
+        // guess url
+        ?.map((e) => {
+            const repo = node?.repository || ''
+            const fn =
+                repo &&
+                (e.file_name || '') &&
+                `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
+            const ln = fn && (e.line_number || '') && `#L${e.line_number}`
+            const url = repo + fn + ln
+            return { ...e, url }
+        })
+    const cmpBy = function <T>(f: (s: T) => string) {
+        return (a: T, b: T) => f(a).localeCompare(f(b))
+    }
+    const problemsSummary = fullfilledErrorList
+        ?.toSorted(cmpBy((e) => e.url ?? ''))
+        .map((e, i) => (
+            <li key={i}>
+                <Link href={e.url} passHref className="button">
+                    <a>
+                        <code className="block">{e.url}</code>
+                        <code className="ml-4">{e.error_type}</code>
+                        <code className="ml-4">{e.line}</code>
+                    </a>
                 </Link>
-                {/* todo: maybe suggest a change and pr in future */}
-            </div>
-        )
-    })
+            </li>
+        ))
+    // const renderErrorList = fullfilledErrorList?.map((error, i) => {
+    //     return (
+    //         <div key={i}>
+    //             <span className="m-1">{error.file_name}</span>
+    //             <span className="m-1">{error.line}</span>
+    //             <span className="m-1">{error.error_type}</span>
+    //             <span className="m-1">{error.scanner}</span>
+    //             <>Meta: {JSON.stringify(error.meta, null, 2)}</>
 
-    const [code, setCode] = useState(status_reason ?? '')
-    useEffect(() => {
-        format(status_reason ?? '', {
-            parser: 'json5',
-            plugins: [prettierPluginBabel, prettierPluginEstree],
-        }).then(setCode)
-    }, [status_reason])
+    //             <Link href={url} passHref className="btn">
+    //                 <a>Check REPO</a>
+    //             </Link>
+    //             {/* todo: maybe suggest a change and pr in future */}
+    //         </div>
+    //     )
+    // })
 
+    const code = JSON.stringify(fullfilledErrorList) ?? status_reason
     return (
-        <p className="text-[18px] pt-2 text-gray-300" ref={ref}>
-            {'Status Reason: '}
+        <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
             {/* {renderErrorList || (
                 <>{!!code && <PrettieredJSON5>{code}</PrettieredJSON5>}</>
-            )} */}
+                )} */}
+            {!!problemsSummary && (
+                <>
+                    <div>{'Problems Summary: '}</div>
+                    <ol className="ml-4">{problemsSummary}</ol>
+                </>
+            )}
+            <div>{'Status Reason: '}</div>
             {!!code && <PrettieredYAML>{code}</PrettieredYAML>}
-        </p>
+        </div>
     )
 }
 
@@ -136,6 +157,8 @@ export function PrettieredJSON5({ children: raw }: { children: string }) {
 }
 
 export function PrettieredYAML({ children: raw }: { children: string }) {
+    const { ref, inView } = useInView()
+
     const parsedYaml = tryCatch(
         (raw: string) => yaml.stringify(yaml.parse(raw)),
         raw
@@ -148,9 +171,44 @@ export function PrettieredYAML({ children: raw }: { children: string }) {
             plugins: [prettierPluginYaml],
         }).then(setCode)
     }, [parsedYaml])
+
+    const [isEditorOpen, setEditorOpen] = useState(false)
+    const [editorReady, setEditorReady] = useState(false)
+    const displayEditor = isEditorOpen && editorReady
+    useEffect(() => {
+        if (isEditorOpen === false) setEditorReady(false)
+    }, [isEditorOpen])
+
     return (
-        <SyntaxHighlighter language="yaml" style={dark}>
-            {code}
-        </SyntaxHighlighter>
+        <div className="relative" ref={ref}>
+            {inView && (
+                <div className="absolute right-5 top-5 z-10">
+                    <Button
+                        onClick={() => setEditorOpen((e) => !e)}
+                        color={'gray'}
+                    >
+                        <MdEdit className="w-5 h-5" />
+                        Toggle Editor
+                    </Button>
+                </div>
+            )}
+            {!displayEditor && (
+                <SyntaxHighlighter language="yaml" style={dark}>
+                    {code}
+                </SyntaxHighlighter>
+            )}
+
+            {isEditorOpen && (
+                <Editor
+                    className={!displayEditor ? 'hidden' : ''}
+                    language="yaml"
+                    options={{ readOnly: true }}
+                    theme={'vs-dark'}
+                    height={'30em'}
+                    value={code}
+                    onMount={() => setEditorReady(true)}
+                />
+            )}
+        </div>
     )
 }
