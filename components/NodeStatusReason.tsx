@@ -94,7 +94,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         })
 
     const problemsSummary = fullfilledErrorList
-        ?.toSorted(compareBy((e) => e.url ?? ''))
+        ?.sort(compareBy((e) => e.url ?? ''))
         .map((e, i) => (
             <li key={i}>
                 <Link href={e.url} passHref className="button">
