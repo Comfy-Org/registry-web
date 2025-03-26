@@ -32,6 +32,8 @@ const conf: NextConfig = {
         config.experiments.topLevelAwait = true
         return config
     },
+    transpilePackages: ['@algolia/autocomplete-shared'],
+
     async redirects() {
         return [
             {
