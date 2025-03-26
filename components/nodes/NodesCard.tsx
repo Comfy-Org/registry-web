@@ -1,6 +1,6 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import Image from 'next/image'
 import { Node } from 'src/api/generated'
 interface NodesCard {
     node: Node
@@ -34,7 +34,7 @@ const NodesCard: React.FC<NodesCard> = ({
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
                         {' '}
-                        <Link href={buttonLink}>
+                        <Link legacyBehavior href={buttonLink}>
                             <a>More</a>
                         </Link>
                     </p>

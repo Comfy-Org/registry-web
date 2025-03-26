@@ -1,7 +1,7 @@
+import Link from 'next/link'
 import * as React from 'react'
 import { Publisher, useListNodesForPublisher } from 'src/api/generated'
 import NodesCard from '../nodes/NodesCard'
-import Link from 'next/link'
 
 type PublisherNodesProps = {
     publisher: Publisher
@@ -26,7 +26,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
         <div className="pt-20">
             <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold leading-tight tracking-tight text-white sm:text-2xl">
-                    <Link href={`publishers/${publisher.id}`}>
+                    <Link legacyBehavior href={`publishers/${publisher.id}`}>
                         {publisher.name !== '' ? publisher.name : publisher.id}
                     </Link>
                 </h1>

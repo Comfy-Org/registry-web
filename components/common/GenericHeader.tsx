@@ -1,7 +1,6 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { Button } from 'flowbite-react'
 import Link from 'next/link'
+import React from 'react'
 
 interface Props {
     title: string
@@ -28,7 +27,7 @@ const GenericHeader: React.FC<Props> = ({
             <p className="pt-2 pb-4 font-light text-gray-500 text-lg dark:text-gray-400">
                 {subTitle}
             </p>
-            <Link href={buttonLink}>
+            <Link legacyBehavior href={buttonLink}>
                 <Button color={buttonColor} className="flex items-center">
                     {showIcon && (
                         <svg

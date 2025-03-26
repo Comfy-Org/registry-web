@@ -1,6 +1,6 @@
-import type { SearchClient } from 'algoliasearch/lite'
 import type { BaseItem } from '@algolia/autocomplete-core'
 import type { AutocompleteOptions } from '@algolia/autocomplete-js'
+import type { SearchClient } from 'algoliasearch/lite'
 
 import {
     createElement,
@@ -12,10 +12,10 @@ import {
 } from 'react'
 import { createRoot, Root } from 'react-dom/client'
 
-import { usePagination, useSearchBox } from 'react-instantsearch'
 import { autocomplete } from '@algolia/autocomplete-js'
-import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
+import { usePagination, useSearchBox } from 'react-instantsearch'
 // @ts-ignore
 import { debounce } from '@algolia/autocomplete-shared'
 
