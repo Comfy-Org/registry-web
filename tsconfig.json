@@ -1,11 +1,7 @@
 {
     "compilerOptions": {
         "target": "ESNext",
-        "lib": [
-            "ESNext",
-            "DOM",
-            "DOM.Iterable"
-        ],
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "allowJs": true,
         "skipLibCheck": true,
         "strict": true,
@@ -21,18 +17,9 @@
         "noImplicitAny": false,
         "baseUrl": "./",
         "paths": {
-            "@/components/*": [
-                "components/*"
-            ]
+            "@/components/*": ["components/*"]
         }
     },
-    "include": [
-        "next-env.d.ts",
-        "**/*.ts",
-        "**/*.tsx"
-    ],
-    "exclude": [
-        "node_modules",
-        "NativeApp"
-    ]
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+    "exclude": ["node_modules", "NativeApp"]
 }
