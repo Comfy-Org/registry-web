@@ -83,13 +83,13 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         // guess url
         ?.map((e) => {
             const reopUrl = node?.repository || ''
-            const pathname =
+            const filepath =
                 reopUrl &&
                 (e.file_name || '') &&
                 `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
-            const hash =
-                pathname && (e.line_number || '') && `#L${e.line_number}`
-            const url = reopUrl + pathname + hash
+            const linenumber =
+                filepath && (e.line_number || '') && `#L${e.line_number}`
+            const url = reopUrl + filepath + linenumber
             return { ...e, url }
         })
 
