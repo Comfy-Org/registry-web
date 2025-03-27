@@ -10,6 +10,7 @@ import {
     NodeVersionStatus,
     useGetNode,
     useGetPermissionOnPublisherNodes,
+    useGetUser,
     useListNodeVersions,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
@@ -102,6 +103,11 @@ const NodeDetails = () => {
             NodeVersionStatus.NodeVersionStatusFlagged,
         ],
     })
+
+    const { data: user } = useGetUser()
+    const isAdmin = user?.isAdmin
+    const canEdit = isAdmin || permissions?.canEdit
+    const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
     const disclaimerUnclaimed = 'This node can only be installed via git'
@@ -335,7 +341,7 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={handleOpenModal}
@@ -358,16 +364,18 @@ const NodeDetails = () => {
                                     />
                                 </svg>
                                 <span>Edit details</span>
+                                {warningForAdminEdit && <>&nbsp;(admin)</>}
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
                                 <HiTrash className="w-5 h-5 mr-2" />
                                 <span>Delete</span>
+                                {warningForAdminEdit && <>&nbsp;(admin)</>}
                             </Button>
                         )}
 
@@ -417,7 +425,7 @@ const NodeDetails = () => {
                         nodeId={nodeId as string}
                         publisherId={publisherId as string}
                         versionNumber={selectedVersion.version as string}
-                        canEdit={permissions?.canEdit}
+                        canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()
                         }}
