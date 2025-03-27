@@ -2,7 +2,7 @@ name: Update API Type definitions
 
 on:
     push:
-      branches: [sno-api-gen]
+        branches: [sno-api-gen]
     schedule:
         - cron: '0 2 1,15 * *'
     workflow_dispatch:
@@ -27,10 +27,10 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v2
               with:
-                node-version: '22'
+                  node-version: '22'
             - name: update api definition
               run: npx -y orval
             # commit prettier fixed code
             - uses: stefanzweifel/git-auto-commit-action@v5
               with:
-                commit_message: 'chore: generate backend API static type'
+                  commit_message: 'chore: generate backend API static type'
