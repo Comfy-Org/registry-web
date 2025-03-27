@@ -9,6 +9,7 @@ const withAdmin = (WrappedComponent) => {
         const router = useRouter()
         const { data: user, isLoading } = useGetUser()
         useEffect(() => {
+            console.log({ user })
             if (!isLoading && !user?.isAdmin) {
                 router.push('/')
             }

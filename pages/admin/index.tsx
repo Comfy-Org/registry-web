@@ -1,7 +1,6 @@
-import React from 'react'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import withAdmin from '@/components/common/HOC/authAdmin'
 
 function AdminDashboard() {
     const router = useRouter()
@@ -18,6 +17,13 @@ function AdminDashboard() {
                     className="w-fit"
                 >
                     Review Node Versions
+                </Button>
+                <Button
+                    color="blue"
+                    onClick={() => router.push('/admin/add-unclaimed-node')}
+                    className="w-fit"
+                >
+                    Add Unclaimed Node
                 </Button>
                 {/* Add more admin links here as needed */}
             </div>

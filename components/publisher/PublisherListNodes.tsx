@@ -1,15 +1,15 @@
+import { Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
-import GenericHeader from '../common/GenericHeader'
-import PublisherNodes from './PublisherNodes'
 import {
     Publisher,
     useListPublishersForUser,
     useUpdatePublisher,
 } from 'src/api/generated'
-import { Spinner } from 'flowbite-react'
+import GenericHeader from '../common/GenericHeader'
+import PublisherNodes from './PublisherNodes'
 
-import EditPublisherModal from './EditPublisherModal'
 import { toast } from 'react-toastify'
+import EditPublisherModal from './EditPublisherModal'
 
 const Nodes: React.FC = () => {
     const { data, isLoading, isError, refetch } = useListPublishersForUser()
@@ -52,6 +52,7 @@ const Nodes: React.FC = () => {
             </div>
         )
     }
+    console.log({ data })
 
     return (
         <section className="h-full mt-8 bg-gray-900 lg:mt-20">
