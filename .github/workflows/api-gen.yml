@@ -1,0 +1,36 @@
+name: Update API Type definitions
+
+on:
+    push:
+      branches: [sno-api-gen]
+    schedule:
+        - cron: '0 2 1,15 * *'
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    update-browserslist-database:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - name: Configure git
+              run: |
+                  # Setup for commiting using built-in token. See https://github.com/actions/checkout#push-a-commit-using-the-built-in-token
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                node-version: '22'
+            - name: update api definition
+              run: npx -y orval
+            # commit prettier fixed code
+            - uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                commit_message: 'chore: generate backend API static type'
