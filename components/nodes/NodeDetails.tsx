@@ -79,7 +79,7 @@ export function formatDownloadCount(count: number): string {
 
 const NodeDetails = () => {
     const router = useRouter()
-    const { publisherId, nodeId } = router.query
+    const { publisherId, nodeId } = router.query // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
