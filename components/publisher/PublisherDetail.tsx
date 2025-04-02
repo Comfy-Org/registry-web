@@ -219,9 +219,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                     />
                 )}
 
-                <PublisherNodes publisher={publisher}  />
+                <PublisherNodes publisher={publisher} />
             </div>
-            
+
             <CreateSecretKeyModal
                 publisherId={publisher.id}
                 openModal={openSecretKeyModal}
