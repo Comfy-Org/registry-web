@@ -1,11 +1,11 @@
+import Link from 'next/link'
 import * as React from 'react'
 import { Publisher, useListNodesForPublisher } from 'src/api/generated'
 import NodesCard from '../nodes/NodesCard'
-import Link from 'next/link'
 
 type PublisherNodesProps = {
     publisher: Publisher
-    onEditPublisher: () => void
+    onEditPublisher?: () => void
 }
 
 /**
@@ -31,7 +31,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
                     </Link>
                 </h1>
 
-                <div onClick={onEditPublisher}>
+                <div onClick={onEditPublisher} hidden={!onEditPublisher}>
                     <svg
                         className="w-[20px] h-[17px] text-white ml-2"
                         aria-hidden="true"
