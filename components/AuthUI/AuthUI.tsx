@@ -77,7 +77,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                             <Image
                                 alt="Comfy Logo"
                                 src="https://storage.googleapis.com/comfy-assets/logo.png"
-                                className="h-6 mr-3 sm:h-16"
+                                className="w-6 h-6 mr-3 sm:w-16 sm:h-16"
                                 width={80}
                                 height={80}
                             />

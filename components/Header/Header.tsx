@@ -1,5 +1,3 @@
-import React from 'react'
-import Image from 'next/image'
 import {
     Badge,
     Button,
@@ -7,8 +5,9 @@ import {
     NavbarCollapse,
     NavbarToggle,
 } from 'flowbite-react'
-import { FaDiscord } from 'react-icons/fa'
-import { FaGithub } from 'react-icons/fa'
+import Image from 'next/image'
+import React from 'react'
+import { FaDiscord, FaGithub } from 'react-icons/fa'
 
 interface HeaderProps {
     isLoggedIn?: boolean
@@ -41,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         src="https://storage.googleapis.com/comfy-assets/logo.png"
                         width={36}
                         height={36}
-                        className="h-6 mr-3 sm:h-9"
+                        className="w-6 h-6 mr-3 sm:w-9 sm:h-9"
                     />
                     <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
                         Comfy Registry
