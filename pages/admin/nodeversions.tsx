@@ -30,7 +30,7 @@ function NodeVersionList({}) {
         pending: NodeVersionStatus.NodeVersionStatusPending,
         deleted: NodeVersionStatus.NodeVersionStatusDeleted,
     } // satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
-    const allFlags = Object.values(flags).toSorted()
+    const allFlags = [...Object.values(flags)].sort()
 
     const defaultSelectedStatus = [
         (router.query as any)?.filter ?? Object.keys(flags),
