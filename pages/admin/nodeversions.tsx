@@ -47,7 +47,7 @@ function NodeVersionList({}) {
 
         const checkedAll =
             allFlags.join(',').toString() ===
-            status.toSorted().join(',').toString()
+            [...status].sort().join(',').toString()
         const searchParams = checkedAll
             ? undefined
             : ({
@@ -56,7 +56,7 @@ function NodeVersionList({}) {
                       .map(([flag]) => flag),
               } as any)
         const search = new URLSearchParams({
-            ...omit('filter')(router.query),
+            ...(omit('filter')(router.query) as object),
             ...searchParams,
         })
             .toString()
