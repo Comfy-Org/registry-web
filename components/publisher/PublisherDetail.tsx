@@ -15,6 +15,7 @@ import { toast } from 'react-toastify'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 import analytic from 'src/analytic/analytic'
 import PublisherStatusBadge from './PublisherStatusBadge'
+import PublisherNodes from './PublisherNodes'
 
 type PublisherDetailProps = {
     publisher: Publisher
@@ -217,7 +218,10 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                         }
                     />
                 )}
+
+                <PublisherNodes publisher={publisher} />
             </div>
+
             <CreateSecretKeyModal
                 publisherId={publisher.id}
                 openModal={openSecretKeyModal}
