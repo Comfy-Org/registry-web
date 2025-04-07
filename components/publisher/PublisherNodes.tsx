@@ -69,9 +69,9 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
             {data?.totalPages && (
                 <Pagination
                     theme={CustomThemePagination as any} // Add 'as any' to bypass type checking
-                    currentPage={page }
+                    currentPage={page}
                     totalPages={data.totalPages}
-                    onPageChange={(page) => setPage(page )}
+                    onPageChange={(page) => setPage(page)}
                     showIcons={true}
                     previousLabel="Previous"
                     nextLabel="Next"
