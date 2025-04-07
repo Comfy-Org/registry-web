@@ -20,7 +20,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
     onEditPublisher,
     include_banned = false,
 }) => {
-    const [page, setPage] = React.useState(0)
+    const [page, setPage] = React.useState(1)
     const { data, isError, isLoading } = useListNodesForPublisherV2(
         publisher.id as string,
         { page, include_banned }
@@ -69,9 +69,9 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
             {data?.totalPages && (
                 <Pagination
                     theme={CustomThemePagination as any} // Add 'as any' to bypass type checking
-                    currentPage={page + 1}
+                    currentPage={page }
                     totalPages={data.totalPages}
-                    onPageChange={(page) => setPage(page - 1)}
+                    onPageChange={(page) => setPage(page )}
                     showIcons={true}
                     previousLabel="Previous"
                     nextLabel="Next"
