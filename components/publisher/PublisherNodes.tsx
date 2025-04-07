@@ -59,7 +59,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
             <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
                 {data?.nodes?.map((node, index) => (
                     <NodesCard
-                        key={index}
+                        key={node.id}
                         node={node}
                         buttonLink={`publishers/${publisher.id}/nodes/${node.id}`}
                     />
