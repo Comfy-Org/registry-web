@@ -7,7 +7,7 @@ import NodesCard from '../nodes/NodesCard'
 
 type PublisherNodesProps = {
     publisher: Publisher
-    onEditPublisher: () => void
+    onEditPublisher?: () => void
     include_banned?: boolean
 }
 
@@ -35,7 +35,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
                     </Link>
                 </h1>
 
-                <div onClick={onEditPublisher}>
+                <div onClick={onEditPublisher} hidden={!onEditPublisher}>
                     <svg
                         className="w-[20px] h-[17px] text-white ml-2"
                         aria-hidden="true"
