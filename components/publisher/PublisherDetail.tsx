@@ -9,7 +9,7 @@ import {
     useGetPermissionOnPublisher,
     useListNodesForPublisherV2,
     useListPersonalAccessTokens,
-    useUpdatePublisher
+    useUpdatePublisher,
 } from 'src/api/generated'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
@@ -30,7 +30,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         isLoading: isLoadingAccessTokens,
         refetch: refetchTokens,
     } = useListPersonalAccessTokens(publisher.id as string)
-    const { data: nodeList } = useListNodesForPublisherV2(publisher.id as string)
+    const { data: nodeList } = useListNodesForPublisherV2(
+        publisher.id as string
+    )
     const { data: permissions } = useGetPermissionOnPublisher(
         publisher.id as string
     )
