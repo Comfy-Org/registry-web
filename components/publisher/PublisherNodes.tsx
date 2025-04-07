@@ -1,11 +1,14 @@
-import * as React from 'react'
-import { Publisher, useListNodesForPublisher } from 'src/api/generated'
-import NodesCard from '../nodes/NodesCard'
+import { Pagination } from 'flowbite-react'
 import Link from 'next/link'
+import * as React from 'react'
+import { Publisher, useListNodesForPublisherV2 } from 'src/api/generated'
+import { CustomThemePagination } from 'utils/comfyTheme'
+import NodesCard from '../nodes/NodesCard'
 
 type PublisherNodesProps = {
     publisher: Publisher
     onEditPublisher: () => void
+    include_banned?: boolean
 }
 
 /**
@@ -15,12 +18,13 @@ type PublisherNodesProps = {
 const PublisherNodes: React.FC<PublisherNodesProps> = ({
     publisher,
     onEditPublisher,
+    include_banned = false,
 }) => {
-    const {
-        data: nodes,
-        isError,
-        isLoading,
-    } = useListNodesForPublisher(publisher.id as string)
+    const [page, setPage] = React.useState(0)
+    const { data, isError, isLoading } = useListNodesForPublisherV2(
+        publisher.id as string,
+        { page, include_banned }
+    )
 
     return (
         <div className="pt-20">
@@ -53,7 +57,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
             </div>
 
             <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
-                {nodes?.map((node, index) => (
+                {data?.nodes?.map((node, index) => (
                     <NodesCard
                         key={index}
                         node={node}
@@ -61,6 +65,19 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
                     />
                 ))}
             </div>
+
+            {data?.totalPages && (
+                <Pagination
+                    theme={CustomThemePagination as any} // Add 'as any' to bypass type checking
+                    currentPage={page + 1}
+                    totalPages={data.totalPages}
+                    onPageChange={(page) => setPage(page - 1)}
+                    showIcons={true}
+                    previousLabel="Previous"
+                    nextLabel="Next"
+                    layout="pagination"
+                />
+            )}
         </div>
     )
 }
