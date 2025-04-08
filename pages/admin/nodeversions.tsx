@@ -1,13 +1,14 @@
-import { useRouter } from 'next/router'
-import React from 'react'
-import { toast } from 'react-toastify'
-
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
 import { NodeStatusReason } from '@/components/NodeStatusReason'
 import { useQueryClient } from '@tanstack/react-query'
 import { Badge, Button, Spinner } from 'flowbite-react'
+import { useRouter } from 'next/router'
 import { omit } from 'rambda'
+import React, { useState } from 'react'
+import { HiPlusCircle } from 'react-icons/hi'
+import { toast } from 'react-toastify'
 import {
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
@@ -63,6 +64,9 @@ function NodeVersionList({}) {
             .replace(/^(?!$)/, '?')
         router.push(router.pathname + search + location.hash)
     }
+
+    const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
+        useState(false)
 
     const getAllNodeVersionsQuery = useListAllNodeVersions({
         page: page,
@@ -222,6 +226,21 @@ function NodeVersionList({}) {
                     >
                         All
                     </Button>
+                    {' | '}
+
+                    <Button
+                        onClick={() => {
+                            setIsAdminCreateNodeModalOpen(true)
+                        }}
+                    >
+                        <HiPlusCircle />
+                        Add Unclaimed Node
+                    </Button>
+
+                    <AdminCreateNodeFormModal
+                        open={isAdminCreateNodeModalOpen}
+                        onClose={() => setIsAdminCreateNodeModalOpen(false)}
+                    />
                 </div>
             </div>
 

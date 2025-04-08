@@ -89,7 +89,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
             const linenumber =
                 filepath && (e.line_number || '') && `#L${e.line_number}`
-            const url = reopUrl + filepath + linenumber
+            const url = repoUrl + filepath + linenumber
             return { ...e, url }
         })
 
