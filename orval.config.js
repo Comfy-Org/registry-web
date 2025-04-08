@@ -1,3 +1,5 @@
+require('dotenv/config') // load backend url from .env
+
 // orval.config.js
 module.exports = {
     dripApi: {

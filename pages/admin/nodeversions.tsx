@@ -1,17 +1,18 @@
-import React from 'react'
-import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
-
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { useQueryClient } from '@tanstack/react-query'
 import { Badge, Button, Spinner } from 'flowbite-react'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { HiPlusCircle } from 'react-icons/hi'
+import { toast } from 'react-toastify'
 import {
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
     useListAllNodeVersions,
 } from 'src/api/generated'
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
-import { useQueryClient } from '@tanstack/react-query'
 
 function NodeVersionList({}) {
     const router = useRouter()
@@ -28,6 +29,8 @@ function NodeVersionList({}) {
         NodeVersionStatus.NodeVersionStatusPending,
         NodeVersionStatus.NodeVersionStatusDeleted,
     ])
+    const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
+        useState(false)
 
     const getAllNodeVersionsQuery = useListAllNodeVersions({
         page: page,
@@ -187,6 +190,21 @@ function NodeVersionList({}) {
                     >
                         All
                     </Button>
+                    {' | '}
+
+                    <Button
+                        onClick={() => {
+                            setIsAdminCreateNodeModalOpen(true)
+                        }}
+                    >
+                        <HiPlusCircle />
+                        Add Unclaimed Node
+                    </Button>
+
+                    <AdminCreateNodeFormModal
+                        open={isAdminCreateNodeModalOpen}
+                        onClose={() => setIsAdminCreateNodeModalOpen(false)}
+                    />
                 </div>
             </div>
 
