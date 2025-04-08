@@ -1,8 +1,10 @@
+require('dotenv/config') // load backend url from .env
+
 // orval.config.js
 module.exports = {
     dripApi: {
         input: {
-            target: 'http://localhost:8080/openapi',
+            target: 'https://api.comfy.org/openapi',
         },
         output: {
             target: './src/api/generated.ts',
