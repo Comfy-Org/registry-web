@@ -150,7 +150,7 @@ export function PrettieredJSON5({ children: raw }: { children: string }) {
         }).then(setCode)
     }, [raw])
     return (
-        <SyntaxHighlighter language="yaml" style={dark}>
+        <SyntaxHighlighter language="json5" style={dark}>
             {code}
         </SyntaxHighlighter>
     )
