@@ -88,9 +88,13 @@ export function AdminCreateNodeFormModal({
         query: { enabled: false },
     }) // list publishers for unclaimed user
 
-    const { data: duplicatedNode } = useGetNode(watch('id') ?? '', {}, {
-        query: { enabled: !!watch('id') },
-    })
+    const { data: duplicatedNode } = useGetNode(
+        watch('id') ?? '',
+        {},
+        {
+            query: { enabled: !!watch('id') },
+        }
+    )
     const { data: similarNodes } = useSearchNodes(
         {
             include_banned: true,
