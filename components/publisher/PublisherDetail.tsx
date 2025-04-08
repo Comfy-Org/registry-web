@@ -1,19 +1,20 @@
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
+import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
 import {
     Publisher,
     useDeletePersonalAccessToken,
     useGetPermissionOnPublisher,
-    useListNodesForPublisher,
+    useListNodesForPublisherV2,
     useListPersonalAccessTokens,
     useUpdatePublisher,
 } from 'src/api/generated'
-import EditPublisherModal from '../publisher/EditPublisherModal'
-import { toast } from 'react-toastify'
+import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
-import analytic from 'src/analytic/analytic'
+import EditPublisherModal from '../publisher/EditPublisherModal'
+import PublisherNodes from './PublisherNodes'
 import PublisherStatusBadge from './PublisherStatusBadge'
 
 type PublisherDetailProps = {
@@ -29,7 +30,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         isLoading: isLoadingAccessTokens,
         refetch: refetchTokens,
     } = useListPersonalAccessTokens(publisher.id as string)
-    const { data: nodes } = useListNodesForPublisher(publisher.id as string)
+    const { data: nodeList } = useListNodesForPublisherV2(
+        publisher.id as string
+    )
     const { data: permissions } = useGetPermissionOnPublisher(
         publisher.id as string
     )
@@ -168,7 +171,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                             />
                         </svg>
                         <span className="ml-2">
-                            {nodes ? `${nodes.length} nodes` : ''}
+                            {nodeList?.total ? `${nodeList?.total} nodes` : ''}
                         </span>
                     </p>
                     {oneMemberOfPublisher && (
@@ -217,7 +220,10 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                         }
                     />
                 )}
+
+                <PublisherNodes publisher={publisher} />
             </div>
+
             <CreateSecretKeyModal
                 publisherId={publisher.id}
                 openModal={openSecretKeyModal}

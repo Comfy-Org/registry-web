@@ -10,6 +10,7 @@ import {
     NodeVersionStatus,
     useGetNode,
     useGetPermissionOnPublisherNodes,
+    useGetUser,
     useListNodeVersions,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
@@ -78,18 +79,23 @@ export function formatDownloadCount(count: number): string {
 
 const NodeDetails = () => {
     const router = useRouter()
-    const { publisherId, nodeId } = router.query
+    const { publisherId: _publisherId, nodeId } = router.query // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
     )
+
+    const [isEditModalOpen, setIsEditModal] = useState(false)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+    const { data: node, isLoading, isError } = useGetNode(nodeId as string)
+    const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
+
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId as string,
         nodeId as string
     )
-    const [isEditModalOpen, setIsEditModal] = useState(false)
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-    const { data: node, isLoading, isError } = useGetNode(nodeId as string)
+
     const {
         data: nodeVersions,
         isLoading: loadingNodeVersions,
@@ -102,6 +108,11 @@ const NodeDetails = () => {
             NodeVersionStatus.NodeVersionStatusFlagged,
         ],
     })
+
+    const { data: user } = useGetUser()
+    const isAdmin = user?.isAdmin
+    const canEdit = isAdmin || permissions?.canEdit
+    const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
     const disclaimerUnclaimed = 'This node can only be installed via git'
@@ -174,18 +185,25 @@ const NodeDetails = () => {
                                     <h1 className="text-[48px] font-bold">
                                         {node.name}
                                     </h1>
-                                    {node.latest_version && (
-                                        <p
-                                            className="text-[18px] pt-2 text-gray-300"
-                                            hidden={isUnclaimed}
-                                        >
-                                            v{node.latest_version?.version}
-                                            <span className="pl-3 text-gray-400">
-                                                {' '}
-                                                Most recent version
+
+                                    <p
+                                        className="text-[18px] pt-2 text-gray-300"
+                                        hidden={isUnclaimed}
+                                    >
+                                        {node.publisher?.id?.replace(
+                                            /^(?!$)/,
+                                            '@'
+                                        )}
+                                        {node.latest_version && (
+                                            <span>
+                                                {!!node.publisher?.id && ` | `}
+                                                {`v${node.latest_version?.version}`}
+                                                <span className="pl-3 text-gray-400">
+                                                    {' Most recent version'}
+                                                </span>
                                             </span>
-                                        </p>
-                                    )}
+                                        )}
+                                    </p>
                                 </div>
                             </div>
                             <NodeStatusBadge status={node.status} />
@@ -335,7 +353,7 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={handleOpenModal}
@@ -358,16 +376,18 @@ const NodeDetails = () => {
                                     />
                                 </svg>
                                 <span>Edit details</span>
+                                {warningForAdminEdit && <>&nbsp;(admin)</>}
                             </Button>
                         )}
 
-                        {permissions?.canEdit && (
+                        {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
                                 <HiTrash className="w-5 h-5 mr-2" />
                                 <span>Delete</span>
+                                {warningForAdminEdit && <>&nbsp;(admin)</>}
                             </Button>
                         )}
 
@@ -417,7 +437,7 @@ const NodeDetails = () => {
                         nodeId={nodeId as string}
                         publisherId={publisherId as string}
                         versionNumber={selectedVersion.version as string}
-                        canEdit={permissions?.canEdit}
+                        canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()
                         }}

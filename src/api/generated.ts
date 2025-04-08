@@ -128,6 +128,33 @@ export type GetPermissionOnPublisherNodes200 = {
   canEdit?: boolean;
 };
 
+export type ListNodesForPublisherV2200 = {
+  /** Maximum number of nodes per page */
+  limit?: number;
+  nodes?: Node[];
+  /** Current page number */
+  page?: number;
+  /** Total number of nodes available */
+  total?: number;
+  /** Total number of pages available */
+  totalPages?: number;
+};
+
+export type ListNodesForPublisherV2Params = {
+/**
+ * Number of nodes to return per page
+ */
+include_banned?: boolean;
+/**
+ * Page number of the nodes list
+ */
+page?: number;
+/**
+ * Number of nodes to return per page
+ */
+limit?: number;
+};
+
 export type ListNodesForPublisherParams = {
 /**
  * Number of nodes to return per page
@@ -157,9 +184,31 @@ export type CreateComfyNodesBody = {
   success?: boolean;
 };
 
+export type ListComfyNodes200 = {
+  comfy_nodes?: ComfyNode[];
+  totalNumberOfPages?: number;
+};
+
+export type ListComfyNodesParams = {
+/**
+ * The page number to retrieve.
+ */
+page?: number;
+/**
+ * The number of items to include per page.
+ */
+limit?: number;
+};
+
 export type ListNodeVersionsParams = {
 statuses?: NodeVersionStatus[];
 include_status_reason?: boolean;
+};
+
+export type CreateNodeTranslationsBodyData = {[key: string]: { [key: string]: unknown }};
+
+export type CreateNodeTranslationsBody = {
+  data?: CreateNodeTranslationsBodyData;
 };
 
 export type PostNodeReviewParams = {
@@ -174,6 +223,13 @@ export type InstallNodeParams = {
  * Specific version of the node to retrieve. If omitted, the latest version is returned.
  */
 version?: string;
+};
+
+export type GetNodeParams = {
+/**
+ * Whether to include the translation or not
+ */
+include_translations?: boolean;
 };
 
 export type SearchNodes200 = {
@@ -259,6 +315,10 @@ latest?: boolean;
  * Database column to use as ascending ordering. Add `;desc` as suffix on each column for descending sort
  */
 sort?: string[];
+/**
+ * node_id to use as filter
+ */
+node_id?: string[];
 /**
  * The platform requesting the nodes
  */
@@ -490,6 +550,8 @@ export const NodeStatus = {
   NodeStatusBanned: 'NodeStatusBanned',
 } as const;
 
+export type NodeTranslations = {[key: string]: { [key: string]: unknown }};
+
 export interface Node {
   author?: string;
   /** The category of the node. */
@@ -515,6 +577,7 @@ export interface Node {
   /** The status detail of the node. */
   status_detail?: string;
   tags?: string[];
+  translations?: NodeTranslations;
 }
 
 /**
@@ -1224,32 +1287,36 @@ export const useSearchNodes = <TData = Awaited<ReturnType<typeof searchNodes>>, 
  */
 export const getNode = (
     nodeId: string,
+    params?: GetNodeParams,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
       return customInstance<Node>(
-      {url: `/nodes/${nodeId}`, method: 'GET', signal
+      {url: `/nodes/${nodeId}`, method: 'GET',
+        params, signal
     },
       options);
     }
   
 
-export const getGetNodeQueryKey = (nodeId: string,) => {
-    return [`/nodes/${nodeId}`] as const;
+export const getGetNodeQueryKey = (nodeId: string,
+    params?: GetNodeParams,) => {
+    return [`/nodes/${nodeId}`, ...(params ? [params]: [])] as const;
     }
 
     
-export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(nodeId: string,
+    params?: GetNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetNodeQueryKey(nodeId);
+  const queryKey =  queryOptions?.queryKey ?? getGetNodeQueryKey(nodeId,params);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNode>>> = ({ signal }) => getNode(nodeId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNode>>> = ({ signal }) => getNode(nodeId,params, requestOptions, signal);
 
       
 
@@ -1265,11 +1332,12 @@ export type GetNodeQueryError = ErrorResponse
  * @summary Retrieve a specific node by ID
  */
 export const useGetNode = <TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(
- nodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ nodeId: string,
+    params?: GetNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
-  const queryOptions = getGetNodeQueryOptions(nodeId,options)
+  const queryOptions = getGetNodeQueryOptions(nodeId,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -1408,6 +1476,65 @@ export const usePostNodeReview = <TError = void | Error | ErrorResponse,
     }
     
 /**
+ * @summary Create Node Translations
+ */
+export const createNodeTranslations = (
+    nodeId: string,
+    createNodeTranslationsBody: CreateNodeTranslationsBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/nodes/${nodeId}/translations`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createNodeTranslationsBody
+    },
+      options);
+    }
+  
+
+
+export const getCreateNodeTranslationsMutationOptions = <TError = void | Error | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createNodeTranslations>>, {nodeId: string;data: CreateNodeTranslationsBody}> = (props) => {
+          const {nodeId,data} = props ?? {};
+
+          return  createNodeTranslations(nodeId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateNodeTranslationsMutationResult = NonNullable<Awaited<ReturnType<typeof createNodeTranslations>>>
+    export type CreateNodeTranslationsMutationBody = CreateNodeTranslationsBody
+    export type CreateNodeTranslationsMutationError = void | Error | ErrorResponse
+
+    /**
+ * @summary Create Node Translations
+ */
+export const useCreateNodeTranslations = <TError = void | Error | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createNodeTranslations>>,
+        TError,
+        {nodeId: string;data: CreateNodeTranslationsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateNodeTranslationsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
  * @summary List all versions of a node
  */
 export const listNodeVersions = (
@@ -1529,6 +1656,77 @@ export const useGetNodeVersion = <TData = Awaited<ReturnType<typeof getNodeVersi
   ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
 
   const queryOptions = getGetNodeVersionQueryOptions(nodeId,versionId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary list comfy-nodes for certain node
+ */
+export const listComfyNodes = (
+    nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListComfyNodes200>(
+      {url: `/nodes/${nodeId}/versions/${version}/comfy-nodes`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListComfyNodesQueryKey = (nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams,) => {
+    return [`/nodes/${nodeId}/versions/${version}/comfy-nodes`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListComfyNodesQueryOptions = <TData = Awaited<ReturnType<typeof listComfyNodes>>, TError = void | ErrorResponse>(nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListComfyNodesQueryKey(nodeId,version,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listComfyNodes>>> = ({ signal }) => listComfyNodes(nodeId,version,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(nodeId && version), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listComfyNodes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListComfyNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listComfyNodes>>>
+export type ListComfyNodesQueryError = void | ErrorResponse
+
+/**
+ * @summary list comfy-nodes for certain node
+ */
+export const useListComfyNodes = <TData = Awaited<ReturnType<typeof listComfyNodes>>, TError = void | ErrorResponse>(
+ nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListComfyNodesQueryOptions(nodeId,version,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -2213,6 +2411,73 @@ export const useCreateNode = <TError = ErrorResponse | void,
       return useMutation(mutationOptions);
     }
     
+/**
+ * @summary Retrieve all nodes
+ */
+export const listNodesForPublisherV2 = (
+    publisherId: string,
+    params?: ListNodesForPublisherV2Params,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListNodesForPublisherV2200>(
+      {url: `/publishers/${publisherId}/nodes/v2`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListNodesForPublisherV2QueryKey = (publisherId: string,
+    params?: ListNodesForPublisherV2Params,) => {
+    return [`/publishers/${publisherId}/nodes/v2`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListNodesForPublisherV2QueryOptions = <TData = Awaited<ReturnType<typeof listNodesForPublisherV2>>, TError = ErrorResponse>(publisherId: string,
+    params?: ListNodesForPublisherV2Params, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisherV2>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListNodesForPublisherV2QueryKey(publisherId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listNodesForPublisherV2>>> = ({ signal }) => listNodesForPublisherV2(publisherId,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(publisherId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisherV2>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListNodesForPublisherV2QueryResult = NonNullable<Awaited<ReturnType<typeof listNodesForPublisherV2>>>
+export type ListNodesForPublisherV2QueryError = ErrorResponse
+
+/**
+ * @summary Retrieve all nodes
+ */
+export const useListNodesForPublisherV2 = <TData = Awaited<ReturnType<typeof listNodesForPublisherV2>>, TError = ErrorResponse>(
+ publisherId: string,
+    params?: ListNodesForPublisherV2Params, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listNodesForPublisherV2>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListNodesForPublisherV2QueryOptions(publisherId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * @summary Delete a specific node
  */
