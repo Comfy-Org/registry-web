@@ -102,7 +102,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         })
 
     const problemsSummary = fullfilledErrorList
-        ?.sort(compareBy((e) => e.url ?? ''))
+        ?.sort(compareBy((e) => e.url ?? e.file_name))
         .map((e, i) => (
             <li key={i}>
                 <Link href={e.url} passHref className="button">
@@ -114,29 +114,10 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 </Link>
             </li>
         ))
-    // const renderErrorList = fullfilledErrorList?.map((error, i) => {
-    //     return (
-    //         <div key={i}>
-    //             <span className="m-1">{error.file_name}</span>
-    //             <span className="m-1">{error.line}</span>
-    //             <span className="m-1">{error.error_type}</span>
-    //             <span className="m-1">{error.scanner}</span>
-    //             <>Meta: {JSON.stringify(error.meta, null, 2)}</>
-
-    //             <Link href={url} passHref className="btn">
-    //                 <a>Check REPO</a>
-    //             </Link>
-    //             {/* todo: maybe suggest a change and pr in future */}
-    //         </div>
-    //     )
-    // })
 
     const code = JSON.stringify(fullfilledErrorList) ?? status_reason
     return (
         <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
-            {/* {renderErrorList || (
-                <>{!!code && <PrettieredJSON5>{code}</PrettieredJSON5>}</>
-                )} */}
             {!!problemsSummary && (
                 <>
                     <div>{'Problems Summary: '}</div>
