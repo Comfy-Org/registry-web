@@ -4,6 +4,10 @@
  * Comfy API
  * OpenAPI spec version: 1.0
  */
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -17,10 +21,6 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult
-} from '@tanstack/react-query';
-import {
-  useMutation,
-  useQuery
 } from '@tanstack/react-query';
 
 import { customInstance } from './mutator/axios-instance';
@@ -1765,72 +1765,6 @@ export const useCreateNodeTranslations = <TError = void | Error | ErrorResponse,
       const mutationOptions = getCreateNodeTranslationsMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
-    }
-    
-/**
- * @summary Create Node Translations
- */
-export const createNodeTranslations = (
-    nodeId: string,
-    createNodeTranslationsBody: CreateNodeTranslationsBody,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<void>(
-      {url: `/nodes/${nodeId}/translations`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: createNodeTranslationsBody, signal
-    },
-      options);
-    }
-  
-
-
-export const getCreateNodeTranslationsMutationOptions = <TError = void | Error | ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext> => {
-    
-const mutationKey = ['createNodeTranslations'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createNodeTranslations>>, {nodeId: string;data: CreateNodeTranslationsBody}> = (props) => {
-          const {nodeId,data} = props ?? {};
-
-          return  createNodeTranslations(nodeId,data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateNodeTranslationsMutationResult = NonNullable<Awaited<ReturnType<typeof createNodeTranslations>>>
-    export type CreateNodeTranslationsMutationBody = CreateNodeTranslationsBody
-    export type CreateNodeTranslationsMutationError = void | Error | ErrorResponse
-
-    /**
- * @summary Create Node Translations
- */
-export const useCreateNodeTranslations = <TError = void | Error | ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationResult<
-        Awaited<ReturnType<typeof createNodeTranslations>>,
-        TError,
-        {nodeId: string;data: CreateNodeTranslationsBody},
-        TContext
-      > => {
-
-      const mutationOptions = getCreateNodeTranslationsMutationOptions(options);
-
-      return useMutation(mutationOptions);
     }
     
 /**
