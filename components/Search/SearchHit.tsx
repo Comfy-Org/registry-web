@@ -33,6 +33,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
     )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
         <Link
+            legacyBehavior
             className="flex flex-col bg-gray-800 rounded-lg cursor-pointer h-full dark:border-gray-700 lg:p-4"
             href={`/nodes/${hit.id}`}
             rel="noopener noreferrer"

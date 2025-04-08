@@ -1,16 +1,15 @@
-import mixpanel from 'mixpanel-browser'
-import React from 'react'
-import Head from 'next/head'
 import { getAuth } from 'firebase/auth'
 import { ThemeModeScript } from 'flowbite-react'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
+import React from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import analytic from 'src/analytic/analytic'
+import app from 'src/firebase'
 import Header from './Header/Header'
 import Container from './common/Container'
-import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer } from 'react-toastify'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import app from 'src/firebase'
-import analytic from 'src/analytic/analytic'
 
 export default function Layout({ children }: React.PropsWithChildren) {
     const router = useRouter()
