@@ -64,7 +64,11 @@ const errorArraySchema = z
 
 export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const { ref, inView } = useInView()
-    const { data: node } = useGetNode(node_id!, { query: { enabled: inView } })
+    const { data: node } = useGetNode(
+        node_id!,
+        {},
+        { query: { enabled: inView } }
+    )
 
     const reasonJson = (function () {
         try {
