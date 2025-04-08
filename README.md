@@ -35,7 +35,9 @@ Start the dev server.
 
 Currently, the Orval spec is in `orval.config.js`. It points to the OpenAPI spec in your localhost server. This can be changed to staging or prod.
 
-`npx orval`
+```sh
+npx orval
+```
 
 This generates react queries that you can use in your Components.
 
