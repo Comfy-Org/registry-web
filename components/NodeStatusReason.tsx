@@ -82,9 +82,9 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const fullfilledErrorList = errorList
         // guess url
         ?.map((e) => {
-            const reopUrl = node?.repository || ''
+            const repoUrl = node?.repository || ''
             const filepath =
-                reopUrl &&
+                repoUrl &&
                 (e.file_name || '') &&
                 `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
             const linenumber =
