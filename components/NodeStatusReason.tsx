@@ -24,40 +24,44 @@ const errorArraySchema = z
         line_number: z.union([z.string(), z.number()]).optional(), // Line number can be a string or number and may or may not be present
         line: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
-        // meta: z
-        //     .object({
-        //         description: z.string(),
-        //         version: z.string(),
-        //         date: z.string(),
-        //         reference: z.string(),
-        //         category: z.string(),
-        //         observable_refs: z.string(),
-        //         attack_id1: z.string(),
-        //         attack_id2: z.string(),
-        //         severity: z.string(),
-        //     })
-        //     .optional(), // Meta information is optional and contains a detailed description if present
-        // matches: z
-        //     .array(
-        //         z.object({
-        //             filepath: z.string(),
-        //             strings: z.array(
-        //                 z.object({
-        //                     identifier: z.string(),
-        //                     instances: z.array(
-        //                         z.object({
-        //                             matched_data: z.string(),
-        //                             matched_length: z.number(),
-        //                             offset: z.number(),
-        //                             line_number: z.number(),
-        //                             line: z.string(),
-        //                         })
-        //                     ),
-        //                 })
-        //             ),
-        //         })
-        //     )
-        //     .optional(), // Matches array, if present, contains detailed match information
+        meta: z
+            .object({
+                description: z.string(),
+                version: z.string(),
+                date: z.string(),
+                reference: z.string(),
+                category: z.string(),
+                observable_refs: z.string(),
+                attack_id1: z.string(),
+                attack_id2: z.string(),
+                severity: z.string(),
+            })
+            .passthrough()
+            .optional(), // Meta information is optional and contains a detailed description if present
+        matches: z
+            .array(
+                z
+                    .object({
+                        filepath: z.string(),
+                        strings: z.array(
+                            z.object({
+                                identifier: z.string(),
+                                instances: z.array(
+                                    z.object({
+                                        matched_data: z.string(),
+                                        matched_length: z.number(),
+                                        offset: z.number(),
+                                        line_number: z.number(),
+                                        line: z.string(),
+                                    })
+                                ),
+                            })
+                        ),
+                    })
+                    .passthrough()
+                    .optional()
+            )
+            .optional(), // Matches array, if present, contains detailed match information
     })
     .passthrough()
     .array()
