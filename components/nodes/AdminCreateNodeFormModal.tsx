@@ -88,7 +88,7 @@ export function AdminCreateNodeFormModal({
         query: { enabled: false },
     }) // list publishers for unclaimed user
 
-    const { data: duplicatedNode } = useGetNode(watch('id') ?? '', {
+    const { data: duplicatedNode } = useGetNode(watch('id') ?? '', {}, {
         query: { enabled: !!watch('id') },
     })
     const { data: similarNodes } = useSearchNodes(
@@ -99,11 +99,7 @@ export function AdminCreateNodeFormModal({
         },
         { query: { enabled: !!watch('name') } }
     )
-    // console.log({
-    //     allPublishers,
-    //     duplicatedNode,
-    //     similarNodes,
-    // })
+
     return (
         <Modal
             show={open}
