@@ -1,9 +1,11 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { NodeStatusReason } from '@/components/NodeStatusReason'
 import { useQueryClient } from '@tanstack/react-query'
 import { Badge, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
+import { omit } from 'rambda'
 import React, { useState } from 'react'
 import { HiPlusCircle } from 'react-icons/hi'
 import { toast } from 'react-toastify'
@@ -22,19 +24,53 @@ function NodeVersionList({}) {
             setPage(parseInt(router.query.page as string))
         }
     }, [router.query.page])
-    const [selectedStatus, setSelectedStatus] = React.useState<
+
+    // allows filter by search param like /admin/nodeversions?filter=flagged&filter=pending
+    const flags = {
+        flagged: NodeVersionStatus.NodeVersionStatusFlagged,
+        pending: NodeVersionStatus.NodeVersionStatusPending,
+        deleted: NodeVersionStatus.NodeVersionStatusDeleted,
+    } // satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
+    const allFlags = [...Object.values(flags)].sort()
+
+    const defaultSelectedStatus = [
+        (router.query as any)?.filter ?? Object.keys(flags),
+    ]
+        .flat()
+        .map((flag) => flags[flag])
+
+    const [selectedStatus, _setSelectedStatus] = React.useState<
         NodeVersionStatus[]
-    >([
-        NodeVersionStatus.NodeVersionStatusFlagged,
-        NodeVersionStatus.NodeVersionStatusPending,
-        NodeVersionStatus.NodeVersionStatusDeleted,
-    ])
+    >(defaultSelectedStatus)
+
+    const setSelectedStatus = (status: NodeVersionStatus[]) => {
+        _setSelectedStatus(status)
+
+        const checkedAll =
+            allFlags.join(',').toString() ===
+            [...status].sort().join(',').toString()
+        const searchParams = checkedAll
+            ? undefined
+            : ({
+                  filter: Object.entries(flags)
+                      .filter(([flag, s]) => status.includes(s))
+                      .map(([flag]) => flag),
+              } as any)
+        const search = new URLSearchParams({
+            ...(omit('filter')(router.query) as object),
+            ...searchParams,
+        })
+            .toString()
+            .replace(/^(?!$)/, '?')
+        router.push(router.pathname + search + location.hash)
+    }
+
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
         useState(false)
 
     const getAllNodeVersionsQuery = useListAllNodeVersions({
         page: page,
-        pageSize: 16,
+        pageSize: 8,
         statuses: selectedStatus,
         include_status_reason: true,
     })
@@ -227,9 +263,7 @@ function NodeVersionList({}) {
                             {NodeVersionStatusToReadable(nodeVersion.status)}
                         </Badge>
                     </div>
-                    <p className="text-[18px] pt-2 text-gray-300">
-                        Status Reason: {nodeVersion.status_reason}
-                    </p>
+                    <NodeStatusReason {...nodeVersion} />
 
                     <div className="flex">
                         <Button
