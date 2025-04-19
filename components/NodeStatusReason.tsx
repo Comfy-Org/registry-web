@@ -108,7 +108,9 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             <li key={i}>
                 <Link href={e.url} passHref className="button">
                     <a>
-                        <code hidden className="block">{e.url}</code>
+                        <code hidden className="block">
+                            {e.url}
+                        </code>
                         <code className="ml-4">{e.error_type}</code>
                         <code className="ml-4">{e.line}</code>
                         <HiLink className="w-5 h-5 ml-4" />
