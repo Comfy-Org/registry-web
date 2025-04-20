@@ -107,11 +107,11 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         .map((e, i) => (
             <li key={i}>
                 <Link href={e.url} passHref className="button">
-                    <a>
+                    <a className='flex gap-2'>
+                        <HiLink className="w-5 h-5 ml-4" />
                         <code hidden className="block">{e.url}</code>
                         <code className="ml-4">{e.error_type}</code>
                         <code className="ml-4">{e.line}</code>
-                        <HiLink className="w-5 h-5 ml-4" />
                     </a>
                 </Link>
             </li>
