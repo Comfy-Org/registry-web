@@ -3,6 +3,7 @@ import withAdmin from '@/components/common/HOC/authAdmin'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
 import { NodeStatusReason } from '@/components/NodeStatusReason'
 import { useQueryClient } from '@tanstack/react-query'
+import clsx from 'clsx'
 import { Badge, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { omit } from 'rambda'
@@ -28,9 +29,19 @@ function NodeVersionList({}) {
     // allows filter by search param like /admin/nodeversions?filter=flagged&filter=pending
     const flags = {
         flagged: NodeVersionStatus.NodeVersionStatusFlagged,
-        pending: NodeVersionStatus.NodeVersionStatusPending,
+        banned: NodeVersionStatus.NodeVersionStatusBanned,
         deleted: NodeVersionStatus.NodeVersionStatusDeleted,
+        pending: NodeVersionStatus.NodeVersionStatusPending,
+        active: NodeVersionStatus.NodeVersionStatusActive,
     } // satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
+    const flagColors = {
+        all: 'success',
+        flagged: 'warning',
+        pending: 'info',
+        deleted: 'failure',
+        banned: 'failure',
+        active: 'info',
+    }
     const allFlags = [...Object.values(flags)].sort()
 
     const defaultSelectedStatus = [
@@ -168,64 +179,49 @@ function NodeVersionList({}) {
                 <div className="flex gap-2">
                     <Button
                         color={
-                            selectedStatus.includes(
-                                NodeVersionStatus.NodeVersionStatusFlagged
-                            )
-                                ? 'warning'
+                            selectedStatus.length > Object.keys(flags).length
+                                ? flagColors.all
                                 : 'gray'
                         }
+                        className={clsx({
+                            // use tailwind add a filter set bright 50% if not selected
+                            'brightness-50': !(
+                                selectedStatus.length >=
+                                Object.keys(flags).length
+                            ),
+                            'hover:brightness-100': !(
+                                selectedStatus.length >=
+                                Object.keys(flags).length
+                            ),
+                            'transition-all duration-200': true,
+                        })}
                         onClick={() =>
-                            setSelectedStatus([
-                                NodeVersionStatus.NodeVersionStatusFlagged,
-                            ])
-                        }
-                    >
-                        Flagged Nodes
-                    </Button>
-                    <Button
-                        color={
-                            selectedStatus.includes(
-                                NodeVersionStatus.NodeVersionStatusPending
-                            )
-                                ? 'info'
-                                : 'gray'
-                        }
-                        onClick={() =>
-                            setSelectedStatus([
-                                NodeVersionStatus.NodeVersionStatusPending,
-                            ])
-                        }
-                    >
-                        Pending Nodes
-                    </Button>
-                    <Button
-                        color={
-                            selectedStatus.includes(
-                                NodeVersionStatus.NodeVersionStatusDeleted
-                            )
-                                ? 'failure'
-                                : 'gray'
-                        }
-                        onClick={() =>
-                            setSelectedStatus([
-                                NodeVersionStatus.NodeVersionStatusDeleted,
-                            ])
-                        }
-                    >
-                        Deleted Nodes
-                    </Button>
-                    <Button
-                        color={selectedStatus.length > 2 ? 'success' : 'gray'}
-                        onClick={() =>
-                            setSelectedStatus([
-                                NodeVersionStatus.NodeVersionStatusFlagged,
-                                NodeVersionStatus.NodeVersionStatusPending,
-                                NodeVersionStatus.NodeVersionStatusDeleted,
-                            ])
+                            setSelectedStatus(Object.values(NodeVersionStatus))
                         }
                     >
                         All
                     </Button>
+
+                    {Object.entries(flags).map(([flag, status]) => (
+                        <Button
+                            key={flag}
+                            color={flagColors[flag]}
+                            className={clsx({
+                                // use tailwind add a filter set bright 50% if not selected
+                                'brightness-50':
+                                    !selectedStatus.includes(status),
+                                'hover:brightness-100':
+                                    !selectedStatus.includes(status),
+                                'transition-all duration-200': true,
+                            })}
+                            aria-checked={selectedStatus.includes(status)}
+                            onClick={() =>
+                                setSelectedStatus([status as NodeVersionStatus])
+                            }
+                        >
+                            {flag.charAt(0).toUpperCase() + flag.slice(1)} Nodes
+                        </Button>
+                    ))}
                     {' | '}
 
                     <Button
