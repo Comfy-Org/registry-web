@@ -93,14 +93,34 @@ function NodeVersionList({}) {
         )
     }
 
-    const onApprove = (id: string, versionNumber: string) => {
-        updateNodeVersionMutation.mutate(
+    const onApprove = async ({
+        id,
+        versionNumber,
+        prevStatus,
+        prevMessage,
+    }: {
+        id: string
+        versionNumber: string
+        prevStatus: string
+        prevMessage: string
+    }) => {
+        const message = prompt('Approve Reason: ', 'Approved by admin')
+        if (!message) {
+            toast.error('Please provide a reason')
+            return
+        }
+        await updateNodeVersionMutation.mutateAsync(
             {
                 nodeId: id,
                 versionNumber: versionNumber,
                 data: {
                     status: NodeVersionStatus.NodeVersionStatusActive,
-                    status_reason: 'Approved by admin',
+                    status_reason: JSON.stringify({
+                        status: NodeVersionStatus.NodeVersionStatusActive,
+                        message,
+                        prevStatus,
+                        prevMessage,
+                    }),
                 },
             },
             {
@@ -117,14 +137,34 @@ function NodeVersionList({}) {
         )
     }
 
-    const onReject = (id: string, versionNumber: string) => {
-        updateNodeVersionMutation.mutate(
+    const onReject = async ({
+        id,
+        versionNumber,
+        prevStatus,
+        prevMessage,
+    }: {
+        id: string
+        versionNumber: string
+        prevStatus: string
+        prevMessage: string
+    }) => {
+        const message = prompt('Reject Reason: ', 'Rejected by admin')
+        if (!message) {
+            toast.error('Please provide a reason')
+            return
+        }
+        await updateNodeVersionMutation.mutateAsync(
             {
                 nodeId: id,
                 versionNumber: versionNumber,
                 data: {
                     status: NodeVersionStatus.NodeVersionStatusBanned,
-                    status_reason: 'Rejected by admin',
+                    status_reason: JSON.stringify({
+                        status: NodeVersionStatus.NodeVersionStatusBanned,
+                        message,
+                        prevStatus,
+                        prevMessage,
+                    }),
                 },
             },
             {
@@ -270,10 +310,14 @@ function NodeVersionList({}) {
                             color="blue"
                             className="flex"
                             onClick={() =>
-                                onApprove(
-                                    nodeVersion.node_id as string,
-                                    nodeVersion.version as string
-                                )
+                                onApprove({
+                                    id: nodeVersion.node_id as string,
+                                    versionNumber:
+                                        nodeVersion.version as string,
+                                    prevStatus: nodeVersion.status as string,
+                                    prevMessage:
+                                        nodeVersion.status_reason as string,
+                                })
                             }
                             style={{ marginRight: '5px' }}
                         >
@@ -282,10 +326,14 @@ function NodeVersionList({}) {
                         <Button
                             color="failure"
                             onClick={() =>
-                                onReject(
-                                    nodeVersion.node_id as string,
-                                    nodeVersion.version as string
-                                )
+                                onReject({
+                                    id: nodeVersion.node_id as string,
+                                    versionNumber:
+                                        nodeVersion.version as string,
+                                    prevStatus: nodeVersion.status as string,
+                                    prevMessage:
+                                        nodeVersion.status_reason as string,
+                                })
                             }
                         >
                             Reject

@@ -6,14 +6,14 @@ import prettierPluginBabel from 'prettier/plugins/babel'
 import prettierPluginEstree from 'prettier/plugins/estree'
 import prettierPluginYaml from 'prettier/plugins/yaml'
 import { format } from 'prettier/standalone'
-import { tryCatch } from 'rambda'
+import { last, tryCatch } from 'rambda'
 import { useEffect, useState } from 'react'
 import { HiLink } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import { NodeVersion, useGetNode } from 'src/api/generated'
+import { NodeVersion, NodeVersionStatus, useGetNode } from 'src/api/generated'
 import yaml from 'yaml'
 import { z } from 'zod'
 
@@ -66,7 +66,14 @@ const errorArraySchema = z
     })
     .passthrough()
     .array()
-
+const zStatusReason = z.union([
+    errorArraySchema,
+    z.object({
+        status: z.string(),
+        message: z.string(),
+        prev: z.string(),
+    }),
+])
 export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const { ref, inView } = useInView()
     const { data: node } = useGetNode(
