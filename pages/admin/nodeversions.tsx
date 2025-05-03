@@ -177,6 +177,49 @@ function NodeVersionList({}) {
         })
         toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
     }
+    const undoable = async (nv: NodeVersion) => {
+        const statusHistory = zStatusReason.safeParse(nv.status_reason).data
+            ?.statusHistory
+        if (!statusHistory?.length) return false
+    }
+    const onUndo = async (nv: NodeVersion) => {
+        const statusHistory = zStatusReason.safeParse(nv.status_reason).data
+            ?.statusHistory
+        if (!statusHistory?.length)
+            return toast.error('No status history found')
+        const message = prompt('Reject Reason: ', 'Rejected by admin')
+        if (!message) return toast.error('Please provide a reason')
+
+        const prevStatus = statusHistory[statusHistory.length - 1].status
+
+        const statusReason = zStatusReason.parse({
+            message: statusHistory[statusHistory.length - 1].message,
+            by: user?.email,
+            statusHistory: statusHistory.slice(0, -1),
+        })
+        await updateNodeVersionMutation.mutateAsync(
+            {
+                nodeId: nv.node_id!.toString(),
+                versionNumber: nv.version!.toString(),
+                data: {
+                    status: prevStatus,
+                    status_reason: JSON.stringify(statusReason),
+                },
+            },
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['/versions'] })
+                    toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
+                },
+                onError: (error) => {
+                    console.error('Error reviewing node version', error)
+                    toast.error(
+                        `Error reviewing node version ${nv.node_id!}@${nv.version!}`
+                    )
+                },
+            }
+        )
+    }
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage)
@@ -313,6 +356,14 @@ function NodeVersionList({}) {
                             onClick={() => onReject(nodeVersion)}
                         >
                             Reject
+                        </Button>
+
+                        <Button
+                            color="gray"
+                            onClick={() => onUndo(nodeVersion)}
+                            hidden={!undoable(nodeVersion)}
+                        >
+                            Undo
                         </Button>
                     </div>
                 </div>

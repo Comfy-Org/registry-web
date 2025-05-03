@@ -13,7 +13,7 @@ import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import { NodeVersion, useGetNode } from 'src/api/generated'
+import { NodeVersion, NodeVersionStatus, useGetNode } from 'src/api/generated'
 import yaml from 'yaml'
 import { z } from 'zod'
 import { parseJsonSafe } from './parseJsonSafe'
@@ -68,9 +68,15 @@ const errorArraySchema = z
     .passthrough()
     .array()
 
+const zStatusCode = z.enum(
+    Object.values(NodeVersionStatus) as [
+        NodeVersionStatus,
+        ...NodeVersionStatus[],
+    ]
+)
 export const zStatusHistory = z.array(
     z.object({
-        status: z.string(),
+        status: zStatusCode,
         message: z.string(),
         by: z.string().optional(),
     })
