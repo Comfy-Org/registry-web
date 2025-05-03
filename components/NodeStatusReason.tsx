@@ -19,9 +19,9 @@ import { z } from 'zod'
 import { parseJsonSafe } from './parseJsonSafe'
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
-const errorArraySchema = z
+const zErrorArray = z
     .object({
-        error_type: z.string(), // The error type is represented as a string
+        type: z.string(), // The error type is represented as a string
         file_name: z.string().optional(), // File name is a string and may or may not be present
         line_number: z.union([z.string(), z.number()]).optional(), // Line number can be a string or number and may or may not be present
         line: z.string().optional(), // Line content where the error is found is a string and optional
@@ -98,13 +98,20 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         { query: { enabled: inView } }
     )
 
-    const reasonJson = parseJsonSafe(status_reason ?? '').data
-    const errorList = errorArraySchema.safeParse(reasonJson).data
+    const statusReasonJson = parseJsonSafe(status_reason ?? '').data
+    
+    const issueList = zErrorArray.safeParse(
+        statusReasonJson?.map?.(({ error_type, type, ...e }) => ({
+            type: error_type || type,
+            ...e,
+        }))
+    ).data
+    
     const statusReason =
-        zStatusReason.safeParse(reasonJson).data ??
+        zStatusReason.safeParse(statusReasonJson).data ??
         zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
 
-    const fullfilledErrorList = errorList
+    const fullfilledErrorList = issueList
         // guess url
         ?.map((e) => {
             const repoUrl = node?.repository || ''
@@ -128,7 +135,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                         <code hidden className="block">
                             {e.url}
                         </code>
-                        <code className="ml-4">{e.error_type}</code>
+                        <code className="ml-4">{e.type}</code>
                         <code className="ml-4">{e.line}</code>
                     </a>
                 </Link>
