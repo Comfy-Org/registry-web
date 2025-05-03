@@ -183,7 +183,7 @@ function NodeVersionList({}) {
 
         await onReview({
             nodeVersion: nv,
-            status: NodeVersionStatus.NodeVersionStatusDeleted,
+            status: NodeVersionStatus.NodeVersionStatusBanned,
             message,
         })
         toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
