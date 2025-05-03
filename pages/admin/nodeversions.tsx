@@ -138,10 +138,7 @@ function NodeVersionList({}) {
             {
                 nodeId: nv.node_id!.toString(),
                 versionNumber: nv.version!.toString(),
-                data: {
-                    status,
-                    status_reason: JSON.stringify(reason),
-                },
+                data: { status, status_reason: JSON.stringify(reason) },
             },
             {
                 onSuccess: () => {
