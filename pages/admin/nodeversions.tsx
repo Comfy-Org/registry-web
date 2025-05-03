@@ -139,7 +139,7 @@ function NodeVersionList({}) {
                 nodeId: nv.node_id!.toString(),
                 versionNumber: nv.version!.toString(),
                 data: {
-                    status: NodeVersionStatus.NodeVersionStatusActive,
+                    status,
                     status_reason: JSON.stringify(reason),
                 },
             },
