@@ -29,7 +29,7 @@ const AuthUI: React.FC<{}> = ({}) => {
 
     const loggedIn = Boolean(googleUser || githubUser)
     React.useEffect(() => {
-        const fromUrl = new URLSearchParams(location.href).get('fromUrl')
+        const fromUrl = new URLSearchParams(location.search).get('fromUrl')
         if (loggedIn) router.push(fromUrl ?? '/nodes')
     }, [loggedIn, router])
 
