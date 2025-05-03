@@ -14,7 +14,6 @@ import app from '../../src/firebase'
 const AuthUI: React.FC<{}> = ({}) => {
     const router = useRouter()
     const auth = getAuth(app)
-
     const [
         signInWithGoogle,
         googleUser,
@@ -28,17 +27,11 @@ const AuthUI: React.FC<{}> = ({}) => {
         githubSignInError,
     ] = useSignInWithGithub(auth)
 
+    const loggedIn = Boolean(googleUser || githubUser)
     React.useEffect(() => {
-        if (googleUser) {
-            router.push('/nodes')
-        }
-    }, [googleUser, router])
-
-    React.useEffect(() => {
-        if (githubUser) {
-            router.push('/nodes')
-        }
-    }, [githubUser, router])
+        const fromUrl = new URLSearchParams(location.href).get('fromUrl')
+        if (loggedIn) router.push(fromUrl ?? '/nodes')
+    }, [loggedIn, router])
 
     React.useEffect(() => {
         if (googleSignInError) {
