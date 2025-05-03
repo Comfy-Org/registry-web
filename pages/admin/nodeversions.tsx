@@ -118,7 +118,7 @@ function NodeVersionList({}) {
         const previousBy = prevStatusReason?.by ?? 'admin@comfy.org' // unknown admin
 
         // concat history
-        const history = [
+        const statusHistory = [
             ...previousHistory,
             {
                 status: previousStatus,
@@ -126,13 +126,13 @@ function NodeVersionList({}) {
                 by: previousBy,
             },
         ]
+        console.log('History', statusHistory)
 
         // updated status reason, with history
         const reason = zStatusReason.parse({
-            status,
             message,
             by: user?.email ?? 'admin@comfy.org', // if user is not loaded, use 'Admin'
-            history,
+            statusHistory,
         })
         await updateNodeVersionMutation.mutateAsync(
             {
