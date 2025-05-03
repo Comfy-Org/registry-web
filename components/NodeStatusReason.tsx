@@ -21,8 +21,8 @@ import { parseJsonSafe } from './parseJsonSafe'
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
 const zErrorArray = z
     .object({
-        type: z.string(), // The error type is represented as a string
-        file_name: z.string().optional(), // File name is a string and may or may not be present
+        issue_type: z.string(), // The error type is represented as a string
+        file_path: z.string().optional(), // File name is a string and may or may not be present
         line_number: z.union([z.string(), z.number()]).optional(), // Line number can be a string or number and may or may not be present
         line: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
@@ -101,8 +101,8 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const statusReasonJson = parseJsonSafe(status_reason ?? '').data
 
     const issueList = zErrorArray.safeParse(
-        statusReasonJson?.map?.(({ error_type, type, ...e }) => ({
-            type: error_type || type,
+        statusReasonJson?.map?.(({ error_type, type, issue_type, ...e }) => ({
+            issue_type: issue_type || error_type || type,
             ...e,
         }))
     ).data
@@ -117,8 +117,8 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             const repoUrl = node?.repository || ''
             const filepath =
                 repoUrl &&
-                (e.file_name || '') &&
-                `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
+                (e.file_path || '') &&
+                `/blob/HEAD/${e.file_path?.replace(/^\//, '')}`
             const linenumber =
                 filepath && (e.line_number || '') && `#L${e.line_number}`
             const url = repoUrl + filepath + linenumber
@@ -126,7 +126,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         })
 
     const problemsSummary = fullfilledErrorList
-        ?.sort(compareBy((e) => e.url ?? e.file_name))
+        ?.sort(compareBy((e) => e.url ?? e.file_path))
         .map((e, i) => (
             <li key={i}>
                 <Link href={e.url} passHref className="button" legacyBehavior>
@@ -135,7 +135,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                         <code hidden className="block">
                             {e.url}
                         </code>
-                        <code className="ml-4">{e.type}</code>
+                        <code className="ml-4">{e.issue_type}</code>
                         <code className="ml-4">{e.line}</code>
                     </a>
                 </Link>
