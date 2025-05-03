@@ -201,10 +201,10 @@ function NodeVersionList({}) {
 
         const prevStatus = statusHistory[statusHistory.length - 1].status
         const by = user?.email // the user who clicked undo
-        if (!by)
-            return toast.error(
-                'Unable to get user email, you may need to refresh the page'
-            )
+        if (!by) {
+            toast.error('Unable to get user email, please reload and try again')
+            return
+        }
 
         const statusReason = zStatusReason.parse({
             message: statusHistory[statusHistory.length - 1].message,
@@ -223,12 +223,14 @@ function NodeVersionList({}) {
             {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/versions'] })
-                    toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
+                    toast.success(
+                        `${nv.node_id!}@${nv.version!} Undone, back to ${NodeVersionStatusToReadable(prevStatus)}`
+                    )
                 },
                 onError: (error) => {
-                    console.error('Error reviewing node version', error)
+                    console.error('Error undoing node version', error)
                     toast.error(
-                        `Error reviewing node version ${nv.node_id!}@${nv.version!}`
+                        `Error undoing node version ${nv.node_id!}@${nv.version!}`
                     )
                 },
             }
