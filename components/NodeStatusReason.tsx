@@ -6,16 +6,17 @@ import prettierPluginBabel from 'prettier/plugins/babel'
 import prettierPluginEstree from 'prettier/plugins/estree'
 import prettierPluginYaml from 'prettier/plugins/yaml'
 import { format } from 'prettier/standalone'
-import { last, tryCatch } from 'rambda'
+import { tryCatch } from 'rambda'
 import { useEffect, useState } from 'react'
 import { HiLink } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import { NodeVersion, NodeVersionStatus, useGetNode } from 'src/api/generated'
+import { NodeVersion, useGetNode } from 'src/api/generated'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { parseJsonSafe } from './parseJsonSafe'
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
 const errorArraySchema = z
@@ -66,14 +67,23 @@ const errorArraySchema = z
     })
     .passthrough()
     .array()
-const zStatusReason = z.union([
-    errorArraySchema,
+
+export const zStatusHistory = z.array(
     z.object({
         status: z.string(),
         message: z.string(),
-        prev: z.string(),
-    }),
-])
+        by: z.string().optional(),
+    })
+)
+// when status is active/banned, the statusReason is approve/reject reason, and maybe a status history
+export const zStatusReason = z.object({
+    message: z.string(),
+    by: z.string(),
+
+    // statusHistory, allow undo
+    statusHistory: zStatusHistory.optional(),
+})
+
 export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const { ref, inView } = useInView()
     const { data: node } = useGetNode(
@@ -82,18 +92,11 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         { query: { enabled: inView } }
     )
 
-    const reasonJson = (function () {
-        try {
-            return JSON.parse(status_reason ?? '')
-        } catch (e) {
-            console.error('Warning: fail to parse status reason: ', {
-                status_reason,
-            })
-            console.error(e)
-            return null
-        }
-    })()
+    const reasonJson = parseJsonSafe(status_reason ?? '').data
     const errorList = errorArraySchema.safeParse(reasonJson).data
+    const statusReason =
+        zStatusReason.safeParse(reasonJson).data ??
+        zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
 
     const fullfilledErrorList = errorList
         // guess url
@@ -113,7 +116,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         ?.sort(compareBy((e) => e.url ?? e.file_name))
         .map((e, i) => (
             <li key={i}>
-                <Link href={e.url} passHref className="button">
+                <Link href={e.url} passHref className="button" legacyBehavior>
                     <a className="flex gap-2">
                         <HiLink className="w-5 h-5 ml-4" />
                         <code hidden className="block">
