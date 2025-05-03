@@ -188,24 +188,27 @@ function NodeVersionList({}) {
         })
         toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
     }
-    const undoable = async (nv: NodeVersion) => {
-        const statusHistory = zStatusReason.safeParse(nv.status_reason).data
-            ?.statusHistory
-        if (!statusHistory?.length) return false
-    }
-    const onUndo = async (nv: NodeVersion) => {
-        const statusHistory = zStatusReason.safeParse(nv.status_reason).data
-            ?.statusHistory
+    const checkIsUndoable = (nv: NodeVersion) =>
+        !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
+            ?.statusHistory?.length
+
+    const onUndoNodeVersion = async (nv: NodeVersion) => {
+        const statusHistory = zStatusReason.safeParse(
+            parseJsonSafe(nv.status_reason).data
+        ).data?.statusHistory
         if (!statusHistory?.length)
             return toast.error('No status history found')
-        const message = prompt('Reject Reason: ', 'Rejected by admin')
-        if (!message) return toast.error('Please provide a reason')
 
         const prevStatus = statusHistory[statusHistory.length - 1].status
+        const by = user?.email // the user who clicked undo
+        if (!by)
+            return toast.error(
+                'Unable to get user email, you may need to refresh the page'
+            )
 
         const statusReason = zStatusReason.parse({
             message: statusHistory[statusHistory.length - 1].message,
-            by: user?.email,
+            by,
             statusHistory: statusHistory.slice(0, -1),
         })
         await updateNodeVersionMutation.mutateAsync(
@@ -338,12 +341,11 @@ function NodeVersionList({}) {
                     </div>
                     <NodeStatusReason {...nodeVersion} />
 
-                    <div className="flex">
+                    <div className="flex gap-2">
                         <Button
                             color="blue"
                             className="flex"
                             onClick={() => onApprove(nodeVersion)}
-                            style={{ marginRight: '5px' }}
                         >
                             Approve
                         </Button>
@@ -354,13 +356,14 @@ function NodeVersionList({}) {
                             Reject
                         </Button>
 
-                        <Button
-                            color="gray"
-                            onClick={() => onUndo(nodeVersion)}
-                            hidden={!undoable(nodeVersion)}
-                        >
-                            Undo
-                        </Button>
+                        {checkIsUndoable(nodeVersion) && (
+                            <Button
+                                color="gray"
+                                onClick={() => onUndoNodeVersion(nodeVersion)}
+                            >
+                                Undo
+                            </Button>
+                        )}
                     </div>
                 </div>
             ))}

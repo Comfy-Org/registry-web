@@ -99,14 +99,14 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     )
 
     const statusReasonJson = parseJsonSafe(status_reason ?? '').data
-    
+
     const issueList = zErrorArray.safeParse(
         statusReasonJson?.map?.(({ error_type, type, ...e }) => ({
             type: error_type || type,
             ...e,
         }))
     ).data
-    
+
     const statusReason =
         zStatusReason.safeParse(statusReasonJson).data ??
         zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
