@@ -104,7 +104,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         statusReasonJson?.map?.(({ error_type, type, issue_type, ...e }) => ({
             issue_type: issue_type || error_type || type,
             line_number: e.line_number || e.line || -1,
-            file_path: e.file_path || e.filename || e.path || e.file ,
+            file_path: e.file_path || e.filename || e.path || e.file,
             ...e,
         }))
     ).data
