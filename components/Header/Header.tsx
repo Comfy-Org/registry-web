@@ -69,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 ) : (
                     <>
                         <Button
-                            href="/auth/login"
+                            href={`/auth/login?fromUrl=${window.location.pathname}`}
                             color="light"
                             className="bg-gray-800 border-none outline-none"
                         >
@@ -78,7 +78,12 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                             </span>
                         </Button>
 
-                        <Button href="/auth/signup" color="blue">
+                        <Button
+                            href={`/auth/signup?fromUrl=${
+                                window.location.pathname
+                            }`}
+                            color="blue"
+                        >
                             <span className="text-xs md:text-base">
                                 Sign up
                             </span>
