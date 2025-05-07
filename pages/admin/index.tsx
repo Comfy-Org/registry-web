@@ -22,6 +22,15 @@ function AdminDashboard() {
                 </Button>
                 <Button
                     color="blue"
+                    onClick={() =>
+                        router.push('/admin/category')
+                    }
+                    className="w-fit"
+                >
+                    Categories Management
+                </Button>
+                <Button
+                    color="blue"
                     onClick={() => router.push('/admin/add-unclaimed-node')}
                     className="w-fit"
                 >
