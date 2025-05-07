@@ -24,8 +24,9 @@ const zErrorArray = z
         issue_type: z.string(), // The error type is represented as a string
         file_path: z.string().optional(), // File name is a string and may or may not be present
         line_number: z.union([z.string(), z.number()]).optional(), // Line number can be a string or number and may or may not be present
-        line: z.string().optional(), // Line content where the error is found is a string and optional
+        code_snippet: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
+        // yara
         meta: z
             .object({
                 description: z.string(),
@@ -40,6 +41,7 @@ const zErrorArray = z
             })
             .passthrough()
             .optional(), // Meta information is optional and contains a detailed description if present
+        // yara
         matches: z
             .array(
                 z
@@ -101,10 +103,18 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const statusReasonJson = parseJsonSafe(status_reason ?? '').data
 
     const issueList = zErrorArray.safeParse(
-        statusReasonJson?.map?.(({ error_type, type, issue_type, ...e }) => ({
-            issue_type: issue_type || error_type || type,
-            line_number: e.line_number || e.line || -1,
+        statusReasonJson?.map?.((e) => ({
+            // try convert status reason to latest schema
+            issue_type: e.issue_type || e.error_type || e.type,
             file_path: e.file_path || e.filename || e.path || e.file,
+            line_number:
+                e.line_number ||
+                (typeof e.line === 'number' ? e.line : undefined) ||
+                -1,
+            code_snippet:
+                e.code_snippet ||
+                (typeof e.line === 'string' ? e.line : undefined) ||
+                e.content,
             ...e,
         }))
     ).data
@@ -134,11 +144,9 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 <Link href={e.url} passHref className="button" legacyBehavior>
                     <a className="flex gap-2">
                         <HiLink className="w-5 h-5 ml-4" />
-                        <code hidden className="block">
-                            {e.url}
-                        </code>
                         <code className="ml-4">{e.issue_type}</code>
-                        <code className="ml-4">{e.line}</code>
+                        <code className="ml-4">{e.line_number}</code>
+                        <code className="ml-4">{e.code_snippet}</code>
                     </a>
                 </Link>
             </li>
