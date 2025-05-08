@@ -13,18 +13,20 @@ import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import { NodeVersion, useGetNode } from 'src/api/generated'
+import { NodeVersion, NodeVersionStatus, useGetNode } from 'src/api/generated'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { parseJsonSafe } from './parseJsonSafe'
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
 const zErrorArray = z
     .object({
-        type: z.string(), // The error type is represented as a string
-        file_name: z.string().optional(), // File name is a string and may or may not be present
-        line_number: z.union([z.string(), z.number()]).optional(), // Line number can be a string or number and may or may not be present
-        line: z.string().optional(), // Line content where the error is found is a string and optional
+        issue_type: z.string(), // The error type is represented as a string
+        file_path: z.string().optional(), // File name is a string and may or may not be present
+        line_number: z.number().optional(), // Line number can be a string or number and may or may not be present
+        code_snippet: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
+        // yara
         meta: z
             .object({
                 description: z.string(),
@@ -39,6 +41,7 @@ const zErrorArray = z
             })
             .passthrough()
             .optional(), // Meta information is optional and contains a detailed description if present
+        // yara
         matches: z
             .array(
                 z
@@ -67,6 +70,28 @@ const zErrorArray = z
     .passthrough()
     .array()
 
+const zStatusCode = z.enum(
+    Object.values(NodeVersionStatus) as [
+        NodeVersionStatus,
+        ...NodeVersionStatus[],
+    ]
+)
+export const zStatusHistory = z.array(
+    z.object({
+        status: zStatusCode,
+        message: z.string(),
+        by: z.string().optional(),
+    })
+)
+// when status is active/banned, the statusReason is approve/reject reason, and maybe a status history
+export const zStatusReason = z.object({
+    message: z.string(),
+    by: z.string(),
+
+    // statusHistory, allow undo
+    statusHistory: zStatusHistory.optional(),
+})
+
 export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const { ref, inView } = useInView()
     const { data: node } = useGetNode(
@@ -75,23 +100,28 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         { query: { enabled: inView } }
     )
 
-    const statusReasonJson = (function () {
-        try {
-            return JSON.parse(status_reason ?? '')
-        } catch (e) {
-            console.error('Warning: fail to parse status reason: ', {
-                status_reason,
-            })
-            console.error(e)
-            return null
-        }
-    })()
+    const statusReasonJson = parseJsonSafe(status_reason ?? '').data
+
     const issueList = zErrorArray.safeParse(
-        statusReasonJson?.map?.(({ error_type, type, ...e }) => ({
-            type: error_type || type,
+        statusReasonJson?.map?.((e) => ({
+            // try convert status reason to latest schema
             ...e,
+            issue_type: e.issue_type || e.error_type || e.type,
+            file_path: e.file_path || e.filename || e.path || e.file,
+            line_number:
+                e.line_number ||
+                (typeof e.line === 'number' ? e.line : undefined) ||
+                -1,
+            code_snippet:
+                e.code_snippet ||
+                (typeof e.line === 'string' ? e.line : undefined) ||
+                e.content,
         }))
     ).data
+
+    const statusReason =
+        zStatusReason.safeParse(statusReasonJson).data ??
+        zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
 
     const fullfilledErrorList = issueList
         // guess url
@@ -99,8 +129,8 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             const repoUrl = node?.repository || ''
             const filepath =
                 repoUrl &&
-                (e.file_name || '') &&
-                `/blob/HEAD/${e.file_name?.replace(/^\//, '')}`
+                (e.file_path || '') &&
+                `/blob/HEAD/${e.file_path?.replace(/^\//, '')}`
             const linenumber =
                 filepath && (e.line_number || '') && `#L${e.line_number}`
             const url = repoUrl + filepath + linenumber
@@ -108,17 +138,15 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         })
 
     const problemsSummary = fullfilledErrorList
-        ?.sort(compareBy((e) => e.url ?? e.file_name))
+        ?.sort(compareBy((e) => e.url ?? e.file_path))
         .map((e, i) => (
             <li key={i}>
-                <Link href={e.url} className="button" legacyBehavior>
+                <Link href={e.url} passHref className="button" legacyBehavior>
                     <a className="flex gap-2">
                         <HiLink className="w-5 h-5 ml-4" />
-                        <code hidden className="block">
-                            {e.url}
-                        </code>
-                        <code className="ml-4">{e.type}</code>
-                        <code className="ml-4">{e.line}</code>
+                        <code className="ml-4">{e.issue_type}</code>
+                        <code className="ml-4">{e.line_number}</code>
+                        <code className="ml-4">{e.code_snippet}</code>
                     </a>
                 </Link>
             </li>
