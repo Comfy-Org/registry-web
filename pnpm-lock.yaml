@@ -89,6 +89,9 @@ importers:
       nextjs-cors:
         specifier: ^2.1.1
         version: 2.2.0(next@15.2.4(@babel/core@7.19.3)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
+      p-map:
+        specifier: ^7.0.3
+        version: 7.0.3
       pi:
         specifier: ^2.0.4
         version: 2.0.4
@@ -3290,6 +3293,10 @@ packages:
   p-locate@5.0.0:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
+
+  p-map@7.0.3:
+    resolution: {integrity: sha512-VkndIv2fIB99swvQoA65bm+fsmt6UNdGeIB0oxBs+WhAhdh08QA04JXpI7rbB9r08/nkbysKoya9rtDERYOYMA==}
+    engines: {node: '>=18'}
 
   package-json-from-dist@1.0.0:
     resolution: {integrity: sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==}
@@ -6923,6 +6930,8 @@ snapshots:
       react-icons: 4.12.0(react@18.2.0)
       tailwind-merge: 2.5.2
       tailwindcss: 3.4.10
+    transitivePeerDependencies:
+      - rollup
 
   flowbite@2.5.1:
     dependencies:
@@ -8123,6 +8132,8 @@ snapshots:
   p-locate@5.0.0:
     dependencies:
       p-limit: 3.1.0
+
+  p-map@7.0.3: {}
 
   package-json-from-dist@1.0.0: {}
 
