@@ -21,7 +21,7 @@ import pMap from 'p-map'
 import { omit } from 'rambda'
 import React, { useRef, useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
-import { HiBan, HiCheck, HiPlusCircle, HiReply } from 'react-icons/hi'
+import { HiBan, HiCheck, HiReply } from 'react-icons/hi'
 import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import {
@@ -347,6 +347,30 @@ function NodeVersionList({}) {
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 z-50 flex justify-between items-center shadow-lg">
                 <div className="flex items-center flex-wrap gap-4">
+                    <Button
+                        color="gray"
+                        onClick={() => {
+                            const allKeys = versions.map(
+                                (nv) => `${nv.node_id}@${nv.version}`
+                            )
+                            const allSelected = allKeys.every(
+                                (key) => selectedVersions[key]
+                            )
+                            setSelectedVersions(
+                                allSelected
+                                    ? {}
+                                    : allKeys.reduce(
+                                          (acc, key) => ({
+                                              ...acc,
+                                              [key]: true,
+                                          }),
+                                          {}
+                                      )
+                            )
+                        }}
+                    >
+                        Select All
+                    </Button>
                     <span className="text-white font-medium mr-4 ml-4">
                         {
                             Object.keys(selectedVersions).filter(
@@ -529,15 +553,6 @@ function NodeVersionList({}) {
                     ))}
                     {' | '}
 
-                    <Button
-                        onClick={() => {
-                            setIsAdminCreateNodeModalOpen(true)
-                        }}
-                    >
-                        <HiPlusCircle />
-                        Add Unclaimed Node
-                    </Button>
-
                     <AdminCreateNodeFormModal
                         open={isAdminCreateNodeModalOpen}
                         onClose={() => setIsAdminCreateNodeModalOpen(false)}
@@ -654,7 +669,7 @@ function NodeVersionList({}) {
                                     </span>
                                 </Label>
 
-                                <Badge color="warning" className='text-[14px]'>
+                                <Badge color="warning" className="text-[14px]">
                                     {NodeVersionStatusToReadable(nv.status)}
                                 </Badge>
                             </div>

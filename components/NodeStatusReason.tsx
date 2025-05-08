@@ -133,20 +133,33 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             return {
                 ...i,
                 issue_type: i.issue_type || i.error_type || i.type,
+                error_type: undefined,
+                type: undefined,
+                //
                 file_path:
                     i.file_path ||
                     i.path ||
                     i.file ||
                     i.file_name ||
                     i.filename,
+                path: undefined,
+                file: undefined,
+                file_name: undefined,
+                filename: undefined,
+
+                //
                 line_number:
                     i.line_number ||
                     (typeof i.line === 'number' ? i.line : undefined) ||
                     -1,
+                //
                 code_snippet:
                     i.code_snippet ||
                     (typeof i.line === 'string' ? i.line : undefined) ||
                     i.content,
+
+                content: undefined,
+                line: undefined,
             }
         })
     )
@@ -221,10 +234,10 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             )}
 
             {!!code?.trim() && (
-                <>
-                    <div>{'Status Reason: '}</div>
+                <details open={!problemsSummary}>
+                    <summary>{'Status Reason: '}</summary>
                     <PrettieredYAML>{code}</PrettieredYAML>
-                </>
+                </details>
             )}
         </div>
     )
