@@ -642,13 +642,21 @@ function NodeVersionList({}) {
                                 />
                                 <Label
                                     htmlFor={`checkbox-${nv.id}`}
-                                    className="text-[24px] text-gray-300"
+                                    className="text-[24px] text-gray-300 flex gap-2 items-center"
                                     // onMouseDown={(e) =>
                                     //     e.shiftKey && e.preventDefault()
                                     // }
                                 >
                                     {nv.node_id}
+
+                                    <span className="text-[16px] text-gray-300">
+                                        @{nv.version}
+                                    </span>
                                 </Label>
+
+                                <Badge color="warning" className='text-[14px]'>
+                                    {NodeVersionStatusToReadable(nv.status)}
+                                </Badge>
                             </div>
                             <div className="flex gap-2 items-center">
                                 <Link
@@ -692,17 +700,6 @@ function NodeVersionList({}) {
                                     />
                                 </Link>
                             </div>
-                        </div>
-                        <p className="text-[18px] pt-2 text-gray-300">
-                            Version: {nv.version}
-                        </p>
-                        <div className="flex flex-row items-center gap-2">
-                            <p className="text-[18px] text-gray-300">
-                                Status:{' '}
-                            </p>
-                            <Badge color="warning">
-                                {NodeVersionStatusToReadable(nv.status)}
-                            </Badge>
                         </div>
                         <NodeStatusReason {...nv} />
 

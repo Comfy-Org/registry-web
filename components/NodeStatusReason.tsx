@@ -151,7 +151,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         })
     )
     issueListParseResult?.error &&
-        console.error(
+        console.warn(
             'Error parsing issue list',
             issueListParseResult?.error,
             statusReasonJson
@@ -200,7 +200,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 <Link href={e.url} target="_blank" className="button flex-0">
                     <FaGithub className="w-5 h-5 ml-4" />
                 </Link>
-                <code className="flex-1 ml-4 whitespace-nowrap text-ellipsis">
+                <code className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-hidden">
                     ...{e.file_path?.slice(-12)} {e.line_number}
                     &nbsp;
                     {e.issue_type}
@@ -219,8 +219,13 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                     <ol className="ml-4">{problemsSummary}</ol>
                 </>
             )}
-            <div>{'Status Reason: '}</div>
-            {!!code && <PrettieredYAML>{code}</PrettieredYAML>}
+
+            {!!code?.trim() && (
+                <>
+                    <div>{'Status Reason: '}</div>
+                    <PrettieredYAML>{code}</PrettieredYAML>
+                </>
+            )}
         </div>
     )
 }
