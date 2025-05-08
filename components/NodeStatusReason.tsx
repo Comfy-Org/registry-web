@@ -8,7 +8,7 @@ import prettierPluginYaml from 'prettier/plugins/yaml'
 import { format } from 'prettier/standalone'
 import { tryCatch } from 'rambda'
 import { useEffect, useState } from 'react'
-import { HiLink } from 'react-icons/hi'
+import { FaGithub } from 'react-icons/fa'
 import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
@@ -19,7 +19,7 @@ import { z } from 'zod'
 import { parseJsonSafe } from './parseJsonSafe'
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
-const zErrorArray = z
+export const zErrorArray = z
     .object({
         issue_type: z.string(), // The error type is represented as a string
         file_path: z.string().optional(), // File name is a string and may or may not be present
@@ -27,45 +27,45 @@ const zErrorArray = z
         code_snippet: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
         // yara
-        meta: z
-            .object({
-                description: z.string(),
-                version: z.string(),
-                date: z.string(),
-                reference: z.string(),
-                category: z.string(),
-                observable_refs: z.string(),
-                attack_id1: z.string(),
-                attack_id2: z.string(),
-                severity: z.string(),
-            })
-            .passthrough()
-            .optional(), // Meta information is optional and contains a detailed description if present
+        // meta: z
+        //     .object({
+        //         description: z.string(),
+        //         version: z.string(),
+        //         date: z.string(),
+        //         reference: z.string(),
+        //         category: z.string(),
+        //         observable_refs: z.string(),
+        //         attack_id1: z.string(),
+        //         attack_id2: z.string(),
+        //         severity: z.string(),
+        //     })
+        //     .passthrough()
+        //     .optional(), // Meta information is optional and contains a detailed description if present
         // yara
-        matches: z
-            .array(
-                z
-                    .object({
-                        filepath: z.string(),
-                        strings: z.array(
-                            z.object({
-                                identifier: z.string(),
-                                instances: z.array(
-                                    z.object({
-                                        matched_data: z.string(),
-                                        matched_length: z.number(),
-                                        offset: z.number(),
-                                        line_number: z.number(),
-                                        line: z.string(),
-                                    })
-                                ),
-                            })
-                        ),
-                    })
-                    .passthrough()
-                    .optional()
-            )
-            .optional(), // Matches array, if present, contains detailed match information
+        // matches: z
+        //     .array(
+        //         z
+        //             .object({
+        //                 filepath: z.string(),
+        //                 strings: z.array(
+        //                     z.object({
+        //                         identifier: z.string(),
+        //                         instances: z.array(
+        //                             z.object({
+        //                                 matched_data: z.string(),
+        //                                 matched_length: z.number(),
+        //                                 offset: z.number(),
+        //                                 line_number: z.number(),
+        //                                 line: z.string(),
+        //                             })
+        //                         ),
+        //                     })
+        //                 ),
+        //             })
+        //             .passthrough()
+        //             .optional()
+        //     )
+        //     .optional(), // Matches array, if present, contains detailed match information
     })
     .passthrough()
     .array()
@@ -102,22 +102,61 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
 
     const statusReasonJson = parseJsonSafe(status_reason ?? '').data
 
-    const issueList = zErrorArray.safeParse(
-        statusReasonJson?.map?.((e) => ({
-            // try convert status reason to latest schema
-            ...e,
-            issue_type: e.issue_type || e.error_type || e.type,
-            file_path: e.file_path || e.filename || e.path || e.file,
-            line_number:
-                e.line_number ||
-                (typeof e.line === 'number' ? e.line : undefined) ||
-                -1,
-            code_snippet:
-                e.code_snippet ||
-                (typeof e.line === 'string' ? e.line : undefined) ||
-                e.content,
-        }))
-    ).data
+    const issueListParseResult = zErrorArray.safeParse(
+        statusReasonJson?.flatMap?.((i) => {
+            // Unwind matches if present
+            if (i.matches) {
+                return i.matches.flatMap((match, matchIndex) =>
+                    match.strings.flatMap((string) =>
+                        string.instances.map((instance) => ({
+                            ...i,
+                            issue_type: i.issue_type || i.error_type || i.type,
+                            file_path:
+                                match.filepath ||
+                                i.file_path ||
+                                i.path ||
+                                i.file ||
+                                i.file_name ||
+                                i.filename,
+                            line_number: instance.line_number || -1,
+                            code_snippet: instance.line || i.code_snippet,
+                            matched_data: instance.matched_data,
+                            matched_length: instance.matched_length,
+                            offset: instance.offset,
+                            matches: [{ ...match, strings: undefined }],
+                            identifier: string.identifier,
+                        }))
+                    )
+                )
+            }
+            // Default conversion for non-matching entries
+            return {
+                ...i,
+                issue_type: i.issue_type || i.error_type || i.type,
+                file_path:
+                    i.file_path ||
+                    i.path ||
+                    i.file ||
+                    i.file_name ||
+                    i.filename,
+                line_number:
+                    i.line_number ||
+                    (typeof i.line === 'number' ? i.line : undefined) ||
+                    -1,
+                code_snippet:
+                    i.code_snippet ||
+                    (typeof i.line === 'string' ? i.line : undefined) ||
+                    i.content,
+            }
+        })
+    )
+    issueListParseResult?.error &&
+        console.error(
+            'Error parsing issue list',
+            issueListParseResult?.error,
+            statusReasonJson
+        )
+    const issueList = issueListParseResult?.data
 
     const statusReason =
         zStatusReason.safeParse(statusReasonJson).data ??
@@ -138,17 +177,36 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         })
 
     const problemsSummary = fullfilledErrorList
-        ?.sort(compareBy((e) => e.url ?? e.file_path))
+        ?.sort(
+            compareBy((e) =>
+                e.url
+                    .split(/\b/)
+                    .map(
+                        (strOrNumber) =>
+                            z
+                                .number()
+                                .safeParse(strOrNumber)
+                                .data?.toString()
+                                .padStart(10, '0') ?? strOrNumber
+                    )
+                    .join('')
+            )
+        )
         .map((e, i) => (
-            <li key={i}>
-                <Link href={e.url} passHref className="button" legacyBehavior>
-                    <a className="flex gap-2">
-                        <HiLink className="w-5 h-5 ml-4" />
-                        <code className="ml-4">{e.issue_type}</code>
-                        <code className="ml-4">{e.line_number}</code>
-                        <code className="ml-4">{e.code_snippet}</code>
-                    </a>
+            <li
+                key={i}
+                className="flex gap-2 items-center w-full justify-start"
+            >
+                <Link href={e.url} target="_blank" className="button flex-0">
+                    <FaGithub className="w-5 h-5 ml-4" />
                 </Link>
+                <code className="flex-1 ml-4 whitespace-nowrap text-ellipsis">
+                    ...{e.file_path?.slice(-12)} {e.line_number}
+                    &nbsp;
+                    {e.issue_type}
+                    &nbsp;
+                    {e.code_snippet}
+                </code>
             </li>
         ))
 

@@ -341,13 +341,13 @@ function NodeVersionList({}) {
         )
     }
 
-    const BatchOperationHeader = () => {
+    const BatchOperationBar = () => {
         if (!Object.keys(selectedVersions).some((key) => selectedVersions[key]))
             return null
         return (
             <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 z-50 flex justify-between items-center shadow-lg">
                 <div className="flex items-center flex-wrap gap-4">
-                    <span className="text-white font-medium mr-4">
+                    <span className="text-white font-medium mr-4 ml-4">
                         {
                             Object.keys(selectedVersions).filter(
                                 (key) => selectedVersions[key]
@@ -394,7 +394,7 @@ function NodeVersionList({}) {
     }
     return (
         <div>
-            <BatchOperationHeader />
+            <BatchOperationBar />
 
             {/* Batch operation modal */}
             <Modal
@@ -552,134 +552,146 @@ function NodeVersionList({}) {
                         key={key}
                         className="border border-gray-600 p-4 rounded-md mb-4 flex flex-col justify-start gap-2"
                     >
-                        <div className="flex-1 text-[24px] text-gray-300 flex-2 flex items-center gap-4 pt-2">
-                            <Checkbox
-                                checked={Boolean(selectedVersions[key])}
-                                onChange={(e) => {
-                                    // hold shift to select multiple
-                                    if (
-                                        e.nativeEvent instanceof MouseEvent &&
-                                        e.nativeEvent.shiftKey &&
-                                        lastCheckedRef.current
-                                    ) {
-                                        const allKeys = versions.map(
-                                            (nv) =>
-                                                `${nv.node_id}@${nv.version}`
-                                        )
-                                        const [currentIndex, lastIndex] = [
-                                            allKeys.indexOf(key),
-                                            allKeys.indexOf(
-                                                lastCheckedRef.current
-                                            ),
-                                        ]
+                        <div className="flex-1 text-[24px] text-gray-300 flex-2 flex items-center gap-4 pt-2 justify-between">
+                            <div className="flex gap-2 items-center">
+                                <Checkbox
+                                    checked={Boolean(selectedVersions[key])}
+                                    onChange={(e) => {
+                                        // hold shift to select multiple
                                         if (
-                                            currentIndex >= 0 &&
-                                            lastIndex >= 0
+                                            e.nativeEvent instanceof
+                                                MouseEvent &&
+                                            e.nativeEvent.shiftKey &&
+                                            lastCheckedRef.current
                                         ) {
-                                            const [start, end] = [
-                                                Math.min(
-                                                    currentIndex,
-                                                    lastIndex
-                                                ),
-                                                Math.max(
-                                                    currentIndex,
-                                                    lastIndex
+                                            const allKeys = versions.map(
+                                                (nv) =>
+                                                    `${nv.node_id}@${nv.version}`
+                                            )
+                                            const [currentIndex, lastIndex] = [
+                                                allKeys.indexOf(key),
+                                                allKeys.indexOf(
+                                                    lastCheckedRef.current
                                                 ),
                                             ]
-                                            const newState =
-                                                !selectedVersions[key]
-                                            setSelectedVersions((prev) => {
-                                                const updated = { ...prev }
-                                                for (
-                                                    let i = start;
-                                                    i <= end;
-                                                    i++
-                                                )
-                                                    updated[allKeys[i]] =
-                                                        newState
-                                                return updated
-                                            })
+                                            if (
+                                                currentIndex >= 0 &&
+                                                lastIndex >= 0
+                                            ) {
+                                                const [start, end] = [
+                                                    Math.min(
+                                                        currentIndex,
+                                                        lastIndex
+                                                    ),
+                                                    Math.max(
+                                                        currentIndex,
+                                                        lastIndex
+                                                    ),
+                                                ]
+                                                const newState =
+                                                    !selectedVersions[key]
+                                                setSelectedVersions((prev) => {
+                                                    const updated = { ...prev }
+                                                    for (
+                                                        let i = start;
+                                                        i <= end;
+                                                        i++
+                                                    )
+                                                        updated[allKeys[i]] =
+                                                            newState
+                                                    return updated
+                                                })
+                                            }
+                                        } else {
+                                            setSelectedVersions((prev) => ({
+                                                ...prev,
+                                                [key]: !prev[key],
+                                            }))
                                         }
-                                    } else {
-                                        setSelectedVersions((prev) => ({
-                                            ...prev,
-                                            [key]: !prev[key],
-                                        }))
-                                    }
 
-                                    // Update the last checked reference
-                                    lastCheckedRef.current = key
-                                }}
-                                id={`checkbox-${nv.id}`}
-                                onKeyDown={(e) => {
-                                    // allow arrow keys to navigate
-                                    const dir = {
-                                        ArrowUp: -1,
-                                        ArrowDown: 1,
-                                    }[e.key]
-                                    if (!dir) return
+                                        // Update the last checked reference
+                                        lastCheckedRef.current = key
+                                    }}
+                                    id={`checkbox-${nv.id}`}
+                                    onKeyDown={(e) => {
+                                        // allow arrow keys to navigate
+                                        const dir = {
+                                            ArrowUp: -1,
+                                            ArrowDown: 1,
+                                        }[e.key]
+                                        if (!dir) return
 
-                                    const nextIndex =
-                                        (versions.length + index + dir) %
-                                        versions.length
-                                    const nextElement = document.querySelector(
-                                        `#checkbox-${versions[nextIndex]?.id}`
-                                    ) as HTMLInputElement
-                                    if (!nextElement) return
+                                        const nextIndex =
+                                            (versions.length + index + dir) %
+                                            versions.length
+                                        const nextElement =
+                                            document.querySelector(
+                                                `#checkbox-${versions[nextIndex]?.id}`
+                                            ) as HTMLInputElement
+                                        if (!nextElement) return
 
-                                    e.preventDefault()
-                                    nextElement.focus()
-                                    nextElement.parentElement!.parentElement!.scrollIntoView(
-                                        {
-                                            behavior: 'smooth',
-                                            block: 'start',
-                                        }
-                                    )
-                                }}
-                            />
-                            <Label
-                                htmlFor={`checkbox-${nv.id}`}
-                                className="text-[24px] text-gray-300"
-                                // onMouseDown={(e) =>
-                                //     e.shiftKey && e.preventDefault()
-                                // }
-                            >
-                                {nv.node_id}
-                            </Label>
-                            <Link target="_blank" href={`/nodes/${nv.node_id}`}>
-                                <MdOpenInNew className="w-6 h-6" />
-                            </Link>
-                            {!!nv.downloadUrl && (
+                                        e.preventDefault()
+                                        nextElement.focus()
+                                        nextElement.parentElement!.parentElement!.scrollIntoView(
+                                            {
+                                                behavior: 'smooth',
+                                                block: 'start',
+                                            }
+                                        )
+                                    }}
+                                />
+                                <Label
+                                    htmlFor={`checkbox-${nv.id}`}
+                                    className="text-[24px] text-gray-300"
+                                    // onMouseDown={(e) =>
+                                    //     e.shiftKey && e.preventDefault()
+                                    // }
+                                >
+                                    {nv.node_id}
+                                </Label>
+                            </div>
+                            <div className="flex gap-2 items-center">
                                 <Link
                                     target="_blank"
-                                    href={nv.downloadUrl}
-                                    title="Download Archive"
+                                    href={`/nodes/${nv.node_id}`}
                                 >
-                                    <MdFolderZip />
+                                    <MdOpenInNew className="w-6 h-6" />
                                 </Link>
-                            )}
-                            <Link
-                                href="javascript:void(0)"
-                                onClick={async () => {
-                                    await getNode(nv.node_id!)
-                                        .then((e) => e.repository)
-                                        .then((url) => {
-                                            window.open(
-                                                url,
-                                                '_blank',
-                                                'noopener,noreferrer'
-                                            )
-                                        })
-                                        .catch((e) => {
-                                            console.error(e)
-                                            toast.error(
-                                                `Error getting node ${nv.node_id} repository`
-                                            )
-                                        })
-                                }}
-                            >
-                                <FaGithub className="w-6 h-6" title="Github" />
-                            </Link>
+                                {!!nv.downloadUrl && (
+                                    <Link
+                                        target="_blank"
+                                        href={nv.downloadUrl}
+                                        title="Download Archive"
+                                    >
+                                        <MdFolderZip />
+                                    </Link>
+                                )}
+                                <Link
+                                    href="javascript:void(0)"
+                                    onClick={async () => {
+                                        await getNode(nv.node_id!)
+                                            .then((e) => e.repository)
+                                            .then((url) => {
+                                                window.open(
+                                                    url,
+                                                    '_blank',
+                                                    'noopener,noreferrer'
+                                                )
+                                            })
+                                            .catch((e) => {
+                                                console.error(e)
+                                                toast.error(
+                                                    `Error getting node ${nv.node_id} repository`
+                                                )
+                                            })
+                                    }}
+                                >
+                                    <FaGithub
+                                        className="w-6 h-6"
+                                        title="Github"
+                                    />
+                                </Link>
+                            </div>
                         </div>
                         <p className="text-[18px] pt-2 text-gray-300">
                             Version: {nv.version}
