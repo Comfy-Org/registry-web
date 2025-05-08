@@ -4,11 +4,18 @@ import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeForm
 import { NodeStatusReason } from '@/components/NodeStatusReason'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
-import { Badge, Button, Spinner } from 'flowbite-react'
+import {
+    Badge,
+    Button,
+    Checkbox,
+    Modal,
+    Spinner,
+    TextInput,
+} from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { omit } from 'rambda'
 import React, { useState } from 'react'
-import { HiPlusCircle } from 'react-icons/hi'
+import { HiBan, HiCheck, HiPlusCircle, HiReply } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import {
     NodeVersionStatus,
@@ -20,6 +27,13 @@ import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 function NodeVersionList({}) {
     const router = useRouter()
     const [page, setPage] = React.useState<number>(1)
+    const [selectedVersions, setSelectedVersions] = useState<{
+        [key: string]: boolean
+    }>({})
+    const [isBatchModalOpen, setIsBatchModalOpen] = useState<boolean>(false)
+    const [batchAction, setBatchAction] = useState<string>('')
+    const [batchReason, setBatchReason] = useState<string>('')
+
     React.useEffect(() => {
         if (router.query.page) {
             setPage(parseInt(router.query.page as string))
@@ -155,6 +169,62 @@ function NodeVersionList({}) {
         )
     }
 
+    const handleSelectVersion = (id: string, version: string) => {
+        const key = `${id}:${version}`
+        setSelectedVersions((prev) => ({
+            ...prev,
+            [key]: !prev[key],
+        }))
+    }
+
+    const handleBatchOperation = () => {
+        const selectedKeys = Object.keys(selectedVersions).filter(
+            (key) => selectedVersions[key]
+        )
+        if (selectedKeys.length === 0) {
+            toast.error('No versions selected')
+            return
+        }
+
+        setBatchAction('')
+        setIsBatchModalOpen(true)
+    }
+
+    const executeBatchOperation = () => {
+        const selectedKeys = Object.keys(selectedVersions).filter(
+            (key) => selectedVersions[key]
+        )
+
+        if (selectedKeys.length === 0) {
+            toast.error('No versions selected')
+            return
+        }
+
+        const reason =
+            batchReason ||
+            (batchAction === 'approve'
+                ? 'Batch approved by admin'
+                : batchAction === 'reject'
+                  ? 'Batch rejected by admin'
+                  : 'Batch status undone by admin')
+
+        selectedKeys.forEach((key) => {
+            const [nodeId, version] = key.split(':')
+
+            if (batchAction === 'approve') {
+                onApprove(nodeId, version, reason)
+            } else if (batchAction === 'reject') {
+                onReject(nodeId, version, reason)
+            } else if (batchAction === 'undo') {
+                onUndo(nodeId, version, reason)
+            }
+        })
+
+        setSelectedVersions({})
+        setIsBatchModalOpen(false)
+        setBatchReason('')
+    }
+
     const handlePageChange = (newPage: number) => {
         setPage(newPage)
         router.push(
@@ -169,6 +239,122 @@ function NodeVersionList({}) {
 
     return (
         <div>
+            {/* Sticky header for batch operations */}
+            {Object.keys(selectedVersions).some(
+                (key) => selectedVersions[key]
+            ) && (
+                <div className="fixed top-0 left-0 right-0 bg-gray-800 p-4 z-50 flex justify-between items-center shadow-lg">
+                    <div>
+                        <span className="text-white font-medium mr-4">
+                            {
+                                Object.keys(selectedVersions).filter(
+                                    (key) => selectedVersions[key]
+                                ).length
+                            }{' '}
+                            versions selected
+                        </span>
+                        <Button
+                            color="success"
+                            onClick={() => {
+                                setBatchAction('approve')
+                                handleBatchOperation()
+                            }}
+                            className="mr-2"
+                        >
+                            <HiCheck className="mr-2" /> Batch Approve
+                        </Button>
+                        <Button
+                            color="failure"
+                            onClick={() => {
+                                setBatchAction('reject')
+                                handleBatchOperation()
+                            }}
+                            className="mr-2"
+                        >
+                            <HiBan className="mr-2" /> Batch Reject
+                        </Button>
+                        <Button
+                            color="warning"
+                            onClick={() => {
+                                setBatchAction('undo')
+                                handleBatchOperation()
+                            }}
+                        >
+                            <HiReply className="mr-2" /> Batch Undo
+                        </Button>
+                    </div>
+                    <Button
+                        color="gray"
+                        onClick={() => setSelectedVersions({})}
+                    >
+                        Clear Selection
+                    </Button>
+                </div>
+            )}
+
+            {/* Batch operation modal */}
+            <Modal
+                show={isBatchModalOpen}
+                onClose={() => setIsBatchModalOpen(false)}
+            >
+                <Modal.Header>
+                    Batch{' '}
+                    {batchAction === 'approve'
+                        ? 'Approve'
+                        : batchAction === 'reject'
+                          ? 'Reject'
+                          : 'Undo'}{' '}
+                    Node Versions
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-6">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                            You are about to{' '}
+                            {batchAction === 'approve'
+                                ? 'approve'
+                                : batchAction === 'reject'
+                                  ? 'reject'
+                                  : 'undo'}{' '}
+                            {
+                                Object.keys(selectedVersions).filter(
+                                    (key) => selectedVersions[key]
+                                ).length
+                            }{' '}
+                            node versions.
+                        </p>
+                        <div>
+                            <label
+                                htmlFor="reason"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                Reason (optional)
+                            </label>
+                            <TextInput
+                                id="reason"
+                                placeholder={
+                                    batchAction === 'approve'
+                                        ? 'Batch approved by admin'
+                                        : batchAction === 'reject'
+                                          ? 'Batch rejected by admin'
+                                          : 'Batch status undone by admin'
+                                }
+                                value={batchReason}
+                                onChange={(e) => setBatchReason(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={executeBatchOperation}>Confirm</Button>
+                    <Button
+                        color="gray"
+                        onClick={() => setIsBatchModalOpen(false)}
+                    >
+                        Cancel
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <div className="flex flex-col gap-4 mb-6">
                 <h1 className="text-2xl font-bold text-gray-200">
                     Node Versions
@@ -245,11 +431,30 @@ function NodeVersionList({}) {
                     key={index}
                     className="border border-gray-600 p-4 rounded-md mb-4 flex flex-col justify-start gap-2"
                 >
-                    <p className="text-[24px] pt-2 text-gray-300">
-                        <a href={`/nodes/${nodeVersion.node_id}`}>
-                            {nodeVersion.node_id}
-                        </a>
-                    </p>
+                    <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                            <p className="text-[24px] pt-2 text-gray-300">
+                                <a href={`/nodes/${nodeVersion.node_id}`}>
+                                    {nodeVersion.node_id}
+                                </a>
+                            </p>
+                        </div>
+                        <div>
+                            <Checkbox
+                                checked={
+                                    !!selectedVersions[
+                                        `${nodeVersion.node_id}:${nodeVersion.version}`
+                                    ]
+                                }
+                                onChange={() =>
+                                    handleSelectVersion(
+                                        nodeVersion.node_id as string,
+                                        nodeVersion.version as string
+                                    )
+                                }
+                            />
+                        </div>
+                    </div>
                     <p className="text-[18px] pt-2 text-gray-300">
                         Version: {nodeVersion.version}
                     </p>
