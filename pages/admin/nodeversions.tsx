@@ -432,7 +432,9 @@ function NodeVersionList({}) {
                             </Label>
                             <TextInput
                                 id="reason"
-                                placeholder={defaultBatchReasons[batchAction] ?? ''}
+                                placeholder={
+                                    defaultBatchReasons[batchAction] ?? ''
+                                }
                                 value={batchReason}
                                 onChange={(e) => setBatchReason(e.target.value)}
                             />
