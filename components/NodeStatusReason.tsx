@@ -213,8 +213,15 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 <Link href={e.url} target="_blank" className="button flex-0">
                     <FaGithub className="w-5 h-5 ml-4" />
                 </Link>
-                <code className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-hidden">
-                    ...{e.file_path?.slice(-12)} {e.line_number}
+                <code
+                    className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-hidden"
+                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim()??''}`}
+                >
+                    {(e.file_path?.length ?? 0) > 12
+                        ? `…${e.file_path?.slice(-10)}`
+                        : e.file_path}
+                    &nbsp;
+                    L{e.line_number}
                     &nbsp;
                     {e.issue_type}
                     &nbsp;
