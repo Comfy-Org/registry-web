@@ -23,7 +23,7 @@ const zErrorArray = z
     .object({
         issue_type: z.string(), // The error type is represented as a string
         file_path: z.string().optional(), // File name is a string and may or may not be present
-        line_number: z.union([z.string(), z.number()]).optional(), // Line number can be a string or number and may or may not be present
+        line_number: z.number().optional(), // Line number can be a string or number and may or may not be present
         code_snippet: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
         // yara
@@ -105,6 +105,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
     const issueList = zErrorArray.safeParse(
         statusReasonJson?.map?.((e) => ({
             // try convert status reason to latest schema
+            ...e,
             issue_type: e.issue_type || e.error_type || e.type,
             file_path: e.file_path || e.filename || e.path || e.file,
             line_number:
@@ -115,7 +116,6 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 e.code_snippet ||
                 (typeof e.line === 'string' ? e.line : undefined) ||
                 e.content,
-            ...e,
         }))
     ).data
 
