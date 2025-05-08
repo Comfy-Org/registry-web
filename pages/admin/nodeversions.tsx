@@ -13,16 +13,19 @@ import {
     Modal,
     Spinner,
     TextInput,
+    Tooltip,
 } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import pMap from 'p-map'
 import { omit } from 'rambda'
 import React, { useRef, useState } from 'react'
-import { FaGithub, FaLink } from 'react-icons/fa'
+import { FaGithub } from 'react-icons/fa'
 import { HiBan, HiCheck, HiPlusCircle, HiReply } from 'react-icons/hi'
+import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import {
+    getNode,
     NodeVersion,
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
@@ -215,7 +218,9 @@ function NodeVersionList({}) {
             parseJsonSafe(nv.status_reason).data
         ).data?.statusHistory
         if (!statusHistory?.length)
-            return toast.error('No status history found')
+            return toast.error(
+                `No status history found for ${nv.node_id}@${nv.version}`
+            )
 
         const prevStatus = statusHistory[statusHistory.length - 1].status
         const by = user?.email // the user who clicked undo
@@ -340,7 +345,7 @@ function NodeVersionList({}) {
         if (!Object.keys(selectedVersions).some((key) => selectedVersions[key]))
             return null
         return (
-            <div className="fixed top-0 left-0 right-0 bg-gray-800 p-4 z-50 flex justify-between items-center shadow-lg">
+            <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 z-50 flex justify-between items-center shadow-lg">
                 <div className="flex items-center flex-wrap gap-4">
                     <span className="text-white font-medium mr-4">
                         {
@@ -407,7 +412,7 @@ function NodeVersionList({}) {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
-                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 flex flex-wrap gap-2">
                             You are about to{' '}
                             {
                                 {
@@ -416,12 +421,29 @@ function NodeVersionList({}) {
                                     undo: 'undo',
                                 }[batchAction]
                             }{' '}
-                            {
-                                Object.keys(selectedVersions).filter(
-                                    (key) => selectedVersions[key]
-                                ).length
-                            }{' '}
-                            node versions.
+                            <Tooltip
+                                content={
+                                    <ol className="list-decimal list-inside">
+                                        {Object.keys(selectedVersions)
+                                            .filter(
+                                                (key) => selectedVersions[key]
+                                            )
+                                            .map((key) => (
+                                                <li key={key}>{key}</li>
+                                            ))}
+                                    </ol>
+                                }
+                                placement="top"
+                            >
+                                <span className="inline-block underline cursor-pointer">
+                                    {
+                                        Object.keys(selectedVersions).filter(
+                                            (key) => selectedVersions[key]
+                                        ).length
+                                    }{' '}
+                                    node versions
+                                </span>
+                            </Tooltip>
                         </p>
                         <div>
                             <Label
@@ -432,7 +454,9 @@ function NodeVersionList({}) {
                             </Label>
                             <TextInput
                                 id="reason"
-                                placeholder={defaultBatchReasons[batchAction] ?? ''}
+                                placeholder={
+                                    defaultBatchReasons[batchAction] ?? ''
+                                }
                                 value={batchReason}
                                 onChange={(e) => setBatchReason(e.target.value)}
                             />
@@ -525,7 +549,7 @@ function NodeVersionList({}) {
                 .map((nv) => ({ ...nv, key: `${nv.node_id}@${nv.version}` }))
                 .map(({ key, ...nv }, index) => (
                     <div
-                        key={index}
+                        key={key}
                         className="border border-gray-600 p-4 rounded-md mb-4 flex flex-col justify-start gap-2"
                     >
                         <div className="flex-1 text-[24px] text-gray-300 flex-2 flex items-center gap-4 pt-2">
@@ -586,43 +610,74 @@ function NodeVersionList({}) {
                                     // Update the last checked reference
                                     lastCheckedRef.current = key
                                 }}
-                                id={`checkbox-${nv.node_id}@${nv.version}`}
+                                id={`checkbox-${nv.id}`}
                                 onKeyDown={(e) => {
                                     // allow arrow keys to navigate
                                     const dir = {
                                         ArrowUp: -1,
                                         ArrowDown: 1,
                                     }[e.key]
-
                                     if (!dir) return
 
-                                    e.preventDefault()
                                     const nextIndex =
-                                        (index + dir) % versions.length
-                                    const nextNodeVersion = versions[nextIndex]
-                                    const nextSelector = `#checkbox-${nextNodeVersion.node_id}@${nextNodeVersion.version}`
+                                        (versions.length + index + dir) %
+                                        versions.length
                                     const nextElement = document.querySelector(
-                                        nextSelector
+                                        `#checkbox-${versions[nextIndex]?.id}`
                                     ) as HTMLInputElement
                                     if (!nextElement) return
 
+                                    e.preventDefault()
                                     nextElement.focus()
-                                    nextElement.scrollIntoView({
-                                        behavior: 'smooth',
-                                        block: 'start',
-                                    })
+                                    nextElement.parentElement!.parentElement!.scrollIntoView(
+                                        {
+                                            behavior: 'smooth',
+                                            block: 'start',
+                                        }
+                                    )
                                 }}
                             />
                             <Label
-                                htmlFor={`checkbox-${nv.node_id}@${nv.version}`}
+                                htmlFor={`checkbox-${nv.id}`}
                                 className="text-[24px] text-gray-300"
+                                // onMouseDown={(e) =>
+                                //     e.shiftKey && e.preventDefault()
+                                // }
                             >
                                 {nv.node_id}
                             </Label>
                             <Link target="_blank" href={`/nodes/${nv.node_id}`}>
-                                <FaLink className="w-6 h-6" />
+                                <MdOpenInNew className="w-6 h-6" />
                             </Link>
-                            <Link target="_blank" href={`/nodes/${nv.node_id}`}>
+                            {!!nv.downloadUrl && (
+                                <Link
+                                    target="_blank"
+                                    href={nv.downloadUrl}
+                                    title="Download Archive"
+                                >
+                                    <MdFolderZip />
+                                </Link>
+                            )}
+                            <Link
+                                href="javascript:void(0)"
+                                onClick={async () => {
+                                    await getNode(nv.node_id!)
+                                        .then((e) => e.repository)
+                                        .then((url) => {
+                                            window.open(
+                                                url,
+                                                '_blank',
+                                                'noopener,noreferrer'
+                                            )
+                                        })
+                                        .catch((e) => {
+                                            console.error(e)
+                                            toast.error(
+                                                `Error getting node ${nv.node_id} repository`
+                                            )
+                                        })
+                                }}
+                            >
                                 <FaGithub className="w-6 h-6" title="Github" />
                             </Link>
                         </div>
