@@ -26,7 +26,7 @@ const zErrorArray = z
         line_number: z.number().optional(), // Line number can be a string or number and may or may not be present
         code_snippet: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
-        // yara
+        // yara meta
         meta: z
             .object({
                 description: z.string(),
@@ -41,7 +41,7 @@ const zErrorArray = z
             })
             .passthrough()
             .optional(), // Meta information is optional and contains a detailed description if present
-        // yara
+        // yara matches
         matches: z
             .array(
                 z
@@ -70,7 +70,7 @@ const zErrorArray = z
     .passthrough()
     .array()
 
-const zStatusCode = z.enum(
+export const zStatusCode = z.enum(
     Object.values(NodeVersionStatus) as [
         NodeVersionStatus,
         ...NodeVersionStatus[],
