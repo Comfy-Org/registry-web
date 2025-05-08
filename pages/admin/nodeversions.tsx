@@ -551,7 +551,6 @@ function NodeVersionList({}) {
                             {flag.charAt(0).toUpperCase() + flag.slice(1)} Nodes
                         </Button>
                     ))}
-                    {' | '}
 
                     <AdminCreateNodeFormModal
                         open={isAdminCreateNodeModalOpen}
