@@ -12,7 +12,7 @@ const ProfileDropdown: React.FC = () => {
     const auth = getAuth(app)
     const [firebaseUser] = useAuthState(auth)
     const { data: user } = useGetUser()
-    
+
     if (!firebaseUser) return null
 
     const handleLogout = async () => {
@@ -32,7 +32,9 @@ const ProfileDropdown: React.FC = () => {
                         rounded
                         placeholderInitials={
                             firebaseUser.displayName
-                                ? firebaseUser.displayName.charAt(0).toUpperCase()
+                                ? firebaseUser.displayName
+                                      .charAt(0)
+                                      .toUpperCase()
                                 : 'U'
                         }
                     />
@@ -44,7 +46,9 @@ const ProfileDropdown: React.FC = () => {
             }
         >
             <Dropdown.Header>
-                <span className="block text-sm">{firebaseUser.displayName || 'User'}</span>
+                <span className="block text-sm">
+                    {firebaseUser.displayName || 'User'}
+                </span>
                 <span className="block truncate text-sm font-medium">
                     {firebaseUser.email}
                 </span>
