@@ -8,6 +8,7 @@ import {
 import Image from 'next/image'
 import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
+import ProfileDropdown from './ProfileDropdown'
 
 interface HeaderProps {
     isLoggedIn?: boolean
@@ -55,17 +56,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     href="/discord"
                 ></Badge>
                 {isLoggedIn ? (
-                    <>
-                        <Button
-                            href="/nodes"
-                            color="light"
-                            className="bg-gray-900"
-                        >
-                            <span className="text-white text-base font-medium">
-                                {title}
-                            </span>
-                        </Button>
-                    </>
+                    <ProfileDropdown />
                 ) : (
                     <>
                         <Button
