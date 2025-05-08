@@ -43,28 +43,26 @@ const zErrorArray = z
             .optional(), // Meta information is optional and contains a detailed description if present
         // yara matches
         matches: z
-            .array(
-                z
+            .object({
+                filepath: z.string(),
+                strings: z
                     .object({
-                        filepath: z.string(),
-                        strings: z.array(
-                            z.object({
-                                identifier: z.string(),
-                                instances: z.array(
-                                    z.object({
-                                        matched_data: z.string(),
-                                        matched_length: z.number(),
-                                        offset: z.number(),
-                                        line_number: z.number(),
-                                        line: z.string(),
-                                    })
-                                ),
+                        identifier: z.string(),
+                        instances: z
+                            .object({
+                                matched_data: z.string(),
+                                matched_length: z.number(),
+                                offset: z.number(),
+                                line_number: z.number(),
+                                line: z.string(),
                             })
-                        ),
+                            .array(),
                     })
-                    .passthrough()
-                    .optional()
-            )
+                    .array(),
+            })
+            .passthrough()
+            .optional()
+            .array()
             .optional(), // Matches array, if present, contains detailed match information
     })
     .passthrough()
