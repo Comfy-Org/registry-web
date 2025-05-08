@@ -1,7 +1,8 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
-import { NodeStatusReason } from '@/components/NodeStatusReason'
+import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
+import { parseJsonSafe } from '@/components/parseJsonSafe'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import { Badge, Button, Spinner } from 'flowbite-react'
@@ -11,8 +12,10 @@ import React, { useState } from 'react'
 import { HiPlusCircle } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import {
+    NodeVersion,
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
+    useGetUser,
     useListAllNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
@@ -20,6 +23,8 @@ import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 function NodeVersionList({}) {
     const router = useRouter()
     const [page, setPage] = React.useState<number>(1)
+    const { data: user } = useGetUser()
+
     React.useEffect(() => {
         if (router.query.page) {
             setPage(parseInt(router.query.page as string))
@@ -104,52 +109,129 @@ function NodeVersionList({}) {
         )
     }
 
-    const onApprove = (id: string, versionNumber: string) => {
-        updateNodeVersionMutation.mutate(
+    async function onReview({
+        nodeVersion: nv,
+        status,
+        message,
+    }: {
+        nodeVersion: NodeVersion
+        status: NodeVersionStatus
+        message: string
+    }) {
+        // parse previous status reason with fallbacks
+        const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data
+        const prevStatusReason =
+            zStatusReason.safeParse(prevStatusReasonJson).data
+        const previousHistory = prevStatusReason?.statusHistory ?? []
+        const previousStatus = nv.status ?? 'Unknown Status' // should not happen
+        const previousMessage =
+            prevStatusReason?.message ?? nv.status_reason ?? '' // use raw msg if fail to parse json
+        const previousBy = prevStatusReason?.by ?? 'admin@comfy.org' // unknown admin
+
+        // concat history
+        const statusHistory = [
+            ...previousHistory,
             {
-                nodeId: id,
-                versionNumber: versionNumber,
-                data: {
-                    status: NodeVersionStatus.NodeVersionStatusActive,
-                    status_reason: 'Approved by admin',
-                },
+                status: previousStatus,
+                message: previousMessage,
+                by: previousBy,
+            },
+        ]
+        console.log('History', statusHistory)
+
+        // updated status reason, with history
+        const reason = zStatusReason.parse({
+            message,
+            by: user?.email ?? 'admin@comfy.org', // if user is not loaded, use 'Admin'
+            statusHistory,
+        })
+        await updateNodeVersionMutation.mutateAsync(
+            {
+                nodeId: nv.node_id!.toString(),
+                versionNumber: nv.version!.toString(),
+                data: { status, status_reason: JSON.stringify(reason) },
             },
             {
                 onSuccess: () => {
-                    toast.success('Node version approved')
                     queryClient.invalidateQueries({
                         queryKey: ['/versions'],
                     })
                 },
-                onError: () => {
-                    toast.error('Error approving node version')
+                onError: (error) => {
+                    console.error('Error reviewing node version', error)
+                    toast.error(
+                        `Error reviewing node version ${nv.node_id!}@${nv.version!}`
+                    )
                 },
             }
         )
     }
+    const onApprove = async (nv: NodeVersion) => {
+        const message = prompt('Approve Reason: ', 'Approved by admin')
+        if (!message) return toast.error('Please provide a reason')
 
-    const onReject = (id: string, versionNumber: string) => {
-        updateNodeVersionMutation.mutate(
+        await onReview({
+            nodeVersion: nv,
+            status: NodeVersionStatus.NodeVersionStatusActive,
+            message,
+        })
+        toast.success(`${nv.node_id!}@${nv.version!} Approved`)
+    }
+    const onReject = async (nv: NodeVersion) => {
+        const message = prompt('Reject Reason: ', 'Rejected by admin')
+        if (!message) return toast.error('Please provide a reason')
+
+        await onReview({
+            nodeVersion: nv,
+            status: NodeVersionStatus.NodeVersionStatusBanned,
+            message,
+        })
+        toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
+    }
+    const checkIsUndoable = (nv: NodeVersion) =>
+        !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
+            ?.statusHistory?.length
+
+    const onUndoNodeVersion = async (nv: NodeVersion) => {
+        const statusHistory = zStatusReason.safeParse(
+            parseJsonSafe(nv.status_reason).data
+        ).data?.statusHistory
+        if (!statusHistory?.length)
+            return toast.error('No status history found')
+
+        const prevStatus = statusHistory[statusHistory.length - 1].status
+        const by = user?.email // the user who clicked undo
+        if (!by) {
+            toast.error('Unable to get user email, please reload and try again')
+            return
+        }
+
+        const statusReason = zStatusReason.parse({
+            message: statusHistory[statusHistory.length - 1].message,
+            by,
+            statusHistory: statusHistory.slice(0, -1),
+        })
+        await updateNodeVersionMutation.mutateAsync(
             {
-                nodeId: id,
-                versionNumber: versionNumber,
+                nodeId: nv.node_id!.toString(),
+                versionNumber: nv.version!.toString(),
                 data: {
-                    status: NodeVersionStatus.NodeVersionStatusBanned,
-                    status_reason: 'Rejected by admin',
+                    status: prevStatus,
+                    status_reason: JSON.stringify(statusReason),
                 },
             },
             {
                 onSuccess: () => {
-                    toast.success('Node version rejected')
-                    queryClient.invalidateQueries({
-                        queryKey: ['/versions'],
-                    })
-                    queryClient.refetchQueries({
-                        queryKey: ['/versions'],
-                    })
+                    queryClient.invalidateQueries({ queryKey: ['/versions'] })
+                    toast.success(
+                        `${nv.node_id!}@${nv.version!} Undone, back to ${NodeVersionStatusToReadable(prevStatus)}`
+                    )
                 },
-                onError: () => {
-                    toast.error('Error rejecting node version')
+                onError: (error) => {
+                    console.error('Error undoing node version', error)
+                    toast.error(
+                        `Error undoing node version ${nv.node_id!}@${nv.version!}`
+                    )
                 },
             }
         )
@@ -261,31 +343,29 @@ function NodeVersionList({}) {
                     </div>
                     <NodeStatusReason {...nodeVersion} />
 
-                    <div className="flex">
+                    <div className="flex gap-2">
                         <Button
                             color="blue"
                             className="flex"
-                            onClick={() =>
-                                onApprove(
-                                    nodeVersion.node_id as string,
-                                    nodeVersion.version as string
-                                )
-                            }
-                            style={{ marginRight: '5px' }}
+                            onClick={() => onApprove(nodeVersion)}
                         >
                             Approve
                         </Button>
                         <Button
                             color="failure"
-                            onClick={() =>
-                                onReject(
-                                    nodeVersion.node_id as string,
-                                    nodeVersion.version as string
-                                )
-                            }
+                            onClick={() => onReject(nodeVersion)}
                         >
                             Reject
                         </Button>
+
+                        {checkIsUndoable(nodeVersion) && (
+                            <Button
+                                color="gray"
+                                onClick={() => onUndoNodeVersion(nodeVersion)}
+                            >
+                                Undo
+                            </Button>
+                        )}
                     </div>
                 </div>
             ))}
