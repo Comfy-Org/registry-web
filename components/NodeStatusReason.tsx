@@ -82,6 +82,7 @@ export const zStatusCode = z.enum(
         ...NodeVersionStatus[],
     ]
 )
+
 export const zStatusHistory = z.array(
     z.object({
         status: zStatusCode,
@@ -89,6 +90,7 @@ export const zStatusHistory = z.array(
         by: z.string().optional(),
     })
 )
+
 // when status is active/banned, the statusReason is approve/reject reason, and maybe a status history
 export const zStatusReason = z.object({
     message: z.string(),
@@ -228,6 +230,10 @@ export function NodeStatusReason(nv: NodeVersion) {
                 key={i}
                 className="flex gap-2 items-center w-full justify-start"
             >
+                {/* show green checkmark if approved before */}
+                {e.isApproved && (
+                    <span className="text-green-500 text-sm">✅</span>
+                )}
                 <Link href={e.url} target="_blank" className="button flex-0">
                     <FaGithub className="w-5 h-5 ml-4" />
                 </Link>
@@ -247,17 +253,17 @@ export function NodeStatusReason(nv: NodeVersion) {
             </li>
         ))
 
-    const code = fullfilledIssueList
-        ? JSON.stringify(fullfilledIssueList)
-        : status_reason
     const lastCode = lastFullfilledIssueList
         ? JSON.stringify(lastFullfilledIssueList)
         : (lastApprovedNodeVersion?.status_reason ?? '')
+    const code = fullfilledIssueList
+        ? JSON.stringify(fullfilledIssueList)
+        : status_reason
     return (
         <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
             {!!problemsSummary && (
                 <>
-                    <div>{'Problems Summary: '}</div>
+                    <h4>{'Problems Summary: '}</h4>
                     <ol className="ml-4">{problemsSummary}</ol>
                 </>
             )}
@@ -265,11 +271,14 @@ export function NodeStatusReason(nv: NodeVersion) {
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
                     <summary>{'Status Reason: '}</summary>
-                    {/* <PrettieredYAML>{code}</PrettieredYAML> */}
-                    <PrettieredYamlDiffView
-                        original={lastCode}
-                        modified={code}
-                    />
+                    {fullfilledIssueList ? (
+                        <PrettieredYamlDiffView
+                            original={lastCode}
+                            modified={code}
+                        />
+                    ) : (
+                        <PrettieredYAML>{code}</PrettieredYAML>
+                    )}
                 </details>
             )}
         </div>
@@ -358,11 +367,11 @@ export function PrettieredYamlDiffView({
     const { ref, inView } = useInView()
 
     const parsedModified = tryCatch(
-        (raw: string) => yaml.stringify(yaml.parse(raw)),
-        rawOriginal
-    )(rawOriginal)
+        (raw: string) => raw && yaml.stringify(yaml.parse(raw)),
+        rawModified
+    )(rawModified)
     const parsedOriginal = tryCatch(
-        (raw: string) => yaml.stringify(yaml.parse(raw)),
+        (raw: string) => raw && yaml.stringify(yaml.parse(raw)),
         rawOriginal
     )(rawOriginal)
 
