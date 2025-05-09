@@ -138,8 +138,8 @@ function NodeVersionList({}) {
 
     const versions =
         (
-            getAllNodeVersionsQuery.data?.versions ||
             getSpecificNodeVersionQuery.data ||
+            getAllNodeVersionsQuery.data?.versions ||
             []
         )?.filter((nv) => {
             if (queryForVersion) return nv.version === queryForVersion
@@ -155,7 +155,10 @@ function NodeVersionList({}) {
         }
     }, [getAllNodeVersionsQuery])
 
-    if (!versions.length) {
+    if (
+        getAllNodeVersionsQuery.isLoading ||
+        getSpecificNodeVersionQuery.isLoading
+    ) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner />
@@ -267,7 +270,7 @@ function NodeVersionList({}) {
             by,
             statusHistory: statusHistory.slice(0, -1),
         })
-        
+
         await updateNodeVersionMutation.mutateAsync(
             {
                 nodeId: nv.node_id!.toString(),
@@ -537,9 +540,45 @@ function NodeVersionList({}) {
                 <h1 className="text-2xl font-bold text-gray-200">
                     Node Versions
                 </h1>
-                <h1 className="text-lg font-bold text-gray-200">
+                <div className="text-lg font-bold text-gray-200">
                     Total Results : {getAllNodeVersionsQuery.data?.total}
-                </h1>
+                </div>
+                <form
+                    className="flex gap-2 items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        const inputElement = document.getElementById(
+                            'filter-node-version'
+                        ) as HTMLInputElement
+                        const [nodeId, version] = inputElement.value.split('@')
+                        const searchParams = new URLSearchParams({
+                            ...(omit(['nodeId', 'version'])(
+                                router.query
+                            ) as object),
+                            ...(nodeId ? { nodeId } : {}),
+                            ...(version ? { version } : {}),
+                        })
+                            .toString()
+                            .replace(/^(?!$)/, '?')
+                        router.push(
+                            router.pathname + searchParams + location.hash
+                        )
+                    }}
+                >
+                    <TextInput
+                        id="filter-node-version"
+                        placeholder="Filter by nodeId@version"
+                        defaultValue={
+                            queryForNodeId && queryForVersion
+                                ? `${queryForNodeId}@${queryForVersion}`
+                                : queryForNodeId
+                                  ? `${queryForNodeId}`
+                                  : ''
+                        }
+                    />
+
+                    <Button color="blue">Search</Button>
+                </form>
                 <div className="flex gap-2">
                     <Button
                         color={
