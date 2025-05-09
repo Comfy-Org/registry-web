@@ -259,7 +259,7 @@ function NodeVersionList({}) {
             }
         )
     }
-    
+
     const handleBatchOperation = () => {
         const selectedKeys = Object.keys(selectedVersions).filter(
             (key) => selectedVersions[key]

@@ -170,7 +170,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             statusReasonJson
         )
     const issueList = issueListParseResult?.data
-    
+
     const statusReason =
         zStatusReason.safeParse(statusReasonJson).data ??
         zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
@@ -215,13 +215,12 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
                 </Link>
                 <code
                     className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-hidden"
-                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim()??''}`}
+                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim() ?? ''}`}
                 >
                     {(e.file_path?.length ?? 0) > 12
                         ? `…${e.file_path?.slice(-10)}`
                         : e.file_path}
-                    &nbsp;
-                    L{e.line_number}
+                    &nbsp; L{e.line_number}
                     &nbsp;
                     {e.issue_type}
                     &nbsp;
