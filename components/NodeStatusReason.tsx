@@ -1,6 +1,6 @@
 import { DiffEditor, Editor } from '@monaco-editor/react'
 import { compareBy } from 'comparing'
-import { Badge, Button } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import Link from 'next/link'
 import prettierPluginBabel from 'prettier/plugins/babel'
 import prettierPluginEstree from 'prettier/plugins/estree'
@@ -22,6 +22,7 @@ import {
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { NodeStatusBadge } from './NodeStatusBadge'
 import { parseIssueList } from './parseIssueList'
 import { parseJsonSafe } from './parseJsonSafe'
 
@@ -296,25 +297,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     key={status}
                                     className="flex gap-2 items-center"
                                 >
-                                    <Badge
-                                        color={
-                                            {
-                                                [NodeVersionStatus.NodeVersionStatusActive]:
-                                                    'success',
-                                                [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                    'failure',
-                                                [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                    'warning',
-                                            }[status as NodeVersionStatus] ||
-                                            'gray'
-                                        }
-                                        className="text-[14px]"
-                                    >
-                                        {NodeVersionStatusToReadable(
-                                            status as NodeVersionStatus
-                                        )}
-                                        <span> x{count}</span>
-                                    </Badge>
+                                    <NodeStatusBadge status={status as NodeVersionStatus} count={count} />
                                 </li>
                             ))}
                         </ul>
@@ -353,21 +336,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                 }`}
                             >
                                 {nv.version}
-                                <Badge
-                                    color={
-                                        {
-                                            [NodeVersionStatus.NodeVersionStatusActive]:
-                                                'success',
-                                            [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                'failure',
-                                            [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                'warning',
-                                        }[nv.status!] || 'gray'
-                                    }
-                                    className="text-[14px]"
-                                >
-                                    {NodeVersionStatusToReadable(nv.status)}
-                                </Badge>
+                                <NodeStatusBadge status={nv.status as NodeVersionStatus}  />
                                 {zStatusReason.safeParse(nv.status_reason).data
                                     ?.message ?? nv.status_reason}
                             </li>
