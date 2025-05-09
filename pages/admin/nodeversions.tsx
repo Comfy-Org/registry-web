@@ -31,6 +31,7 @@ import {
     useAdminUpdateNodeVersion,
     useGetUser,
     useListAllNodeVersions,
+    useListNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
@@ -46,6 +47,7 @@ function NodeVersionList({}) {
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
 
+    // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
         if (router.query.page) {
             setPage(parseInt(router.query.page as string))
@@ -105,13 +107,44 @@ function NodeVersionList({}) {
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
         useState(false)
 
-    const getAllNodeVersionsQuery = useListAllNodeVersions({
-        page: page,
-        pageSize: 8,
-        statuses: selectedStatus,
-        include_status_reason: true,
-    })
-    const versions = getAllNodeVersionsQuery.data?.versions || []
+    const queryForNodeId = router.query.nodeId as string
+
+    const getAllNodeVersionsQuery = useListAllNodeVersions(
+        {
+            page: page,
+            pageSize: 8,
+            statuses: selectedStatus,
+            include_status_reason: true,
+
+            // failed to filter, TODO: fix this in the backend
+            // nodeId: queryForNodeId ?? undefined,
+        },
+        { query: { enabled: !queryForNodeId } }
+    )
+
+    console.log('queryForNodeId', queryForNodeId)
+    // patched from frontend if queryForNodeId is set
+    const getSpecificNodeVersionQuery = useListNodeVersions(
+        queryForNodeId,
+        {
+            statuses: selectedStatus,
+            include_status_reason: true,
+        },
+        { query: { enabled: !!queryForNodeId } }
+    )
+
+    // todo: also implement this in the backend
+    const queryForVersion = router.query.version as string
+
+    const versions =
+        (
+            getSpecificNodeVersionQuery.data ||
+            getAllNodeVersionsQuery.data?.versions ||
+            []
+        )?.filter((nv) => {
+            if (queryForVersion) return nv.version === queryForVersion
+            return true
+        }) || []
 
     const updateNodeVersionMutation = useAdminUpdateNodeVersion()
     const queryClient = useQueryClient()
@@ -122,7 +155,10 @@ function NodeVersionList({}) {
         }
     }, [getAllNodeVersionsQuery])
 
-    if (getAllNodeVersionsQuery.isLoading) {
+    if (
+        getAllNodeVersionsQuery.isLoading ||
+        getSpecificNodeVersionQuery.isLoading
+    ) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner />
@@ -234,6 +270,7 @@ function NodeVersionList({}) {
             by,
             statusHistory: statusHistory.slice(0, -1),
         })
+
         await updateNodeVersionMutation.mutateAsync(
             {
                 nodeId: nv.node_id!.toString(),
@@ -502,9 +539,45 @@ function NodeVersionList({}) {
                 <h1 className="text-2xl font-bold text-gray-200">
                     Node Versions
                 </h1>
-                <h1 className="text-lg font-bold text-gray-200">
+                <div className="text-lg font-bold text-gray-200">
                     Total Results : {getAllNodeVersionsQuery.data?.total}
-                </h1>
+                </div>
+                <form
+                    className="flex gap-2 items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        const inputElement = document.getElementById(
+                            'filter-node-version'
+                        ) as HTMLInputElement
+                        const [nodeId, version] = inputElement.value.split('@')
+                        const searchParams = new URLSearchParams({
+                            ...(omit(['nodeId', 'version'])(
+                                router.query
+                            ) as object),
+                            ...(nodeId ? { nodeId } : {}),
+                            ...(version ? { version } : {}),
+                        })
+                            .toString()
+                            .replace(/^(?!$)/, '?')
+                        router.push(
+                            router.pathname + searchParams + location.hash
+                        )
+                    }}
+                >
+                    <TextInput
+                        id="filter-node-version"
+                        placeholder="Filter by nodeId@version"
+                        defaultValue={
+                            queryForNodeId && queryForVersion
+                                ? `${queryForNodeId}@${queryForVersion}`
+                                : queryForNodeId
+                                  ? `${queryForNodeId}`
+                                  : ''
+                        }
+                    />
+
+                    <Button color="blue">Search</Button>
+                </form>
                 <div className="flex gap-2">
                     <Button
                         color={
