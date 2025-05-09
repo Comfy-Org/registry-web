@@ -272,14 +272,7 @@ export function NodeStatusReason(nv: NodeVersion) {
 
                         <h4 className="text-lg font-bold flex gap-2 items-center cursor-pointer">
                             <FaHistory className="w-5 h-5 ml-4" />
-                            Node Version History:
-                            <Link
-                                href={`/admin/nodeversions?nodeId=${node?.id}`}
-                                target="_blank"
-                                className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
-                            >
-                                <MdOpenInNew className="w-6 h-6" />
-                            </Link>
+                            Node history:
                         </h4>
                         <ul className="ml-4 flex gap-2">
                             {Object.entries(
@@ -318,24 +311,16 @@ export function NodeStatusReason(nv: NodeVersion) {
                                 </li>
                             ))}
                         </ul>
+
+                        <Link
+                            href={`/admin/nodeversions?nodeId=${node?.id}`}
+                            target="_blank"
+                            className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
+                        >
+                            <MdOpenInNew className="w-6 h-6" />
+                        </Link>
                     </summary>
-                    <ol
-                        className="ml-4 max-w-full overflow-hidden"
-                        // title={nodeVersions
-                        //     ?.map(
-                        //         (nv) =>
-                        //             `${
-                        //                 nv.version
-                        //             } ${NodeVersionStatusToReadable(
-                        //                 nv.status
-                        //             )} ${
-                        //                 (zStatusReason.safeParse(
-                        //                     nv.status_reason
-                        //                 ).data?.message ?? nv.status_reason)
-                        //             }`
-                        //     )
-                        //     .join('\n')}
-                    >
+                    <ol className="ml-4 max-w-full overflow-hidden">
                         {nodeVersions?.map((nv) => (
                             <li
                                 key={nv.id}
@@ -368,6 +353,13 @@ export function NodeStatusReason(nv: NodeVersion) {
                                 >
                                     {NodeVersionStatusToReadable(nv.status)}
                                 </Badge>
+                                <Link
+                                    href={`/admin/nodeversions?nodeId=${node?.id}&version=${nv.version}`}
+                                    target="_blank"
+                                    className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
+                                >
+                                    <MdOpenInNew className="w-6 h-6" />
+                                </Link>
                                 {zStatusReason.safeParse(nv.status_reason).data
                                     ?.message ?? nv.status_reason}
                             </li>
