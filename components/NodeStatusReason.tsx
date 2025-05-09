@@ -313,9 +313,10 @@ export function NodeStatusReason(nv: NodeVersion) {
                         </ul>
 
                         <Link
-                            href={`/admin/nodeversions?nodeId=${node?.id}`}
+                            href={`/admin/nodeversions?nodeId=${nv.node_id}`}
                             target="_blank"
                             className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
+                            title={`View all node versions for ${nv.node_id}`}
                         >
                             <MdOpenInNew className="w-6 h-6" />
                         </Link>
@@ -354,9 +355,10 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     {NodeVersionStatusToReadable(nv.status)}
                                 </Badge>
                                 <Link
-                                    href={`/admin/nodeversions?nodeId=${node?.id}&version=${nv.version}`}
+                                    href={`/admin/nodeversions?nodeId=${nv.node_id}&version=${nv.version}`}
                                     target="_blank"
                                     className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
+                                    title={`View node version ${nv.version} for ${nv.node_id}`}
                                 >
                                     <MdOpenInNew className="w-6 h-6" />
                                 </Link>
