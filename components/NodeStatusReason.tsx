@@ -297,7 +297,10 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     key={status}
                                     className="flex gap-2 items-center"
                                 >
-                                    <NodeStatusBadge status={status as NodeVersionStatus} count={count} />
+                                    <NodeStatusBadge
+                                        status={status as NodeVersionStatus}
+                                        count={count}
+                                    />
                                 </li>
                             ))}
                         </ul>
@@ -336,7 +339,9 @@ export function NodeStatusReason(nv: NodeVersion) {
                                 }`}
                             >
                                 {nv.version}
-                                <NodeStatusBadge status={nv.status as NodeVersionStatus}  />
+                                <NodeStatusBadge
+                                    status={nv.status as NodeVersionStatus}
+                                />
                                 {zStatusReason.safeParse(nv.status_reason).data
                                     ?.message ?? nv.status_reason}
                             </li>
