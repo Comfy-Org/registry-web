@@ -100,7 +100,11 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
         { query: { enabled: inView } }
     )
 
-    const statusReasonJson = parseJsonSafe(status_reason ?? '').data
+    const { data: statusReasonJson, error: parseError } = parseJsonSafe(status_reason ?? '');
+    if (parseError) {
+        console.error('Failed to parse status_reason JSON:', parseError);
+    }
+    const statusReasonJson = statusReasonJson || [];
 
     const issueListParseResult = zErrorArray.safeParse(
         statusReasonJson?.flatMap?.((i) => {
