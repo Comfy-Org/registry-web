@@ -48,5 +48,7 @@ sidekick.yaml
 
 .idea/
 
-# ignore bun lock file
-bun.lock
+# ignore other lock file as we prefer bun now
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
