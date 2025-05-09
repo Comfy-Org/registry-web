@@ -1,4 +1,4 @@
-import { Editor } from '@monaco-editor/react'
+import { DiffEditor, Editor } from '@monaco-editor/react'
 import { compareBy } from 'comparing'
 import { Button } from 'flowbite-react'
 import Link from 'next/link'
@@ -13,9 +13,15 @@ import { MdEdit } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
-import { NodeVersion, NodeVersionStatus, useGetNode } from 'src/api/generated'
+import {
+    NodeVersion,
+    NodeVersionStatus,
+    useGetNode,
+    useListNodeVersions,
+} from 'src/api/generated'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { parseIssueList } from './parseIssueList'
 import { parseJsonSafe } from './parseJsonSafe'
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
@@ -92,91 +98,70 @@ export const zStatusReason = z.object({
     statusHistory: zStatusHistory.optional(),
 })
 
-export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
+export function NodeStatusReason(nv: NodeVersion) {
+    const { node_id, status_reason } = nv
     const { ref, inView } = useInView()
+
+    // TODO: migrate this to comfy-api, bring node information to /versions
     const { data: node } = useGetNode(
         node_id!,
         {},
         { query: { enabled: inView } }
     )
 
-    const statusReasonJson = parseJsonSafe(status_reason ?? '').data
-
-    const issueListParseResult = zErrorArray.safeParse(
-        statusReasonJson?.flatMap?.((i) => {
-            // Unwind matches if present
-            if (i.matches) {
-                return i.matches.flatMap((match, matchIndex) =>
-                    match.strings.flatMap((string) =>
-                        string.instances.map((instance) => ({
-                            ...i,
-                            issue_type: i.issue_type || i.error_type || i.type,
-                            file_path:
-                                match.filepath ||
-                                i.file_path ||
-                                i.path ||
-                                i.file ||
-                                i.file_name ||
-                                i.filename,
-                            line_number: instance.line_number || -1,
-                            code_snippet: instance.line || i.code_snippet,
-                            matched_data: instance.matched_data,
-                            matched_length: instance.matched_length,
-                            offset: instance.offset,
-                            matches: [{ ...match, strings: undefined }],
-                            identifier: string.identifier,
-                        }))
-                    )
-                )
-            }
-            // Default conversion for non-matching entries
-            return {
-                ...i,
-                issue_type: i.issue_type || i.error_type || i.type,
-                error_type: undefined,
-                type: undefined,
-                //
-                file_path:
-                    i.file_path ||
-                    i.path ||
-                    i.file ||
-                    i.file_name ||
-                    i.filename,
-                path: undefined,
-                file: undefined,
-                file_name: undefined,
-                filename: undefined,
-
-                //
-                line_number:
-                    i.line_number ||
-                    (typeof i.line === 'number' ? i.line : undefined) ||
-                    -1,
-                //
-                code_snippet:
-                    i.code_snippet ||
-                    (typeof i.line === 'string' ? i.line : undefined) ||
-                    i.content,
-
-                content: undefined,
-                line: undefined,
-            }
-        })
+    // Get last nodeversion, sorted by time
+    const { data: nodeVersions } = useListNodeVersions(
+        node_id!,
+        { include_status_reason: true },
+        { query: { enabled: inView } }
     )
-    issueListParseResult?.error &&
-        console.warn(
-            'Error parsing issue list',
-            issueListParseResult?.error,
-            statusReasonJson
-        )
-    const issueList = issueListParseResult?.data
+    nodeVersions?.sort(compareBy((e) => e.createdAt || e.id || ''))
 
-    const statusReason =
-        zStatusReason.safeParse(statusReasonJson).data ??
-        zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
+    // query last node versions
+    const currentNodeVersionIndex =
+        nodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1
+    const lastApprovedNodeVersion = nodeVersions?.find(
+        (nv, i) =>
+            nv.status === NodeVersionStatus.NodeVersionStatusActive &&
+            i < currentNodeVersionIndex
+    )
+    // const lastBannedNodeVersion = nodeVersions?.find(
+    //     (nv, i) =>
+    //         nv.status === NodeVersionStatus.NodeVersionStatusBanned &&
+    //         i < currentNodeVersionIndex
+    // )
+    // const lastFlaggedNodeVersion = nodeVersions?.find(
+    //     (nv, i) =>
+    //         nv.status === NodeVersionStatus.NodeVersionStatusFlagged &&
+    //         i < currentNodeVersionIndex
+    // )
+    // const lastNodeVersion = nodeVersions?.at(-2)
 
-    const fullfilledErrorList = issueList
-        // guess url
+    // parse status reason
+    const issueList = parseIssueList(parseJsonSafe(status_reason ?? '').data)
+    // const lastVersionIssueList = parseIssueList(parseJsonSafe(lastNodeVersion.status_reason ?? '').data)
+
+    // assume all issues are approved if last node version is approved
+    const approvedIssueList = parseIssueList(
+        parseJsonSafe(
+            zStatusReason
+                .safeParse(
+                    parseJsonSafe(lastApprovedNodeVersion?.status_reason ?? '')
+                        .data
+                )
+                .data?.statusHistory?.findLast(
+                    (e) =>
+                        e.status === NodeVersionStatus.NodeVersionStatusFlagged
+                )?.message
+        ).data
+    )
+
+    // const statusReason =
+    //     zStatusReason.safeParse(statusReasonJson).data ??
+    //     zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
+
+    const fullfilledIssueList = issueList
+        // guess url from node
         ?.map((e) => {
             const repoUrl = node?.repository || ''
             const filepath =
@@ -188,21 +173,54 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             const url = repoUrl + filepath + linenumber
             return { ...e, url }
         })
+        // mark if the issue was approved before
+        ?.map((e) => {
+            const isApproved = approvedIssueList?.some(
+                (approvedIssue) =>
+                    approvedIssue.file_path === e.file_path &&
+                    approvedIssue.line_number === e.line_number &&
+                    approvedIssue.code_snippet === e.code_snippet
+            )
+            return { ...e, isApproved }
+        })
 
-    const problemsSummary = fullfilledErrorList
+    const lastFullfilledIssueList = approvedIssueList // guess url from node
+        ?.map((e) => {
+            const repoUrl = node?.repository || ''
+            const filepath =
+                repoUrl &&
+                (e.file_path || '') &&
+                `/blob/HEAD/${e.file_path?.replace(/^\//, '')}`
+            const linenumber =
+                filepath && (e.line_number || '') && `#L${e.line_number}`
+            const url = repoUrl + filepath + linenumber
+            return { ...e, url }
+        })
+        // mark if the issue was approved before
+        ?.map((e) => {
+            const isApproved = true
+            return { ...e, isApproved }
+        })
+
+    // get a summary for the issues, including weather it was approved before
+    const problemsSummary = fullfilledIssueList
         ?.sort(
-            compareBy((e) =>
-                e.url
-                    .split(/\b/)
-                    .map(
-                        (strOrNumber) =>
-                            z
-                                .number()
-                                .safeParse(strOrNumber)
-                                .data?.toString()
-                                .padStart(10, '0') ?? strOrNumber
-                    )
-                    .join('')
+            compareBy(
+                (e) =>
+                    // sort by approved before
+                    (e.isApproved ? '0' : '1') +
+                    // and then filepath + line number (padStart to order numbers by number, instead of string)
+                    e.url
+                        .split(/\b/)
+                        .map(
+                            (strOrNumber) =>
+                                z
+                                    .number()
+                                    .safeParse(strOrNumber)
+                                    .data?.toString()
+                                    .padStart(10, '0') ?? strOrNumber
+                        )
+                        .join('')
             )
         )
         .map((e, i) => (
@@ -229,7 +247,12 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             </li>
         ))
 
-    const code = JSON.stringify(fullfilledErrorList) ?? status_reason
+    const code = fullfilledIssueList
+        ? JSON.stringify(fullfilledIssueList)
+        : status_reason
+    const lastCode = lastFullfilledIssueList
+        ? JSON.stringify(lastFullfilledIssueList)
+        : (lastApprovedNodeVersion?.status_reason ?? '')
     return (
         <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
             {!!problemsSummary && (
@@ -242,7 +265,11 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
                     <summary>{'Status Reason: '}</summary>
-                    <PrettieredYAML>{code}</PrettieredYAML>
+                    {/* <PrettieredYAML>{code}</PrettieredYAML> */}
+                    <PrettieredYamlDiffView
+                        original={lastCode}
+                        modified={code}
+                    />
                 </details>
             )}
         </div>
@@ -314,6 +341,77 @@ export function PrettieredYAML({ children: raw }: { children: string }) {
                     theme={'vs-dark'}
                     height={'30em'}
                     value={code}
+                    onMount={() => setEditorReady(true)}
+                />
+            )}
+        </div>
+    )
+}
+
+export function PrettieredYamlDiffView({
+    original: rawOriginal,
+    modified: rawModified,
+}: {
+    original: string
+    modified: string
+}) {
+    const { ref, inView } = useInView()
+
+    const parsedModified = tryCatch(
+        (raw: string) => yaml.stringify(yaml.parse(raw)),
+        rawOriginal
+    )(rawOriginal)
+    const parsedOriginal = tryCatch(
+        (raw: string) => yaml.stringify(yaml.parse(raw)),
+        rawOriginal
+    )(rawOriginal)
+
+    const [codeOriginal, setCodeOriginal] = useState(parsedOriginal)
+    const [codeModified, setCodeModified] = useState(parsedModified)
+
+    useEffect(() => {
+        format(parsedOriginal, {
+            parser: 'yaml',
+            plugins: [prettierPluginYaml],
+        }).then(setCodeOriginal)
+    }, [parsedOriginal])
+    useEffect(() => {
+        format(parsedModified, {
+            parser: 'yaml',
+            plugins: [prettierPluginYaml],
+        }).then(setCodeModified)
+    }, [parsedModified])
+
+    const [isEditorOpen, setEditorOpen] = useState(true)
+    const [editorReady, setEditorReady] = useState(false)
+    const displayEditor = isEditorOpen && editorReady
+    useEffect(() => {
+        if (isEditorOpen === false) setEditorReady(false)
+    }, [isEditorOpen])
+
+    return (
+        <div className="relative" ref={ref}>
+            {inView && (
+                <div className="absolute right-5 top-5 z-10">
+                    <Button
+                        onClick={() => setEditorOpen((e) => !e)}
+                        color={'gray'}
+                    >
+                        <MdEdit className="w-5 h-5" />
+                        Toggle Editor
+                    </Button>
+                </div>
+            )}
+
+            {isEditorOpen && (
+                <DiffEditor
+                    className={!displayEditor ? 'hidden' : ''}
+                    language="yaml"
+                    options={{ readOnly: true }}
+                    theme={'vs-dark'}
+                    height={'30em'}
+                    original={codeOriginal}
+                    modified={codeModified}
                     onMount={() => setEditorReady(true)}
                 />
             )}
