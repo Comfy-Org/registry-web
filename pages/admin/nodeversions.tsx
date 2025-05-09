@@ -31,6 +31,7 @@ import {
     useAdminUpdateNodeVersion,
     useGetUser,
     useListAllNodeVersions,
+    useListNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
@@ -46,6 +47,7 @@ function NodeVersionList({}) {
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
 
+    // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
         if (router.query.page) {
             setPage(parseInt(router.query.page as string))
@@ -105,13 +107,44 @@ function NodeVersionList({}) {
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
         useState(false)
 
-    const getAllNodeVersionsQuery = useListAllNodeVersions({
-        page: page,
-        pageSize: 8,
-        statuses: selectedStatus,
-        include_status_reason: true,
-    })
-    const versions = getAllNodeVersionsQuery.data?.versions || []
+    const queryForNodeId = router.query.nodeId as string
+
+    const getAllNodeVersionsQuery = useListAllNodeVersions(
+        {
+            page: page,
+            pageSize: 8,
+            statuses: selectedStatus,
+            include_status_reason: true,
+
+            // failed to filter, TODO: fix this in the backend
+            // nodeId: queryForNodeId ?? undefined,
+        },
+        { query: { enabled: !queryForNodeId } }
+    )
+
+    console.log('queryForNodeId', queryForNodeId)
+    // patched from frontend if queryForNodeId is set
+    const getSpecificNodeVersionQuery = useListNodeVersions(
+        queryForNodeId,
+        {
+            statuses: selectedStatus,
+            include_status_reason: true,
+        },
+        { query: { enabled: !!queryForNodeId } }
+    )
+
+    // todo: also implement this in the backend
+    const queryForVersion = router.query.version as string
+
+    const versions =
+        (
+            getAllNodeVersionsQuery.data?.versions ||
+            getSpecificNodeVersionQuery.data ||
+            []
+        )?.filter((nv) => {
+            if (queryForVersion) return nv.version === queryForVersion
+            return true
+        }) || []
 
     const updateNodeVersionMutation = useAdminUpdateNodeVersion()
     const queryClient = useQueryClient()
@@ -122,7 +155,7 @@ function NodeVersionList({}) {
         }
     }, [getAllNodeVersionsQuery])
 
-    if (getAllNodeVersionsQuery.isLoading) {
+    if (!versions.length) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner />
@@ -234,6 +267,7 @@ function NodeVersionList({}) {
             by,
             statusHistory: statusHistory.slice(0, -1),
         })
+        
         await updateNodeVersionMutation.mutateAsync(
             {
                 nodeId: nv.node_id!.toString(),
@@ -278,6 +312,7 @@ function NodeVersionList({}) {
         reject: 'Batch rejected by admin',
         undo: 'Batch undone by admin',
     }
+
     const executeBatchOperation = async () => {
         // Process batch operations for the selected versions
         const selectedKeys = Object.keys(selectedVersions).filter(
