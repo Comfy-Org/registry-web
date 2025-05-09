@@ -259,7 +259,7 @@ function NodeVersionList({}) {
             }
         )
     }
-
+    
     const handleBatchOperation = () => {
         const selectedKeys = Object.keys(selectedVersions).filter(
             (key) => selectedVersions[key]
@@ -740,7 +740,7 @@ function NodeVersionList({}) {
                         </div>
                     </div>
                 ))}
-            <div className="">
+            <div className="pb-8">
                 <CustomPagination
                     currentPage={page}
                     totalPages={getAllNodeVersionsQuery.data?.totalPages || 1}

@@ -70,7 +70,7 @@ export const zErrorArray = z
     .passthrough()
     .array()
 
-const zStatusCode = z.enum(
+export const zStatusCode = z.enum(
     Object.values(NodeVersionStatus) as [
         NodeVersionStatus,
         ...NodeVersionStatus[],
@@ -170,7 +170,7 @@ export function NodeStatusReason({ node_id, status_reason }: NodeVersion) {
             statusReasonJson
         )
     const issueList = issueListParseResult?.data
-
+    
     const statusReason =
         zStatusReason.safeParse(statusReasonJson).data ??
         zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
