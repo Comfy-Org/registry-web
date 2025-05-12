@@ -50,3 +50,4 @@ sidekick.yaml
 
 # ignore bun lock file
 bun.lock
+*storybook.log
