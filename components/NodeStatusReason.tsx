@@ -241,7 +241,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                     <FaGithub className="w-5 h-5 ml-4" />
                 </Link>
                 <code
-                    className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-hidden"
+                    className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-x-scroll"
                     title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim() ?? ''}`}
                 >
                     {(e.file_path?.length ?? 0) > 12
