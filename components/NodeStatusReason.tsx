@@ -206,55 +206,25 @@ export function NodeStatusReason(nv: NodeVersion) {
         })
 
     // get a summary for the issues, including weather it was approved before
-    const problemsSummary = fullfilledIssueList
-        ?.sort(
-            compareBy(
-                (e) =>
-                    // sort by approved before
-                    (e.isApproved ? '0' : '1') +
-                    // and then filepath + line number (padStart to order numbers by number, instead of string)
-                    e.url
-                        .split(/\b/)
-                        .map(
-                            (strOrNumber) =>
-                                z
-                                    .number()
-                                    .safeParse(strOrNumber)
-                                    .data?.toString()
-                                    .padStart(10, '0') ?? strOrNumber
-                        )
-                        .join('')
-            )
+    const problemsSummary = fullfilledIssueList?.sort(
+        compareBy(
+            (e) =>
+                // sort by approved before
+                (e.isApproved ? '0' : '1') +
+                // and then filepath + line number (padStart to order numbers by number, instead of string)
+                e.url
+                    .split(/\b/)
+                    .map(
+                        (strOrNumber) =>
+                            z
+                                .number()
+                                .safeParse(strOrNumber)
+                                .data?.toString()
+                                .padStart(10, '0') ?? strOrNumber
+                    )
+                    .join('')
         )
-        .map((e, i) => (
-            <li
-                key={i}
-                className="flex gap-2 items-center w-full justify-start"
-            >
-                {/* show green checkmark if approved before */}
-                {e.isApproved ? (
-                    <span className="text-green-500 text-sm">✅</span>
-                ) : (
-                    <span className="text-red-500 text-sm">❓</span>
-                )}
-                <Link href={e.url} target="_blank" className="button flex-0">
-                    <FaGithub className="w-5 h-5 ml-4" />
-                </Link>
-                <code
-                    className="flex-1 ml-4 whitespace-nowrap text-ellipsis overflow-x-scroll"
-                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim() ?? ''}`}
-                >
-                    {(e.file_path?.length ?? 0) > 12
-                        ? `…${e.file_path?.slice(-10)}`
-                        : e.file_path}
-                    &nbsp; L{e.line_number}
-                    &nbsp;
-                    {e.issue_type}
-                    &nbsp;
-                    {e.code_snippet}
-                </code>
-            </li>
-        ))
+    )
 
     const lastCode = lastFullfilledIssueList
         ? JSON.stringify(lastFullfilledIssueList)
@@ -270,7 +240,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                     <summary className="flex gap-2 items-center">
                         <FaChevronDown className="w-5 h-5" />
 
-                        <h4 className="text-lg font-bold flex gap-2 items-center cursor-pointer">
+                        <h4 className="text-lg font-bold flex gap-2 items-center cursor-pointer ">
                             <FaHistory className="w-5 h-5 ml-4" />
                             Node Version History:
                             <Link
@@ -281,7 +251,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                 <MdOpenInNew className="w-6 h-6" />
                             </Link>
                         </h4>
-                        <ul className="ml-4 flex gap-2">
+                        <ul className="ml-4 flex gap-2 overflow-x-auto">
                             {Object.entries(
                                 nodeVersions!.reduce(
                                     (acc, nv) => {
@@ -319,67 +289,116 @@ export function NodeStatusReason(nv: NodeVersion) {
                             ))}
                         </ul>
                     </summary>
-                    <ol
-                        className="ml-4 max-w-full overflow-hidden"
-                        // title={nodeVersions
-                        //     ?.map(
-                        //         (nv) =>
-                        //             `${
-                        //                 nv.version
-                        //             } ${NodeVersionStatusToReadable(
-                        //                 nv.status
-                        //             )} ${
-                        //                 (zStatusReason.safeParse(
-                        //                     nv.status_reason
-                        //                 ).data?.message ?? nv.status_reason)
-                        //             }`
-                        //     )
-                        //     .join('\n')}
-                    >
-                        {nodeVersions?.map((nv) => (
-                            <li
-                                key={nv.id}
-                                className={`flex gap-2 whitespace-nowrap text-ellipsis ${
-                                    nodeVersions?.indexOf(nv) ===
-                                    currentNodeVersionIndex
-                                        ? 'bg-gray-700 text-white'
-                                        : ''
-                                }`}
-                                title={`${nv.version} ${NodeVersionStatusToReadable(
-                                    nv.status
-                                )} ${
-                                    zStatusReason.safeParse(nv.status_reason)
-                                        .data?.message ?? nv.status_reason
-                                }`}
-                            >
-                                {nv.version}
-                                <Badge
-                                    color={
-                                        {
-                                            [NodeVersionStatus.NodeVersionStatusActive]:
-                                                'success',
-                                            [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                'failure',
-                                            [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                'warning',
-                                        }[nv.status!] || 'gray'
-                                    }
-                                    className="text-[14px]"
+                    <div className="overflow-x-auto overflow-hidden max-w-full">
+                        <ol className="ml-4 w-max">
+                            {nodeVersions?.map((nv) => (
+                                <li
+                                    key={nv.id}
+                                    className={`w-full min-w-max flex gap-2 text-xs whitespace-nowrap ${
+                                        nodeVersions?.indexOf(nv) ===
+                                        currentNodeVersionIndex
+                                            ? 'bg-gray-700 text-white'
+                                            : ''
+                                    }`}
+                                    title={`${nv.version} ${NodeVersionStatusToReadable(
+                                        nv.status
+                                    )} ${
+                                        zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.message ?? nv.status_reason
+                                    }`}
                                 >
-                                    {NodeVersionStatusToReadable(nv.status)}
-                                </Badge>
-                                {zStatusReason.safeParse(nv.status_reason).data
-                                    ?.message ?? nv.status_reason}
-                            </li>
-                        ))}
-                    </ol>
+                                    <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[8rem] justify-end flex-0 justify-between">
+                                        <Badge
+                                            color={
+                                                {
+                                                    [NodeVersionStatus.NodeVersionStatusActive]:
+                                                        'success',
+                                                    [NodeVersionStatus.NodeVersionStatusBanned]:
+                                                        'failure',
+                                                    [NodeVersionStatus.NodeVersionStatusFlagged]:
+                                                        'warning',
+                                                }[nv.status!] || 'gray'
+                                            }
+                                            className="text-[14px]"
+                                        >
+                                            {NodeVersionStatusToReadable(
+                                                nv.status
+                                            )}
+                                        </Badge>
+                                        {nv.version}
+                                        <Link href={`/admin/nodeversions?nodeId=${nv.node_id}&versionId=${nv.id}`} target='_blank' className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors">
+                                        <MdOpenInNew className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                    <code
+                                        className="text-gray-400 whitespace-nowrap flex-1"
+                                        title={`${nv.version} ${NodeVersionStatusToReadable(
+                                            nv.status
+                                        )} ${
+                                            zStatusReason.safeParse(
+                                                nv.status_reason
+                                            ).data?.message ?? nv.status_reason
+                                        }`}
+                                    >
+                                        {zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.message ?? nv.status_reason}
+                                    </code>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
                 </details>
             )}
 
-            {!!problemsSummary && (
+            {!!problemsSummary?.length && (
                 <>
                     <h4>{'Problems Summary: '}</h4>
-                    <ol className="ml-4">{problemsSummary}</ol>
+                    <ol className="ml-4 overflow-x-auto">
+                        {problemsSummary.map((e, i) => (
+                            <li
+                                key={i}
+                                className="flex gap-2 items-center w-full justify-start text-xs"
+                            >
+                                <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[14rem]">
+                                    {/* show green checkmark if approved before */}
+                                    {e.isApproved ? (
+                                        <span className="text-green-500">
+                                            ✅
+                                        </span>
+                                    ) : (
+                                        <span className="text-red-500">❓</span>
+                                    )}
+                                    <Link
+                                        href={e.url}
+                                        target="_blank"
+                                        className="button flex-0"
+                                    >
+                                        <FaGithub className="w-5 h-5 ml-4" />
+                                    </Link>
+                                    <code
+                                        className="text-gray-400 whitespace-nowrap flex-1"
+                                        title={`${e.file_path} L${e.line_number}`}
+                                    >
+                                        {(e.file_path?.length ?? 0) > 18 + 2
+                                            ? `…${e.file_path?.slice(-18)}`
+                                            : e.file_path}
+                                        &nbsp;L{e.line_number}
+                                    </code>
+                                </div>
+                                <code
+                                    className="flex-1 ml-4 whitespace-nowrap text"
+                                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim() ?? ''}`}
+                                >
+                                    &nbsp;
+                                    {e.issue_type}
+                                    &nbsp;
+                                    {e.code_snippet}
+                                </code>
+                            </li>
+                        ))}
+                    </ol>
                 </>
             )}
 
