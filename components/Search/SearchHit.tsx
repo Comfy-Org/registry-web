@@ -10,6 +10,7 @@ import React from 'react'
 import { HiDownload } from 'react-icons/hi'
 import { Snippet } from 'react-instantsearch'
 import Markdown from 'react-markdown'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 interface NodeHit {
     id: string
     name: string
@@ -96,7 +97,11 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
 
                     {/* meta info */}
                     <p className="mb-1 text-xs font-light text-nowrap mt-2 text-gray-400">
-                        @{hit.publisher_id}
+                        {hit.publisher_id === UNCLAIMED_ADMIN_PUBLISHER_ID ? (
+                            <span className="text-gray">Unclaimed</span>
+                        ) : (
+                            `@${hit.publisher_id}`
+                        )}
                         {hit.latest_version && (
                             <span className="">
                                 {' | '}
