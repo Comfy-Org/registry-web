@@ -327,8 +327,12 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             )}
                                         </Badge>
                                         {nv.version}
-                                        <Link href={`/admin/nodeversions?nodeId=${nv.node_id}&versionId=${nv.id}`} target='_blank' className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors">
-                                        <MdOpenInNew className="w-4 h-4" />
+                                        <Link
+                                            href={`/admin/nodeversions?nodeId=${nv.node_id}&versionId=${nv.id}`}
+                                            target="_blank"
+                                            className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
+                                        >
+                                            <MdOpenInNew className="w-4 h-4" />
                                         </Link>
                                     </div>
                                     <code
