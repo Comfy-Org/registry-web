@@ -115,7 +115,6 @@ const NodeDetails = () => {
     const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
-    const disclaimerUnclaimed = 'This node can only be installed via git'
 
     const toggleDrawer = () => {
         analytic.track('View Node Version Details')
@@ -282,7 +281,12 @@ const NodeDetails = () => {
                             <div className="mt-5 mb-10">
                                 {isUnclaimed ? (
                                     <p className="text-base font-normal text-gray-200">
-                                        {disclaimerUnclaimed}
+                                        This node can only be installed via git
+                                        {node.repository && (
+                                            <CopyableCodeBlock
+                                                code={`cd your/path/to/ComfyUI/custom_nodes && git clone ${node.repository}`}
+                                            />
+                                        )}
                                     </p>
                                 ) : (
                                     <CopyableCodeBlock
