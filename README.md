@@ -22,9 +22,9 @@ Run the development server
 
 ```bash
 git checkout dev
-brew install pnpm
-pnpm install
-pnpm run dev
+curl -fsSL https://bun.sh/install | bash
+bun install
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
