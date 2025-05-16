@@ -13,11 +13,10 @@ const queryClient = new QueryClient({
             retry: (failureCount, error: any) => {
                 // Don't retry on 404s
                 if (error?.response?.status === 404) return false
+
                 // Retry up to 3 times for other errors
                 return failureCount < 3
             },
-            // Default stale time for all queries (5 minutes)
-            staleTime: 5 * 60 * 1000,
         },
     },
 })
@@ -38,7 +37,9 @@ const persistEffect = () =>
                     '/users/publishers/': true,
                 }
                 if (persistKeys[String(queryKey[0])]) return true
-                return false
+
+                // Persist all queries with 'nodes' in the key for now
+                return true
             },
         },
     })[0]
