@@ -55,7 +55,7 @@ export default function Autocomplete({
     useEffect(() => {
         setQuery(instantSearchUiState.query)
         setPage(0)
-    }, [instantSearchUiState, setQuery])
+    }, [instantSearchUiState, setQuery, setPage])
 
     const plugins = useMemo(() => {
         const recentSearches = createLocalStorageRecentSearchesPlugin({
@@ -117,7 +117,7 @@ export default function Autocomplete({
         })
 
         return [recentSearches, querySuggestions]
-    }, [])
+    }, [searchClient])
 
     useEffect(() => {
         if (!autocompleteContainer.current) {
@@ -156,7 +156,7 @@ export default function Autocomplete({
         })
 
         return () => autocompleteInstance.destroy()
-    }, [plugins])
+    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins, query])
 
     return <div className={className} ref={autocompleteContainer} />
 }
