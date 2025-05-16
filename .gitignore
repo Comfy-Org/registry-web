@@ -56,3 +56,7 @@ storybook-static
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+
+# ignore storybook files
+storybook-static
+*storybook.log
