@@ -12,7 +12,9 @@
         {
             "type": "npm",
             "script": "fix",
-            "problemMatcher": ["$eslint-compact"],
+            "problemMatcher": [
+                "$eslint-compact"
+            ],
             "label": "npm: fix",
             "detail": "prettier -w . && eslint --fix ."
         },
@@ -27,9 +29,17 @@
             "type": "npm",
             "script": "dev",
             "problemMatcher": [],
-            // "runOptions": {"runOn": "folderOpen"},
             "label": "npm: dev",
             "detail": "next dev"
+        },
+        {
+            "type": "bun",
+            "script": "next lint",
+            "problemMatcher": [
+                "$eslint-stylish"
+            ],
+            "label": "bun: lint",
+            "detail": "bun run next lint - package.json"
         }
     ]
 }
