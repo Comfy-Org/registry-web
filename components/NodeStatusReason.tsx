@@ -1,6 +1,6 @@
 import { DiffEditor, Editor } from '@monaco-editor/react'
 import { compareBy } from 'comparing'
-import { Badge, Button } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import Link from 'next/link'
 import prettierPluginBabel from 'prettier/plugins/babel'
 import prettierPluginEstree from 'prettier/plugins/estree'
@@ -22,6 +22,7 @@ import {
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { NodeStatusBadge } from './NodeStatusBadge'
 import { parseIssueList } from './parseIssueList'
 import { parseJsonSafe } from './parseJsonSafe'
 
@@ -262,25 +263,10 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     key={status}
                                     className="flex gap-2 items-center"
                                 >
-                                    <Badge
-                                        color={
-                                            {
-                                                [NodeVersionStatus.NodeVersionStatusActive]:
-                                                    'success',
-                                                [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                    'failure',
-                                                [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                    'warning',
-                                            }[status as NodeVersionStatus] ||
-                                            'gray'
-                                        }
-                                        className="text-[14px]"
-                                    >
-                                        {NodeVersionStatusToReadable(
-                                            status as NodeVersionStatus
-                                        )}
-                                        <span> x{count}</span>
-                                    </Badge>
+                                    <NodeStatusBadge
+                                        status={status as NodeVersionStatus}
+                                        count={count}
+                                    />
                                 </li>
                             ))}
                         </ul>
@@ -324,23 +310,11 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     }`}
                                 >
                                     <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[8rem] justify-end flex-0 justify-between">
-                                        <Badge
-                                            color={
-                                                {
-                                                    [NodeVersionStatus.NodeVersionStatusActive]:
-                                                        'success',
-                                                    [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                        'failure',
-                                                    [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                        'warning',
-                                                }[nv.status!] || 'gray'
+                                        <NodeStatusBadge
+                                            status={
+                                                nv.status as NodeVersionStatus
                                             }
-                                            className="text-[14px]"
-                                        >
-                                            {NodeVersionStatusToReadable(
-                                                nv.status
-                                            )}
-                                        </Badge>
+                                        />
                                         {nv.version}
                                         <Link
                                             href={`/admin/nodeversions?nodeId=${nv.node_id}&version=${nv.version}`}

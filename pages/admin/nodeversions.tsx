@@ -1,13 +1,13 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
 import { parseJsonSafe } from '@/components/parseJsonSafe'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
-    Badge,
     Button,
     Checkbox,
     Label,
@@ -959,9 +959,9 @@ function NodeVersionList({}) {
                                     </span>
                                 </Label>
 
-                                <Badge color="warning" className="text-[14px]">
-                                    {NodeVersionStatusToReadable(nv.status)}
-                                </Badge>
+                                <NodeStatusBadge
+                                    status={nv.status as NodeVersionStatus}
+                                />
                             </div>
                             <div className="flex gap-2 items-center">
                                 <Link
