@@ -1,15 +1,22 @@
 import Header from '@/components/Header/Header';
 import { Meta, StoryObj } from '@storybook/react';
+import { WithQueryClientProvider } from '../WithQueryClientProvider';
 
-// Mock window.location for the Header component
-window.location = {
-  ...window.location,
-  pathname: '/nodes'
+// Create a wrapper component to provide the query client
+const HeaderWithQueryClient = (props) => {
+  // Note: We're not modifying window.location as it's read-only
+  // Instead, we'll use the already existing location object
+  
+  return (
+    <WithQueryClientProvider>
+      <Header {...props} />
+    </WithQueryClientProvider>
+  );
 };
 
-const meta: Meta<typeof Header> = {
+const meta: Meta<typeof HeaderWithQueryClient> = {
   title: 'Components/Header/Header',
-  component: Header,
+  component: HeaderWithQueryClient,
   parameters: {
     layout: 'fullscreen',
     backgrounds: { default: 'dark' },
