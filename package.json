@@ -14,7 +14,8 @@
     "enc": "senv encrypt .env.development.local -o .env.development.local.encrypted && senv encrypt .env.production.local -o .env.production.local.encrypted",
     "dec": "senv decrypt .env.development.local.encrypted -o .env.development.local && senv decrypt .env.production.local.encrypted -o .env.production.local",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.17.4",
