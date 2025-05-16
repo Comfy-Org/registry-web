@@ -1,0 +1,78 @@
+
+<Meta title="Documentation/Storybook Usage" />
+
+# Using Storybook with Comfy Registry
+
+This guide explains how to use Storybook effectively with the Comfy Registry project.
+
+## Getting Started
+
+To run Storybook locally:
+
+```bash
+pnpm run storybook
+```
+
+This will start Storybook on port 6006. You can access it at [http://localhost:6006](http://localhost:6006).
+
+## Component Organization
+
+Components in Storybook are organized into categories based on their location in the project:
+
+- **Components/Common** - General UI components used throughout the application
+- **Components/Nodes** - Components related to nodes display and management
+- **Components/Publisher** - Components related to publishers
+- **Components/Search** - Search-related components
+- **Components/Header** - Header components
+- **Components/Labels** - Form label components
+- **Components/CodeBlock** - Code formatting and display components
+- **Pages** - Full page components
+
+## Creating New Stories
+
+To create a new story for a component:
+
+1. Create a new file in the `src/stories/components` directory with the naming convention `ComponentName.stories.tsx`
+2. Import the component and define its stories
+3. Use the `Meta` and `StoryObj` types to define the component's stories
+4. Use the `args` property to pass props to the component
+
+Example:
+
+```tsx
+import { Meta, StoryObj } from '@storybook/react';
+import YourComponent from '../../../components/path/to/YourComponent';
+
+const meta: Meta<typeof YourComponent> = {
+  title: 'Components/Category/YourComponent',
+  component: YourComponent,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+};
+
+export default meta;
+type Story = StoryObj<typeof YourComponent>;
+
+export const Default: Story = {
+  args: {
+    // Component props here
+  },
+};
+```
+
+## Working with Complex Components
+
+For components that rely on external dependencies (like Firebase, Algolia search, or Next.js router):
+
+1. Create a wrapper component that mocks the necessary dependencies
+2. Use the wrapper component in your story
+3. Provide mock data that mimics the real data structure
+
+## Best Practices
+
+- Use the `backgrounds` parameter to set the appropriate background color for components
+- Use the `layout` parameter to control how the component is displayed in the canvas
+- Add multiple stories to show different states of a component
+- Document component props and usage in the story

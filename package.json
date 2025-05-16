@@ -30,6 +30,7 @@
     "@tanstack/query-sync-storage-persister": "^5.76.1",
     "@tanstack/react-query": "^5.76.1",
     "@tanstack/react-query-persist-client": "^5.76.1",
+    "@types/jest": "^29.5.14",
     "@types/md5": "^2.3.5",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/yaml": "^1.9.7",

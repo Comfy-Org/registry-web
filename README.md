@@ -29,6 +29,21 @@ pnpm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Storybook
+
+We use Storybook for component development and documentation. To run Storybook:
+
+```bash
+pnpm run storybook
+```
+
+Open [http://localhost:6006](http://localhost:6006) to view the component library. Storybook allows you to:
+
+- View and interact with components in isolation
+- Test different component states and variations
+- See documentation for components
+- Develop UI components in isolation without running the full app
+
 ### Generate Code Stub based on OpenAPI Spec
 
 Start the dev server.
