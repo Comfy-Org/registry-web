@@ -121,12 +121,11 @@ export function NodeStatusReason(nv: NodeVersion) {
         { include_status_reason: true },
         { query: { enabled: inView } }
     )
-    nodeVersions?.sort?.(compareBy((e) => e.createdAt || e.id || ''))
+    nodeVersions?.sort(compareBy((e) => e.createdAt || e.id || ''))
 
     // query last node versions
     const currentNodeVersionIndex =
-        nodeVersions?.findIndex?.((nodeVersion) => nodeVersion.id === nv.id) ??
-        -1
+        nodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1
     const lastApprovedNodeVersion = nodeVersions?.findLast(
         (nv, i) =>
             nv.status === NodeVersionStatus.NodeVersionStatusActive &&

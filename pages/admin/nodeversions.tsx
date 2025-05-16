@@ -391,6 +391,69 @@ function NodeVersionList({}) {
         !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
             ?.statusHistory?.length
 
+    const checkHasBatchId = (nv: NodeVersion) => {
+        return false // TODO: remove this after undoBatch is ready
+        const statusReason = zStatusReason.safeParse(
+            parseJsonSafe(nv.status_reason).data
+        ).data
+        return !!statusReason?.batchId
+    }
+
+    const undoBatch = async (nv: NodeVersion) => {
+        const statusReason = zStatusReason.safeParse(
+            parseJsonSafe(nv.status_reason).data
+        ).data
+        if (!statusReason?.batchId) {
+            toast.error(`No batch ID found for ${nv.node_id}@${nv.version}`)
+            return
+        }
+
+        // todo: search for this batchId and get a list of nodeVersions
+        // 
+        // and show the list for confirmation
+        // 
+        // and undo all of them
+
+        // // Ask for confirmation
+        // if (
+        //     !confirm(
+        //         `Do you want to undo the entire batch with ID: ${statusReason.batchId}?`
+        //     )
+        // ) {
+        //     return
+        // }
+
+        // const batchId = statusReason.batchId
+
+        // // Find all node versions in the current view that have the same batch ID
+        // const batchNodes = versions.filter((v) => {
+        //     const vStatusReason = zStatusReason.safeParse(
+        //         parseJsonSafe(v.status_reason).data
+        //     ).data
+        //     return vStatusReason?.batchId === batchId
+        // })
+
+        // if (batchNodes.length === 0) {
+        //     toast.error(`No nodes found with batch ID: ${batchId}`)
+        //     return
+        // }
+
+        // toast.info(
+        //     `Undoing batch with ID: ${batchId} (${batchNodes.length} nodes)`
+        // )
+
+        // // Process all items in the batch using the undo function
+        // await pMap(
+        //     batchNodes,
+        //     async (nodeVersion) => {
+        //         await onUndo(nodeVersion)
+        //     },
+        //     { concurrency: 5, stopOnError: false }
+        // )
+
+        // toast.success(`Successfully undid batch with ID: ${batchId}`)
+    }
+
     const onUndo = async (nv: NodeVersion) => {
         const statusHistory = zStatusReason.safeParse(
             parseJsonSafe(nv.status_reason).data
@@ -963,6 +1026,15 @@ function NodeVersionList({}) {
                             {checkIsUndoable(nv) && (
                                 <Button color="gray" onClick={() => onUndo(nv)}>
                                     Undo
+                                </Button>
+                            )}
+
+                            {checkHasBatchId(nv) && (
+                                <Button
+                                    color="warning"
+                                    onClick={() => undoBatch(nv)}
+                                >
+                                    Undo Batch
                                 </Button>
                             )}
                         </div>
