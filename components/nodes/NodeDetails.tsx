@@ -95,7 +95,7 @@ const NodeDetails = () => {
         publisherId as string,
         nodeId as string
     )
-    
+
     const {
         data: nodeVersions,
         isLoading: loadingNodeVersions,
