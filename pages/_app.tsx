@@ -44,7 +44,7 @@ const persistEffect = () =>
     })[0]
 
 export default function App({ Component, pageProps }: AppProps) {
-    useEffect(persistEffect,[])
+    useEffect(persistEffect, [])
     return (
         <QueryClientProvider client={queryClient}>
             <FlowBiteThemeProvider>
