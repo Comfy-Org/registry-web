@@ -122,7 +122,8 @@ export function NodeStatusReason(nv: NodeVersion) {
 
     // query last node versions
     const currentNodeVersionIndex =
-        nodeVersions?.findIndex?.((nodeVersion) => nodeVersion.id === nv.id) ?? -1
+        nodeVersions?.findIndex?.((nodeVersion) => nodeVersion.id === nv.id) ??
+        -1
     const lastApprovedNodeVersion = nodeVersions?.findLast(
         (nv, i) =>
             nv.status === NodeVersionStatus.NodeVersionStatusActive &&
