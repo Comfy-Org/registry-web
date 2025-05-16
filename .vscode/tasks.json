@@ -27,9 +27,15 @@
             "type": "npm",
             "script": "dev",
             "problemMatcher": [],
-            // "runOptions": {"runOn": "folderOpen"},
             "label": "npm: dev",
             "detail": "next dev"
+        },
+        {
+            "type": "bun",
+            "script": "next lint",
+            "problemMatcher": ["$eslint-stylish"],
+            "label": "bun: lint",
+            "detail": "bun run next lint - package.json"
         }
     ]
 }

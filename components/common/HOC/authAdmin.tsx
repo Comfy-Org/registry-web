@@ -14,7 +14,14 @@ import { useGetUser } from 'src/api/generated'
 const withAdmin = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        const { data: user, isLoading } = useGetUser()
+        const { data: user, isLoading } = useGetUser({
+            query: {
+                // Add cache configuration for this particular query
+                staleTime: 5 * 60 * 1000, // 5 minutes
+                gcTime: 60 * 60 * 1000, // 1 hour (previously cacheTime)
+            },
+        })
+
         useEffect(() => {
             if (!isLoading && !user) {
                 router.push(`/auth/login?fromUrl=${router.asPath}`)
