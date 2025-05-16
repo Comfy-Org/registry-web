@@ -5,6 +5,7 @@ This project uses [Chromatic](https://www.chromatic.com/) for visual testing and
 ## CI/CD Integration
 
 We have set up GitHub Actions to automatically run Chromatic on:
+
 - Every push to the `main` and `dev` branches
 - Every pull request targeting these branches
 
@@ -33,11 +34,12 @@ CHROMATIC_PROJECT_TOKEN=your_project_token pnpm run chromatic
 The Chromatic configuration is handled in two places:
 
 1. **GitHub Actions Workflow** (`.github/workflows/chromatic.yml`):
-   - Controls when Chromatic runs in CI
-   - Sets options like auto-accepting changes on the main branch
+
+    - Controls when Chromatic runs in CI
+    - Sets options like auto-accepting changes on the main branch
 
 2. **Package.json Script**:
-   - Provides an easy way to run Chromatic locally
+    - Provides an easy way to run Chromatic locally
 
 ## Features
 

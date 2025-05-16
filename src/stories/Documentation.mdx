@@ -1,4 +1,3 @@
-
 <Meta title="Documentation/Storybook Usage" />
 
 # Using Storybook with Comfy Registry
@@ -40,26 +39,26 @@ To create a new story for a component:
 Example:
 
 ```tsx
-import { Meta, StoryObj } from '@storybook/react';
-import YourComponent from '../../../components/path/to/YourComponent';
+import { Meta, StoryObj } from '@storybook/react'
+import YourComponent from '../../../components/path/to/YourComponent'
 
 const meta: Meta<typeof YourComponent> = {
-  title: 'Components/Category/YourComponent',
-  component: YourComponent,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
-};
+    title: 'Components/Category/YourComponent',
+    component: YourComponent,
+    parameters: {
+        layout: 'centered',
+    },
+    tags: ['autodocs'],
+}
 
-export default meta;
-type Story = StoryObj<typeof YourComponent>;
+export default meta
+type Story = StoryObj<typeof YourComponent>
 
 export const Default: Story = {
-  args: {
-    // Component props here
-  },
-};
+    args: {
+        // Component props here
+    },
+}
 ```
 
 ## Working with Complex Components
