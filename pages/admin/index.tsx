@@ -1,7 +1,6 @@
-import React from 'react'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import withAdmin from '@/components/common/HOC/authAdmin'
 
 function AdminDashboard() {
     const router = useRouter()
@@ -14,10 +13,19 @@ function AdminDashboard() {
             <div className="flex flex-col gap-4">
                 <Button
                     color="blue"
-                    onClick={() => router.push('/admin/nodeversions')}
+                    onClick={() =>
+                        router.push('/admin/nodeversions?filter=flagged')
+                    }
                     className="w-fit"
                 >
                     Review Node Versions
+                </Button>
+                <Button
+                    color="blue"
+                    onClick={() => router.push('/admin/add-unclaimed-node')}
+                    className="w-fit"
+                >
+                    Add Unclaimed Node
                 </Button>
                 {/* Add more admin links here as needed */}
             </div>

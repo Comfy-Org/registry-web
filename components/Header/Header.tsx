@@ -1,5 +1,3 @@
-import React from 'react'
-import Image from 'next/image'
 import {
     Badge,
     Button,
@@ -7,8 +5,10 @@ import {
     NavbarCollapse,
     NavbarToggle,
 } from 'flowbite-react'
-import { FaDiscord } from 'react-icons/fa'
-import { FaGithub } from 'react-icons/fa'
+import Image from 'next/image'
+import React from 'react'
+import { FaDiscord, FaGithub } from 'react-icons/fa'
+import ProfileDropdown from './ProfileDropdown'
 
 interface HeaderProps {
     isLoggedIn?: boolean
@@ -41,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         src="https://storage.googleapis.com/comfy-assets/logo.png"
                         width={36}
                         height={36}
-                        className="h-6 mr-3 sm:h-9"
+                        className="w-6 h-6 mr-3 sm:w-9 sm:h-9"
                     />
                     <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
                         Comfy Registry
@@ -56,21 +56,11 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     href="/discord"
                 ></Badge>
                 {isLoggedIn ? (
-                    <>
-                        <Button
-                            href="/nodes"
-                            color="light"
-                            className="bg-gray-900"
-                        >
-                            <span className="text-white text-base font-medium">
-                                {title}
-                            </span>
-                        </Button>
-                    </>
+                    <ProfileDropdown />
                 ) : (
                     <>
                         <Button
-                            href="/auth/login"
+                            href={`/auth/login?fromUrl=${window.location.pathname}`}
                             color="light"
                             className="bg-gray-800 border-none outline-none"
                         >
@@ -79,7 +69,12 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                             </span>
                         </Button>
 
-                        <Button href="/auth/signup" color="blue">
+                        <Button
+                            href={`/auth/signup?fromUrl=${
+                                window.location.pathname
+                            }`}
+                            color="blue"
+                        >
                             <span className="text-xs md:text-base">
                                 Sign up
                             </span>
