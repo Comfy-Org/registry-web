@@ -2,6 +2,7 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import type { AppProps } from 'next/app'
+import { useEffect } from 'react'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
@@ -21,15 +22,13 @@ const queryClient = new QueryClient({
     },
 })
 
-// Create a persister for syncing queries to localStorage
-if (typeof window !== 'undefined') {
-    const persister = createSyncStoragePersister({
-        storage: window.localStorage,
-        key: 'comfy-registry-cache',
-    })
+const persistEffect = () =>
     persistQueryClient({
         queryClient: queryClient as any,
-        persister: persister,
+        persister: createSyncStoragePersister({
+            storage: window.localStorage,
+            key: 'comfy-registry-cache',
+        }),
         // Only persist queries with these query keys
         dehydrateOptions: {
             shouldDehydrateQuery: ({ queryKey }) => {
@@ -42,10 +41,10 @@ if (typeof window !== 'undefined') {
                 return false
             },
         },
-    })
-}
+    })[0]
 
 export default function App({ Component, pageProps }: AppProps) {
+    useEffect(persistEffect)
     return (
         <QueryClientProvider client={queryClient}>
             <FlowBiteThemeProvider>
