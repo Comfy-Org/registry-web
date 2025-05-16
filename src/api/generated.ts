@@ -3323,7 +3323,7 @@ export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError =
 
 
 /**
- * @summary Retrieve all publishers for a given user
+ * @summary Retrieve all publishers for a given userf/
  */
 export const listPublishersForUser = (
     
