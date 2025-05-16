@@ -49,12 +49,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 </div>
             </Navbar.Brand>
             <div className="flex items-center gap-2 bg-gray-900 md:order-2">
-                <Badge
-                    icon={DiscordIcon}
-                    color="gray"
-                    className="p-3"
-                    href="/discord"
-                ></Badge>
                 {isLoggedIn ? (
                     <ProfileDropdown />
                 ) : (
@@ -81,6 +75,12 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         </Button>
                     </>
                 )}
+                <Badge
+                    icon={DiscordIcon}
+                    color="gray"
+                    className="p-3"
+                    href="/discord"
+                ></Badge>
                 <Button
                     href="https://docs.comfy.org/registry/overview"
                     color="blue"
