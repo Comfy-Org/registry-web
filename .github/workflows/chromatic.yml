@@ -6,6 +6,9 @@ on:
     pull_request:
         branches: [main, dev]
 
+permissions:
+    issues: write # Required for Chromatic to comment on PRs
+
 jobs:
     chromatic-deployment:
         name: Deploy Storybook to Chromatic
@@ -41,9 +44,37 @@ jobs:
 
             # Publish to Chromatic
             - name: Publish to Chromatic
+              id: chromatic
               uses: chromaui/action@v1
               with:
                   projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
                   storybookBuildDir: storybook-static
                   exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
                   autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
+
+            # Comment on PR with Chromatic results
+            - name: Comment on PR
+              if: github.event_name == 'pull_request' && steps.chromatic.outputs.buildUrl
+              uses: actions/github-script@v6
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  script: |
+                      const { issue: { number: issue_number }, repo: { owner, repo } } = context;
+                      const buildUrl = '${{ steps.chromatic.outputs.buildUrl }}';
+                      const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
+
+                      const message = `## 🎨 Chromatic Visual Testing Results
+
+                      | Resource | URL |
+                      | --- | --- |
+                      | 🔍 Build Results | [Chromatic Build](${buildUrl}) |
+                      | 📚 Storybook | [View Storybook](${storybookUrl}) |
+
+                      Check the visual changes and approve or request changes as needed.`;
+
+                      github.rest.issues.createComment({
+                        issue_number,
+                        owner,
+                        repo,
+                        body: message
+                      });
