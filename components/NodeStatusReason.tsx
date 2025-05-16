@@ -99,6 +99,9 @@ export const zStatusReason = z.object({
 
     // statusHistory, allow undo
     statusHistory: zStatusHistory.optional(),
+
+    // batchId for batch operations (for future batch-undo)
+    batchId: z.string().optional(),
 })
 
 export function NodeStatusReason(nv: NodeVersion) {
@@ -118,12 +121,11 @@ export function NodeStatusReason(nv: NodeVersion) {
         { include_status_reason: true },
         { query: { enabled: inView } }
     )
-    nodeVersions?.sort?.(compareBy((e) => e.createdAt || e.id || ''))
+    nodeVersions?.sort(compareBy((e) => e.createdAt || e.id || ''))
 
     // query last node versions
     const currentNodeVersionIndex =
-        nodeVersions?.findIndex?.((nodeVersion) => nodeVersion.id === nv.id) ??
-        -1
+        nodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1
     const lastApprovedNodeVersion = nodeVersions?.findLast(
         (nv, i) =>
             nv.status === NodeVersionStatus.NodeVersionStatusActive &&
@@ -307,6 +309,16 @@ export function NodeStatusReason(nv: NodeVersion) {
                                         zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason
+                                    }${
+                                        zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.batchId
+                                            ? ` [Batch: ${
+                                                  zStatusReason.safeParse(
+                                                      nv.status_reason
+                                                  ).data?.batchId
+                                              }]`
+                                            : ''
                                     }`}
                                 >
                                     <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[8rem] justify-end flex-0 justify-between">
@@ -344,11 +356,34 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             zStatusReason.safeParse(
                                                 nv.status_reason
                                             ).data?.message ?? nv.status_reason
+                                        }${
+                                            zStatusReason.safeParse(
+                                                nv.status_reason
+                                            ).data?.batchId
+                                                ? ` [Batch: ${
+                                                      zStatusReason.safeParse(
+                                                          nv.status_reason
+                                                      ).data?.batchId
+                                                  }]`
+                                                : ''
                                         }`}
                                     >
                                         {zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason}
+                                        {zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.batchId && (
+                                            <span className="ml-2 text-xs text-gray-500">
+                                                [Batch:{' '}
+                                                {
+                                                    zStatusReason.safeParse(
+                                                        nv.status_reason
+                                                    ).data?.batchId
+                                                }
+                                                ]
+                                            </span>
+                                        )}
                                     </code>
                                 </li>
                             ))}
