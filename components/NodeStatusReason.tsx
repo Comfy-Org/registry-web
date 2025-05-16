@@ -99,7 +99,7 @@ export const zStatusReason = z.object({
 
     // statusHistory, allow undo
     statusHistory: zStatusHistory.optional(),
-    
+
     // batchId for batch operations (for future batch-undo)
     batchId: z.string().optional(),
 })
@@ -312,10 +312,12 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     }${
                                         zStatusReason.safeParse(
                                             nv.status_reason
-                                        ).data?.batchId 
-                                            ? ` [Batch: ${zStatusReason.safeParse(
-                                                nv.status_reason
-                                            ).data?.batchId}]` 
+                                        ).data?.batchId
+                                            ? ` [Batch: ${
+                                                  zStatusReason.safeParse(
+                                                      nv.status_reason
+                                                  ).data?.batchId
+                                              }]`
                                             : ''
                                     }`}
                                 >
@@ -357,10 +359,12 @@ export function NodeStatusReason(nv: NodeVersion) {
                                         }${
                                             zStatusReason.safeParse(
                                                 nv.status_reason
-                                            ).data?.batchId 
-                                                ? ` [Batch: ${zStatusReason.safeParse(
-                                                    nv.status_reason
-                                                ).data?.batchId}]` 
+                                            ).data?.batchId
+                                                ? ` [Batch: ${
+                                                      zStatusReason.safeParse(
+                                                          nv.status_reason
+                                                      ).data?.batchId
+                                                  }]`
                                                 : ''
                                         }`}
                                     >
@@ -371,9 +375,13 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             nv.status_reason
                                         ).data?.batchId && (
                                             <span className="ml-2 text-xs text-gray-500">
-                                                [Batch: {zStatusReason.safeParse(
-                                                    nv.status_reason
-                                                ).data?.batchId}]
+                                                [Batch:{' '}
+                                                {
+                                                    zStatusReason.safeParse(
+                                                        nv.status_reason
+                                                    ).data?.batchId
+                                                }
+                                                ]
                                             </span>
                                         )}
                                     </code>

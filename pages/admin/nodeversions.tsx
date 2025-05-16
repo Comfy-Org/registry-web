@@ -409,9 +409,9 @@ function NodeVersionList({}) {
         }
 
         // todo: search for this batchId and get a list of nodeVersions
-        // 
+        //
         // and show the list for confirmation
-        // 
+        //
         // and undo all of them
 
         // // Ask for confirmation
