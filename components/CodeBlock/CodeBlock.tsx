@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { IoIosInformationCircle } from 'react-icons/io'
 
 const CopyableCodeBlock = ({ code }) => {
@@ -27,7 +27,7 @@ const CopyableCodeBlock = ({ code }) => {
                         title="Install Comfy CLI with: npm install -g comfy-cli"
                     />
                 </a>
-                <pre className="text-xs">{code}</pre>
+                <pre className="text-xs pr-[5em]">{code}</pre>
                 <button
                     onClick={handleCopy}
                     className={`absolute top-4 right-4 text-xs py-1 px-2 rounded ${
