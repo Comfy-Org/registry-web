@@ -59,7 +59,7 @@
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.56.3",
-    "react-icons": "^5.5.0",
+    "react-icons": "5.4.0",
     "react-instantsearch": "^7.15.7",
     "react-instantsearch-router-nextjs": "^7.15.7",
     "react-intersection-observer": "^9.16.0",
