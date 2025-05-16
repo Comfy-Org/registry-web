@@ -19,9 +19,9 @@ const withAdmin = (WrappedComponent) => {
                 // Add cache configuration for this particular query
                 staleTime: 5 * 60 * 1000, // 5 minutes
                 gcTime: 60 * 60 * 1000, // 1 hour (previously cacheTime)
-            }
+            },
         })
-        
+
         useEffect(() => {
             if (!isLoading && !user) {
                 router.push(`/auth/login?fromUrl=${router.asPath}`)
