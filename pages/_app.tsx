@@ -38,8 +38,8 @@ const persistEffect = () =>
                 }
                 if (persistKeys[String(queryKey[0])]) return true
 
-                // Persist all queries with 'nodes' in the key for now
-                return true
+                // Persist all queries with 'nodes' in the key for future
+                return false
             },
         },
     })[0]
