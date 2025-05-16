@@ -99,6 +99,9 @@ export const zStatusReason = z.object({
 
     // statusHistory, allow undo
     statusHistory: zStatusHistory.optional(),
+    
+    // batchId for batch operations (for future batch-undo)
+    batchId: z.string().optional(),
 })
 
 export function NodeStatusReason(nv: NodeVersion) {
@@ -306,6 +309,14 @@ export function NodeStatusReason(nv: NodeVersion) {
                                         zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason
+                                    }${
+                                        zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.batchId 
+                                            ? ` [Batch: ${zStatusReason.safeParse(
+                                                nv.status_reason
+                                            ).data?.batchId}]` 
+                                            : ''
                                     }`}
                                 >
                                     <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[8rem] justify-end flex-0 justify-between">
@@ -343,11 +354,28 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             zStatusReason.safeParse(
                                                 nv.status_reason
                                             ).data?.message ?? nv.status_reason
+                                        }${
+                                            zStatusReason.safeParse(
+                                                nv.status_reason
+                                            ).data?.batchId 
+                                                ? ` [Batch: ${zStatusReason.safeParse(
+                                                    nv.status_reason
+                                                ).data?.batchId}]` 
+                                                : ''
                                         }`}
                                     >
                                         {zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason}
+                                        {zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.batchId && (
+                                            <span className="ml-2 text-xs text-gray-500">
+                                                [Batch: {zStatusReason.safeParse(
+                                                    nv.status_reason
+                                                ).data?.batchId}]
+                                            </span>
+                                        )}
                                     </code>
                                 </li>
                             ))}
