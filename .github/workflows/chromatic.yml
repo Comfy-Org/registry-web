@@ -8,7 +8,7 @@ on:
 
 permissions:
     issues: write # Required for Chromatic to comment on PRs
-
+    pull-requests: write # Required for Chromatic to comment on PRs
 jobs:
     chromatic-deployment:
         name: Deploy Storybook to Chromatic
