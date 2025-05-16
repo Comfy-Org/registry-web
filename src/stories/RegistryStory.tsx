@@ -40,6 +40,9 @@ const RegistryStory: React.FC = () => {
             <p className="text-gray-400 mt-2">
               In the real application, these would be dynamically loaded from Algolia search.
             </p>
+            <span>
+                test catch ui change
+            </span>
           </div>
         </div>
 
