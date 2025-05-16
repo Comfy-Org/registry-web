@@ -16,11 +16,14 @@ const HitWrapper = (props) => {
   const mockHit = {
     id: props.id || '123',
     name: props.name || 'Node Name',
-    description: props.description || 'Thsis is a description of the node',
+    description: props.description || 'This is a description of the node',
     publisher_id: props.publisherId || 'pub-123',
     total_install: props.totalInstall || 1500,
     latest_version: props.latestVersion || '1.2.3',
     comfy_nodes: props.comfyNodes || ['node1', 'node2'],
+    // Add required Algolia Hit properties
+    __position: 1,
+    __queryID: 'sample-query-id',
     _highlightResult: {
       comfy_nodes: props.comfyNodes?.map(node => ({
         value: node,
