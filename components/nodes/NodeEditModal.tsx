@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
-
-import nodesLogo from '../../public/images/nodelogo2.png'
 import Image from 'next/image'
-import { NodeLogoModal } from './NodeLogoModal'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import { Error, Node, useUpdateNode } from 'src/api/generated'
 import {
     CustomThemeTextArea,
     customThemeTextInput,
     customThemeTModal,
 } from 'utils/comfyTheme'
-import { Error, Node, useUpdateNode } from 'src/api/generated'
-import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
+import nodesLogo from '../../public/images/nodelogo2.png'
 
 type NodeEditModalProps = {
     openEditModal: boolean
@@ -28,7 +26,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
 }) => {
     const updateNodeMutation = useUpdateNode({})
     const [nodeName, setNodeName] = useState('')
-    const [openLogoModal, setOpenLogoModal] = useState(false)
+    // const [openLogoModal, setOpenLogoModal] = useState(false)
     const [description, setDescription] = useState('')
     const [license, setLicense] = useState('')
     const [githubLink, setGithubLink] = useState('')
@@ -41,14 +39,14 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             setGithubLink(nodeData.repository || '')
         }
     }, [nodeData])
-    const handleOpenLogoModal = () => {
-        onCloseEditModal()
-        setOpenLogoModal(true)
-    }
+    // const handleOpenLogoModal = () => {
+    //     onCloseEditModal()
+    //     setOpenLogoModal(true)
+    // }
 
-    const handleCloseLogoModal = () => {
-        setOpenLogoModal(false)
-    }
+    // const handleCloseLogoModal = () => {
+    //     setOpenLogoModal(false)
+    // }
 
     const handleUpdateNode = () => {
         if (nodeData.id) {
@@ -107,7 +105,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                 height={200}
                                 className=""
                             />
-                            <div className="absolute right-[-5px] px-4 text-lg text-white top-[180px]">
+                            {/* <div className="absolute right-[-5px] px-4 text-lg text-white top-[180px]">
                                 <div
                                     className="p-2 bg-gray-500 rounded-full"
                                     onClick={handleOpenLogoModal}
@@ -128,7 +126,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                         />
                                     </svg>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="space-y-6 min-w-[350px]">
                             <div>
@@ -228,10 +226,10 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                     </div>
                 </Modal.Body>
             </Modal>
-            <NodeLogoModal
+            {/* <NodeLogoModal
                 openLogoModal={openLogoModal}
                 onCloseModal={handleCloseLogoModal}
-            />
+            /> */}
         </>
     )
 }
