@@ -362,6 +362,13 @@ function NodeVersionList({}) {
         message?: string | null,
         batchId?: string
     ) => {
+        if (nv.status !== NodeVersionStatus.NodeVersionStatusFlagged) {
+            toast.error(
+                `Node version ${nv.node_id}@${nv.version} is not flagged, skip`
+            )
+            return
+        }
+
         message ||= prompt('Approve Reason: ', 'Approved by admin')
         if (!message) return toast.error('Please provide a reason')
 
@@ -378,6 +385,12 @@ function NodeVersionList({}) {
         message?: string | null,
         batchId?: string
     ) => {
+        if (nv.status !== NodeVersionStatus.NodeVersionStatusFlagged) {
+            toast.error(
+                `Node version ${nv.node_id}@${nv.version} is not flagged, skip`
+            )
+            return
+        }
         message ||= prompt('Reject Reason: ', 'Rejected by admin')
         if (!message) return toast.error('Please provide a reason')
 
@@ -1037,19 +1050,24 @@ function NodeVersionList({}) {
                         <NodeStatusReason {...nv} />
 
                         <div className="flex gap-2">
-                            <Button
-                                color="blue"
-                                className="flex"
-                                onClick={() => onApprove(nv)}
-                            >
-                                Approve
-                            </Button>
-                            <Button
-                                color="failure"
-                                onClick={() => onReject(nv)}
-                            >
-                                Reject
-                            </Button>
+                            {nv.status ===
+                                NodeVersionStatus.NodeVersionStatusFlagged && (
+                                <>
+                                    <Button
+                                        color="blue"
+                                        className="flex"
+                                        onClick={() => onApprove(nv)}
+                                    >
+                                        Approve
+                                    </Button>
+                                    <Button
+                                        color="failure"
+                                        onClick={() => onReject(nv)}
+                                    >
+                                        Reject
+                                    </Button>
+                                </>
+                            )}
 
                             {checkIsUndoable(nv) && (
                                 <Button color="gray" onClick={() => onUndo(nv)}>
