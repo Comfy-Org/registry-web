@@ -62,7 +62,7 @@ function NodeVersionList({}) {
         deleted: NodeVersionStatus.NodeVersionStatusDeleted,
         pending: NodeVersionStatus.NodeVersionStatusPending,
         active: NodeVersionStatus.NodeVersionStatusActive,
-    } // satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
+    } satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
     const flagColors = {
         all: 'success',
         flagged: 'warning',
@@ -109,6 +109,7 @@ function NodeVersionList({}) {
         useState(false)
 
     const queryForNodeId = router.query.nodeId as string
+    const queryForStatusReason = router.query.statusReason as string
 
     const getAllNodeVersionsQuery = useListAllNodeVersions(
         {
@@ -116,9 +117,10 @@ function NodeVersionList({}) {
             pageSize: 8,
             statuses: selectedStatus,
             include_status_reason: true,
+            status_reason: queryForStatusReason || undefined,
 
             // failed to filter, TODO: fix this in the backend
-            // nodeId: queryForNodeId ?? undefined,
+            // nodeId: queryForNodeId || undefined,
         },
         { query: { enabled: !queryForNodeId } }
     )
@@ -795,6 +797,32 @@ function NodeVersionList({}) {
                     />
 
                     <Button color="blue">Search</Button>
+                </form>
+                <form
+                    className="flex gap-2 items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        const inputElement = document.getElementById(
+                            'filter-status-reason'
+                        ) as HTMLInputElement
+                        const statusReason = inputElement.value.trim()
+                        const searchParams = new URLSearchParams({
+                            ...(omit(['statusReason'])(router.query) as object),
+                            ...(statusReason ? { statusReason } : {}),
+                        })
+                            .toString()
+                            .replace(/^(?!$)/, '?')
+                        router.push(
+                            router.pathname + searchParams + location.hash
+                        )
+                    }}
+                >
+                    <TextInput
+                        id="filter-status-reason"
+                        placeholder="Filter by status reason"
+                        defaultValue={queryForStatusReason || ''}
+                    />
+                    <Button color="blue">Search by Reason</Button>
                 </form>
                 <div className="flex gap-2">
                     <Button
