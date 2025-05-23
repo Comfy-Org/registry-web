@@ -18,6 +18,21 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query'
 import { customInstance } from './mutator/axios-instance';
+export type MetronomeZeroBalanceBodyProperties = {
+  /** the metronome customer id */
+  customer_id?: string;
+  /** the customer remaining balance */
+  remaining_balance?: number;
+};
+
+export type MetronomeZeroBalanceBody = {
+  /** the id of the webhook */
+  id: string;
+  properties: MetronomeZeroBalanceBodyProperties;
+  /** the type of the webhook */
+  type: string;
+};
+
 export type ListAllNodeVersions200 = {
   /** Current page number */
   page?: number;
@@ -42,6 +57,10 @@ page?: number;
  * The number of items to include per page.
  */
 pageSize?: number;
+/**
+ * search for status_reason, case insensitive
+ */
+status_reason?: string;
 };
 
 export type PostUploadArtifact200 = {
@@ -173,6 +192,664 @@ export type ValidatePublisherParams = {
  */
 username: string;
 };
+
+export type TripoGetBalance200 = {
+  code: TripoResponseSuccessCode;
+  data: TripoBalance;
+};
+
+export type TripoUploadFile200Data = {
+  image_token: string;
+};
+
+export type TripoUploadFile200 = {
+  code: TripoResponseSuccessCode;
+  data: TripoUploadFile200Data;
+};
+
+export type TripoUploadFileBody = {
+  file: Blob;
+};
+
+export type TripoGetTask200 = {
+  code: TripoResponseSuccessCode;
+  data: TripoTask;
+};
+
+export type TripoCreateTaskBodyOneOfOnetwo = {
+  face_limit?: number;
+  flatten_bottom?: boolean;
+  flatten_bottom_threshold?: number;
+  force_symmetry?: boolean;
+  format: TripoConvertFormat;
+  original_model_task_id: string;
+  pivot_to_center_bottom?: boolean;
+  quad?: boolean;
+  texture_format?: TripoTextureFormat;
+  texture_size?: number;
+  type: TripoTypeConvertModel;
+};
+
+export type TripoCreateTaskBodyOneOfOneone = {
+  block_size?: number;
+  original_model_task_id: string;
+  style: TripoStylizeOptions;
+  type: TripoTypeStylizeModel;
+};
+
+export type TripoCreateTaskBodyOneOfOnezero = {
+  animation: TripoAnimation;
+  bake_animation?: boolean;
+  original_model_task_id: string;
+  out_format?: TripoStandardFormat;
+  type: TripoTypeAnimateRetarget;
+};
+
+export type TripoCreateTaskBodyOneOfNine = {
+  original_model_task_id: string;
+  out_format?: TripoStandardFormat;
+  spec?: TripoSpec;
+  topology?: TripoTopology;
+  type: TripoTypeAnimateRig;
+};
+
+export type TripoCreateTaskBodyOneOfEight = {
+  original_model_task_id: string;
+  type: TripoTypeAnimatePrerigcheck;
+};
+
+export type TripoCreateTaskBodyOneOfSeven = {
+  draft_model_task_id: string;
+  type: TripoTypeRefineModel;
+};
+
+export type TripoCreateTaskBodyOneOfSix = {
+  model_seed?: number;
+  original_model_task_id: string;
+  pbr?: boolean;
+  texture?: boolean;
+  texture_alignment?: TripoTextureAlignment;
+  texture_quality?: TripoTextureQuality;
+  texture_seed?: number;
+  type: TripoTypeTextureModel;
+};
+
+export type TripoCreateTaskBodyOneOfFourFilesItem = {
+  file_token: string;
+  type: string;
+};
+
+export type TripoCreateTaskBodyOneOfFour = {
+  auto_size?: boolean;
+  face_limit?: number;
+  files: TripoCreateTaskBodyOneOfFourFilesItem[];
+  mode?: TripoMultiviewMode;
+  model_seed?: number;
+  model_version?: TripoModelVersion;
+  orientation?: TripoOrientation;
+  orthographic_projection?: boolean;
+  pbr?: boolean;
+  quad?: boolean;
+  texture?: boolean;
+  texture_alignment?: TripoTextureAlignment;
+  texture_quality?: TripoTextureQuality;
+  texture_seed?: number;
+  type: TripoMultiviewToModel;
+};
+
+export type TripoCreateTaskBody = TripoCreateTaskBodyOneOf | TripoCreateTaskBodyOneOfTwo | TripoCreateTaskBodyOneOfFour | TripoCreateTaskBodyOneOfSix | TripoCreateTaskBodyOneOfSeven | TripoCreateTaskBodyOneOfEight | TripoCreateTaskBodyOneOfNine | TripoCreateTaskBodyOneOfOnezero | TripoCreateTaskBodyOneOfOneone | TripoCreateTaskBodyOneOfOnetwo;
+
+export type TripoCreateTaskBodyOneOfTwoFile = {
+  file_token: string;
+  type: string;
+};
+
+export type TripoCreateTaskBodyOneOfTwo = {
+  auto_size?: boolean;
+  face_limit?: number;
+  file: TripoCreateTaskBodyOneOfTwoFile;
+  model_seed?: number;
+  model_version?: TripoModelVersion;
+  orientation?: TripoOrientation;
+  pbr?: boolean;
+  quad?: boolean;
+  style?: TripoModelStyle;
+  texture?: boolean;
+  texture_alignment?: TripoTextureAlignment;
+  texture_quality?: TripoTextureQuality;
+  texture_seed?: number;
+  type: TripoImageToModel;
+};
+
+export type TripoCreateTaskBodyOneOf = {
+  auto_size?: boolean;
+  face_limit?: number;
+  model_seed?: number;
+  model_version?: TripoModelVersion;
+  /** @maxLength 1024 */
+  negative_prompt?: string;
+  pbr?: boolean;
+  /** @maxLength 1024 */
+  prompt: string;
+  quad?: boolean;
+  style?: TripoModelStyle;
+  text_seed?: number;
+  texture?: boolean;
+  texture_quality?: TripoTextureQuality;
+  texture_seed?: number;
+  type: TripoTextToModel;
+};
+
+export type StabilityImageGenrationUltra500 = {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+};
+
+export type StabilityImageGenrationUltra429 = {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+};
+
+export type StabilityImageGenrationUltra422 = {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+};
+
+export type StabilityImageGenrationUltra413 = {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+};
+
+export type StabilityImageGenrationUltra400 = {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+};
+
+/**
+ * The reason the generation finished. - `SUCCESS` = successful generation. - `CONTENT_FILTERED` = successful generation, however the output violated our content moderation policy and has been blurred as a result.
+ */
+export type StabilityImageGenrationUltra200ThreeFinishReason = typeof StabilityImageGenrationUltra200ThreeFinishReason[keyof typeof StabilityImageGenrationUltra200ThreeFinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUltra200ThreeFinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export type StabilityImageGenrationUltra200Three = {
+  /** The reason the generation finished. - `SUCCESS` = successful generation. - `CONTENT_FILTERED` = successful generation, however the output violated our content moderation policy and has been blurred as a result. */
+  finish_reason: StabilityImageGenrationUltra200ThreeFinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+};
+
+/**
+ * The reason the generation finished. - `SUCCESS` = successful generation. - `CONTENT_FILTERED` = successful generation, however the output violated our content moderation policy and has been blurred as a result.
+ */
+export type StabilityImageGenrationUltra200TwoFinishReason = typeof StabilityImageGenrationUltra200TwoFinishReason[keyof typeof StabilityImageGenrationUltra200TwoFinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUltra200TwoFinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export type StabilityImageGenrationUltra200Two = {
+  /** The reason the generation finished. - `SUCCESS` = successful generation. - `CONTENT_FILTERED` = successful generation, however the output violated our content moderation policy and has been blurred as a result. */
+  finish_reason: StabilityImageGenrationUltra200TwoFinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+};
+
+/**
+ * The reason the generation finished. - `SUCCESS` = successful generation. - `CONTENT_FILTERED` = successful generation, however the output violated our content moderation policy and has been blurred as a result.
+ */
+export type StabilityImageGenrationUltra200OneFinishReason = typeof StabilityImageGenrationUltra200OneFinishReason[keyof typeof StabilityImageGenrationUltra200OneFinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUltra200OneFinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export type StabilityImageGenrationUltra200One = {
+  /** The reason the generation finished. - `SUCCESS` = successful generation. - `CONTENT_FILTERED` = successful generation, however the output violated our content moderation policy and has been blurred as a result. */
+  finish_reason: StabilityImageGenrationUltra200OneFinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+};
+
+/**
+ * Guides the image model towards a particular style.
+ */
+export type StabilityImageGenrationUltraBodyStylePreset = typeof StabilityImageGenrationUltraBodyStylePreset[keyof typeof StabilityImageGenrationUltraBodyStylePreset];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUltraBodyStylePreset = {
+  enhance: 'enhance',
+  anime: 'anime',
+  photographic: 'photographic',
+  'digital-art': 'digital-art',
+  'comic-book': 'comic-book',
+  'fantasy-art': 'fantasy-art',
+  'line-art': 'line-art',
+  'analog-film': 'analog-film',
+  'neon-punk': 'neon-punk',
+  isometric: 'isometric',
+  'low-poly': 'low-poly',
+  origami: 'origami',
+  'modeling-compound': 'modeling-compound',
+  cinematic: 'cinematic',
+  '3d-model': '3d-model',
+  'pixel-art': 'pixel-art',
+  'tile-texture': 'tile-texture',
+} as const;
+
+/**
+ * Dictates the `content-type` of the generated image.
+ */
+export type StabilityImageGenrationUltraBodyOutputFormat = typeof StabilityImageGenrationUltraBodyOutputFormat[keyof typeof StabilityImageGenrationUltraBodyOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUltraBodyOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+  webp: 'webp',
+} as const;
+
+/**
+ * Controls the aspect ratio of the generated image.
+ */
+export type StabilityImageGenrationUltraBodyAspectRatio = typeof StabilityImageGenrationUltraBodyAspectRatio[keyof typeof StabilityImageGenrationUltraBodyAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUltraBodyAspectRatio = {
+  '21:9': '21:9',
+  '16:9': '16:9',
+  '3:2': '3:2',
+  '5:4': '5:4',
+  '1:1': '1:1',
+  '4:5': '4:5',
+  '2:3': '2:3',
+  '9:16': '9:16',
+  '9:21': '9:21',
+} as const;
+
+export type StabilityImageGenrationUltraBody = {
+  /** Controls the aspect ratio of the generated image. */
+  aspect_ratio?: StabilityImageGenrationUltraBodyAspectRatio;
+  /** The image to use as the starting point for the generation. > **Important:** The `strength` parameter is required when `image` is provided. Supported Formats: - jpeg - png - webp Validation Rules: - Width must be between 64 and 16,384 pixels - Height must be between 64 and 16,384 pixels - Total pixel count must be at least 4,096 pixels */
+  image?: Blob;
+  /**
+   * A blurb of text describing what you **do not** wish to see in the output image. This is an advanced feature.
+   * @maxLength 10000
+   */
+  negative_prompt?: string;
+  /** Dictates the `content-type` of the generated image. */
+  output_format?: StabilityImageGenrationUltraBodyOutputFormat;
+  /**
+   * What you wish to see in the output image. A strong, descriptive prompt that clearly defines elements, colors, and subjects will lead to better results. To control the weight of a given word use the format `(word:weight)`, where `word` is the word you'd like to control the weight of and `weight` is a value between 0 and 1. For example: `The sky was a crisp (blue:0.3) and (green:0.8)` would convey a sky that was blue and green, but more green than blue.
+   * @minLength 1
+   * @maxLength 10000
+   */
+  prompt: string;
+  /**
+   * A specific value that is used to guide the 'randomness' of the generation. (Omit this parameter or pass `0` to use a random seed.)
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+  /**
+   * Sometimes referred to as _denoising_, this parameter controls how much influence the 
+`image` parameter has on the generated image.  A value of 0 would yield an image that 
+is identical to the input.  A value of 1 would be as if you passed in no image at all.
+
+> **Important:** This parameter is required when `image` is provided.
+   * @minimum 0
+   * @maximum 1
+   */
+  strength?: number;
+  /** Guides the image model towards a particular style. */
+  style_preset?: StabilityImageGenrationUltraBodyStylePreset;
+};
+
+/**
+ * The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+  policy and has been blurred as a result.
+ */
+export type StabilityGetResult200ThreeFinishReason = typeof StabilityGetResult200ThreeFinishReason[keyof typeof StabilityGetResult200ThreeFinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityGetResult200ThreeFinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export type StabilityGetResult200Three = {
+  /** The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+  policy and has been blurred as a result. */
+  finish_reason: StabilityGetResult200ThreeFinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+};
+
+/**
+ * The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+  policy and has been blurred as a result.
+ */
+export type StabilityGetResult200TwoFinishReason = typeof StabilityGetResult200TwoFinishReason[keyof typeof StabilityGetResult200TwoFinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityGetResult200TwoFinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export type StabilityGetResult200Two = {
+  /** The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+  policy and has been blurred as a result. */
+  finish_reason: StabilityGetResult200TwoFinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+};
+
+/**
+ * The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+  policy and has been blurred as a result.
+ */
+export type StabilityGetResult200OneFinishReason = typeof StabilityGetResult200OneFinishReason[keyof typeof StabilityGetResult200OneFinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityGetResult200OneFinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export type StabilityGetResult200One = {
+  /** The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+  policy and has been blurred as a result. */
+  finish_reason: StabilityGetResult200OneFinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+};
+
+export type RecraftVectorizeBody = {
+  /** Image file to process */
+  file: Blob;
+};
+
+export type RecraftRemoveBackground200Image = {
+  /** URL of the processed image */
+  url?: string;
+};
+
+export type RecraftRemoveBackground200 = {
+  image?: RecraftRemoveBackground200Image;
+};
+
+export type RecraftRemoveBackgroundBody = {
+  /** Image file to process */
+  file: Blob;
+};
+
+export type RecraftCrispUpscaleBody = {
+  /** Image file to process */
+  file: Blob;
+};
+
+export type PixverseUploadImageBody = {
+  image?: Blob;
+};
+
+export type GetOpenAIResponseParams = {
+/**
+ * Additional fields to include in the response. See the `include`
+parameter for Response creation above for more information.
+
+ */
+include?: Includable[];
+};
+
+export type MoonvalleyUploadFileBody = {
+  file?: Blob;
+};
+
+export type GetMinimaxVideoGenerationParams = {
+/**
+ * The task ID to be queried
+ */
+task_id: string;
+};
+
+export type RetrieveMinimaxFileParams = {
+/**
+ * Unique identifier for the file, obtained from the generation response
+ */
+file_id: number;
+};
+
+export type KlingVideoExtendQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingText2VideoQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingLipSyncQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingImage2VideoQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingVideoEffectsQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingVirtualTryOnQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingImageGenerationsQueryTaskListParams = {
+/**
+ * Page number
+ */
+pageNum?: number;
+/**
+ * Data volume per page
+ */
+pageSize?: number;
+};
+
+export type KlingQueryResourcePackagesParams = {
+start_time: number;
+end_time: number;
+resource_pack_name?: string;
+};
+
+export type DummyProxyBody = {
+  message?: string;
+};
+
+export type BFLFillV1FluxPro10FillPost200 = BFLAsyncResponse | BFLAsyncWebhookResponse;
+
+export type BFLExpandV1FluxPro10ExpandPost200 = BFLAsyncResponse | BFLAsyncWebhookResponse;
+
+export type BFLProDepthV1FluxPro10DepthPost200 = BFLAsyncResponse | BFLAsyncWebhookResponse;
+
+export type BFLProCannyV1FluxPro10CannyPost200 = BFLAsyncResponse | BFLAsyncWebhookResponse;
 
 export type CreateComfyNodesBodyNodes = {[key: string]: ComfyNode};
 
@@ -389,6 +1066,161 @@ pageSize?: number;
 repoName?: string;
 };
 
+export type GetCustomerEventsById200 = {
+  events?: AuditLog[];
+  /** Maximum number of nodes per page */
+  limit?: number;
+  /** Current page number */
+  page?: number;
+  /** Total number of events available */
+  total?: number;
+  /** Total number of pages available */
+  totalPages?: number;
+};
+
+export type GetCustomerEventsByIdParams = {
+/**
+ * Page number of the nodes list
+ */
+page?: number;
+/**
+ * Number of nodes to return per page
+ */
+limit?: number;
+/**
+ * Event type to filter
+ */
+filter?: string;
+};
+
+export type GetCustomerBalanceById200 = {
+  /** The remaining balance in microamount (1/1,000,000 of the currency unit) */
+  amount_micros: number;
+  /** The currency code (e.g., "usd") */
+  currency: string;
+};
+
+export type GetCustomerById200 = {
+  customer?: Customer;
+};
+
+export type GetCustomerUsage200 = {
+  /** The dashboard URL for the customer's usage */
+  url?: string;
+};
+
+export type CreateCustomerStorageResourceBody = {
+  /** The content type of the file (e.g., 'image/png') */
+  content_type?: string;
+  /** The hash of the file. If provided, an existing file with the same hash may be returned. */
+  file_hash?: string;
+  /** The desired name of the file (e.g., 'profile.jpg') */
+  file_name: string;
+};
+
+export type GetCustomerEvents200 = {
+  events?: AuditLog[];
+  /** Maximum number of nodes per page */
+  limit?: number;
+  /** Current page number */
+  page?: number;
+  /** Total number of events available */
+  total?: number;
+  /** Total number of pages available */
+  totalPages?: number;
+};
+
+export type GetCustomerEventsParams = {
+/**
+ * Page number of the nodes list
+ */
+page?: number;
+/**
+ * Number of nodes to return per page
+ */
+limit?: number;
+/**
+ * Event type to filter
+ */
+filter?: string;
+};
+
+export type InitiateCreditPurchase201 = {
+  /** the url to redirect the customer */
+  checkout_url?: string;
+};
+
+export type InitiateCreditPurchaseBody = {
+  /** the amount of the checkout transaction in micro value */
+  amount_micros: number;
+  /** the currency used in the checkout transaction */
+  currency: string;
+};
+
+export type AccessBillingPortal200 = {
+  /** The URL to redirect the customer to the billing portal */
+  billing_portal_url?: string;
+};
+
+export type AccessBillingPortalBody = {
+  /** Optional URL to redirect the customer after they're done with the billing portal */
+  return_url?: string;
+};
+
+export type GetCustomerBalance200 = {
+  /** The remaining balance in microamount (1/1,000,000 of the currency unit) */
+  amount_micros: number;
+  /** The currency code (e.g., "usd") */
+  currency: string;
+};
+
+export type CreateCustomerAPIKey201 = {
+  api_key?: APIKeyWithPlaintext;
+};
+
+export type ListCustomerAPIKeys200 = {
+  api_keys?: APIKey[];
+};
+
+export type SearchCustomers200 = {
+  customers?: Customer[];
+  /** Number of customers per page */
+  limit?: number;
+  /** Current page number */
+  page?: number;
+  /** Total number of matching customers */
+  total?: number;
+  /** Total number of pages available */
+  totalPages?: number;
+};
+
+export type SearchCustomersParams = {
+/**
+ * Email address to search for
+ */
+email?: string;
+/**
+ * Customer name to search for
+ */
+name?: string;
+/**
+ * Stripe customer ID to search for
+ */
+stripe_id?: string;
+/**
+ * Metronome customer ID to search for\
+ */
+metronome_id?: string;
+/**
+ * Page number to retrieve
+ */
+page?: number;
+/**
+ * Number of customers to return per page
+ */
+limit?: number;
+};
+
 export type ComfyNodesBackfillParams = {
 max_node?: number;
 };
@@ -420,6 +1252,181 @@ export const WorkflowRunStatus = {
   WorkflowRunStatusCompleted: 'WorkflowRunStatusCompleted',
 } as const;
 
+/**
+ * The type of the web search tool call. Always `web_search_call`.
+
+ */
+export type WebSearchToolCallType = typeof WebSearchToolCallType[keyof typeof WebSearchToolCallType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const WebSearchToolCallType = {
+  web_search_call: 'web_search_call',
+} as const;
+
+/**
+ * The status of the web search tool call.
+
+ */
+export type WebSearchToolCallStatus = typeof WebSearchToolCallStatus[keyof typeof WebSearchToolCallStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const WebSearchToolCallStatus = {
+  in_progress: 'in_progress',
+  searching: 'searching',
+  completed: 'completed',
+  failed: 'failed',
+} as const;
+
+/**
+ * The results of a web search tool call. See the 
+[web search guide](/docs/guides/tools-web-search) for more information.
+
+ */
+export interface WebSearchToolCall {
+  /** The unique ID of the web search tool call.
+ */
+  id: string;
+  /** The status of the web search tool call.
+ */
+  status: WebSearchToolCallStatus;
+  /** The type of the web search tool call. Always `web_search_call`.
+ */
+  type: WebSearchToolCallType;
+}
+
+/**
+ * The type of the web search tool. One of `web_search_preview` or `web_search_preview_2025_03_11`.
+ */
+export type WebSearchPreviewToolType = typeof WebSearchPreviewToolType[keyof typeof WebSearchPreviewToolType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const WebSearchPreviewToolType = {
+  web_search_preview: 'web_search_preview',
+  web_search_preview_2025_03_11: 'web_search_preview_2025_03_11',
+} as const;
+
+/**
+ * High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.
+ */
+export type WebSearchPreviewToolSearchContextSize = typeof WebSearchPreviewToolSearchContextSize[keyof typeof WebSearchPreviewToolSearchContextSize];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const WebSearchPreviewToolSearchContextSize = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+/**
+ * This tool searches the web for relevant results to use in a response. Learn more about the [web search tool](https://platform.openai.com/docs/guides/tools-web-search).
+ */
+export interface WebSearchPreviewTool {
+  /** High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default. */
+  search_context_size?: WebSearchPreviewToolSearchContextSize;
+  /** The type of the web search tool. One of `web_search_preview` or `web_search_preview_2025_03_11`. */
+  type: WebSearchPreviewToolType;
+}
+
+export interface Veo2GenVidResponse {
+  /** Operation resource name */
+  name: string;
+}
+
+export type Veo2GenVidRequestParametersPersonGeneration = typeof Veo2GenVidRequestParametersPersonGeneration[keyof typeof Veo2GenVidRequestParametersPersonGeneration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Veo2GenVidRequestParametersPersonGeneration = {
+  ALLOW: 'ALLOW',
+  BLOCK: 'BLOCK',
+} as const;
+
+export type Veo2GenVidRequestParameters = {
+  aspectRatio?: string;
+  durationSeconds?: number;
+  enhancePrompt?: boolean;
+  negativePrompt?: string;
+  personGeneration?: Veo2GenVidRequestParametersPersonGeneration;
+  sampleCount?: number;
+  seed?: number;
+  /** Optional Cloud Storage URI to upload the video */
+  storageUri?: string;
+};
+
+/**
+ * Optional image to guide video generation
+ */
+export type Veo2GenVidRequestInstancesItemImage = (unknown & {
+  bytesBase64Encoded?: string;
+  gcsUri?: string;
+  mimeType?: string;
+}) | (unknown & {
+  bytesBase64Encoded?: string;
+  gcsUri?: string;
+  mimeType?: string;
+});
+
+export type Veo2GenVidRequestInstancesItem = {
+  /** Optional image to guide video generation */
+  image?: Veo2GenVidRequestInstancesItemImage;
+  /** Text description of the video */
+  prompt: string;
+};
+
+export interface Veo2GenVidRequest {
+  instances?: Veo2GenVidRequestInstancesItem[];
+  parameters?: Veo2GenVidRequestParameters;
+}
+
+export type Veo2GenVidPollResponseResponseVideosItem = {
+  /** Base64-encoded video content */
+  bytesBase64Encoded?: string;
+  /** Cloud Storage URI of the video */
+  gcsUri?: string;
+  /** Video MIME type */
+  mimeType?: string;
+};
+
+/**
+ * The actual prediction response if done is true
+ */
+export type Veo2GenVidPollResponseResponse = {
+  '@type'?: string;
+  /** Count of media filtered by responsible AI policies */
+  raiMediaFilteredCount?: number;
+  /** Reasons why media was filtered by responsible AI policies */
+  raiMediaFilteredReasons?: string[];
+  videos?: Veo2GenVidPollResponseResponseVideosItem[];
+};
+
+/**
+ * Error details if operation failed
+ */
+export type Veo2GenVidPollResponseError = {
+  /** Error code */
+  code?: number;
+  /** Error message */
+  message?: string;
+};
+
+export interface Veo2GenVidPollResponse {
+  done?: boolean;
+  /** Error details if operation failed */
+  error?: Veo2GenVidPollResponseError;
+  name?: string;
+  /** The actual prediction response if done is true */
+  response?: Veo2GenVidPollResponseResponse;
+}
+
+export interface Veo2GenVidPollRequest {
+  /** Full operation name (from predict response) */
+  operationName: string;
+}
+
 export interface User {
   /** The email address for this user. */
   email?: string;
@@ -433,6 +1440,1060 @@ export interface User {
   name?: string;
 }
 
+export type TripoTypeTextureModel = typeof TripoTypeTextureModel[keyof typeof TripoTypeTextureModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeTextureModel = {
+  texture_model: 'texture_model',
+} as const;
+
+export type TripoTypeStylizeModel = typeof TripoTypeStylizeModel[keyof typeof TripoTypeStylizeModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeStylizeModel = {
+  stylize_model: 'stylize_model',
+} as const;
+
+export type TripoTypeRefineModel = typeof TripoTypeRefineModel[keyof typeof TripoTypeRefineModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeRefineModel = {
+  refine_model: 'refine_model',
+} as const;
+
+export type TripoTypeConvertModel = typeof TripoTypeConvertModel[keyof typeof TripoTypeConvertModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeConvertModel = {
+  convert_model: 'convert_model',
+} as const;
+
+export type TripoTypeAnimateRig = typeof TripoTypeAnimateRig[keyof typeof TripoTypeAnimateRig];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeAnimateRig = {
+  animate_rig: 'animate_rig',
+} as const;
+
+export type TripoTypeAnimateRetarget = typeof TripoTypeAnimateRetarget[keyof typeof TripoTypeAnimateRetarget];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeAnimateRetarget = {
+  animate_retarget: 'animate_retarget',
+} as const;
+
+export type TripoTypeAnimatePrerigcheck = typeof TripoTypeAnimatePrerigcheck[keyof typeof TripoTypeAnimatePrerigcheck];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTypeAnimatePrerigcheck = {
+  animate_prerigcheck: 'animate_prerigcheck',
+} as const;
+
+export type TripoTopology = typeof TripoTopology[keyof typeof TripoTopology];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTopology = {
+  bip: 'bip',
+  quad: 'quad',
+} as const;
+
+export type TripoTextureQuality = typeof TripoTextureQuality[keyof typeof TripoTextureQuality];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTextureQuality = {
+  standard: 'standard',
+  detailed: 'detailed',
+} as const;
+
+export type TripoTextureFormat = typeof TripoTextureFormat[keyof typeof TripoTextureFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTextureFormat = {
+  BMP: 'BMP',
+  DPX: 'DPX',
+  HDR: 'HDR',
+  JPEG: 'JPEG',
+  OPEN_EXR: 'OPEN_EXR',
+  PNG: 'PNG',
+  TARGA: 'TARGA',
+  TIFF: 'TIFF',
+  WEBP: 'WEBP',
+} as const;
+
+export type TripoTextureAlignment = typeof TripoTextureAlignment[keyof typeof TripoTextureAlignment];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTextureAlignment = {
+  original_image: 'original_image',
+  geometry: 'geometry',
+} as const;
+
+/**
+ * The type of the Tripo task, specifically for text-to-model operations.
+ */
+export type TripoTextToModel = typeof TripoTextToModel[keyof typeof TripoTextToModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTextToModel = {
+  text_to_model: 'text_to_model',
+} as const;
+
+export type TripoTaskStatus = typeof TripoTaskStatus[keyof typeof TripoTaskStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTaskStatus = {
+  queued: 'queued',
+  running: 'running',
+  success: 'success',
+  failed: 'failed',
+  cancelled: 'cancelled',
+  unknown: 'unknown',
+  banned: 'banned',
+  expired: 'expired',
+} as const;
+
+export type TripoTaskOutputTopology = typeof TripoTaskOutputTopology[keyof typeof TripoTaskOutputTopology];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoTaskOutputTopology = {
+  bip: 'bip',
+  quad: 'quad',
+} as const;
+
+export type TripoTaskOutput = {
+  base_model?: string;
+  model?: string;
+  pbr_model?: string;
+  rendered_image?: string;
+  riggable?: boolean;
+  topology?: TripoTaskOutputTopology;
+};
+
+export type TripoTaskInput = { [key: string]: unknown };
+
+export interface TripoTask {
+  create_time: number;
+  input: TripoTaskInput;
+  output: TripoTaskOutput;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  progress: number;
+  status: TripoTaskStatus;
+  task_id: string;
+  type: string;
+}
+
+export type TripoSuccessTaskData = {
+  /** used for getTask */
+  task_id: string;
+};
+
+export type TripoSuccessTaskCode = typeof TripoSuccessTaskCode[keyof typeof TripoSuccessTaskCode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoSuccessTaskCode = {
+  NUMBER_0: 0,
+} as const;
+
+export interface TripoSuccessTask {
+  code: TripoSuccessTaskCode;
+  data: TripoSuccessTaskData;
+}
+
+export type TripoStylizeOptions = typeof TripoStylizeOptions[keyof typeof TripoStylizeOptions];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoStylizeOptions = {
+  lego: 'lego',
+  voxel: 'voxel',
+  voronoi: 'voronoi',
+  minecraft: 'minecraft',
+} as const;
+
+export type TripoStandardFormat = typeof TripoStandardFormat[keyof typeof TripoStandardFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoStandardFormat = {
+  glb: 'glb',
+  fbx: 'fbx',
+} as const;
+
+export type TripoSpec = typeof TripoSpec[keyof typeof TripoSpec];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoSpec = {
+  mixamo: 'mixamo',
+  tripo: 'tripo',
+} as const;
+
+/**
+ * Standard success code for Tripo API responses. Typically 0 for success.
+ */
+export type TripoResponseSuccessCode = number;
+
+export type TripoOrientation = typeof TripoOrientation[keyof typeof TripoOrientation];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoOrientation = {
+  align_image: 'align_image',
+  default: 'default',
+} as const;
+
+/**
+ * Task type for Tripo multiview-to-model generation.
+ */
+export type TripoMultiviewToModel = typeof TripoMultiviewToModel[keyof typeof TripoMultiviewToModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoMultiviewToModel = {
+  multiview_to_model: 'multiview_to_model',
+} as const;
+
+/**
+ * Mode for multiview generation, specifying view orientation.
+ */
+export type TripoMultiviewMode = typeof TripoMultiviewMode[keyof typeof TripoMultiviewMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoMultiviewMode = {
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT',
+} as const;
+
+/**
+ * Version of the Tripo model.
+ */
+export type TripoModelVersion = typeof TripoModelVersion[keyof typeof TripoModelVersion];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoModelVersion = {
+  'v25-20250123': 'v2.5-20250123',
+  'v20-20240919': 'v2.0-20240919',
+  'v14-20240625': 'v1.4-20240625',
+} as const;
+
+/**
+ * Style for the Tripo model generation.
+ */
+export type TripoModelStyle = typeof TripoModelStyle[keyof typeof TripoModelStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoModelStyle = {
+  'person:person2cartoon': 'person:person2cartoon',
+  'animal:venom': 'animal:venom',
+  'object:clay': 'object:clay',
+  'object:steampunk': 'object:steampunk',
+  'object:christmas': 'object:christmas',
+  'object:barbie': 'object:barbie',
+  gold: 'gold',
+  ancient_bronze: 'ancient_bronze',
+} as const;
+
+/**
+ * Task type for Tripo image-to-model generation.
+ */
+export type TripoImageToModel = typeof TripoImageToModel[keyof typeof TripoImageToModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoImageToModel = {
+  image_to_model: 'image_to_model',
+} as const;
+
+export type TripoErrorResponseCode = typeof TripoErrorResponseCode[keyof typeof TripoErrorResponseCode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoErrorResponseCode = {
+  NUMBER_1001: 1001,
+  NUMBER_2000: 2000,
+  NUMBER_2001: 2001,
+  NUMBER_2002: 2002,
+  NUMBER_2003: 2003,
+  NUMBER_2004: 2004,
+  NUMBER_2006: 2006,
+  NUMBER_2007: 2007,
+  NUMBER_2008: 2008,
+  NUMBER_2010: 2010,
+} as const;
+
+export interface TripoErrorResponse {
+  code: TripoErrorResponseCode;
+  message: string;
+  suggestion: string;
+}
+
+export type TripoConvertFormat = typeof TripoConvertFormat[keyof typeof TripoConvertFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoConvertFormat = {
+  GLTF: 'GLTF',
+  USDZ: 'USDZ',
+  FBX: 'FBX',
+  OBJ: 'OBJ',
+  STL: 'STL',
+  '3MF': '3MF',
+} as const;
+
+export interface TripoBalance {
+  balance: number;
+  frozen: number;
+}
+
+export type TripoAnimation = typeof TripoAnimation[keyof typeof TripoAnimation];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TripoAnimation = {
+  'preset:idle': 'preset:idle',
+  'preset:walk': 'preset:walk',
+  'preset:climb': 'preset:climb',
+  'preset:jump': 'preset:jump',
+  'preset:run': 'preset:run',
+  'preset:slash': 'preset:slash',
+  'preset:shoot': 'preset:shoot',
+  'preset:hurt': 'preset:hurt',
+  'preset:fall': 'preset:fall',
+  'preset:turn': 'preset:turn',
+} as const;
+
+/**
+ * The type of hosted tool the model should to use. Learn more about
+[built-in tools](/docs/guides/tools).
+
+Allowed values are:
+- `file_search`
+- `web_search_preview`
+- `computer_use_preview`
+
+ */
+export type ToolChoiceTypesType = typeof ToolChoiceTypesType[keyof typeof ToolChoiceTypesType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ToolChoiceTypesType = {
+  file_search: 'file_search',
+  web_search_preview: 'web_search_preview',
+  computer_use_preview: 'computer_use_preview',
+  web_search_preview_2025_03_11: 'web_search_preview_2025_03_11',
+} as const;
+
+/**
+ * Indicates that the model should use a built-in tool to generate a response.
+[Learn more about built-in tools](/docs/guides/tools).
+
+ */
+export interface ToolChoiceTypes {
+  /** The type of hosted tool the model should to use. Learn more about
+[built-in tools](/docs/guides/tools).
+
+Allowed values are:
+- `file_search`
+- `web_search_preview`
+- `computer_use_preview`
+ */
+  type: ToolChoiceTypesType;
+}
+
+/**
+ * Controls which (if any) tool is called by the model.
+
+`none` means the model will not call any tool and instead generates a message.
+
+`auto` means the model can pick between generating a message or calling one or
+more tools.
+
+`required` means the model must call one or more tools.
+
+ */
+export type ToolChoiceOptions = typeof ToolChoiceOptions[keyof typeof ToolChoiceOptions];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ToolChoiceOptions = {
+  none: 'none',
+  auto: 'auto',
+  required: 'required',
+} as const;
+
+/**
+ * For function calling, the type is always `function`.
+ */
+export type ToolChoiceFunctionType = typeof ToolChoiceFunctionType[keyof typeof ToolChoiceFunctionType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ToolChoiceFunctionType = {
+  function: 'function',
+} as const;
+
+/**
+ * Use this option to force the model to call a specific function.
+
+ */
+export interface ToolChoiceFunction {
+  /** The name of the function to call. */
+  name: string;
+  /** For function calling, the type is always `function`. */
+  type: ToolChoiceFunctionType;
+}
+
+export type Tool = FileSearchTool | FunctionTool | WebSearchPreviewTool | ComputerUsePreviewTool;
+
+/**
+ * The type of response format being defined. Always `json_schema`.
+ */
+export type TextResponseFormatJsonSchemaType = typeof TextResponseFormatJsonSchemaType[keyof typeof TextResponseFormatJsonSchemaType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const TextResponseFormatJsonSchemaType = {
+  json_schema: 'json_schema',
+} as const;
+
+/**
+ * JSON Schema response format. Used to generate structured JSON responses.
+Learn more about [Structured Outputs](/docs/guides/structured-outputs).
+
+ */
+export interface TextResponseFormatJsonSchema {
+  /** A description of what the response format is for, used by the model to
+determine how to respond in the format.
+ */
+  description?: string;
+  /** The name of the response format. Must be a-z, A-Z, 0-9, or contain
+underscores and dashes, with a maximum length of 64.
+ */
+  name: string;
+  schema: ResponseFormatJsonSchemaSchema;
+  /** Whether to enable strict schema adherence when generating the output.
+If set to true, the model will always follow the exact schema defined
+in the `schema` field. Only a subset of JSON Schema is supported when
+`strict` is `true`. To learn more, read the [Structured Outputs
+guide](/docs/guides/structured-outputs).
+ */
+  strict?: boolean;
+  /** The type of response format being defined. Always `json_schema`. */
+  type: TextResponseFormatJsonSchemaType;
+}
+
+/**
+ * An object specifying the format that the model must output.
+
+Configuring `{ "type": "json_schema" }` enables Structured Outputs, 
+which ensures the model will match your supplied JSON schema. Learn more in the 
+[Structured Outputs guide](/docs/guides/structured-outputs).
+
+The default format is `{ "type": "text" }` with no additional options.
+
+**Not recommended for gpt-4o and newer models:**
+
+Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+ensures the message the model generates is valid JSON. Using `json_schema`
+is preferred for models that support it.
+
+ */
+export type TextResponseFormatConfiguration = ResponseFormatText | TextResponseFormatJsonSchema | ResponseFormatJsonObject;
+
+export interface StripeShipping {
+  address?: StripeAddress;
+  /** @nullable */
+  carrier?: string | null;
+  name?: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  tracking_number?: string | null;
+}
+
+export interface StripeRequestInfo {
+  /** @nullable */
+  id?: string | null;
+  /** @nullable */
+  idempotency_key?: string | null;
+}
+
+export type StripeRefundListDataItem = { [key: string]: unknown };
+
+export interface StripeRefundList {
+  data?: StripeRefundListDataItem[];
+  has_more?: boolean;
+  object?: string;
+  total_count?: number;
+  url?: string;
+}
+
+export interface StripePaymentMethodOptions {
+  card?: StripePaymentMethodOptionsCard;
+}
+
+/**
+ * @nullable
+ */
+export type StripePaymentMethodOptionsCardNetwork = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentMethodOptionsCardMandateOptions = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentMethodOptionsCardInstallments = unknown | null;
+
+export type StripePaymentMethodOptionsCard = {
+  /** @nullable */
+  installments?: StripePaymentMethodOptionsCardInstallments;
+  /** @nullable */
+  mandate_options?: StripePaymentMethodOptionsCardMandateOptions;
+  /** @nullable */
+  network?: StripePaymentMethodOptionsCardNetwork;
+  request_three_d_secure?: string;
+};
+
+export interface StripePaymentMethodDetails {
+  card?: StripeCardDetails;
+  type?: string;
+}
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentTransferGroup = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentTransferData = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentStatementDescriptorSuffix = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentStatementDescriptor = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentSource = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentSetupFutureUsage = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentReview = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentProcessing = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentPaymentMethodConfigurationDetails = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentOnBehalfOf = unknown | null;
+
+export type StripePaymentIntentObject = typeof StripePaymentIntentObject[keyof typeof StripePaymentIntentObject];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StripePaymentIntentObject = {
+  payment_intent: 'payment_intent',
+} as const;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentNextAction = unknown | null;
+
+export type StripePaymentIntentMetadata = { [key: string]: unknown };
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentLastPaymentError = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripePaymentIntentAutomaticPaymentMethods = unknown | null;
+
+export interface StripePaymentIntent {
+  amount?: number;
+  amount_capturable?: number;
+  amount_details?: StripeAmountDetails;
+  amount_received?: number;
+  /** @nullable */
+  application?: string | null;
+  /** @nullable */
+  application_fee_amount?: number | null;
+  /** @nullable */
+  automatic_payment_methods?: StripePaymentIntentAutomaticPaymentMethods;
+  /** @nullable */
+  canceled_at?: number | null;
+  /** @nullable */
+  cancellation_reason?: string | null;
+  capture_method?: string;
+  charges?: StripeChargeList;
+  client_secret?: string;
+  confirmation_method?: string;
+  created?: number;
+  currency?: string;
+  /** @nullable */
+  customer?: string | null;
+  /** @nullable */
+  description?: string | null;
+  id?: string;
+  /** @nullable */
+  invoice?: string | null;
+  /** @nullable */
+  last_payment_error?: StripePaymentIntentLastPaymentError;
+  latest_charge?: string;
+  livemode?: boolean;
+  metadata?: StripePaymentIntentMetadata;
+  /** @nullable */
+  next_action?: StripePaymentIntentNextAction;
+  object?: StripePaymentIntentObject;
+  /** @nullable */
+  on_behalf_of?: StripePaymentIntentOnBehalfOf;
+  payment_method?: string;
+  /** @nullable */
+  payment_method_configuration_details?: StripePaymentIntentPaymentMethodConfigurationDetails;
+  payment_method_options?: StripePaymentMethodOptions;
+  payment_method_types?: string[];
+  /** @nullable */
+  processing?: StripePaymentIntentProcessing;
+  /** @nullable */
+  receipt_email?: string | null;
+  /** @nullable */
+  review?: StripePaymentIntentReview;
+  /** @nullable */
+  setup_future_usage?: StripePaymentIntentSetupFutureUsage;
+  shipping?: StripeShipping;
+  /** @nullable */
+  source?: StripePaymentIntentSource;
+  /** @nullable */
+  statement_descriptor?: StripePaymentIntentStatementDescriptor;
+  /** @nullable */
+  statement_descriptor_suffix?: StripePaymentIntentStatementDescriptorSuffix;
+  status?: string;
+  /** @nullable */
+  transfer_data?: StripePaymentIntentTransferData;
+  /** @nullable */
+  transfer_group?: StripePaymentIntentTransferGroup;
+}
+
+/**
+ * @nullable
+ */
+export type StripeOutcomeReason = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeOutcomeNetworkDeclineCode = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeOutcomeNetworkAdviceCode = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeOutcomeAdviceCode = unknown | null;
+
+export interface StripeOutcome {
+  /** @nullable */
+  advice_code?: StripeOutcomeAdviceCode;
+  /** @nullable */
+  network_advice_code?: StripeOutcomeNetworkAdviceCode;
+  /** @nullable */
+  network_decline_code?: StripeOutcomeNetworkDeclineCode;
+  network_status?: string;
+  /** @nullable */
+  reason?: StripeOutcomeReason;
+  risk_level?: string;
+  risk_score?: number;
+  seller_message?: string;
+  type?: string;
+}
+
+export type StripeEventType = typeof StripeEventType[keyof typeof StripeEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StripeEventType = {
+  payment_intentsucceeded: 'payment_intent.succeeded',
+} as const;
+
+export type StripeEventObject = typeof StripeEventObject[keyof typeof StripeEventObject];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StripeEventObject = {
+  event: 'event',
+} as const;
+
+export type StripeEventData = {
+  object?: StripePaymentIntent;
+};
+
+export interface StripeEvent {
+  api_version?: string;
+  created?: number;
+  data: StripeEventData;
+  id: string;
+  livemode?: boolean;
+  object: StripeEventObject;
+  pending_webhooks?: number;
+  request?: StripeRequestInfo;
+  type: StripeEventType;
+}
+
+export interface StripeChargeList {
+  data?: StripeCharge[];
+  has_more?: boolean;
+  object?: string;
+  total_count?: number;
+  url?: string;
+}
+
+/**
+ * @nullable
+ */
+export type StripeChargeTransferGroup = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeTransferData = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeStatementDescriptorSuffix = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeStatementDescriptor = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeSourceTransfer = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeSource = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeReview = unknown | null;
+
+export type StripeChargeRadarOptions = { [key: string]: unknown };
+
+/**
+ * @nullable
+ */
+export type StripeChargeOrder = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeOnBehalfOf = unknown | null;
+
+export type StripeChargeObject = typeof StripeChargeObject[keyof typeof StripeChargeObject];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StripeChargeObject = {
+  charge: 'charge',
+} as const;
+
+export type StripeChargeMetadata = { [key: string]: unknown };
+
+/**
+ * @nullable
+ */
+export type StripeChargeInvoice = unknown | null;
+
+export type StripeChargeFraudDetails = { [key: string]: unknown };
+
+/**
+ * @nullable
+ */
+export type StripeChargeFailureMessage = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeFailureCode = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeFailureBalanceTransaction = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeDispute = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeChargeDestination = unknown | null;
+
+export interface StripeCharge {
+  amount?: number;
+  amount_captured?: number;
+  amount_refunded?: number;
+  /** @nullable */
+  application?: string | null;
+  /** @nullable */
+  application_fee?: string | null;
+  /** @nullable */
+  application_fee_amount?: number | null;
+  /** @nullable */
+  balance_transaction?: string | null;
+  billing_details?: StripeBillingDetails;
+  calculated_statement_descriptor?: string;
+  captured?: boolean;
+  created?: number;
+  currency?: string;
+  /** @nullable */
+  customer?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  destination?: StripeChargeDestination;
+  /** @nullable */
+  dispute?: StripeChargeDispute;
+  disputed?: boolean;
+  /** @nullable */
+  failure_balance_transaction?: StripeChargeFailureBalanceTransaction;
+  /** @nullable */
+  failure_code?: StripeChargeFailureCode;
+  /** @nullable */
+  failure_message?: StripeChargeFailureMessage;
+  fraud_details?: StripeChargeFraudDetails;
+  id?: string;
+  /** @nullable */
+  invoice?: StripeChargeInvoice;
+  livemode?: boolean;
+  metadata?: StripeChargeMetadata;
+  object?: StripeChargeObject;
+  /** @nullable */
+  on_behalf_of?: StripeChargeOnBehalfOf;
+  /** @nullable */
+  order?: StripeChargeOrder;
+  outcome?: StripeOutcome;
+  paid?: boolean;
+  payment_intent?: string;
+  payment_method?: string;
+  payment_method_details?: StripePaymentMethodDetails;
+  radar_options?: StripeChargeRadarOptions;
+  /** @nullable */
+  receipt_email?: string | null;
+  /** @nullable */
+  receipt_number?: string | null;
+  receipt_url?: string;
+  refunded?: boolean;
+  refunds?: StripeRefundList;
+  /** @nullable */
+  review?: StripeChargeReview;
+  shipping?: StripeShipping;
+  /** @nullable */
+  source?: StripeChargeSource;
+  /** @nullable */
+  source_transfer?: StripeChargeSourceTransfer;
+  /** @nullable */
+  statement_descriptor?: StripeChargeStatementDescriptor;
+  /** @nullable */
+  statement_descriptor_suffix?: StripeChargeStatementDescriptorSuffix;
+  status?: string;
+  /** @nullable */
+  transfer_data?: StripeChargeTransferData;
+  /** @nullable */
+  transfer_group?: StripeChargeTransferGroup;
+}
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsWallet = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsThreeDSecure = unknown | null;
+
+export type StripeCardDetailsOvercapture = {
+  maximum_amount_capturable?: number;
+  status?: string;
+};
+
+export type StripeCardDetailsNetworkToken = {
+  used?: boolean;
+};
+
+export type StripeCardDetailsMulticapture = {
+  status?: string;
+};
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsMandate = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsInstallments = unknown | null;
+
+export type StripeCardDetailsIncrementalAuthorization = {
+  status?: string;
+};
+
+export type StripeCardDetailsExtendedAuthorization = {
+  status?: string;
+};
+
+export interface StripeCardDetails {
+  amount_authorized?: number;
+  /** @nullable */
+  authorization_code?: StripeCardDetailsAuthorizationCode;
+  brand?: string;
+  checks?: StripeCardDetailsChecks;
+  country?: string;
+  exp_month?: number;
+  exp_year?: number;
+  extended_authorization?: StripeCardDetailsExtendedAuthorization;
+  fingerprint?: string;
+  funding?: string;
+  incremental_authorization?: StripeCardDetailsIncrementalAuthorization;
+  /** @nullable */
+  installments?: StripeCardDetailsInstallments;
+  last4?: string;
+  /** @nullable */
+  mandate?: StripeCardDetailsMandate;
+  multicapture?: StripeCardDetailsMulticapture;
+  network?: string;
+  network_token?: StripeCardDetailsNetworkToken;
+  network_transaction_id?: string;
+  overcapture?: StripeCardDetailsOvercapture;
+  regulated_status?: string;
+  /** @nullable */
+  three_d_secure?: StripeCardDetailsThreeDSecure;
+  /** @nullable */
+  wallet?: StripeCardDetailsWallet;
+}
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsChecksAddressPostalCodeCheck = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsChecksAddressLine1Check = unknown | null;
+
+export type StripeCardDetailsChecks = {
+  /** @nullable */
+  address_line1_check?: StripeCardDetailsChecksAddressLine1Check;
+  /** @nullable */
+  address_postal_code_check?: StripeCardDetailsChecksAddressPostalCodeCheck;
+  cvc_check?: string;
+};
+
+/**
+ * @nullable
+ */
+export type StripeCardDetailsAuthorizationCode = unknown | null;
+
+/**
+ * @nullable
+ */
+export type StripeBillingDetailsTaxId = unknown | null;
+
+export type StripeAmountDetailsTip = { [key: string]: unknown };
+
+export interface StripeAmountDetails {
+  tip?: StripeAmountDetailsTip;
+}
+
+export interface StripeAddress {
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  country?: string | null;
+  /** @nullable */
+  line1?: string | null;
+  /** @nullable */
+  line2?: string | null;
+  /** @nullable */
+  postal_code?: string | null;
+  /** @nullable */
+  state?: string | null;
+}
+
+export interface StripeBillingDetails {
+  address?: StripeAddress;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  name?: string | null;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  tax_id?: StripeBillingDetailsTaxId;
+}
+
 export interface StorageFile {
   /** Path to the file in storage */
   file_path?: string;
@@ -440,6 +2501,2078 @@ export interface StorageFile {
   id?: string;
   /** Public URL */
   public_url?: string;
+}
+
+/**
+ * The version of your application, used to help us communicate version-specific debugging or moderation issues to you.
+ * @maxLength 256
+ */
+export type StabilityStabilityClientVersion = string;
+
+/**
+ * A unique identifier for your end user. Used to help us communicate user-specific debugging or moderation issues to you. Feel free to obfuscate this value to protect user privacy.
+ * @maxLength 256
+ */
+export type StabilityStabilityClientUserID = string;
+
+/**
+ * The name of your application, used to help us communicate app-specific debugging or moderation issues to you.
+ * @maxLength 256
+ */
+export type StabilityStabilityClientID = string;
+
+export interface StabilityImageGenrationUpscaleFastResponse500 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleFastResponse429 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleFastResponse422 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleFastResponse413 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleFastResponse400 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+/**
+ * The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+policy and has been blurred as a result.
+ */
+export type StabilityImageGenrationUpscaleFastResponse200FinishReason = typeof StabilityImageGenrationUpscaleFastResponse200FinishReason[keyof typeof StabilityImageGenrationUpscaleFastResponse200FinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUpscaleFastResponse200FinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export interface StabilityImageGenrationUpscaleFastResponse200 {
+  /** The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+policy and has been blurred as a result. */
+  finish_reason: StabilityImageGenrationUpscaleFastResponse200FinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+}
+
+/**
+ * Dictates the `content-type` of the generated image.
+ */
+export type StabilityImageGenrationUpscaleFastRequestOutputFormat = typeof StabilityImageGenrationUpscaleFastRequestOutputFormat[keyof typeof StabilityImageGenrationUpscaleFastRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUpscaleFastRequestOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+  webp: 'webp',
+} as const;
+
+export interface StabilityImageGenrationUpscaleFastRequest {
+  /** The image you wish to upscale.
+
+Supported Formats:
+- jpeg
+- png
+- webp
+
+Validation Rules:
+- Width must be between 32 and 1,536 pixels
+- Height must be between 32 and 1,536 pixels
+- Total pixel count must be between 1,024 and 1,048,576 pixels */
+  image: Blob;
+  /** Dictates the `content-type` of the generated image. */
+  output_format?: StabilityImageGenrationUpscaleFastRequestOutputFormat;
+}
+
+export interface StabilityImageGenrationUpscaleCreativeResponse500 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleCreativeResponse429 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleCreativeResponse422 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleCreativeResponse413 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleCreativeResponse400 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleCreativeResponse200 {
+  id: StabilityGenerationID;
+}
+
+/**
+ * Guides the image model towards a particular style.
+ */
+export type StabilityImageGenrationUpscaleCreativeRequestStylePreset = typeof StabilityImageGenrationUpscaleCreativeRequestStylePreset[keyof typeof StabilityImageGenrationUpscaleCreativeRequestStylePreset];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUpscaleCreativeRequestStylePreset = {
+  enhance: 'enhance',
+  anime: 'anime',
+  photographic: 'photographic',
+  'digital-art': 'digital-art',
+  'comic-book': 'comic-book',
+  'fantasy-art': 'fantasy-art',
+  'line-art': 'line-art',
+  'analog-film': 'analog-film',
+  'neon-punk': 'neon-punk',
+  isometric: 'isometric',
+  'low-poly': 'low-poly',
+  origami: 'origami',
+  'modeling-compound': 'modeling-compound',
+  cinematic: 'cinematic',
+  '3d-model': '3d-model',
+  'pixel-art': 'pixel-art',
+  'tile-texture': 'tile-texture',
+} as const;
+
+/**
+ * Dictates the `content-type` of the generated image.
+ */
+export type StabilityImageGenrationUpscaleCreativeRequestOutputFormat = typeof StabilityImageGenrationUpscaleCreativeRequestOutputFormat[keyof typeof StabilityImageGenrationUpscaleCreativeRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUpscaleCreativeRequestOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+  webp: 'webp',
+} as const;
+
+export interface StabilityImageGenrationUpscaleCreativeRequest {
+  /**
+   * Indicates how creative the model should be when upscaling an image.
+Higher values will result in more details being added to the image during upscaling.
+   * @minimum 0.1
+   * @maximum 0.5
+   */
+  creativity?: number;
+  /** The image you wish to upscale.
+
+Supported Formats:
+- jpeg
+- png
+- webp
+
+Validation Rules:
+- Every side must be at least 64 pixels
+- Total pixel count must be between 4,096 and 1,048,576 pixels */
+  image: Blob;
+  /**
+   * A blurb of text describing what you **do not** wish to see in the output image.
+This is an advanced feature.
+   * @maxLength 10000
+   */
+  negative_prompt?: string;
+  /** Dictates the `content-type` of the generated image. */
+  output_format?: StabilityImageGenrationUpscaleCreativeRequestOutputFormat;
+  /**
+   * What you wish to see in the output image. A strong, descriptive prompt that clearly defines
+elements, colors, and subjects will lead to better results.
+
+To control the weight of a given word use the format `(word:weight)`,
+where `word` is the word you'd like to control the weight of and `weight`
+is a value between 0 and 1. For example: `The sky was a crisp (blue:0.3) and (green:0.8)`
+would convey a sky that was blue and green, but more green than blue.
+   * @minLength 1
+   * @maxLength 10000
+   */
+  prompt: string;
+  /**
+   * A specific value that is used to guide the 'randomness' of the generation. (Omit this parameter or pass `0` to use a random seed.)
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+  /** Guides the image model towards a particular style. */
+  style_preset?: StabilityImageGenrationUpscaleCreativeRequestStylePreset;
+}
+
+export interface StabilityImageGenrationUpscaleConservativeResponse500 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleConservativeResponse429 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleConservativeResponse422 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleConservativeResponse413 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationUpscaleConservativeResponse400 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+/**
+ * The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+policy and has been blurred as a result.
+ */
+export type StabilityImageGenrationUpscaleConservativeResponse200FinishReason = typeof StabilityImageGenrationUpscaleConservativeResponse200FinishReason[keyof typeof StabilityImageGenrationUpscaleConservativeResponse200FinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUpscaleConservativeResponse200FinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export interface StabilityImageGenrationUpscaleConservativeResponse200 {
+  /** The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+policy and has been blurred as a result. */
+  finish_reason: StabilityImageGenrationUpscaleConservativeResponse200FinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+}
+
+/**
+ * Dictates the `content-type` of the generated image.
+ */
+export type StabilityImageGenrationUpscaleConservativeRequestOutputFormat = typeof StabilityImageGenrationUpscaleConservativeRequestOutputFormat[keyof typeof StabilityImageGenrationUpscaleConservativeRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationUpscaleConservativeRequestOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+  webp: 'webp',
+} as const;
+
+export interface StabilityImageGenrationUpscaleConservativeRequest {
+  creativity?: StabilityCreativity;
+  /** The image you wish to upscale.
+
+Supported Formats:
+- jpeg
+- png
+- webp
+
+Validation Rules:
+- Every side must be at least 64 pixels
+- Total pixel count must be between 4,096 and 9,437,184 pixels
+- The aspect ratio must be between 1:2.5 and 2.5:1 */
+  image: Blob;
+  /**
+   * A blurb of text describing what you **do not** wish to see in the output image.
+This is an advanced feature.
+   * @maxLength 10000
+   */
+  negative_prompt?: string;
+  /** Dictates the `content-type` of the generated image. */
+  output_format?: StabilityImageGenrationUpscaleConservativeRequestOutputFormat;
+  /**
+   * What you wish to see in the output image. A strong, descriptive prompt that clearly defines
+elements, colors, and subjects will lead to better results.
+
+To control the weight of a given word use the format `(word:weight)`,
+where `word` is the word you'd like to control the weight of and `weight`
+is a value between 0 and 1. For example: `The sky was a crisp (blue:0.3) and (green:0.8)`
+would convey a sky that was blue and green, but more green than blue.
+   * @minLength 1
+   * @maxLength 10000
+   */
+  prompt: string;
+  /**
+   * A specific value that is used to guide the 'randomness' of the generation. (Omit this parameter or pass `0` to use a random seed.)
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+}
+
+export interface StabilityImageGenrationSD3Response500 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationSD3Response429 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationSD3Response422 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationSD3Response413 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+export interface StabilityImageGenrationSD3Response400 {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new)
+you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+/**
+ * The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+policy and has been blurred as a result.
+ */
+export type StabilityImageGenrationSD3Response200FinishReason = typeof StabilityImageGenrationSD3Response200FinishReason[keyof typeof StabilityImageGenrationSD3Response200FinishReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenrationSD3Response200FinishReason = {
+  SUCCESS: 'SUCCESS',
+  CONTENT_FILTERED: 'CONTENT_FILTERED',
+} as const;
+
+export interface StabilityImageGenrationSD3Response200 {
+  /** The reason the generation finished.
+
+- `SUCCESS` = successful generation.
+- `CONTENT_FILTERED` = successful generation, however the output violated our content moderation
+policy and has been blurred as a result. */
+  finish_reason: StabilityImageGenrationSD3Response200FinishReason;
+  /** The generated image, encoded to base64. */
+  image: string;
+  /**
+   * The seed used as random noise for this generation.
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+}
+
+/**
+ * Guides the image model towards a particular style.
+ */
+export type StabilityImageGenerationSD3RequestStylePreset = typeof StabilityImageGenerationSD3RequestStylePreset[keyof typeof StabilityImageGenerationSD3RequestStylePreset];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenerationSD3RequestStylePreset = {
+  enhance: 'enhance',
+  anime: 'anime',
+  photographic: 'photographic',
+  'digital-art': 'digital-art',
+  'comic-book': 'comic-book',
+  'fantasy-art': 'fantasy-art',
+  'line-art': 'line-art',
+  'analog-film': 'analog-film',
+  'neon-punk': 'neon-punk',
+  isometric: 'isometric',
+  'low-poly': 'low-poly',
+  origami: 'origami',
+  'modeling-compound': 'modeling-compound',
+  cinematic: 'cinematic',
+  '3d-model': '3d-model',
+  'pixel-art': 'pixel-art',
+  'tile-texture': 'tile-texture',
+} as const;
+
+/**
+ * Dictates the `content-type` of the generated image.
+ */
+export type StabilityImageGenerationSD3RequestOutputFormat = typeof StabilityImageGenerationSD3RequestOutputFormat[keyof typeof StabilityImageGenerationSD3RequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenerationSD3RequestOutputFormat = {
+  png: 'png',
+  jpeg: 'jpeg',
+} as const;
+
+/**
+ * The model to use for generation.
+
+- `sd3.5-large` requires 6.5 credits per generation
+- `sd3.5-large-turbo` requires 4 credits per generation
+- `sd3.5-medium` requires 3.5 credits per generation
+- As of the April 17, 2025, `sd3-large`, `sd3-large-turbo` and `sd3-medium`
+
+
+
+  are re-routed to their `sd3.5-[model version]` equivalent, at the same price.
+ */
+export type StabilityImageGenerationSD3RequestModel = typeof StabilityImageGenerationSD3RequestModel[keyof typeof StabilityImageGenerationSD3RequestModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenerationSD3RequestModel = {
+  'sd35-large': 'sd3.5-large',
+  'sd35-large-turbo': 'sd3.5-large-turbo',
+  'sd35-medium': 'sd3.5-medium',
+} as const;
+
+/**
+ * Controls whether this is a text-to-image or image-to-image generation, which affects which parameters are required:
+- **text-to-image** requires only the `prompt` parameter
+- **image-to-image** requires the `prompt`, `image`, and `strength` parameters
+ */
+export type StabilityImageGenerationSD3RequestMode = typeof StabilityImageGenerationSD3RequestMode[keyof typeof StabilityImageGenerationSD3RequestMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenerationSD3RequestMode = {
+  'text-to-image': 'text-to-image',
+  'image-to-image': 'image-to-image',
+} as const;
+
+/**
+ * Controls the aspect ratio of the generated image. Defaults to 1:1.
+
+> **Important:** This parameter is only valid for **text-to-image** requests.
+ */
+export type StabilityImageGenerationSD3RequestAspectRatio = typeof StabilityImageGenerationSD3RequestAspectRatio[keyof typeof StabilityImageGenerationSD3RequestAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityImageGenerationSD3RequestAspectRatio = {
+  '21:9': '21:9',
+  '16:9': '16:9',
+  '3:2': '3:2',
+  '5:4': '5:4',
+  '1:1': '1:1',
+  '4:5': '4:5',
+  '2:3': '2:3',
+  '9:16': '9:16',
+  '9:21': '9:21',
+} as const;
+
+export interface StabilityImageGenerationSD3Request {
+  /** Controls the aspect ratio of the generated image. Defaults to 1:1.
+
+> **Important:** This parameter is only valid for **text-to-image** requests. */
+  aspect_ratio?: StabilityImageGenerationSD3RequestAspectRatio;
+  /**
+   * How strictly the diffusion process adheres to the prompt text (higher values keep your image closer to your prompt). The _Large_ and _Medium_ models use a default of `4`. The _Turbo_ model uses a default of `1`.
+   * @minimum 1
+   * @maximum 10
+   */
+  cfg_scale?: number;
+  /** The image to use as the starting point for the generation.
+
+Supported formats:
+
+
+
+  - jpeg
+  - png
+  - webp
+
+Supported dimensions:
+
+
+
+  - Every side must be at least 64 pixels
+
+> **Important:** This parameter is only valid for **image-to-image** requests. */
+  image?: Blob;
+  /** Controls whether this is a text-to-image or image-to-image generation, which affects which parameters are required:
+- **text-to-image** requires only the `prompt` parameter
+- **image-to-image** requires the `prompt`, `image`, and `strength` parameters */
+  mode?: StabilityImageGenerationSD3RequestMode;
+  /** The model to use for generation.
+
+- `sd3.5-large` requires 6.5 credits per generation
+- `sd3.5-large-turbo` requires 4 credits per generation
+- `sd3.5-medium` requires 3.5 credits per generation
+- As of the April 17, 2025, `sd3-large`, `sd3-large-turbo` and `sd3-medium`
+
+
+
+  are re-routed to their `sd3.5-[model version]` equivalent, at the same price. */
+  model?: StabilityImageGenerationSD3RequestModel;
+  /**
+   * Keywords of what you **do not** wish to see in the output image.
+This is an advanced feature.
+   * @maxLength 10000
+   */
+  negative_prompt?: string;
+  /** Dictates the `content-type` of the generated image. */
+  output_format?: StabilityImageGenerationSD3RequestOutputFormat;
+  /**
+   * What you wish to see in the output image. A strong, descriptive prompt that clearly defines
+elements, colors, and subjects will lead to better results.
+   * @minLength 1
+   * @maxLength 10000
+   */
+  prompt: string;
+  /**
+   * A specific value that is used to guide the 'randomness' of the generation. (Omit this parameter or pass `0` to use a random seed.)
+   * @minimum 0
+   * @maximum 4294967294
+   */
+  seed?: number;
+  /**
+   * Sometimes referred to as _denoising_, this parameter controls how much influence the
+`image` parameter has on the generated image.  A value of 0 would yield an image that
+is identical to the input.  A value of 1 would be as if you passed in no image at all.
+
+> **Important:** This parameter is only valid for **image-to-image** requests.
+   * @minimum 0
+   * @maximum 1
+   */
+  strength?: number;
+  /** Guides the image model towards a particular style. */
+  style_preset?: StabilityImageGenerationSD3RequestStylePreset;
+}
+
+export type StabilityGetResultResponse202Status = typeof StabilityGetResultResponse202Status[keyof typeof StabilityGetResultResponse202Status];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityGetResultResponse202Status = {
+  'in-progress': 'in-progress',
+} as const;
+
+export interface StabilityGetResultResponse202 {
+  /** The ID of the generation result. */
+  id?: string;
+  status?: StabilityGetResultResponse202Status;
+}
+
+/**
+ * The `id` of a generation, typically used for async generations, that can be used to check the status of the generation or retrieve the result.
+ * @minLength 64
+ * @maxLength 64
+ */
+export type StabilityGenerationID = string;
+
+export interface StabilityError {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Short-hand name for an error, useful for discriminating between errors with the same status code.
+   * @minLength 1
+   */
+  name: string;
+}
+
+/**
+ * Controls the likelihood of creating additional details not heavily conditioned by the init image.
+ * @minimum 0.2
+ * @maximum 0.5
+ */
+export type StabilityCreativity = number;
+
+/**
+ * Our content moderation system has flagged some part of your request and subsequently denied it.  You were not charged for this request.  While this may at times be frustrating, it is necessary to maintain the integrity of our platform and ensure a safe experience for all users. If you would like to provide feedback, please use the [Support Form](https://kb.stability.ai/knowledge-base/kb-tickets/new).
+ * @minLength 1
+ */
+export type StabilityContentModerationResponseName = typeof StabilityContentModerationResponseName[keyof typeof StabilityContentModerationResponseName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const StabilityContentModerationResponseName = {
+  content_moderation: 'content_moderation',
+} as const;
+
+/**
+ * Your request was flagged by our content moderation system.
+ */
+export interface StabilityContentModerationResponse {
+  /**
+   * One or more error messages indicating what went wrong.
+   * @minItems 1
+   */
+  errors: string[];
+  /**
+   * A unique identifier associated with this error. Please include this in any [support tickets](https://kb.stability.ai/knowledge-base/kb-tickets/new) you file, as it will greatly assist us in diagnosing the root cause of the problem.
+   * @minLength 1
+   */
+  id: string;
+  /**
+   * Our content moderation system has flagged some part of your request and subsequently denied it.  You were not charged for this request.  While this may at times be frustrating, it is necessary to maintain the integrity of our platform and ensure a safe experience for all users. If you would like to provide feedback, please use the [Support Form](https://kb.stability.ai/knowledge-base/kb-tickets/new).
+   * @minLength 1
+   */
+  name: StabilityContentModerationResponseName;
+}
+
+export interface RunwayTextToImageResponse {
+  /** Task ID */
+  id?: string;
+}
+
+export type RunwayTextToImageRequestReferenceImagesItem = {
+  /** A HTTPS URL or data URI containing an encoded image */
+  uri?: string;
+};
+
+/**
+ * Model to use for generation
+ */
+export type RunwayTextToImageRequestModel = typeof RunwayTextToImageRequestModel[keyof typeof RunwayTextToImageRequestModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayTextToImageRequestModel = {
+  gen4_image: 'gen4_image',
+} as const;
+
+export type RunwayTextToImageAspectRatioEnum = typeof RunwayTextToImageAspectRatioEnum[keyof typeof RunwayTextToImageAspectRatioEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayTextToImageAspectRatioEnum = {
+  '1920:1080': '1920:1080',
+  '1080:1920': '1080:1920',
+  '1024:1024': '1024:1024',
+  '1360:768': '1360:768',
+  '1080:1080': '1080:1080',
+  '1168:880': '1168:880',
+  '1440:1080': '1440:1080',
+  '1080:1440': '1080:1440',
+  '1808:768': '1808:768',
+  '2112:912': '2112:912',
+} as const;
+
+export interface RunwayTextToImageRequest {
+  /** Model to use for generation */
+  model: RunwayTextToImageRequestModel;
+  /**
+   * Text prompt for the image generation
+   * @maxLength 1000
+   */
+  promptText: string;
+  ratio: RunwayTextToImageAspectRatioEnum;
+  /** Array of reference images to guide the generation */
+  referenceImages?: RunwayTextToImageRequestReferenceImagesItem[];
+}
+
+/**
+ * Possible statuses for a Runway task.
+ */
+export type RunwayTaskStatusEnum = typeof RunwayTaskStatusEnum[keyof typeof RunwayTaskStatusEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayTaskStatusEnum = {
+  SUCCEEDED: 'SUCCEEDED',
+  RUNNING: 'RUNNING',
+  FAILED: 'FAILED',
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED',
+  THROTTLED: 'THROTTLED',
+} as const;
+
+export interface RunwayTaskStatusResponse {
+  /** Task creation timestamp */
+  createdAt: string;
+  /** Task ID */
+  id: string;
+  /** Array of output video URLs */
+  output?: string[];
+  /**
+   * Float value between 0 and 1 representing the progress of the task. Only available if status is RUNNING.
+   * @minimum 0
+   * @maximum 1
+   */
+  progress?: number;
+  status: RunwayTaskStatusEnum;
+}
+
+/**
+ * The position of the image in the output video. 'last' is currently supported for gen3a_turbo only.
+ */
+export type RunwayPromptImageDetailedObjectPosition = typeof RunwayPromptImageDetailedObjectPosition[keyof typeof RunwayPromptImageDetailedObjectPosition];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayPromptImageDetailedObjectPosition = {
+  first: 'first',
+  last: 'last',
+} as const;
+
+/**
+ * Represents an image with its position in the video sequence.
+ */
+export interface RunwayPromptImageDetailedObject {
+  /** The position of the image in the output video. 'last' is currently supported for gen3a_turbo only. */
+  position: RunwayPromptImageDetailedObjectPosition;
+  /** A HTTPS URL or data URI containing an encoded image. */
+  uri: string;
+}
+
+/**
+ * Image(s) to use for the video generation. Can be a single URI or an array of image objects with positions.
+ */
+export type RunwayPromptImageObject = string | RunwayPromptImageDetailedObject[];
+
+/**
+ * Available Runway models for generation.
+ */
+export type RunwayModelEnum = typeof RunwayModelEnum[keyof typeof RunwayModelEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayModelEnum = {
+  gen4_turbo: 'gen4_turbo',
+  gen3a_turbo: 'gen3a_turbo',
+} as const;
+
+export interface RunwayImageToVideoResponse {
+  /** Task ID */
+  id?: string;
+}
+
+export type RunwayDurationEnum = typeof RunwayDurationEnum[keyof typeof RunwayDurationEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayDurationEnum = {
+  NUMBER_5: 5,
+  NUMBER_10: 10,
+} as const;
+
+export type RunwayAspectRatioEnum = typeof RunwayAspectRatioEnum[keyof typeof RunwayAspectRatioEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RunwayAspectRatioEnum = {
+  '1280:720': '1280:720',
+  '720:1280': '720:1280',
+  '1104:832': '1104:832',
+  '832:1104': '832:1104',
+  '960:960': '960:960',
+  '1584:672': '1584:672',
+  '1280:768': '1280:768',
+  '768:1280': '768:1280',
+} as const;
+
+export interface RunwayImageToVideoRequest {
+  duration: RunwayDurationEnum;
+  model: RunwayModelEnum;
+  promptImage: RunwayPromptImageObject;
+  /**
+   * Text prompt for the generation
+   * @maxLength 1000
+   */
+  promptText?: string;
+  ratio: RunwayAspectRatioEnum;
+  /**
+   * Random seed for generation
+   * @minimum 0
+   * @maximum 4294967295
+   */
+  seed: number;
+}
+
+/**
+ * Rodin Tier para options
+ */
+export type RodinTierType = typeof RodinTierType[keyof typeof RodinTierType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RodinTierType = {
+  Regular: 'Regular',
+  Sketch: 'Sketch',
+  Detail: 'Detail',
+  Smooth: 'Smooth',
+} as const;
+
+export type RodinStatusOptions = typeof RodinStatusOptions[keyof typeof RodinStatusOptions];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RodinStatusOptions = {
+  Done: 'Done',
+  Failed: 'Failed',
+  Generating: 'Generating',
+  Waiting: 'Waiting',
+} as const;
+
+export interface RodinResourceItem {
+  /** File name */
+  name?: string;
+  /** Download url */
+  url?: string;
+}
+
+/**
+ * Rodin Quality para options
+ */
+export type RodinQualityType = typeof RodinQualityType[keyof typeof RodinQualityType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RodinQualityType = {
+  'extra-low': 'extra-low',
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+/**
+ * Rodin Mesh_Mode para options
+ */
+export type RodinMeshModeType = typeof RodinMeshModeType[keyof typeof RodinMeshModeType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RodinMeshModeType = {
+  Quad: 'Quad',
+  Raw: 'Raw',
+} as const;
+
+/**
+ * Rodin Material para options
+ */
+export type RodinMaterialType = typeof RodinMaterialType[keyof typeof RodinMaterialType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RodinMaterialType = {
+  PBR: 'PBR',
+  Shaded: 'Shaded',
+} as const;
+
+export interface RodinGenerateJobsData {
+  /** Subscription Key. */
+  subscription_key?: string;
+  /** subjobs uuid. */
+  uuids?: string[];
+}
+
+export interface RodinCheckStatusJobItem {
+  status?: RodinStatusOptions;
+  /** sub uuid */
+  uuid?: string;
+}
+
+export interface Rodin3DGenerateResponse {
+  jobs?: RodinGenerateJobsData;
+  /** message */
+  message?: string;
+  /** prompt */
+  prompt?: string;
+  /** Time */
+  submit_time?: string;
+  /** Task UUID */
+  uuid?: string;
+}
+
+export interface Rodin3DGenerateRequest {
+  /** The reference images to generate 3D Assets. */
+  images: string;
+  material?: RodinMaterialType;
+  mesh_mode?: RodinMeshModeType;
+  quality?: RodinQualityType;
+  /** Seed. */
+  seed?: number;
+  tier?: RodinTierType;
+}
+
+export interface Rodin3DDownloadResponse {
+  list?: RodinResourceItem[];
+}
+
+export interface Rodin3DDownloadRequest {
+  /** Task UUID */
+  task_uuid: string;
+}
+
+export interface Rodin3DCheckStatusResponse {
+  /** Details for the generation status. */
+  jobs?: RodinCheckStatusJobItem[];
+}
+
+export interface Rodin3DCheckStatusRequest {
+  /** subscription from generate endpoint */
+  subscription_key: string;
+}
+
+/**
+ * A detailed breakdown of the output tokens.
+ */
+export type ResponseUsageOutputTokensDetails = {
+  /** The number of reasoning tokens. */
+  reasoning_tokens: number;
+};
+
+/**
+ * A detailed breakdown of the input tokens.
+ */
+export type ResponseUsageInputTokensDetails = {
+  /** The number of tokens that were retrieved from the cache. 
+[More on prompt caching](/docs/guides/prompt-caching).
+ */
+  cached_tokens: number;
+};
+
+/**
+ * Represents token usage details including input tokens, output tokens,
+a breakdown of output tokens, and the total tokens used.
+
+ */
+export interface ResponseUsage {
+  /** The number of input tokens. */
+  input_tokens: number;
+  /** A detailed breakdown of the input tokens. */
+  input_tokens_details: ResponseUsageInputTokensDetails;
+  /** The number of output tokens. */
+  output_tokens: number;
+  /** A detailed breakdown of the output tokens. */
+  output_tokens_details: ResponseUsageOutputTokensDetails;
+  /** The total number of tokens used. */
+  total_tokens: number;
+}
+
+/**
+ * The truncation strategy to use for the model response.
+- `auto`: If the context of this response and previous ones exceeds
+  the model's context window size, the model will truncate the 
+  response to fit the context window by dropping input items in the
+  middle of the conversation. 
+- `disabled` (default): If a model response will exceed the context window 
+  size for a model, the request will fail with a 400 error.
+
+ */
+export type ResponsePropertiesTruncation = typeof ResponsePropertiesTruncation[keyof typeof ResponsePropertiesTruncation];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponsePropertiesTruncation = {
+  auto: 'auto',
+  disabled: 'disabled',
+} as const;
+
+/**
+ * How the model should select which tool (or tools) to use when generating
+a response. See the `tools` parameter to see how to specify which tools
+the model can call.
+
+ */
+export type ResponsePropertiesToolChoice = ToolChoiceOptions | ToolChoiceTypes | ToolChoiceFunction;
+
+export type ResponsePropertiesText = {
+  format?: TextResponseFormatConfiguration;
+};
+
+export interface ResponseProperties {
+  /** Inserts a system (or developer) message as the first item in the model's context.
+
+When using along with `previous_response_id`, the instructions from a previous
+response will not be carried over to the next response. This makes it simple
+to swap out system (or developer) messages in new responses.
+ */
+  instructions?: string;
+  /** An upper bound for the number of tokens that can be generated for a response, including visible output tokens and [reasoning tokens](/docs/guides/reasoning).
+ */
+  max_output_tokens?: number;
+  model?: OpenAIModels;
+  /** The unique ID of the previous response to the model. Use this to
+create multi-turn conversations. Learn more about 
+[conversation state](/docs/guides/conversation-state).
+ */
+  previous_response_id?: string;
+  reasoning?: Reasoning;
+  text?: ResponsePropertiesText;
+  /** How the model should select which tool (or tools) to use when generating
+a response. See the `tools` parameter to see how to specify which tools
+the model can call.
+ */
+  tool_choice?: ResponsePropertiesToolChoice;
+  tools?: Tool[];
+  /** The truncation strategy to use for the model response.
+- `auto`: If the context of this response and previous ones exceeds
+  the model's context window size, the model will truncate the 
+  response to fit the context window by dropping input items in the
+  middle of the conversation. 
+- `disabled` (default): If a model response will exceed the context window 
+  size for a model, the request will fail with a 400 error.
+ */
+  truncation?: ResponsePropertiesTruncation;
+}
+
+/**
+ * The type of the event. Always `response.output_item.done`.
+
+ */
+export type ResponseOutputItemDoneEventType = typeof ResponseOutputItemDoneEventType[keyof typeof ResponseOutputItemDoneEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseOutputItemDoneEventType = {
+  responseoutput_itemdone: 'response.output_item.done',
+} as const;
+
+/**
+ * Emitted when an output item is marked done.
+ */
+export interface ResponseOutputItemDoneEvent {
+  item: OutputItem;
+  /** The index of the output item that was marked done.
+ */
+  output_index: number;
+  /** The type of the event. Always `response.output_item.done`.
+ */
+  type: ResponseOutputItemDoneEventType;
+}
+
+/**
+ * The type of the event. Always `response.output_item.added`.
+
+ */
+export type ResponseOutputItemAddedEventType = typeof ResponseOutputItemAddedEventType[keyof typeof ResponseOutputItemAddedEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseOutputItemAddedEventType = {
+  responseoutput_itemadded: 'response.output_item.added',
+} as const;
+
+/**
+ * Emitted when a new output item is added.
+ */
+export interface ResponseOutputItemAddedEvent {
+  item: OutputItem;
+  /** The index of the output item that was added.
+ */
+  output_index: number;
+  /** The type of the event. Always `response.output_item.added`.
+ */
+  type: ResponseOutputItemAddedEventType;
+}
+
+/**
+ * The type of the event. Always `response.incomplete`.
+
+ */
+export type ResponseIncompleteEventType = typeof ResponseIncompleteEventType[keyof typeof ResponseIncompleteEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseIncompleteEventType = {
+  responseincomplete: 'response.incomplete',
+} as const;
+
+/**
+ * An event that is emitted when a response finishes as incomplete.
+
+ */
+export interface ResponseIncompleteEvent {
+  response: OpenAIResponse;
+  /** The type of the event. Always `response.incomplete`.
+ */
+  type: ResponseIncompleteEventType;
+}
+
+/**
+ * The type of the event. Always `response.in_progress`.
+
+ */
+export type ResponseInProgressEventType = typeof ResponseInProgressEventType[keyof typeof ResponseInProgressEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseInProgressEventType = {
+  responsein_progress: 'response.in_progress',
+} as const;
+
+/**
+ * Emitted when the response is in progress.
+ */
+export interface ResponseInProgressEvent {
+  response: OpenAIResponse;
+  /** The type of the event. Always `response.in_progress`.
+ */
+  type: ResponseInProgressEventType;
+}
+
+/**
+ * The type of response format being defined. Always `text`.
+ */
+export type ResponseFormatTextType = typeof ResponseFormatTextType[keyof typeof ResponseFormatTextType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseFormatTextType = {
+  text: 'text',
+} as const;
+
+/**
+ * Default response format. Used to generate text responses.
+
+ */
+export interface ResponseFormatText {
+  /** The type of response format being defined. Always `text`. */
+  type: ResponseFormatTextType;
+}
+
+/**
+ * The schema for the response format, described as a JSON Schema object.
+Learn how to build JSON schemas [here](https://json-schema.org/).
+
+ */
+export interface ResponseFormatJsonSchemaSchema { [key: string]: unknown }
+
+/**
+ * The type of response format being defined. Always `json_object`.
+ */
+export type ResponseFormatJsonObjectType = typeof ResponseFormatJsonObjectType[keyof typeof ResponseFormatJsonObjectType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseFormatJsonObjectType = {
+  json_object: 'json_object',
+} as const;
+
+/**
+ * JSON object response format. An older method of generating JSON responses.
+Using `json_schema` is recommended for models that support it. Note that the
+model will not generate JSON without a system or user message instructing it
+to do so.
+
+ */
+export interface ResponseFormatJsonObject {
+  /** The type of response format being defined. Always `json_object`. */
+  type: ResponseFormatJsonObjectType;
+}
+
+/**
+ * The type of the event. Always `response.failed`.
+
+ */
+export type ResponseFailedEventType = typeof ResponseFailedEventType[keyof typeof ResponseFailedEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseFailedEventType = {
+  responsefailed: 'response.failed',
+} as const;
+
+/**
+ * An event that is emitted when a response fails.
+
+ */
+export interface ResponseFailedEvent {
+  response: OpenAIResponse;
+  /** The type of the event. Always `response.failed`.
+ */
+  type: ResponseFailedEventType;
+}
+
+/**
+ * The type of the event. Always `error`.
+
+ */
+export type ResponseErrorEventType = typeof ResponseErrorEventType[keyof typeof ResponseErrorEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseErrorEventType = {
+  error: 'error',
+} as const;
+
+/**
+ * Emitted when an error occurs.
+ */
+export interface ResponseErrorEvent {
+  /** The error code.
+ */
+  code: string;
+  /** The error message.
+ */
+  message: string;
+  /** The error parameter.
+ */
+  param: string;
+  /** The type of the event. Always `error`.
+ */
+  type: ResponseErrorEventType;
+}
+
+/**
+ * The error code for the response.
+ */
+export type ResponseErrorCode = typeof ResponseErrorCode[keyof typeof ResponseErrorCode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseErrorCode = {
+  server_error: 'server_error',
+  rate_limit_exceeded: 'rate_limit_exceeded',
+  invalid_prompt: 'invalid_prompt',
+  vector_store_timeout: 'vector_store_timeout',
+  invalid_image: 'invalid_image',
+  invalid_image_format: 'invalid_image_format',
+  invalid_base64_image: 'invalid_base64_image',
+  invalid_image_url: 'invalid_image_url',
+  image_too_large: 'image_too_large',
+  image_too_small: 'image_too_small',
+  image_parse_error: 'image_parse_error',
+  image_content_policy_violation: 'image_content_policy_violation',
+  invalid_image_mode: 'invalid_image_mode',
+  image_file_too_large: 'image_file_too_large',
+  unsupported_image_media_type: 'unsupported_image_media_type',
+  empty_image_file: 'empty_image_file',
+  failed_to_download_image: 'failed_to_download_image',
+  image_file_not_found: 'image_file_not_found',
+} as const;
+
+/**
+ * An error object returned when the model fails to generate a Response.
+ */
+export interface ResponseError {
+  code: ResponseErrorCode;
+  /** A human-readable description of the error. */
+  message: string;
+}
+
+/**
+ * The type of the event. Always `response.created`.
+ */
+export type ResponseCreatedEventType = typeof ResponseCreatedEventType[keyof typeof ResponseCreatedEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseCreatedEventType = {
+  responsecreated: 'response.created',
+} as const;
+
+/**
+ * An event that is emitted when a response is created.
+ */
+export interface ResponseCreatedEvent {
+  response: OpenAIResponse;
+  /** The type of the event. Always `response.created`. */
+  type: ResponseCreatedEventType;
+}
+
+/**
+ * The type of the event. Always `response.content_part.done`.
+ */
+export type ResponseContentPartDoneEventType = typeof ResponseContentPartDoneEventType[keyof typeof ResponseContentPartDoneEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseContentPartDoneEventType = {
+  responsecontent_partdone: 'response.content_part.done',
+} as const;
+
+/**
+ * Emitted when a content part is done.
+ */
+export interface ResponseContentPartDoneEvent {
+  /** The index of the content part that is done. */
+  content_index: number;
+  /** The ID of the output item that the content part was added to. */
+  item_id: string;
+  /** The index of the output item that the content part was added to. */
+  output_index: number;
+  part: OutputContent;
+  /** The type of the event. Always `response.content_part.done`. */
+  type: ResponseContentPartDoneEventType;
+}
+
+/**
+ * The type of the event. Always `response.content_part.added`.
+ */
+export type ResponseContentPartAddedEventType = typeof ResponseContentPartAddedEventType[keyof typeof ResponseContentPartAddedEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseContentPartAddedEventType = {
+  responsecontent_partadded: 'response.content_part.added',
+} as const;
+
+/**
+ * Emitted when a new content part is added.
+ */
+export interface ResponseContentPartAddedEvent {
+  /** The index of the content part that was added. */
+  content_index: number;
+  /** The ID of the output item that the content part was added to. */
+  item_id: string;
+  /** The index of the output item that the content part was added to. */
+  output_index: number;
+  part: OutputContent;
+  /** The type of the event. Always `response.content_part.added`. */
+  type: ResponseContentPartAddedEventType;
+}
+
+/**
+ * The type of the event. Always `response.completed`.
+ */
+export type ResponseCompletedEventType = typeof ResponseCompletedEventType[keyof typeof ResponseCompletedEventType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ResponseCompletedEventType = {
+  responsecompleted: 'response.completed',
+} as const;
+
+/**
+ * Emitted when the model response is complete.
+ */
+export interface ResponseCompletedEvent {
+  response: OpenAIResponse;
+  /** The type of the event. Always `response.completed`. */
+  type: ResponseCompletedEventType;
+}
+
+/**
+ * The rendering speed setting that controls the trade-off between generation speed and quality
+ */
+export type RenderingSpeed = typeof RenderingSpeed[keyof typeof RenderingSpeed];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RenderingSpeed = {
+  BALANCED: 'BALANCED',
+  TURBO: 'TURBO',
+  QUALITY: 'QUALITY',
+} as const;
+
+export interface RecraftUserControls {
+  artistic_level?: number;
+  background_color?: RecraftImageColor;
+  colors?: RecraftImageColor[];
+  no_text?: boolean;
+}
+
+export type RecraftTransformModel = typeof RecraftTransformModel[keyof typeof RecraftTransformModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RecraftTransformModel = {
+  refm1: 'refm1',
+  recraft20b: 'recraft20b',
+  recraftv2: 'recraftv2',
+  recraftv3: 'recraftv3',
+  flux1_1pro: 'flux1_1pro',
+  flux1dev: 'flux1dev',
+  imagen3: 'imagen3',
+  hidream_i1_dev: 'hidream_i1_dev',
+} as const;
+
+export interface RecraftTransformImageWithMaskRequest {
+  block_nsfw?: boolean;
+  calculate_features?: boolean;
+  image: Blob;
+  image_format?: RecraftImageFormat;
+  mask: Blob;
+  model?: RecraftTransformModel;
+  n?: number;
+  negative_prompt?: string;
+  prompt: string;
+  response_format?: RecraftResponseFormat;
+  style?: RecraftImageStyle;
+  style_id?: string;
+  substyle?: RecraftImageSubStyle;
+  text_layout?: RecraftTextLayout;
+}
+
+export interface RecraftTextLayoutItem {
+  bbox: number[][];
+  text: string;
+}
+
+export type RecraftTextLayout = RecraftTextLayoutItem[];
+
+export type RecraftResponseFormat = typeof RecraftResponseFormat[keyof typeof RecraftResponseFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RecraftResponseFormat = {
+  url: 'url',
+  b64_json: 'b64_json',
+} as const;
+
+export interface RecraftProcessImageResponse {
+  created: number;
+  credits: number;
+  image: RecraftImage;
+}
+
+export interface RecraftProcessImageRequest {
+  image: Blob;
+  image_format?: RecraftImageFormat;
+  response_format?: RecraftResponseFormat;
+}
+
+export type RecraftImageSubStyle = typeof RecraftImageSubStyle[keyof typeof RecraftImageSubStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RecraftImageSubStyle = {
+  '2d_art_poster': '2d_art_poster',
+  '3d': '3d',
+  '80s': '80s',
+  glow: 'glow',
+  grain: 'grain',
+  hand_drawn: 'hand_drawn',
+  infantile_sketch: 'infantile_sketch',
+  kawaii: 'kawaii',
+  pixel_art: 'pixel_art',
+  psychedelic: 'psychedelic',
+  seamless: 'seamless',
+  voxel: 'voxel',
+  watercolor: 'watercolor',
+  broken_line: 'broken_line',
+  colored_outline: 'colored_outline',
+  colored_shapes: 'colored_shapes',
+  colored_shapes_gradient: 'colored_shapes_gradient',
+  doodle_fill: 'doodle_fill',
+  doodle_offset_fill: 'doodle_offset_fill',
+  offset_fill: 'offset_fill',
+  outline: 'outline',
+  outline_gradient: 'outline_gradient',
+  uneven_fill: 'uneven_fill',
+  '70s': '70s',
+  cartoon: 'cartoon',
+  doodle_line_art: 'doodle_line_art',
+  engraving: 'engraving',
+  flat_2: 'flat_2',
+  line_art: 'line_art',
+  linocut: 'linocut',
+  b_and_w: 'b_and_w',
+  enterprise: 'enterprise',
+  hard_flash: 'hard_flash',
+  hdr: 'hdr',
+  motion_blur: 'motion_blur',
+  natural_light: 'natural_light',
+  studio_portrait: 'studio_portrait',
+  line_circuit: 'line_circuit',
+  '2d_art_poster_2': '2d_art_poster_2',
+  engraving_color: 'engraving_color',
+  flat_air_art: 'flat_air_art',
+  hand_drawn_outline: 'hand_drawn_outline',
+  handmade_3d: 'handmade_3d',
+  stickers_drawings: 'stickers_drawings',
+  plastic: 'plastic',
+  pictogram: 'pictogram',
+} as const;
+
+export type RecraftImageStyle = typeof RecraftImageStyle[keyof typeof RecraftImageStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RecraftImageStyle = {
+  digital_illustration: 'digital_illustration',
+  icon: 'icon',
+  realistic_image: 'realistic_image',
+  vector_illustration: 'vector_illustration',
+} as const;
+
+export interface RecraftImageToImageRequest {
+  block_nsfw?: boolean;
+  calculate_features?: boolean;
+  controls?: RecraftUserControls;
+  image: Blob;
+  image_format?: RecraftImageFormat;
+  model?: RecraftTransformModel;
+  n?: number;
+  negative_prompt?: string;
+  prompt: string;
+  response_format?: RecraftResponseFormat;
+  strength: number;
+  style?: RecraftImageStyle;
+  style_id?: string;
+  substyle?: RecraftImageSubStyle;
+  text_layout?: RecraftTextLayout;
+}
+
+export type RecraftImageGenerationResponseDataItem = {
+  /** Unique identifier for the generated image */
+  image_id?: string;
+  /** URL to access the generated image */
+  url?: string;
+};
+
+/**
+ * Response from the Recraft image generation API.
+ */
+export interface RecraftImageGenerationResponse {
+  /** Unix timestamp when the generation was created */
+  created: number;
+  /** Number of credits used for the generation */
+  credits: number;
+  /** Array of generated image information */
+  data: RecraftImageGenerationResponseDataItem[];
+}
+
+/**
+ * The controls for the generated image
+ */
+export type RecraftImageGenerationRequestControls = {
+  /**
+   * Defines artistic tone of your image. At a simple level, the person looks straight at the camera in a static and clean style. Dynamic and eccentric levels introduce movement and creativity.
+   * @minimum 0
+   * @maximum 5
+   * @nullable
+   */
+  artistic_level?: number | null;
+  background_color?: RGBColor;
+  /** An array of preferable colors */
+  colors?: RGBColor[];
+  /** Do not embed text layouts */
+  no_text?: boolean;
+};
+
+/**
+ * Parameters for the Recraft image generation proxy request.
+ */
+export interface RecraftImageGenerationRequest {
+  /** The controls for the generated image */
+  controls?: RecraftImageGenerationRequestControls;
+  /** The model to use for generation (e.g., "recraftv3") */
+  model: string;
+  /**
+   * The number of images to generate
+   * @minimum 1
+   * @maximum 4
+   */
+  n: number;
+  /** The text prompt describing the image to generate */
+  prompt: string;
+  /** The size of the generated image (e.g., "1024x1024") */
+  size: string;
+  /** The style to apply to the generated image (e.g., "digital_illustration") */
+  style?: string;
+  /** The style ID to apply to the generated image (e.g., "123e4567-e89b-12d3-a456-426614174000"). If style_id is provided, style should not be provided. */
+  style_id?: string;
+}
+
+export type RecraftImageFormat = typeof RecraftImageFormat[keyof typeof RecraftImageFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RecraftImageFormat = {
+  webp: 'webp',
+  png: 'png',
+} as const;
+
+export interface RecraftImageFeatures {
+  nsfw_score?: number;
+}
+
+export interface RecraftImageColor {
+  rgb?: number[];
+  std?: number[];
+  weight?: number;
+}
+
+export interface RecraftImage {
+  b64_json?: string;
+  features?: RecraftImageFeatures;
+  image_id: string;
+  revised_prompt?: string;
+  url?: string;
+}
+
+export interface RecraftGenerateImageResponse {
+  created: number;
+  credits: number;
+  data: RecraftImage[];
+}
+
+/**
+ * The type of the object. Always `reasoning`.
+
+ */
+export type ReasoningItemType = typeof ReasoningItemType[keyof typeof ReasoningItemType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReasoningItemType = {
+  reasoning: 'reasoning',
+} as const;
+
+/**
+ * The type of the object. Always `summary_text`.
+
+ */
+export type ReasoningItemSummaryItemType = typeof ReasoningItemSummaryItemType[keyof typeof ReasoningItemSummaryItemType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReasoningItemSummaryItemType = {
+  summary_text: 'summary_text',
+} as const;
+
+export type ReasoningItemSummaryItem = {
+  /** A short summary of the reasoning used by the model when generating
+the response.
+ */
+  text: string;
+  /** The type of the object. Always `summary_text`.
+ */
+  type: ReasoningItemSummaryItemType;
+};
+
+/**
+ * The status of the item. One of `in_progress`, `completed`, or
+`incomplete`. Populated when items are returned via API.
+
+ */
+export type ReasoningItemStatus = typeof ReasoningItemStatus[keyof typeof ReasoningItemStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReasoningItemStatus = {
+  in_progress: 'in_progress',
+  completed: 'completed',
+  incomplete: 'incomplete',
+} as const;
+
+/**
+ * A description of the chain of thought used by a reasoning model while generating
+a response.
+
+ */
+export interface ReasoningItem {
+  /** The unique identifier of the reasoning content.
+ */
+  id: string;
+  /** The status of the item. One of `in_progress`, `completed`, or
+`incomplete`. Populated when items are returned via API.
+ */
+  status?: ReasoningItemStatus;
+  /** Reasoning text contents.
+ */
+  summary: ReasoningItemSummaryItem[];
+  /** The type of the object. Always `reasoning`.
+ */
+  type: ReasoningItemType;
+}
+
+/**
+ * **o-series models only** 
+
+Constrains effort on reasoning for 
+[reasoning models](https://platform.openai.com/docs/guides/reasoning).
+Currently supported values are `low`, `medium`, and `high`. Reducing
+reasoning effort can result in faster responses and fewer tokens used
+on reasoning in a response.
+
+ */
+export type ReasoningEffort = typeof ReasoningEffort[keyof typeof ReasoningEffort];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReasoningEffort = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+/**
+ * A summary of the reasoning performed by the model. This can be
+useful for debugging and understanding the model's reasoning process.
+One of `auto`, `concise`, or `detailed`.
+
+ */
+export type ReasoningSummary = typeof ReasoningSummary[keyof typeof ReasoningSummary];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReasoningSummary = {
+  auto: 'auto',
+  concise: 'concise',
+  detailed: 'detailed',
+} as const;
+
+/**
+ * **Deprecated:** use `summary` instead.
+
+A summary of the reasoning performed by the model. This can be
+useful for debugging and understanding the model's reasoning process.
+One of `auto`, `concise`, or `detailed`.
+
+ * @deprecated
+ */
+export type ReasoningGenerateSummary = typeof ReasoningGenerateSummary[keyof typeof ReasoningGenerateSummary];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReasoningGenerateSummary = {
+  auto: 'auto',
+  concise: 'concise',
+  detailed: 'detailed',
+} as const;
+
+/**
+ * **o-series models only**
+
+Configuration options for 
+[reasoning models](https://platform.openai.com/docs/guides/reasoning).
+
+ */
+export interface Reasoning {
+  effort?: ReasoningEffort;
+  /**
+   * **Deprecated:** use `summary` instead.
+
+A summary of the reasoning performed by the model. This can be
+useful for debugging and understanding the model's reasoning process.
+One of `auto`, `concise`, or `detailed`.
+
+   * @deprecated
+   */
+  generate_summary?: ReasoningGenerateSummary;
+  /** A summary of the reasoning performed by the model. This can be
+useful for debugging and understanding the model's reasoning process.
+One of `auto`, `concise`, or `detailed`.
+ */
+  summary?: ReasoningSummary;
+}
+
+/**
+ * RGB color values
+ */
+export interface RGBColor {
+  /**
+   * @minItems 3
+   * @maxItems 3
+   */
+  rgb: number[];
 }
 
 export interface PublisherUser {
@@ -485,6 +4618,444 @@ export interface Publisher {
   website?: string;
 }
 
+/**
+ * Video generation status codes:
+* 1 - Generation successful
+* 5 - Generating
+* 6 - Deleted
+* 7 - Contents moderation failed
+* 8 - Generation failed
+
+ */
+export type PixverseVideoResultResponseRespStatus = typeof PixverseVideoResultResponseRespStatus[keyof typeof PixverseVideoResultResponseRespStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseVideoResultResponseRespStatus = {
+  NUMBER_1: 1,
+  NUMBER_5: 5,
+  NUMBER_6: 6,
+  NUMBER_7: 7,
+  NUMBER_8: 8,
+} as const;
+
+export type PixverseVideoResultResponseResp = {
+  create_time?: string;
+  id?: number;
+  modify_time?: string;
+  negative_prompt?: string;
+  outputHeight?: number;
+  outputWidth?: number;
+  prompt?: string;
+  resolution_ratio?: number;
+  seed?: number;
+  size?: number;
+  /** Video generation status codes:
+* 1 - Generation successful
+* 5 - Generating
+* 6 - Deleted
+* 7 - Contents moderation failed
+* 8 - Generation failed
+ */
+  status?: PixverseVideoResultResponseRespStatus;
+  style?: string;
+  url?: string;
+};
+
+export interface PixverseVideoResultResponse {
+  ErrCode?: number;
+  ErrMsg?: string;
+  Resp?: PixverseVideoResultResponseResp;
+}
+
+export type PixverseVideoResponseResp = {
+  video_id?: number;
+};
+
+export interface PixverseVideoResponse {
+  ErrCode?: number;
+  ErrMsg?: string;
+  Resp?: PixverseVideoResponseResp;
+}
+
+export type PixverseTransitionVideoRequestStyle = typeof PixverseTransitionVideoRequestStyle[keyof typeof PixverseTransitionVideoRequestStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTransitionVideoRequestStyle = {
+  anime: 'anime',
+  '3d_animation': '3d_animation',
+  clay: 'clay',
+  comic: 'comic',
+  cyberpunk: 'cyberpunk',
+} as const;
+
+export type PixverseTransitionVideoRequestQuality = typeof PixverseTransitionVideoRequestQuality[keyof typeof PixverseTransitionVideoRequestQuality];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTransitionVideoRequestQuality = {
+  '360p': '360p',
+  '540p': '540p',
+  '720p': '720p',
+  '1080p': '1080p',
+} as const;
+
+export type PixverseTransitionVideoRequestMotionMode = typeof PixverseTransitionVideoRequestMotionMode[keyof typeof PixverseTransitionVideoRequestMotionMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTransitionVideoRequestMotionMode = {
+  normal: 'normal',
+  fast: 'fast',
+} as const;
+
+export type PixverseTransitionVideoRequestModel = typeof PixverseTransitionVideoRequestModel[keyof typeof PixverseTransitionVideoRequestModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTransitionVideoRequestModel = {
+  v35: 'v3.5',
+} as const;
+
+export type PixverseTransitionVideoRequestDuration = typeof PixverseTransitionVideoRequestDuration[keyof typeof PixverseTransitionVideoRequestDuration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTransitionVideoRequestDuration = {
+  NUMBER_5: 5,
+  NUMBER_8: 8,
+} as const;
+
+export interface PixverseTransitionVideoRequest {
+  duration: PixverseTransitionVideoRequestDuration;
+  first_frame_img: number;
+  last_frame_img: number;
+  model: PixverseTransitionVideoRequestModel;
+  motion_mode: PixverseTransitionVideoRequestMotionMode;
+  prompt: string;
+  quality: PixverseTransitionVideoRequestQuality;
+  seed: number;
+  style?: PixverseTransitionVideoRequestStyle;
+  template_id?: number;
+  water_mark?: boolean;
+}
+
+export type PixverseTextVideoRequestStyle = typeof PixverseTextVideoRequestStyle[keyof typeof PixverseTextVideoRequestStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTextVideoRequestStyle = {
+  anime: 'anime',
+  '3d_animation': '3d_animation',
+  clay: 'clay',
+  comic: 'comic',
+  cyberpunk: 'cyberpunk',
+} as const;
+
+export type PixverseTextVideoRequestQuality = typeof PixverseTextVideoRequestQuality[keyof typeof PixverseTextVideoRequestQuality];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTextVideoRequestQuality = {
+  '360p': '360p',
+  '540p': '540p',
+  '720p': '720p',
+  '1080p': '1080p',
+} as const;
+
+export type PixverseTextVideoRequestMotionMode = typeof PixverseTextVideoRequestMotionMode[keyof typeof PixverseTextVideoRequestMotionMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTextVideoRequestMotionMode = {
+  normal: 'normal',
+  fast: 'fast',
+} as const;
+
+export type PixverseTextVideoRequestModel = typeof PixverseTextVideoRequestModel[keyof typeof PixverseTextVideoRequestModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTextVideoRequestModel = {
+  v35: 'v3.5',
+} as const;
+
+export type PixverseTextVideoRequestDuration = typeof PixverseTextVideoRequestDuration[keyof typeof PixverseTextVideoRequestDuration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTextVideoRequestDuration = {
+  NUMBER_5: 5,
+  NUMBER_8: 8,
+} as const;
+
+export type PixverseTextVideoRequestAspectRatio = typeof PixverseTextVideoRequestAspectRatio[keyof typeof PixverseTextVideoRequestAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseTextVideoRequestAspectRatio = {
+  '16:9': '16:9',
+  '4:3': '4:3',
+  '1:1': '1:1',
+  '3:4': '3:4',
+  '9:16': '9:16',
+} as const;
+
+export interface PixverseTextVideoRequest {
+  aspect_ratio: PixverseTextVideoRequestAspectRatio;
+  duration: PixverseTextVideoRequestDuration;
+  model: PixverseTextVideoRequestModel;
+  motion_mode?: PixverseTextVideoRequestMotionMode;
+  negative_prompt?: string;
+  prompt: string;
+  quality: PixverseTextVideoRequestQuality;
+  seed?: number;
+  style?: PixverseTextVideoRequestStyle;
+  template_id?: number;
+  water_mark?: boolean;
+}
+
+export type PixverseImageVideoRequestStyle = typeof PixverseImageVideoRequestStyle[keyof typeof PixverseImageVideoRequestStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseImageVideoRequestStyle = {
+  anime: 'anime',
+  '3d_animation': '3d_animation',
+  clay: 'clay',
+  comic: 'comic',
+  cyberpunk: 'cyberpunk',
+} as const;
+
+export type PixverseImageVideoRequestQuality = typeof PixverseImageVideoRequestQuality[keyof typeof PixverseImageVideoRequestQuality];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseImageVideoRequestQuality = {
+  '360p': '360p',
+  '540p': '540p',
+  '720p': '720p',
+  '1080p': '1080p',
+} as const;
+
+export type PixverseImageVideoRequestMotionMode = typeof PixverseImageVideoRequestMotionMode[keyof typeof PixverseImageVideoRequestMotionMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseImageVideoRequestMotionMode = {
+  normal: 'normal',
+  fast: 'fast',
+} as const;
+
+export type PixverseImageVideoRequestModel = typeof PixverseImageVideoRequestModel[keyof typeof PixverseImageVideoRequestModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseImageVideoRequestModel = {
+  v35: 'v3.5',
+} as const;
+
+export type PixverseImageVideoRequestDuration = typeof PixverseImageVideoRequestDuration[keyof typeof PixverseImageVideoRequestDuration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PixverseImageVideoRequestDuration = {
+  NUMBER_5: 5,
+  NUMBER_8: 8,
+} as const;
+
+export interface PixverseImageVideoRequest {
+  duration: PixverseImageVideoRequestDuration;
+  img_id: number;
+  model: PixverseImageVideoRequestModel;
+  motion_mode?: PixverseImageVideoRequestMotionMode;
+  prompt: string;
+  quality: PixverseImageVideoRequestQuality;
+  seed?: number;
+  style?: PixverseImageVideoRequestStyle;
+  template_id?: number;
+  water_mark?: boolean;
+}
+
+export type PixverseImageUploadResponseResp = {
+  img_id?: number;
+};
+
+export interface PixverseImageUploadResponse {
+  ErrCode?: number;
+  ErrMsg?: string;
+  Resp?: PixverseImageUploadResponseResp;
+}
+
+export type Pikaffect = typeof Pikaffect[keyof typeof Pikaffect];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Pikaffect = {
+  'Cake-ify': 'Cake-ify',
+  Crumble: 'Crumble',
+  Crush: 'Crush',
+  Decapitate: 'Decapitate',
+  Deflate: 'Deflate',
+  Dissolve: 'Dissolve',
+  Explode: 'Explode',
+  'Eye-pop': 'Eye-pop',
+  Inflate: 'Inflate',
+  Levitate: 'Levitate',
+  Melt: 'Melt',
+  Peel: 'Peel',
+  Poke: 'Poke',
+  Squish: 'Squish',
+  'Ta-da': 'Ta-da',
+  Tear: 'Tear',
+} as const;
+
+export type PikaValidationErrorLocItem = string | number;
+
+export interface PikaValidationError {
+  loc: PikaValidationErrorLocItem[];
+  msg: string;
+  type: string;
+}
+
+export type PikaStatusEnum = typeof PikaStatusEnum[keyof typeof PikaStatusEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PikaStatusEnum = {
+  queued: 'queued',
+  started: 'started',
+  finished: 'finished',
+} as const;
+
+export interface PikaVideoResponse {
+  id: string;
+  /** @nullable */
+  progress?: number | null;
+  status: PikaStatusEnum;
+  /** @nullable */
+  url?: string | null;
+}
+
+export type PikaResolutionEnum = typeof PikaResolutionEnum[keyof typeof PikaResolutionEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PikaResolutionEnum = {
+  '1080p': '1080p',
+  '720p': '720p',
+} as const;
+
+export interface PikaHTTPValidationError {
+  detail?: PikaValidationError[];
+}
+
+export interface PikaGenerateResponse {
+  video_id: string;
+}
+
+export type PikaDurationEnum = typeof PikaDurationEnum[keyof typeof PikaDurationEnum];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PikaDurationEnum = {
+  NUMBER_5: 5,
+  NUMBER_10: 10,
+} as const;
+
+export interface PikaBodyGeneratePikaswapsGeneratePikaswapsPost {
+  image?: Blob;
+  /** A mask image that specifies the region to modify, where the mask is white and the background is black */
+  modifyRegionMask?: Blob;
+  /** Plaintext description of the object / region to modify */
+  modifyRegionRoi?: string;
+  negativePrompt?: string;
+  promptText?: string;
+  seed?: number;
+  video?: Blob;
+}
+
+export interface PikaBodyGeneratePikaffectsGeneratePikaffectsPost {
+  image?: Blob;
+  negativePrompt?: string;
+  pikaffect?: Pikaffect;
+  promptText?: string;
+  seed?: number;
+}
+
+export interface PikaBodyGeneratePikadditionsGeneratePikadditionsPost {
+  image?: Blob;
+  negativePrompt?: string;
+  promptText?: string;
+  seed?: number;
+  video?: Blob;
+}
+
+export interface PikaBodyGenerate22T2vGenerate22T2vPost {
+  /**
+   * Aspect ratio (width / height)
+   * @minimum 0.4
+   * @maximum 2.5
+   */
+  aspectRatio?: number;
+  duration?: PikaDurationEnum;
+  /** @nullable */
+  negativePrompt?: string | null;
+  promptText: string;
+  resolution?: PikaResolutionEnum;
+  /** @nullable */
+  seed?: number | null;
+}
+
+export interface PikaBodyGenerate22KeyframeGenerate22PikaframesPost {
+  /**
+   * @minimum 5
+   * @maximum 10
+   */
+  duration?: number;
+  /** Array of keyframe images */
+  keyFrames?: Blob[];
+  negativePrompt?: string;
+  promptText: string;
+  resolution?: PikaResolutionEnum;
+  seed?: number;
+}
+
+export interface PikaBodyGenerate22I2vGenerate22I2vPost {
+  duration?: PikaDurationEnum;
+  /** @nullable */
+  image?: Blob | null;
+  /** @nullable */
+  negativePrompt?: string | null;
+  /** @nullable */
+  promptText?: string | null;
+  resolution?: PikaResolutionEnum;
+  /** @nullable */
+  seed?: number | null;
+}
+
+export type PikaBodyGenerate22C2vGenerate22PikascenesPostIngredientsMode = typeof PikaBodyGenerate22C2vGenerate22PikascenesPostIngredientsMode[keyof typeof PikaBodyGenerate22C2vGenerate22PikascenesPostIngredientsMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const PikaBodyGenerate22C2vGenerate22PikascenesPostIngredientsMode = {
+  creative: 'creative',
+  precise: 'precise',
+} as const;
+
+export interface PikaBodyGenerate22C2vGenerate22PikascenesPost {
+  /** Aspect ratio (width / height) */
+  aspectRatio?: number;
+  duration?: number;
+  images?: Blob[];
+  ingredientsMode: PikaBodyGenerate22C2vGenerate22PikascenesPostIngredientsMode;
+  negativePrompt?: string;
+  promptText?: string;
+  resolution?: string;
+  seed?: number;
+}
+
 export interface PersonalAccessToken {
   /** [Output Only]The date and time the token was created. */
   createdAt?: string;
@@ -497,6 +5068,479 @@ export interface PersonalAccessToken {
   /** [Output Only]. The personal access token. Only returned during creation. */
   token?: string;
 }
+
+/**
+ * The type of output content
+ */
+export type OutputTextContentType = typeof OutputTextContentType[keyof typeof OutputTextContentType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OutputTextContentType = {
+  output_text: 'output_text',
+} as const;
+
+export interface OutputTextContent {
+  /** The text content */
+  text: string;
+  /** The type of output content */
+  type: OutputTextContentType;
+}
+
+/**
+ * The type of output item
+ */
+export type OutputMessageType = typeof OutputMessageType[keyof typeof OutputMessageType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OutputMessageType = {
+  message: 'message',
+} as const;
+
+/**
+ * The role of the message
+ */
+export type OutputMessageRole = typeof OutputMessageRole[keyof typeof OutputMessageRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OutputMessageRole = {
+  assistant: 'assistant',
+} as const;
+
+export interface OutputMessage {
+  /** The content of the message */
+  content: OutputContent[];
+  /** The role of the message */
+  role: OutputMessageRole;
+  /** The type of output item */
+  type: OutputMessageType;
+}
+
+export type OutputItem = OutputMessage | FileSearchToolCall | FunctionToolCall | WebSearchToolCall | ComputerToolCall | ReasoningItem;
+
+/**
+ * The type of output content
+ */
+export type OutputAudioContentType = typeof OutputAudioContentType[keyof typeof OutputAudioContentType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OutputAudioContentType = {
+  output_audio: 'output_audio',
+} as const;
+
+export interface OutputAudioContent {
+  /** Base64-encoded audio data */
+  data: string;
+  /** Transcript of the audio */
+  transcript: string;
+  /** The type of output content */
+  type: OutputAudioContentType;
+}
+
+export type OutputContent = OutputTextContent | OutputAudioContent;
+
+/**
+ * Events that can be emitted during response streaming
+ */
+export type OpenAIResponseStreamEvent = ResponseCreatedEvent | ResponseInProgressEvent | ResponseCompletedEvent | ResponseFailedEvent | ResponseIncompleteEvent | ResponseOutputItemAddedEvent | ResponseOutputItemDoneEvent | ResponseContentPartAddedEvent | ResponseContentPartDoneEvent | ResponseErrorEvent;
+
+/**
+ * The status of the response generation. One of `completed`, `failed`, `in_progress`, or `incomplete`.
+ */
+export type OpenAIResponseAllOfStatus = typeof OpenAIResponseAllOfStatus[keyof typeof OpenAIResponseAllOfStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIResponseAllOfStatus = {
+  completed: 'completed',
+  failed: 'failed',
+  in_progress: 'in_progress',
+  incomplete: 'incomplete',
+} as const;
+
+/**
+ * The object type of this resource - always set to `response`.
+ */
+export type OpenAIResponseAllOfObject = typeof OpenAIResponseAllOfObject[keyof typeof OpenAIResponseAllOfObject];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIResponseAllOfObject = {
+  response: 'response',
+} as const;
+
+/**
+ * The reason why the response is incomplete.
+ */
+export type OpenAIResponseAllOfIncompleteDetailsReason = typeof OpenAIResponseAllOfIncompleteDetailsReason[keyof typeof OpenAIResponseAllOfIncompleteDetailsReason];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIResponseAllOfIncompleteDetailsReason = {
+  max_output_tokens: 'max_output_tokens',
+  content_filter: 'content_filter',
+} as const;
+
+/**
+ * Details about why the response is incomplete.
+
+ * @nullable
+ */
+export type OpenAIResponseAllOfIncompleteDetails = {
+  /** The reason why the response is incomplete. */
+  reason?: OpenAIResponseAllOfIncompleteDetailsReason;
+} | null;
+
+export type OpenAIResponseAllOf = {
+  /** Unix timestamp (in seconds) of when this Response was created. */
+  created_at?: number;
+  error?: ResponseError;
+  /** Unique identifier for this Response. */
+  id?: string;
+  /**
+   * Details about why the response is incomplete.
+
+   * @nullable
+   */
+  incomplete_details?: OpenAIResponseAllOfIncompleteDetails;
+  /** The object type of this resource - always set to `response`. */
+  object?: OpenAIResponseAllOfObject;
+  /** An array of content items generated by the model.
+
+- The length and order of items in the `output` array is dependent
+  on the model's response.
+- Rather than accessing the first item in the `output` array and 
+  assuming it's an `assistant` message with the content generated by
+  the model, you might consider using the `output_text` property where
+  supported in SDKs.
+ */
+  output?: OutputItem[];
+  /**
+   * SDK-only convenience property that contains the aggregated text output 
+from all `output_text` items in the `output` array, if any are present. 
+Supported in the Python and JavaScript SDKs.
+
+   * @nullable
+   */
+  output_text?: string | null;
+  /** Whether to allow the model to run tool calls in parallel.
+ */
+  parallel_tool_calls?: boolean;
+  /** The status of the response generation. One of `completed`, `failed`, `in_progress`, or `incomplete`. */
+  status?: OpenAIResponseAllOfStatus;
+  usage?: ResponseUsage;
+};
+
+/**
+ * A response from the model
+ */
+export type OpenAIResponse = ModelResponseProperties & ResponseProperties & OpenAIResponseAllOf;
+
+export type OpenAIModels = typeof OpenAIModels[keyof typeof OpenAIModels];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIModels = {
+  'gpt-4': 'gpt-4',
+  'gpt-4-0314': 'gpt-4-0314',
+  'gpt-4-0613': 'gpt-4-0613',
+  'gpt-4-32k': 'gpt-4-32k',
+  'gpt-4-32k-0314': 'gpt-4-32k-0314',
+  'gpt-4-32k-0613': 'gpt-4-32k-0613',
+  'gpt-4-0125-preview': 'gpt-4-0125-preview',
+  'gpt-4-turbo': 'gpt-4-turbo',
+  'gpt-4-turbo-2024-04-09': 'gpt-4-turbo-2024-04-09',
+  'gpt-4-turbo-preview': 'gpt-4-turbo-preview',
+  'gpt-4-1106-preview': 'gpt-4-1106-preview',
+  'gpt-4-vision-preview': 'gpt-4-vision-preview',
+  'gpt-35-turbo': 'gpt-3.5-turbo',
+  'gpt-35-turbo-16k': 'gpt-3.5-turbo-16k',
+  'gpt-35-turbo-0301': 'gpt-3.5-turbo-0301',
+  'gpt-35-turbo-0613': 'gpt-3.5-turbo-0613',
+  'gpt-35-turbo-1106': 'gpt-3.5-turbo-1106',
+  'gpt-35-turbo-0125': 'gpt-3.5-turbo-0125',
+  'gpt-35-turbo-16k-0613': 'gpt-3.5-turbo-16k-0613',
+  'gpt-41': 'gpt-4.1',
+  'gpt-41-mini': 'gpt-4.1-mini',
+  'gpt-41-nano': 'gpt-4.1-nano',
+  'gpt-41-2025-04-14': 'gpt-4.1-2025-04-14',
+  'gpt-41-mini-2025-04-14': 'gpt-4.1-mini-2025-04-14',
+  'gpt-41-nano-2025-04-14': 'gpt-4.1-nano-2025-04-14',
+  o1: 'o1',
+  'o1-mini': 'o1-mini',
+  'o1-preview': 'o1-preview',
+  'o1-pro': 'o1-pro',
+  'o1-2024-12-17': 'o1-2024-12-17',
+  'o1-preview-2024-09-12': 'o1-preview-2024-09-12',
+  'o1-mini-2024-09-12': 'o1-mini-2024-09-12',
+  'o1-pro-2025-03-19': 'o1-pro-2025-03-19',
+  o3: 'o3',
+  'o3-mini': 'o3-mini',
+  'o3-2025-04-16': 'o3-2025-04-16',
+  'o3-mini-2025-01-31': 'o3-mini-2025-01-31',
+  'o4-mini': 'o4-mini',
+  'o4-mini-2025-04-16': 'o4-mini-2025-04-16',
+  'gpt-4o': 'gpt-4o',
+  'gpt-4o-mini': 'gpt-4o-mini',
+  'gpt-4o-2024-11-20': 'gpt-4o-2024-11-20',
+  'gpt-4o-2024-08-06': 'gpt-4o-2024-08-06',
+  'gpt-4o-2024-05-13': 'gpt-4o-2024-05-13',
+  'gpt-4o-mini-2024-07-18': 'gpt-4o-mini-2024-07-18',
+  'gpt-4o-audio-preview': 'gpt-4o-audio-preview',
+  'gpt-4o-audio-preview-2024-10-01': 'gpt-4o-audio-preview-2024-10-01',
+  'gpt-4o-audio-preview-2024-12-17': 'gpt-4o-audio-preview-2024-12-17',
+  'gpt-4o-mini-audio-preview': 'gpt-4o-mini-audio-preview',
+  'gpt-4o-mini-audio-preview-2024-12-17': 'gpt-4o-mini-audio-preview-2024-12-17',
+  'gpt-4o-search-preview': 'gpt-4o-search-preview',
+  'gpt-4o-mini-search-preview': 'gpt-4o-mini-search-preview',
+  'gpt-4o-search-preview-2025-03-11': 'gpt-4o-search-preview-2025-03-11',
+  'gpt-4o-mini-search-preview-2025-03-11': 'gpt-4o-mini-search-preview-2025-03-11',
+  'computer-use-preview': 'computer-use-preview',
+  'computer-use-preview-2025-03-11': 'computer-use-preview-2025-03-11',
+  'chatgpt-4o-latest': 'chatgpt-4o-latest',
+} as const;
+
+export type OpenAIImageGenerationResponseUsage = {
+  input_tokens?: number;
+  input_tokens_details?: OpenAIImageGenerationResponseUsageInputTokensDetails;
+  output_tokens?: number;
+  total_tokens?: number;
+};
+
+export interface OpenAIImageGenerationResponse {
+  data?: OpenAIImageGenerationResponseDataItem[];
+  usage?: OpenAIImageGenerationResponseUsage;
+}
+
+export type OpenAIImageGenerationResponseUsageInputTokensDetails = {
+  image_tokens?: number;
+  text_tokens?: number;
+};
+
+export type OpenAIImageGenerationResponseDataItem = {
+  /** Base64 encoded image data */
+  b64_json?: string;
+  /** Revised prompt */
+  revised_prompt?: string;
+  /** URL of the image */
+  url?: string;
+};
+
+/**
+ * Style of the image (only for dall-e-3)
+ */
+export type OpenAIImageGenerationRequestStyle = typeof OpenAIImageGenerationRequestStyle[keyof typeof OpenAIImageGenerationRequestStyle];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageGenerationRequestStyle = {
+  vivid: 'vivid',
+  natural: 'natural',
+} as const;
+
+/**
+ * Response format of image data
+ */
+export type OpenAIImageGenerationRequestResponseFormat = typeof OpenAIImageGenerationRequestResponseFormat[keyof typeof OpenAIImageGenerationRequestResponseFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageGenerationRequestResponseFormat = {
+  url: 'url',
+  b64_json: 'b64_json',
+} as const;
+
+/**
+ * The quality of the generated image
+ */
+export type OpenAIImageGenerationRequestQuality = typeof OpenAIImageGenerationRequestQuality[keyof typeof OpenAIImageGenerationRequestQuality];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageGenerationRequestQuality = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  standard: 'standard',
+  hd: 'hd',
+} as const;
+
+/**
+ * Format of the output image
+ */
+export type OpenAIImageGenerationRequestOutputFormat = typeof OpenAIImageGenerationRequestOutputFormat[keyof typeof OpenAIImageGenerationRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageGenerationRequestOutputFormat = {
+  png: 'png',
+  webp: 'webp',
+  jpeg: 'jpeg',
+} as const;
+
+/**
+ * Content moderation setting
+ */
+export type OpenAIImageGenerationRequestModeration = typeof OpenAIImageGenerationRequestModeration[keyof typeof OpenAIImageGenerationRequestModeration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageGenerationRequestModeration = {
+  low: 'low',
+  auto: 'auto',
+} as const;
+
+/**
+ * Background transparency
+ */
+export type OpenAIImageGenerationRequestBackground = typeof OpenAIImageGenerationRequestBackground[keyof typeof OpenAIImageGenerationRequestBackground];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageGenerationRequestBackground = {
+  transparent: 'transparent',
+  opaque: 'opaque',
+} as const;
+
+export interface OpenAIImageGenerationRequest {
+  /** Background transparency */
+  background?: OpenAIImageGenerationRequestBackground;
+  /** The model to use for image generation */
+  model?: string;
+  /** Content moderation setting */
+  moderation?: OpenAIImageGenerationRequestModeration;
+  /** The number of images to generate (1-10). Only 1 supported for dall-e-3. */
+  n?: number;
+  /** Compression level for JPEG or WebP (0-100) */
+  output_compression?: number;
+  /** Format of the output image */
+  output_format?: OpenAIImageGenerationRequestOutputFormat;
+  /** A text description of the desired image */
+  prompt: string;
+  /** The quality of the generated image */
+  quality?: OpenAIImageGenerationRequestQuality;
+  /** Response format of image data */
+  response_format?: OpenAIImageGenerationRequestResponseFormat;
+  /** Size of the image (e.g., 1024x1024, 1536x1024, auto) */
+  size?: string;
+  /** Style of the image (only for dall-e-3) */
+  style?: OpenAIImageGenerationRequestStyle;
+  /** A unique identifier for end-user monitoring */
+  user?: string;
+}
+
+/**
+ * Format of the output image
+ */
+export type OpenAIImageEditRequestOutputFormat = typeof OpenAIImageEditRequestOutputFormat[keyof typeof OpenAIImageEditRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageEditRequestOutputFormat = {
+  png: 'png',
+  webp: 'webp',
+  jpeg: 'jpeg',
+} as const;
+
+/**
+ * Content moderation setting
+ */
+export type OpenAIImageEditRequestModeration = typeof OpenAIImageEditRequestModeration[keyof typeof OpenAIImageEditRequestModeration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const OpenAIImageEditRequestModeration = {
+  low: 'low',
+  auto: 'auto',
+} as const;
+
+export interface OpenAIImageEditRequest {
+  /** Background transparency */
+  background?: string;
+  /** The model to use for image editing */
+  model: string;
+  /** Content moderation setting */
+  moderation?: OpenAIImageEditRequestModeration;
+  /** The number of images to generate */
+  n?: number;
+  /** Compression level for JPEG or WebP (0-100) */
+  output_compression?: number;
+  /** Format of the output image */
+  output_format?: OpenAIImageEditRequestOutputFormat;
+  /** A text description of the desired edit */
+  prompt: string;
+  /** The quality of the edited image */
+  quality?: string;
+  /** Size of the output image */
+  size?: string;
+  /** A unique identifier for end-user monitoring */
+  user?: string;
+}
+
+/**
+ * Text, image, or file inputs to the model, used to generate a response.
+
+Learn more:
+- [Text inputs and outputs](/docs/guides/text)
+- [Image inputs](/docs/guides/images)
+- [File inputs](/docs/guides/pdf-files)
+- [Conversation state](/docs/guides/conversation-state)
+- [Function calling](/docs/guides/function-calling)
+
+ */
+export type OpenAICreateResponseAllOfInput = string | InputItem[];
+
+export type OpenAICreateResponseAllOf = {
+  /**
+   * Specify additional output data to include in the model response. Currently
+supported values are:
+- `file_search_call.results`: Include the search results of
+  the file search tool call.
+- `message.input_image.image_url`: Include image urls from the input message.
+- `computer_call_output.output.image_url`: Include image urls from the computer call output.
+
+   * @nullable
+   */
+  include?: Includable[] | null;
+  /** Text, image, or file inputs to the model, used to generate a response.
+
+Learn more:
+- [Text inputs and outputs](/docs/guides/text)
+- [Image inputs](/docs/guides/images)
+- [File inputs](/docs/guides/pdf-files)
+- [Conversation state](/docs/guides/conversation-state)
+- [Function calling](/docs/guides/function-calling)
+ */
+  input: OpenAICreateResponseAllOfInput;
+  /**
+   * Whether to allow the model to run tool calls in parallel.
+
+   * @nullable
+   */
+  parallel_tool_calls?: boolean | null;
+  /**
+   * Whether to store the generated model response for later retrieval via
+API.
+
+   * @nullable
+   */
+  store?: boolean | null;
+  /**
+   * If set to true, the model response data will be streamed to the client
+as it is generated using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format).
+See the [Streaming section below](/docs/api-reference/responses-streaming)
+for more information.
+
+   * @nullable
+   */
+  stream?: boolean | null;
+  usage?: ResponseUsage;
+};
+
+export type OpenAICreateResponse = CreateModelResponseProperties & ResponseProperties & OpenAICreateResponseAllOf;
 
 export interface NodeVersionUpdateRequest {
   /** The changelog describing the version changes. */
@@ -580,6 +5624,258 @@ export interface Node {
   translations?: NodeTranslations;
 }
 
+export interface MoonvalleyUploadResponse {
+  access_url?: string;
+}
+
+export type MoonvalleyPromptResponseModelParams = { [key: string]: unknown };
+
+export type MoonvalleyPromptResponseMeta = { [key: string]: unknown };
+
+export type MoonvalleyPromptResponseInferenceParams = { [key: string]: unknown };
+
+export type MoonvalleyPromptResponseFrameConditioning = { [key: string]: unknown };
+
+export type MoonvalleyPromptResponseError = { [key: string]: unknown };
+
+export interface MoonvalleyPromptResponse {
+  error?: MoonvalleyPromptResponseError;
+  frame_conditioning?: MoonvalleyPromptResponseFrameConditioning;
+  id?: string;
+  inference_params?: MoonvalleyPromptResponseInferenceParams;
+  meta?: MoonvalleyPromptResponseMeta;
+  model_params?: MoonvalleyPromptResponseModelParams;
+  output_url?: string;
+  prompt_text?: string;
+  status?: string;
+}
+
+export interface MoonvalleyInferenceParams {
+  add_quality_guidance?: boolean;
+  caching_coefficient?: number;
+  caching_cooldown?: number;
+  caching_warmup?: number;
+  clip_value?: number;
+  conditioning_frame_index?: number;
+  cooldown_steps?: number;
+  fps?: number;
+  guidance_scale?: number;
+  height?: number;
+  negative_prompt?: string;
+  num_frames?: number;
+  seed?: number;
+  shift_value?: number;
+  steps?: number;
+  use_guidance_schedule?: boolean;
+  use_negative_prompts?: boolean;
+  use_timestep_transform?: boolean;
+  warmup_steps?: number;
+  width?: number;
+}
+
+export type MoonvalleyCreateVideoToVideoRequestControlType = typeof MoonvalleyCreateVideoToVideoRequestControlType[keyof typeof MoonvalleyCreateVideoToVideoRequestControlType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const MoonvalleyCreateVideoToVideoRequestControlType = {
+  motion_control: 'motion_control',
+} as const;
+
+export interface MoonvalleyCreateVideoToVideoRequest {
+  control_type: MoonvalleyCreateVideoToVideoRequestControlType;
+  inference_params?: MoonvalleyInferenceParams;
+  prompt_text: string;
+  video_url: string;
+  webhook_url?: string;
+}
+
+export interface MoonvalleyCreatePromptResponse {
+  approximate_wait_time?: number;
+  id?: string;
+  status?: string;
+}
+
+export interface MoonvalleyCreatePromptRequest {
+  image_url?: string;
+  inference_params?: MoonvalleyInferenceParams;
+  prompt_text: string;
+  webhook_url?: string;
+}
+
+/**
+ * How to handle truncation of the response
+ */
+export type ModelResponsePropertiesTruncation = typeof ModelResponsePropertiesTruncation[keyof typeof ModelResponsePropertiesTruncation];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ModelResponsePropertiesTruncation = {
+  disabled: 'disabled',
+  auto: 'auto',
+} as const;
+
+/**
+ * Common properties for model responses
+ */
+export interface ModelResponseProperties {
+  /** Instructions for the model on how to generate the response */
+  instructions?: string;
+  /** Maximum number of tokens to generate */
+  max_output_tokens?: number;
+  /** The model used to generate the response */
+  model?: string;
+  /**
+   * Controls randomness in the response
+   * @minimum 0
+   * @maximum 2
+   */
+  temperature?: number;
+  /**
+   * Controls diversity of the response via nucleus sampling
+   * @minimum 0
+   * @maximum 1
+   */
+  top_p?: number;
+  /** How to handle truncation of the response */
+  truncation?: ModelResponsePropertiesTruncation;
+}
+
+/**
+ * Type of input or output content modality.
+ */
+export type Modality = typeof Modality[keyof typeof Modality];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Modality = {
+  MODALITY_UNSPECIFIED: 'MODALITY_UNSPECIFIED',
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO',
+  AUDIO: 'AUDIO',
+  DOCUMENT: 'DOCUMENT',
+} as const;
+
+export interface ModalityTokenCount {
+  modality?: Modality;
+  /** Number of tokens for the given modality. */
+  tokenCount?: number;
+}
+
+/**
+ * Response from the Minimax video generation API.
+ */
+export interface MinimaxVideoGenerationResponse {
+  base_resp: MinimaxBaseResponse;
+  /** The task ID for the asynchronous video generation task. */
+  task_id: string;
+}
+
+export type MinimaxVideoGenerationRequestSubjectReferenceItem = {
+  /** URL or base64 encoding of the subject reference image. */
+  image?: string;
+  /** URL or base64 encoding of the mask for the subject reference image. */
+  mask?: string;
+};
+
+/**
+ * Required. ID of model. Options: T2V-01-Director, I2V-01-Director, S2V-01, I2V-01, I2V-01-live, T2V-01
+ */
+export type MinimaxVideoGenerationRequestModel = typeof MinimaxVideoGenerationRequestModel[keyof typeof MinimaxVideoGenerationRequestModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const MinimaxVideoGenerationRequestModel = {
+  'T2V-01-Director': 'T2V-01-Director',
+  'I2V-01-Director': 'I2V-01-Director',
+  'S2V-01': 'S2V-01',
+  'I2V-01': 'I2V-01',
+  'I2V-01-live': 'I2V-01-live',
+  'T2V-01': 'T2V-01',
+} as const;
+
+/**
+ * Parameters for the Minimax video generation proxy request.
+ */
+export interface MinimaxVideoGenerationRequest {
+  /** Optional. URL to receive real-time status updates about the video generation task. */
+  callback_url?: string;
+  /** URL or base64 encoding of the first frame image. Required when model is I2V-01, I2V-01-Director, or I2V-01-live. */
+  first_frame_image?: string;
+  /** Required. ID of model. Options: T2V-01-Director, I2V-01-Director, S2V-01, I2V-01, I2V-01-live, T2V-01 */
+  model: MinimaxVideoGenerationRequestModel;
+  /**
+   * Description of the video. Should be less than 2000 characters. Supports camera movement instructions in [brackets].
+   * @maxLength 2000
+   */
+  prompt?: string;
+  /** If true (default), the model will automatically optimize the prompt. Set to false for more precise control. */
+  prompt_optimizer?: boolean;
+  /** Only available when model is S2V-01. The model will generate a video based on the subject uploaded through this parameter. */
+  subject_reference?: MinimaxVideoGenerationRequestSubjectReferenceItem[];
+}
+
+/**
+ * Task status: 'Queueing' (in queue), 'Preparing' (task is preparing), 'Processing' (generating), 'Success' (task completed successfully), or 'Fail' (task failed).
+ */
+export type MinimaxTaskResultResponseStatus = typeof MinimaxTaskResultResponseStatus[keyof typeof MinimaxTaskResultResponseStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const MinimaxTaskResultResponseStatus = {
+  Queueing: 'Queueing',
+  Preparing: 'Preparing',
+  Processing: 'Processing',
+  Success: 'Success',
+  Fail: 'Fail',
+} as const;
+
+export type MinimaxFileRetrieveResponseFile = {
+  /** File size in bytes */
+  bytes?: number;
+  /** Unix timestamp when the file was created, in seconds */
+  created_at?: number;
+  /** The URL to download the video */
+  download_url?: string;
+  /** Unique identifier for the file */
+  file_id?: number;
+  /** The name of the file */
+  filename?: string;
+  /** The purpose of using the file */
+  purpose?: string;
+};
+
+/**
+ * Common response structure used by Minimax APIs
+ */
+export interface MinimaxBaseResponse {
+  /** Status code. 0 indicates success, other values indicate errors. */
+  status_code: number;
+  /** Specific error details or success message. */
+  status_msg: string;
+}
+
+/**
+ * Response from querying a Minimax video generation task status.
+ */
+export interface MinimaxTaskResultResponse {
+  base_resp: MinimaxBaseResponse;
+  /** After the task status changes to Success, this field returns the file ID corresponding to the generated video. */
+  file_id?: string;
+  /** Task status: 'Queueing' (in queue), 'Preparing' (task is preparing), 'Processing' (generating), 'Success' (task completed successfully), or 'Fail' (task failed). */
+  status: MinimaxTaskResultResponseStatus;
+  /** The task ID being queried. */
+  task_id: string;
+}
+
+/**
+ * Response from retrieving a Minimax file download URL.
+ */
+export interface MinimaxFileRetrieveResponse {
+  base_resp: MinimaxBaseResponse;
+  file: MinimaxFileRetrieveResponseFile;
+}
+
 /**
  * Time series of VRAM usage.
  */
@@ -610,6 +5906,1673 @@ export interface MachineStats {
   vram_time_series?: MachineStatsVramTimeSeries;
 }
 
+export type LumaVideoModelOutputResolution = '540p' | '720p' | '1080p' | '4k' | string;
+
+export type LumaVideoModelOutputDuration = '5s' | '9s' | string;
+
+/**
+ * The video model used for the generation
+ */
+export type LumaVideoModel = typeof LumaVideoModel[keyof typeof LumaVideoModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaVideoModel = {
+  'ray-2': 'ray-2',
+  'ray-flash-2': 'ray-flash-2',
+  'ray-1-6': 'ray-1-6',
+} as const;
+
+export type LumaUpscaleVideoGenerationRequestGenerationType = typeof LumaUpscaleVideoGenerationRequestGenerationType[keyof typeof LumaUpscaleVideoGenerationRequestGenerationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaUpscaleVideoGenerationRequestGenerationType = {
+  upscale_video: 'upscale_video',
+} as const;
+
+/**
+ * The upscale generation request object
+ */
+export interface LumaUpscaleVideoGenerationRequest {
+  /** The callback URL for the upscale */
+  callback_url?: string;
+  generation_type?: LumaUpscaleVideoGenerationRequestGenerationType;
+  resolution?: LumaVideoModelOutputResolution;
+}
+
+/**
+ * The state of the generation
+ */
+export type LumaState = typeof LumaState[keyof typeof LumaState];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaState = {
+  queued: 'queued',
+  dreaming: 'dreaming',
+  completed: 'completed',
+  failed: 'failed',
+} as const;
+
+/**
+ * The modify image reference object
+ */
+export interface LumaModifyImageRef {
+  /** The URL of the image reference */
+  url?: string;
+  /** The weight of the modify image reference */
+  weight?: number;
+}
+
+export type LumaImageReferenceType = typeof LumaImageReferenceType[keyof typeof LumaImageReferenceType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaImageReferenceType = {
+  image: 'image',
+} as const;
+
+/**
+ * The image object
+ */
+export interface LumaImageReference {
+  type: LumaImageReferenceType;
+  /** The URL of the image */
+  url: string;
+}
+
+/**
+ * A keyframe can be either a Generation reference, an Image, or a Video
+ */
+export type LumaKeyframe = LumaGenerationReference | LumaImageReference;
+
+/**
+ * The keyframes of the generation
+ */
+export interface LumaKeyframes {
+  frame0?: LumaKeyframe;
+  frame1?: LumaKeyframe;
+}
+
+/**
+ * The image reference object
+ */
+export interface LumaImageRef {
+  /** The URL of the image reference */
+  url?: string;
+  /** The weight of the image reference */
+  weight?: number;
+}
+
+/**
+ * The image model used for the generation
+ */
+export type LumaImageModel = typeof LumaImageModel[keyof typeof LumaImageModel];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaImageModel = {
+  'photon-1': 'photon-1',
+  'photon-flash-1': 'photon-flash-1',
+} as const;
+
+/**
+ * The image identity object
+ */
+export interface LumaImageIdentity {
+  /** The URLs of the image identity */
+  images?: string[];
+}
+
+export type LumaImageGenerationRequestGenerationType = typeof LumaImageGenerationRequestGenerationType[keyof typeof LumaImageGenerationRequestGenerationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaImageGenerationRequestGenerationType = {
+  image: 'image',
+} as const;
+
+export type LumaImageGenerationRequestCharacterRef = {
+  identity0?: LumaImageIdentity;
+};
+
+/**
+ * The image generation request object
+ */
+export interface LumaImageGenerationRequest {
+  aspect_ratio?: LumaAspectRatio;
+  /** The callback URL for the generation */
+  callback_url?: string;
+  character_ref?: LumaImageGenerationRequestCharacterRef;
+  generation_type?: LumaImageGenerationRequestGenerationType;
+  image_ref?: LumaImageRef[];
+  model?: LumaImageModel;
+  modify_image_ref?: LumaModifyImageRef;
+  /** The prompt of the generation */
+  prompt?: string;
+  style_ref?: LumaImageRef[];
+}
+
+export type LumaGenerationType = typeof LumaGenerationType[keyof typeof LumaGenerationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaGenerationType = {
+  video: 'video',
+  image: 'image',
+} as const;
+
+export type LumaGenerationRequestGenerationType = typeof LumaGenerationRequestGenerationType[keyof typeof LumaGenerationRequestGenerationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaGenerationRequestGenerationType = {
+  video: 'video',
+} as const;
+
+/**
+ * The generation request object
+ */
+export interface LumaGenerationRequest {
+  aspect_ratio: LumaAspectRatio;
+  /** The callback URL of the generation, a POST request with Generation object will be sent to the callback URL when the generation is dreaming, completed, or failed */
+  callback_url?: string;
+  duration: LumaVideoModelOutputDuration;
+  generation_type?: LumaGenerationRequestGenerationType;
+  keyframes?: LumaKeyframes;
+  /** Whether to loop the video */
+  loop?: boolean;
+  model: LumaVideoModel;
+  /** The prompt of the generation */
+  prompt: string;
+  resolution: LumaVideoModelOutputResolution;
+}
+
+export type LumaGenerationReferenceType = typeof LumaGenerationReferenceType[keyof typeof LumaGenerationReferenceType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaGenerationReferenceType = {
+  generation: 'generation',
+} as const;
+
+/**
+ * The generation reference object
+ */
+export interface LumaGenerationReference {
+  /** The ID of the generation */
+  id: string;
+  type: LumaGenerationReferenceType;
+}
+
+/**
+ * The generation response object
+ */
+export interface LumaGeneration {
+  assets?: LumaAssets;
+  /** The date and time when the generation was created */
+  created_at?: string;
+  /** The reason for the state of the generation */
+  failure_reason?: string;
+  generation_type?: LumaGenerationType;
+  /** The ID of the generation */
+  id?: string;
+  /** The model used for the generation */
+  model?: string;
+  /** The request of the generation */
+  request?: LumaGenerationRequestProperty;
+  state?: LumaState;
+}
+
+/**
+ * The error object
+ */
+export interface LumaError {
+  /** The error message */
+  detail?: string;
+}
+
+export type LumaAudioGenerationRequestGenerationType = typeof LumaAudioGenerationRequestGenerationType[keyof typeof LumaAudioGenerationRequestGenerationType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaAudioGenerationRequestGenerationType = {
+  add_audio: 'add_audio',
+} as const;
+
+/**
+ * The audio generation request object
+ */
+export interface LumaAudioGenerationRequest {
+  /** The callback URL for the audio */
+  callback_url?: string;
+  generation_type?: LumaAudioGenerationRequestGenerationType;
+  /** The negative prompt of the audio */
+  negative_prompt?: string;
+  /** The prompt of the audio */
+  prompt?: string;
+}
+
+/**
+ * The request of the generation
+ */
+export type LumaGenerationRequestProperty = LumaGenerationRequest | LumaImageGenerationRequest | LumaUpscaleVideoGenerationRequest | LumaAudioGenerationRequest;
+
+/**
+ * The assets of the generation
+ */
+export interface LumaAssets {
+  /** The URL of the image */
+  image?: string;
+  /** The URL of the progress video */
+  progress_video?: string;
+  /** The URL of the video */
+  video?: string;
+}
+
+/**
+ * The aspect ratio of the generation
+ */
+export type LumaAspectRatio = typeof LumaAspectRatio[keyof typeof LumaAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const LumaAspectRatio = {
+  '1:1': '1:1',
+  '16:9': '16:9',
+  '9:16': '9:16',
+  '4:3': '4:3',
+  '3:4': '3:4',
+  '21:9': '21:9',
+  '9:21': '9:21',
+} as const;
+
+export type KlingVirtualTryOnResponseDataTaskResult = {
+  images?: KlingImageResult[];
+};
+
+export type KlingVirtualTryOnResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_result?: KlingVirtualTryOnResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task status information */
+  task_status_msg?: string;
+  /** Task update time */
+  updated_at?: number;
+};
+
+export interface KlingVirtualTryOnResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingVirtualTryOnResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+/**
+ * Model Name
+ */
+export type KlingVirtualTryOnModelName = typeof KlingVirtualTryOnModelName[keyof typeof KlingVirtualTryOnModelName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingVirtualTryOnModelName = {
+  'kolors-virtual-try-on-v1': 'kolors-virtual-try-on-v1',
+  'kolors-virtual-try-on-v1-5': 'kolors-virtual-try-on-v1-5',
+} as const;
+
+export interface KlingVirtualTryOnRequest {
+  /** The callback notification address */
+  callback_url?: string;
+  /** Reference clothing image - Base64 encoded string or image URL */
+  cloth_image?: string;
+  /** Reference human image - Base64 encoded string or image URL */
+  human_image: string;
+  model_name?: KlingVirtualTryOnModelName;
+}
+
+export interface KlingVideoResult {
+  /** Total video duration */
+  duration?: string;
+  /** Generated video ID */
+  id?: string;
+  /** URL for generated video */
+  url?: string;
+}
+
+/**
+ * Model Name
+ */
+export type KlingVideoGenModelName = typeof KlingVideoGenModelName[keyof typeof KlingVideoGenModelName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingVideoGenModelName = {
+  'kling-v1': 'kling-v1',
+  'kling-v1-5': 'kling-v1-5',
+  'kling-v1-6': 'kling-v1-6',
+  'kling-v2-master': 'kling-v2-master',
+} as const;
+
+/**
+ * Video generation mode. std: Standard Mode, which is cost-effective. pro: Professional Mode, generates videos with longer duration but higher quality output.
+ */
+export type KlingVideoGenMode = typeof KlingVideoGenMode[keyof typeof KlingVideoGenMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingVideoGenMode = {
+  std: 'std',
+  pro: 'pro',
+} as const;
+
+/**
+ * Video length in seconds
+ */
+export type KlingVideoGenDuration = typeof KlingVideoGenDuration[keyof typeof KlingVideoGenDuration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingVideoGenDuration = {
+  NUMBER_5: '5',
+  NUMBER_10: '10',
+} as const;
+
+/**
+ * Flexibility in video generation. The higher the value, the lower the model's degree of flexibility, and the stronger the relevance to the user's prompt.
+ * @minimum 0
+ * @maximum 1
+ */
+export type KlingVideoGenCfgScale = number;
+
+/**
+ * Video aspect ratio
+ */
+export type KlingVideoGenAspectRatio = typeof KlingVideoGenAspectRatio[keyof typeof KlingVideoGenAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingVideoGenAspectRatio = {
+  '16:9': '16:9',
+  '9:16': '9:16',
+  '1:1': '1:1',
+} as const;
+
+export type KlingVideoExtendResponseDataTaskResult = {
+  videos?: KlingVideoResult[];
+};
+
+export type KlingVideoExtendResponseDataTaskInfo = {
+  external_task_id?: string;
+};
+
+export type KlingVideoExtendResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_info?: KlingVideoExtendResponseDataTaskInfo;
+  task_result?: KlingVideoExtendResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task update time */
+  updated_at?: number;
+};
+
+export interface KlingVideoExtendResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingVideoExtendResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+export interface KlingVideoExtendRequest {
+  /** The callback notification address. Server will notify when the task status changes. */
+  callback_url?: string;
+  cfg_scale?: KlingVideoGenCfgScale;
+  /**
+   * Negative text prompt for elements to avoid in the extended video
+   * @maxLength 2500
+   */
+  negative_prompt?: string;
+  /**
+   * Positive text prompt for guiding the video extension
+   * @maxLength 2500
+   */
+  prompt?: string;
+  /** The ID of the video to be extended. Supports videos generated by text-to-video, image-to-video, and previous video extension operations. Cannot exceed 3 minutes total duration after extension. */
+  video_id?: string;
+}
+
+export interface KlingVideoEffectsResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingVideoEffectsResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+export type KlingVideoEffectsResponseDataTaskResult = {
+  videos?: KlingVideoResult[];
+};
+
+export type KlingVideoEffectsResponseDataTaskInfo = {
+  external_task_id?: string;
+};
+
+export type KlingVideoEffectsResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_info?: KlingVideoEffectsResponseDataTaskInfo;
+  task_result?: KlingVideoEffectsResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task update time */
+  updated_at?: number;
+};
+
+/**
+ * Scene Name. Dual-character Effects (hug, kiss, heart_gesture).
+ */
+export type KlingDualCharacterEffectsScene = typeof KlingDualCharacterEffectsScene[keyof typeof KlingDualCharacterEffectsScene];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingDualCharacterEffectsScene = {
+  hug: 'hug',
+  kiss: 'kiss',
+  heart_gesture: 'heart_gesture',
+} as const;
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingVideoEffectsRequestEffectScene = {...KlingDualCharacterEffectsScene,...KlingSingleImageEffectsScene,} as const;
+
+export interface KlingVideoEffectsRequest {
+  /** The callback notification address for the result of this task. */
+  callback_url?: string;
+  effect_scene: typeof KlingVideoEffectsRequestEffectScene[keyof typeof KlingVideoEffectsRequestEffectScene] ;
+  /** Customized Task ID. Must be unique within a single user account. */
+  external_task_id?: string;
+  input: KlingVideoEffectsInput;
+}
+
+/**
+ * Model Name
+ */
+export type KlingTextToVideoModelName = typeof KlingTextToVideoModelName[keyof typeof KlingTextToVideoModelName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingTextToVideoModelName = {
+  'kling-v1': 'kling-v1',
+  'kling-v1-6': 'kling-v1-6',
+} as const;
+
+export type KlingText2VideoResponseDataTaskResult = {
+  videos?: KlingVideoResult[];
+};
+
+export type KlingText2VideoResponseDataTaskInfo = {
+  external_task_id?: string;
+};
+
+export type KlingText2VideoResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_info?: KlingText2VideoResponseDataTaskInfo;
+  task_result?: KlingText2VideoResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task update time */
+  updated_at?: number;
+};
+
+export interface KlingText2VideoResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingText2VideoResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+export interface KlingText2VideoRequest {
+  aspect_ratio?: KlingVideoGenAspectRatio;
+  /** The callback notification address */
+  callback_url?: string;
+  camera_control?: KlingCameraControl;
+  cfg_scale?: KlingVideoGenCfgScale;
+  duration?: KlingVideoGenDuration;
+  /** Customized Task ID */
+  external_task_id?: string;
+  mode?: KlingVideoGenMode;
+  model_name?: KlingTextToVideoModelName;
+  /**
+   * Negative text prompt
+   * @maxLength 2500
+   */
+  negative_prompt?: string;
+  /**
+   * Positive text prompt
+   * @maxLength 2500
+   */
+  prompt?: string;
+}
+
+/**
+ * Task Status
+ */
+export type KlingTaskStatus = typeof KlingTaskStatus[keyof typeof KlingTaskStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingTaskStatus = {
+  submitted: 'submitted',
+  processing: 'processing',
+  succeed: 'succeed',
+  failed: 'failed',
+} as const;
+
+/**
+ * Scene Name. Single Image Effects (bloombloom, dizzydizzy, fuzzyfuzzy, squish, expansion).
+ */
+export type KlingSingleImageEffectsScene = typeof KlingSingleImageEffectsScene[keyof typeof KlingSingleImageEffectsScene];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingSingleImageEffectsScene = {
+  bloombloom: 'bloombloom',
+  dizzydizzy: 'dizzydizzy',
+  fuzzyfuzzy: 'fuzzyfuzzy',
+  squish: 'squish',
+  expansion: 'expansion',
+} as const;
+
+/**
+ * Model Name. Only kling-v1-6 is supported for single image effects.
+ */
+export type KlingSingleImageEffectModelName = typeof KlingSingleImageEffectModelName[keyof typeof KlingSingleImageEffectModelName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingSingleImageEffectModelName = {
+  'kling-v1-6': 'kling-v1-6',
+} as const;
+
+/**
+ * Video Length in seconds. Only 5-second videos are supported.
+ */
+export type KlingSingleImageEffectDuration = typeof KlingSingleImageEffectDuration[keyof typeof KlingSingleImageEffectDuration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingSingleImageEffectDuration = {
+  NUMBER_5: '5',
+} as const;
+
+export interface KlingSingleImageEffectInput {
+  duration: KlingSingleImageEffectDuration;
+  /** Reference Image. URL or Base64 encoded string (without data:image prefix). File size cannot exceed 10MB, resolution not less than 300*300px, aspect ratio between 1:2.5 ~ 2.5:1. */
+  image: string;
+  model_name: KlingSingleImageEffectModelName;
+}
+
+export type KlingVideoEffectsInput = KlingSingleImageEffectInput | KlingDualCharacterEffectInput;
+
+export type KlingResourcePackageResponseData = {
+  /** Error code; 0 indicates success */
+  code?: number;
+  /** Error information */
+  msg?: string;
+  /** Resource package list */
+  resource_pack_subscribe_infos?: KlingResourcePackageResponseDataResourcePackSubscribeInfosItem[];
+};
+
+export interface KlingResourcePackageResponse {
+  /** Error code; 0 indicates success */
+  code?: number;
+  data?: KlingResourcePackageResponseData;
+  /** Error information */
+  message?: string;
+  /** Request ID, generated by the system, used to track requests and troubleshoot problems */
+  request_id?: string;
+}
+
+/**
+ * Resource Package Status
+ */
+export type KlingResourcePackageResponseDataResourcePackSubscribeInfosItemStatus = typeof KlingResourcePackageResponseDataResourcePackSubscribeInfosItemStatus[keyof typeof KlingResourcePackageResponseDataResourcePackSubscribeInfosItemStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingResourcePackageResponseDataResourcePackSubscribeInfosItemStatus = {
+  toBeOnline: 'toBeOnline',
+  online: 'online',
+  expired: 'expired',
+  runOut: 'runOut',
+} as const;
+
+/**
+ * Resource package type (decreasing_total=decreasing total, constant_period=constant periodicity)
+ */
+export type KlingResourcePackageResponseDataResourcePackSubscribeInfosItemResourcePackType = typeof KlingResourcePackageResponseDataResourcePackSubscribeInfosItemResourcePackType[keyof typeof KlingResourcePackageResponseDataResourcePackSubscribeInfosItemResourcePackType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingResourcePackageResponseDataResourcePackSubscribeInfosItemResourcePackType = {
+  decreasing_total: 'decreasing_total',
+  constant_period: 'constant_period',
+} as const;
+
+export type KlingResourcePackageResponseDataResourcePackSubscribeInfosItem = {
+  /** Effective time, Unix timestamp in ms */
+  effective_time?: number;
+  /** Expiration time, Unix timestamp in ms */
+  invalid_time?: number;
+  /** Purchase time, Unix timestamp in ms */
+  purchase_time?: number;
+  /** Remaining quantity (updated with a 12-hour delay) */
+  remaining_quantity?: number;
+  /** Resource package ID */
+  resource_pack_id?: string;
+  /** Resource package name */
+  resource_pack_name?: string;
+  /** Resource package type (decreasing_total=decreasing total, constant_period=constant periodicity) */
+  resource_pack_type?: KlingResourcePackageResponseDataResourcePackSubscribeInfosItemResourcePackType;
+  /** Resource Package Status */
+  status?: KlingResourcePackageResponseDataResourcePackSubscribeInfosItemStatus;
+  /** Total quantity */
+  total_quantity?: number;
+};
+
+/**
+ * The voice language corresponds to the Voice ID.
+ */
+export type KlingLipSyncVoiceLanguage = typeof KlingLipSyncVoiceLanguage[keyof typeof KlingLipSyncVoiceLanguage];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingLipSyncVoiceLanguage = {
+  zh: 'zh',
+  en: 'en',
+} as const;
+
+export type KlingLipSyncResponseDataTaskResult = {
+  videos?: KlingVideoResult[];
+};
+
+export type KlingLipSyncResponseDataTaskInfo = {
+  external_task_id?: string;
+};
+
+export type KlingLipSyncResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_info?: KlingLipSyncResponseDataTaskInfo;
+  task_result?: KlingLipSyncResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task update time */
+  updated_at?: number;
+};
+
+export interface KlingLipSyncResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingLipSyncResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+/**
+ * Video Generation Mode. text2video: Text-to-video generation mode; audio2video: Audio-to-video generation mode
+ */
+export type KlingLipSyncMode = typeof KlingLipSyncMode[keyof typeof KlingLipSyncMode];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingLipSyncMode = {
+  text2video: 'text2video',
+  audio2video: 'audio2video',
+} as const;
+
+export interface KlingLipSyncInputObject {
+  /** Local Path of Audio File. Supported formats: .mp3/.wav/.m4a/.aac, maximum file size of 5MB. Base64 code. */
+  audio_file?: string;
+  audio_type?: KlingAudioUploadType;
+  /** Audio File Download URL. Supported formats: .mp3/.wav/.m4a/.aac, maximum file size of 5MB. */
+  audio_url?: string;
+  mode: KlingLipSyncMode;
+  /** Text Content for Lip-Sync Video Generation. Required when mode is text2video. Maximum length is 120 characters. */
+  text?: string;
+  /** The ID of the video generated by Kling AI. Only supports 5-second and 10-second videos generated within the last 30 days. */
+  video_id?: string;
+  /** Get link for uploaded video. Video files support .mp4/.mov, file size does not exceed 100MB, video length between 2-10s. */
+  video_url?: string;
+  /** Voice ID. Required when mode is text2video. The system offers a variety of voice options to choose from. */
+  voice_id?: string;
+  voice_language?: KlingLipSyncVoiceLanguage;
+  /**
+   * Speech Rate. Valid range: 0.8~2.0, accurate to one decimal place.
+   * @minimum 0.8
+   * @maximum 2
+   */
+  voice_speed?: number;
+}
+
+export interface KlingLipSyncRequest {
+  /** The callback notification address. Server will notify when the task status changes. */
+  callback_url?: string;
+  input: KlingLipSyncInputObject;
+}
+
+export interface KlingImageResult {
+  /** Image Number (0-9) */
+  index?: number;
+  /** URL for generated image */
+  url?: string;
+}
+
+export type KlingImageGenerationsResponseDataTaskResult = {
+  images?: KlingImageResult[];
+};
+
+export type KlingImageGenerationsResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_result?: KlingImageGenerationsResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task status information */
+  task_status_msg?: string;
+  /** Task update time */
+  updated_at?: number;
+};
+
+export interface KlingImageGenerationsResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingImageGenerationsResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+/**
+ * Model Name
+ */
+export type KlingImageGenModelName = typeof KlingImageGenModelName[keyof typeof KlingImageGenModelName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingImageGenModelName = {
+  'kling-v1': 'kling-v1',
+  'kling-v1-5': 'kling-v1-5',
+  'kling-v2': 'kling-v2',
+} as const;
+
+/**
+ * Image reference type
+ */
+export type KlingImageGenImageReferenceType = typeof KlingImageGenImageReferenceType[keyof typeof KlingImageGenImageReferenceType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingImageGenImageReferenceType = {
+  subject: 'subject',
+  face: 'face',
+} as const;
+
+/**
+ * Aspect ratio of the generated images
+ */
+export type KlingImageGenAspectRatio = typeof KlingImageGenAspectRatio[keyof typeof KlingImageGenAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingImageGenAspectRatio = {
+  '16:9': '16:9',
+  '9:16': '9:16',
+  '1:1': '1:1',
+  '4:3': '4:3',
+  '3:4': '3:4',
+  '3:2': '3:2',
+  '2:3': '2:3',
+  '21:9': '21:9',
+} as const;
+
+export interface KlingImageGenerationsRequest {
+  aspect_ratio?: KlingImageGenAspectRatio;
+  /** The callback notification address */
+  callback_url?: string;
+  /**
+   * Subject reference similarity
+   * @minimum 0
+   * @maximum 1
+   */
+  human_fidelity?: number;
+  /** Reference Image - Base64 encoded string or image URL */
+  image?: string;
+  /**
+   * Reference intensity for user-uploaded images
+   * @minimum 0
+   * @maximum 1
+   */
+  image_fidelity?: number;
+  image_reference?: KlingImageGenImageReferenceType;
+  model_name?: KlingImageGenModelName;
+  /**
+   * Number of generated images
+   * @minimum 1
+   * @maximum 9
+   */
+  n?: number;
+  /**
+   * Negative text prompt
+   * @maxLength 200
+   */
+  negative_prompt?: string;
+  /**
+   * Positive text prompt
+   * @maxLength 500
+   */
+  prompt: string;
+}
+
+export type KlingImage2VideoResponseDataTaskResult = {
+  videos?: KlingVideoResult[];
+};
+
+export type KlingImage2VideoResponseDataTaskInfo = {
+  external_task_id?: string;
+};
+
+export type KlingImage2VideoResponseData = {
+  /** Task creation time */
+  created_at?: number;
+  /** Task ID */
+  task_id?: string;
+  task_info?: KlingImage2VideoResponseDataTaskInfo;
+  task_result?: KlingImage2VideoResponseDataTaskResult;
+  task_status?: KlingTaskStatus;
+  /** Task update time */
+  updated_at?: number;
+};
+
+export interface KlingImage2VideoResponse {
+  /** Error code */
+  code?: number;
+  data?: KlingImage2VideoResponseData;
+  /** Error message */
+  message?: string;
+  /** Request ID */
+  request_id?: string;
+}
+
+export type KlingImage2VideoRequestDynamicMasksItemTrajectoriesItem = {
+  /** The horizontal coordinate of trajectory point. Based on bottom-left corner of image as origin (0,0). */
+  x?: number;
+  /** The vertical coordinate of trajectory point. Based on bottom-left corner of image as origin (0,0). */
+  y?: number;
+};
+
+export type KlingImage2VideoRequestDynamicMasksItem = {
+  /** Dynamic Brush Application Area (Mask image created by users using the motion brush). The aspect ratio must match the input image. */
+  mask?: string;
+  trajectories?: KlingImage2VideoRequestDynamicMasksItemTrajectoriesItem[];
+};
+
+export interface KlingImage2VideoRequest {
+  aspect_ratio?: KlingVideoGenAspectRatio;
+  /** The callback notification address. Server will notify when the task status changes. */
+  callback_url?: string;
+  camera_control?: KlingCameraControl;
+  cfg_scale?: KlingVideoGenCfgScale;
+  duration?: KlingVideoGenDuration;
+  /** Dynamic Brush Configuration List (up to 6 groups). For 5-second videos, trajectory length must not exceed 77 coordinates. */
+  dynamic_masks?: KlingImage2VideoRequestDynamicMasksItem[];
+  /** Customized Task ID. Must be unique within a single user account. */
+  external_task_id?: string;
+  /** Reference Image - URL or Base64 encoded string, cannot exceed 10MB, resolution not less than 300*300px, aspect ratio between 1:2.5 ~ 2.5:1. Base64 should not include data:image prefix. */
+  image?: string;
+  /** Reference Image - End frame control. URL or Base64 encoded string, cannot exceed 10MB, resolution not less than 300*300px. Base64 should not include data:image prefix. */
+  image_tail?: string;
+  mode?: KlingVideoGenMode;
+  model_name?: KlingVideoGenModelName;
+  /**
+   * Negative text prompt
+   * @maxLength 2500
+   */
+  negative_prompt?: string;
+  /**
+   * Positive text prompt
+   * @maxLength 2500
+   */
+  prompt?: string;
+  /** Static Brush Application Area (Mask image created by users using the motion brush). The aspect ratio must match the input image. */
+  static_mask?: string;
+}
+
+export interface KlingErrorResponse {
+  /** - 1000: Authentication failed
+- 1001: Authorization is empty
+- 1002: Authorization is invalid
+- 1003: Authorization is not yet valid
+- 1004: Authorization has expired
+- 1100: Account exception
+- 1101: Account in arrears (postpaid scenario)
+- 1102: Resource pack depleted or expired (prepaid scenario)
+- 1103: Unauthorized access to requested resource
+- 1200: Invalid request parameters
+- 1201: Invalid parameters
+- 1202: Invalid request method
+- 1203: Requested resource does not exist
+- 1300: Trigger platform strategy
+- 1301: Trigger content security policy
+- 1302: API request too frequent
+- 1303: Concurrency/QPS exceeds limit
+- 1304: Trigger IP whitelist policy
+- 5000: Internal server error
+- 5001: Service temporarily unavailable
+- 5002: Server internal timeout
+ */
+  code: number;
+  /** Human-readable error message */
+  message: string;
+  /** Request ID for tracking and troubleshooting */
+  request_id: string;
+}
+
+/**
+ * @minItems 2
+ * @maxItems 2
+ */
+export type KlingDualCharacterImages = string[];
+
+/**
+ * Model Name. Can be kling-v1, kling-v1-5, or kling-v1-6.
+ */
+export type KlingCharacterEffectModelName = typeof KlingCharacterEffectModelName[keyof typeof KlingCharacterEffectModelName];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingCharacterEffectModelName = {
+  'kling-v1': 'kling-v1',
+  'kling-v1-5': 'kling-v1-5',
+  'kling-v1-6': 'kling-v1-6',
+} as const;
+
+export interface KlingDualCharacterEffectInput {
+  duration: KlingVideoGenDuration;
+  images: KlingDualCharacterImages;
+  mode?: KlingVideoGenMode;
+  model_name?: KlingCharacterEffectModelName;
+}
+
+/**
+ * Predefined camera movements type. simple: Customizable camera movement. down_back: Camera descends and moves backward. forward_up: Camera moves forward and tilts up. right_turn_forward: Rotate right and move forward. left_turn_forward: Rotate left and move forward.
+ */
+export type KlingCameraControlType = typeof KlingCameraControlType[keyof typeof KlingCameraControlType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingCameraControlType = {
+  simple: 'simple',
+  down_back: 'down_back',
+  forward_up: 'forward_up',
+  right_turn_forward: 'right_turn_forward',
+  left_turn_forward: 'left_turn_forward',
+} as const;
+
+export interface KlingCameraConfig {
+  /**
+   * Controls camera's movement along horizontal axis (x-axis). Negative indicates left, positive indicates right.
+   * @minimum -10
+   * @maximum 10
+   */
+  horizontal?: number;
+  /**
+   * Controls camera's rotation in vertical plane (x-axis). Negative indicates downward rotation, positive indicates upward rotation.
+   * @minimum -10
+   * @maximum 10
+   */
+  pan?: number;
+  /**
+   * Controls camera's rolling amount (z-axis). Negative indicates counterclockwise, positive indicates clockwise.
+   * @minimum -10
+   * @maximum 10
+   */
+  roll?: number;
+  /**
+   * Controls camera's rotation in horizontal plane (y-axis). Negative indicates left rotation, positive indicates right rotation.
+   * @minimum -10
+   * @maximum 10
+   */
+  tilt?: number;
+  /**
+   * Controls camera's movement along vertical axis (y-axis). Negative indicates downward, positive indicates upward.
+   * @minimum -10
+   * @maximum 10
+   */
+  vertical?: number;
+  /**
+   * Controls change in camera's focal length. Negative indicates narrower field of view, positive indicates wider field of view.
+   * @minimum -10
+   * @maximum 10
+   */
+  zoom?: number;
+}
+
+export interface KlingCameraControl {
+  config?: KlingCameraConfig;
+  type?: KlingCameraControlType;
+}
+
+/**
+ * Method of Transmitting Audio Files for Lip-Sync. Required when mode is audio2video.
+ */
+export type KlingAudioUploadType = typeof KlingAudioUploadType[keyof typeof KlingAudioUploadType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingAudioUploadType = {
+  file: 'file',
+  url: 'url',
+} as const;
+
+/**
+ * Content item used to generate a response.
+
+ */
+export type Item = InputMessage | OutputMessage | FileSearchToolCall | ComputerToolCall | WebSearchToolCall | FunctionToolCall | ReasoningItem;
+
+/**
+ * The type of the input item. Always `input_text`.
+ */
+export type InputTextContentType = typeof InputTextContentType[keyof typeof InputTextContentType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputTextContentType = {
+  input_text: 'input_text',
+} as const;
+
+/**
+ * A text input to the model.
+ */
+export interface InputTextContent {
+  /** The text input to the model. */
+  text: string;
+  /** The type of the input item. Always `input_text`. */
+  type: InputTextContentType;
+}
+
+/**
+ * A list of one or many input items to the model, containing different content 
+types.
+
+ */
+export type InputMessageContentList = InputContent[];
+
+export type InputMessageType = typeof InputMessageType[keyof typeof InputMessageType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputMessageType = {
+  message: 'message',
+} as const;
+
+export type InputMessageStatus = typeof InputMessageStatus[keyof typeof InputMessageStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputMessageStatus = {
+  in_progress: 'in_progress',
+  completed: 'completed',
+  incomplete: 'incomplete',
+} as const;
+
+export type InputMessageRole = typeof InputMessageRole[keyof typeof InputMessageRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputMessageRole = {
+  user: 'user',
+  system: 'system',
+  developer: 'developer',
+} as const;
+
+export interface InputMessage {
+  content?: InputMessageContentList;
+  role?: InputMessageRole;
+  status?: InputMessageStatus;
+  type?: InputMessageType;
+}
+
+export type InputItem = EasyInputMessage | Item;
+
+/**
+ * The type of the input item. Always `input_image`.
+ */
+export type InputImageContentType = typeof InputImageContentType[keyof typeof InputImageContentType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputImageContentType = {
+  input_image: 'input_image',
+} as const;
+
+/**
+ * The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
+ */
+export type InputImageContentDetail = typeof InputImageContentDetail[keyof typeof InputImageContentDetail];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputImageContentDetail = {
+  low: 'low',
+  high: 'high',
+  auto: 'auto',
+} as const;
+
+/**
+ * An image input to the model. Learn about [image inputs](/docs/guides/vision).
+ */
+export interface InputImageContent {
+  /** The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`. */
+  detail: InputImageContentDetail;
+  /** The ID of the file to be sent to the model. */
+  file_id?: string;
+  /** The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL. */
+  image_url?: string;
+  /** The type of the input item. Always `input_image`. */
+  type: InputImageContentType;
+}
+
+/**
+ * The type of the input item. Always `input_file`.
+ */
+export type InputFileContentType = typeof InputFileContentType[keyof typeof InputFileContentType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const InputFileContentType = {
+  input_file: 'input_file',
+} as const;
+
+/**
+ * A file input to the model.
+ */
+export interface InputFileContent {
+  /** The content of the file to be sent to the model.
+ */
+  file_data?: string;
+  /** The ID of the file to be sent to the model. */
+  file_id?: string;
+  /** The name of the file to be sent to the model. */
+  filename?: string;
+  /** The type of the input item. Always `input_file`. */
+  type: InputFileContentType;
+}
+
+export type InputContent = InputTextContent | InputImageContent | InputFileContent;
+
+/**
+ * Specify additional output data to include in the model response. Currently
+supported values are:
+- `file_search_call.results`: Include the search results of
+  the file search tool call.
+- `message.input_image.image_url`: Include image urls from the input message.
+- `computer_call_output.output.image_url`: Include image urls from the computer call output.
+
+ */
+export type Includable = typeof Includable[keyof typeof Includable];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const Includable = {
+  file_search_callresults: 'file_search_call.results',
+  messageinput_imageimage_url: 'message.input_image.image_url',
+  computer_call_outputoutputimage_url: 'computer_call_output.output.image_url',
+} as const;
+
+export type ImagenOutputOptionsMimeType = typeof ImagenOutputOptionsMimeType[keyof typeof ImagenOutputOptionsMimeType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ImagenOutputOptionsMimeType = {
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+} as const;
+
+export interface ImagenOutputOptions {
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  compressionQuality?: number;
+  mimeType?: ImagenOutputOptionsMimeType;
+}
+
+export interface ImagenImagePrediction {
+  /** Base64-encoded image content */
+  bytesBase64Encoded?: string;
+  /** MIME type of the generated image */
+  mimeType?: string;
+  /** Enhanced or rewritten prompt used to generate this image */
+  prompt?: string;
+}
+
+export type ImagenImageGenerationParametersSafetySetting = typeof ImagenImageGenerationParametersSafetySetting[keyof typeof ImagenImageGenerationParametersSafetySetting];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ImagenImageGenerationParametersSafetySetting = {
+  block_most: 'block_most',
+  block_some: 'block_some',
+  block_few: 'block_few',
+  block_fewest: 'block_fewest',
+} as const;
+
+export type ImagenImageGenerationParametersPersonGeneration = typeof ImagenImageGenerationParametersPersonGeneration[keyof typeof ImagenImageGenerationParametersPersonGeneration];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ImagenImageGenerationParametersPersonGeneration = {
+  dont_allow: 'dont_allow',
+  allow_adult: 'allow_adult',
+  allow_all: 'allow_all',
+} as const;
+
+export type ImagenImageGenerationParametersAspectRatio = typeof ImagenImageGenerationParametersAspectRatio[keyof typeof ImagenImageGenerationParametersAspectRatio];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ImagenImageGenerationParametersAspectRatio = {
+  '1:1': '1:1',
+  '9:16': '9:16',
+  '16:9': '16:9',
+  '3:4': '3:4',
+  '4:3': '4:3',
+} as const;
+
+export interface ImagenImageGenerationParameters {
+  addWatermark?: boolean;
+  aspectRatio?: ImagenImageGenerationParametersAspectRatio;
+  enhancePrompt?: boolean;
+  includeRaiReason?: boolean;
+  includeSafetyAttributes?: boolean;
+  outputOptions?: ImagenOutputOptions;
+  personGeneration?: ImagenImageGenerationParametersPersonGeneration;
+  safetySetting?: ImagenImageGenerationParametersSafetySetting;
+  /**
+   * @minimum 1
+   * @maximum 4
+   */
+  sampleCount?: number;
+  seed?: number;
+  storageUri?: string;
+}
+
+export interface ImagenImageGenerationInstance {
+  /** Text prompt for image generation */
+  prompt: string;
+}
+
+export interface ImagenGenerateImageResponse {
+  predictions?: ImagenImagePrediction[];
+}
+
+export interface ImagenGenerateImageRequest {
+  instances: ImagenImageGenerationInstance[];
+  parameters: ImagenImageGenerationParameters;
+}
+
+/**
+ * The type of style to apply
+ */
+export type IdeogramV3RequestStyleType = typeof IdeogramV3RequestStyleType[keyof typeof IdeogramV3RequestStyleType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3RequestStyleType = {
+  GENERAL: 'GENERAL',
+} as const;
+
+/**
+ * Whether to enable magic prompt enhancement
+ */
+export type IdeogramV3RequestMagicPrompt = typeof IdeogramV3RequestMagicPrompt[keyof typeof IdeogramV3RequestMagicPrompt];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3RequestMagicPrompt = {
+  ON: 'ON',
+  OFF: 'OFF',
+} as const;
+
+export type IdeogramV3RequestColorPalette = {
+  /** Name of the color palette */
+  name: string;
+};
+
+export interface IdeogramV3Request {
+  /** Aspect ratio in format WxH */
+  aspect_ratio?: string;
+  color_palette?: IdeogramV3RequestColorPalette;
+  /** Whether to enable magic prompt enhancement */
+  magic_prompt?: IdeogramV3RequestMagicPrompt;
+  /** Text prompt specifying what to avoid in the generation */
+  negative_prompt?: string;
+  /**
+   * Number of images to generate
+   * @minimum 1
+   */
+  num_images?: number;
+  /** The text prompt for image generation */
+  prompt: string;
+  rendering_speed: RenderingSpeed;
+  /** Image resolution in format WxH */
+  resolution?: string;
+  /** Seed value for reproducible generation */
+  seed?: number;
+  /** Array of style codes in hexadecimal format */
+  style_codes?: string[];
+  /** Array of reference image URLs or identifiers */
+  style_reference_images?: string[];
+  /** The type of style to apply */
+  style_type?: IdeogramV3RequestStyleType;
+}
+
+export type IdeogramV3ReplaceBackgroundRequestRenderingSpeed = typeof IdeogramV3ReplaceBackgroundRequestRenderingSpeed[keyof typeof IdeogramV3ReplaceBackgroundRequestRenderingSpeed];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3ReplaceBackgroundRequestRenderingSpeed = {
+  TURBO: 'TURBO',
+  DEFAULT: 'DEFAULT',
+  QUALITY: 'QUALITY',
+} as const;
+
+export type IdeogramV3ReplaceBackgroundRequestMagicPrompt = typeof IdeogramV3ReplaceBackgroundRequestMagicPrompt[keyof typeof IdeogramV3ReplaceBackgroundRequestMagicPrompt];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3ReplaceBackgroundRequestMagicPrompt = {
+  AUTO: 'AUTO',
+  ON: 'ON',
+  OFF: 'OFF',
+} as const;
+
+export type IdeogramV3ReplaceBackgroundRequestColorPalette = { [key: string]: unknown };
+
+export interface IdeogramV3ReplaceBackgroundRequest {
+  color_palette?: IdeogramV3ReplaceBackgroundRequestColorPalette;
+  image?: Blob;
+  magic_prompt?: IdeogramV3ReplaceBackgroundRequestMagicPrompt;
+  /**
+   * @minimum 1
+   * @maximum 8
+   */
+  num_images?: number;
+  prompt: string;
+  rendering_speed?: IdeogramV3ReplaceBackgroundRequestRenderingSpeed;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  seed?: number;
+  style_codes?: string[];
+  style_reference_images?: Blob[];
+}
+
+export type IdeogramV3RemixRequestStyleType = typeof IdeogramV3RemixRequestStyleType[keyof typeof IdeogramV3RemixRequestStyleType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3RemixRequestStyleType = {
+  AUTO: 'AUTO',
+  GENERAL: 'GENERAL',
+  REALISTIC: 'REALISTIC',
+  DESIGN: 'DESIGN',
+} as const;
+
+export type IdeogramV3RemixRequestRenderingSpeed = typeof IdeogramV3RemixRequestRenderingSpeed[keyof typeof IdeogramV3RemixRequestRenderingSpeed];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3RemixRequestRenderingSpeed = {
+  TURBO: 'TURBO',
+  DEFAULT: 'DEFAULT',
+  QUALITY: 'QUALITY',
+} as const;
+
+export type IdeogramV3RemixRequestMagicPrompt = typeof IdeogramV3RemixRequestMagicPrompt[keyof typeof IdeogramV3RemixRequestMagicPrompt];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3RemixRequestMagicPrompt = {
+  AUTO: 'AUTO',
+  ON: 'ON',
+  OFF: 'OFF',
+} as const;
+
+export type IdeogramV3RemixRequestColorPalette = { [key: string]: unknown };
+
+export interface IdeogramV3RemixRequest {
+  aspect_ratio?: string;
+  color_palette?: IdeogramV3RemixRequestColorPalette;
+  image?: Blob;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  image_weight?: number;
+  magic_prompt?: IdeogramV3RemixRequestMagicPrompt;
+  negative_prompt?: string;
+  /**
+   * @minimum 1
+   * @maximum 8
+   */
+  num_images?: number;
+  prompt: string;
+  rendering_speed?: IdeogramV3RemixRequestRenderingSpeed;
+  resolution?: string;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  seed?: number;
+  style_codes?: string[];
+  style_reference_images?: Blob[];
+  style_type?: IdeogramV3RemixRequestStyleType;
+}
+
+export type IdeogramV3ReframeRequestRenderingSpeed = typeof IdeogramV3ReframeRequestRenderingSpeed[keyof typeof IdeogramV3ReframeRequestRenderingSpeed];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const IdeogramV3ReframeRequestRenderingSpeed = {
+  TURBO: 'TURBO',
+  DEFAULT: 'DEFAULT',
+  QUALITY: 'QUALITY',
+} as const;
+
+export type IdeogramV3ReframeRequestColorPalette = { [key: string]: unknown };
+
+export interface IdeogramV3ReframeRequest {
+  color_palette?: IdeogramV3ReframeRequestColorPalette;
+  image?: Blob;
+  /**
+   * @minimum 1
+   * @maximum 8
+   */
+  num_images?: number;
+  rendering_speed?: IdeogramV3ReframeRequestRenderingSpeed;
+  resolution: string;
+  /**
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  seed?: number;
+  style_codes?: string[];
+  style_reference_images?: Blob[];
+}
+
+export type IdeogramV3IdeogramResponseDataItem = {
+  is_image_safe?: boolean;
+  prompt?: string;
+  resolution?: string;
+  seed?: number;
+  style_type?: string;
+  url?: string;
+};
+
+export interface IdeogramV3IdeogramResponse {
+  created?: string;
+  data?: IdeogramV3IdeogramResponseDataItem[];
+}
+
+export interface IdeogramV3EditRequest {
+  color_palette?: IdeogramColorPalette;
+  /** The image being edited (max size 10MB); only JPEG, WebP and PNG formats are supported at this time. */
+  image?: Blob;
+  /** Determine if MagicPrompt should be used in generating the request or not. */
+  magic_prompt?: string;
+  /** A black and white image of the same size as the image being edited (max size 10MB). Black regions in the mask should match up with the regions of the image that you would like to edit; only JPEG, WebP and PNG formats are supported at this time. */
+  mask?: Blob;
+  /** The number of images to generate. */
+  num_images?: number;
+  /** The prompt used to describe the edited result. */
+  prompt: string;
+  rendering_speed: RenderingSpeed;
+  /** Random seed. Set for reproducible generation. */
+  seed?: number;
+  /** A list of 8 character hexadecimal codes representing the style of the image. Cannot be used in conjunction with style_reference_images or style_type. */
+  style_codes?: string[];
+  /** A set of images to use as style references (maximum total size 10MB across all style references). The images should be in JPEG, PNG or WebP format. */
+  style_reference_images?: Blob[];
+}
+
+export type IdeogramGenerateResponseDataItem = {
+  /** Indicates whether the image is considered safe. */
+  is_image_safe?: boolean;
+  /** The prompt used to generate this image. */
+  prompt?: string;
+  /** The resolution of the generated image (e.g., '1024x1024'). */
+  resolution?: string;
+  /** The seed value used for this generation. */
+  seed?: number;
+  /** The style type used for generation (e.g., 'REALISTIC', 'ANIME'). */
+  style_type?: string;
+  /** URL to the generated image. */
+  url?: string;
+};
+
+/**
+ * Response from the Ideogram image generation API.
+ */
+export interface IdeogramGenerateResponse {
+  /** Timestamp when the generation was created. */
+  created?: string;
+  /** Array of generated image information. */
+  data?: IdeogramGenerateResponseDataItem[];
+}
+
+/**
+ * Optional. Color palette object. Only for V_2, V_2_TURBO.
+ */
+export type IdeogramGenerateRequestImageRequestColorPalette = { [key: string]: unknown };
+
+/**
+ * The image generation request parameters.
+ */
+export type IdeogramGenerateRequestImageRequest = {
+  /** Optional. The aspect ratio (e.g., 'ASPECT_16_9', 'ASPECT_1_1'). Cannot be used with resolution. Defaults to 'ASPECT_1_1' if unspecified. */
+  aspect_ratio?: string;
+  /** Optional. Color palette object. Only for V_2, V_2_TURBO. */
+  color_palette?: IdeogramGenerateRequestImageRequestColorPalette;
+  /** Optional. MagicPrompt usage ('AUTO', 'ON', 'OFF'). */
+  magic_prompt_option?: string;
+  /** The model used (e.g., 'V_2', 'V_2A_TURBO') */
+  model: string;
+  /** Optional. Description of what to exclude. Only for V_1, V_1_TURBO, V_2, V_2_TURBO. */
+  negative_prompt?: string;
+  /**
+   * Optional. Number of images to generate (1-8). Defaults to 1.
+   * @minimum 1
+   * @maximum 8
+   */
+  num_images?: number;
+  /** Required. The prompt to use to generate the image. */
+  prompt: string;
+  /** Optional. Resolution (e.g., 'RESOLUTION_1024_1024'). Only for model V_2. Cannot be used with aspect_ratio. */
+  resolution?: string;
+  /**
+   * Optional. A number between 0 and 2147483647.
+   * @minimum 0
+   * @maximum 2147483647
+   */
+  seed?: number;
+  /** Optional. Style type ('AUTO', 'GENERAL', 'REALISTIC', 'DESIGN', 'RENDER_3D', 'ANIME'). Only for models V_2 and above. */
+  style_type?: string;
+};
+
+/**
+ * Parameters for the Ideogram generation proxy request. Based on Ideogram's API.
+ */
+export interface IdeogramGenerateRequest {
+  /** The image generation request parameters. */
+  image_request: IdeogramGenerateRequestImageRequest;
+}
+
+export type IdeogramColorPaletteOneOfTwoMembersItem = {
+  /**
+   * Hexadecimal color code
+   * @pattern ^#[0-9A-Fa-f]{6}$
+   */
+  color?: string;
+  /**
+   * Optional weight for the color (0-1)
+   * @minimum 0
+   * @maximum 1
+   */
+  weight?: number;
+};
+
+export type IdeogramColorPaletteOneOfTwo = {
+  /** Array of color definitions with optional weights */
+  members: IdeogramColorPaletteOneOfTwoMembersItem[];
+};
+
+export type IdeogramColorPaletteOneOf = {
+  /** Name of the preset color palette */
+  name: string;
+};
+
+/**
+ * A color palette specification that can either use a preset name or explicit color definitions with weights
+ */
+export type IdeogramColorPalette = IdeogramColorPaletteOneOf | IdeogramColorPaletteOneOfTwo;
+
 /**
  * A map of operating system to status pairs
  */
@@ -630,6 +7593,463 @@ export interface GitCommitSummary {
   timestamp?: string;
 }
 
+/**
+ * For video input, the start and end offset of the video in Duration format. For example, to specify a 10 second clip starting at 1:00, set "startOffset": { "seconds": 60 } and "endOffset": { "seconds": 70 }. The metadata should only be specified while the video data is presented in inlineData or fileData.
+
+ */
+export interface GeminiVideoMetadata {
+  endOffset?: GeminiOffset;
+  startOffset?: GeminiOffset;
+}
+
+export interface GeminiUsageMetadata {
+  /** Output only. Number of tokens in the cached part in the input (the cached content). */
+  cachedContentTokenCount?: number;
+  /** Number of tokens in the response(s). */
+  candidatesTokenCount?: number;
+  /** Breakdown of candidate tokens by modality. */
+  candidatesTokensDetails?: ModalityTokenCount[];
+  /** Number of tokens in the request. When cachedContent is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content. */
+  promptTokenCount?: number;
+  /** Breakdown of prompt tokens by modality. */
+  promptTokensDetails?: ModalityTokenCount[];
+  /** Number of tokens present in thoughts output. */
+  thoughtsTokenCount?: number;
+  /** Number of tokens present in tool-use prompt(s). */
+  toolUsePromptTokenCount?: number;
+}
+
+/**
+ * A piece of code that enables the system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the model. See Function calling.
+
+ */
+export interface GeminiTool {
+  functionDeclarations?: GeminiFunctionDeclaration[];
+}
+
+export interface GeminiTextPart {
+  /** A text prompt or code snippet. */
+  text?: string;
+}
+
+/**
+ * The identity of the entity that creates the message. The following values are supported: user: This indicates that the message is sent by a real person, typically a user-generated message. model: This indicates that the message is generated by the model. The model value is used to insert messages from the model into the conversation during multi-turn conversations. For non-multi-turn conversations, this field can be left blank or unset.
+
+ */
+export type GeminiSystemInstructionContentRole = typeof GeminiSystemInstructionContentRole[keyof typeof GeminiSystemInstructionContentRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GeminiSystemInstructionContentRole = {
+  user: 'user',
+  model: 'model',
+} as const;
+
+/**
+ * Available for gemini-2.0-flash and gemini-2.0-flash-lite. Instructions for the model to steer it toward better performance. For example, "Answer as concisely as possible" or "Don't use technical terms in your response". The text strings count toward the token limit. The role field of systemInstruction is ignored and doesn't affect the performance of the model. Note: Only text should be used in parts and content in each part should be in a separate paragraph.
+
+ */
+export interface GeminiSystemInstructionContent {
+  /** A list of ordered parts that make up a single message. Different parts may have different IANA MIME types. For limits on the inputs, such as the maximum number of tokens or the number of images, see the model specifications on the Google models page.
+ */
+  parts: GeminiTextPart[];
+  /** The identity of the entity that creates the message. The following values are supported: user: This indicates that the message is sent by a real person, typically a user-generated message. model: This indicates that the message is generated by the model. The model value is used to insert messages from the model into the conversation during multi-turn conversations. For non-multi-turn conversations, this field can be left blank or unset.
+ */
+  role: GeminiSystemInstructionContentRole;
+}
+
+export type GeminiSafetyThreshold = typeof GeminiSafetyThreshold[keyof typeof GeminiSafetyThreshold];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GeminiSafetyThreshold = {
+  OFF: 'OFF',
+  BLOCK_NONE: 'BLOCK_NONE',
+  BLOCK_LOW_AND_ABOVE: 'BLOCK_LOW_AND_ABOVE',
+  BLOCK_MEDIUM_AND_ABOVE: 'BLOCK_MEDIUM_AND_ABOVE',
+  BLOCK_ONLY_HIGH: 'BLOCK_ONLY_HIGH',
+} as const;
+
+/**
+ * The probability that the content violates the specified safety category
+ */
+export type GeminiSafetyRatingProbability = typeof GeminiSafetyRatingProbability[keyof typeof GeminiSafetyRatingProbability];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GeminiSafetyRatingProbability = {
+  NEGLIGIBLE: 'NEGLIGIBLE',
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  UNKNOWN: 'UNKNOWN',
+} as const;
+
+export type GeminiSafetyCategory = typeof GeminiSafetyCategory[keyof typeof GeminiSafetyCategory];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GeminiSafetyCategory = {
+  HARM_CATEGORY_SEXUALLY_EXPLICIT: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+  HARM_CATEGORY_HATE_SPEECH: 'HARM_CATEGORY_HATE_SPEECH',
+  HARM_CATEGORY_HARASSMENT: 'HARM_CATEGORY_HARASSMENT',
+  HARM_CATEGORY_DANGEROUS_CONTENT: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+} as const;
+
+/**
+ * Per request settings for blocking unsafe content. Enforced on GenerateContentResponse.candidates.
+
+ */
+export interface GeminiSafetySetting {
+  category: GeminiSafetyCategory;
+  threshold: GeminiSafetyThreshold;
+}
+
+export interface GeminiSafetyRating {
+  category?: GeminiSafetyCategory;
+  /** The probability that the content violates the specified safety category */
+  probability?: GeminiSafetyRatingProbability;
+}
+
+export interface GeminiPromptFeedback {
+  blockReason?: string;
+  blockReasonMessage?: string;
+  safetyRatings?: GeminiSafetyRating[];
+}
+
+/**
+ * Represents a duration offset for video timeline positions.
+
+ */
+export interface GeminiOffset {
+  /**
+   * Signed fractions of a second at nanosecond resolution. Negative second values with fractions must still have non-negative nanos values.
+
+   * @minimum 0
+   * @maximum 999999999
+   */
+  nanos?: number;
+  /**
+   * Signed seconds of the span of time. Must be from -315,576,000,000 to +315,576,000,000 inclusive.
+
+   * @minimum -315576000000
+   * @maximum 315576000000
+   */
+  seconds?: number;
+}
+
+/**
+ * The media type of the file specified in the data or fileUri fields. Acceptable values include the following. For gemini-2.0-flash-lite and gemini-2.0-flash, the maximum length of an audio file is 8.4 hours and the maximum length of a video file (without audio) is one hour. For more information, see Gemini audio and video requirements. Text files must be UTF-8 encoded. The contents of the text file count toward the token limit. There is no limit on image resolution.
+ */
+export type GeminiMimeType = typeof GeminiMimeType[keyof typeof GeminiMimeType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GeminiMimeType = {
+  'application/pdf': 'application/pdf',
+  'audio/mpeg': 'audio/mpeg',
+  'audio/mp3': 'audio/mp3',
+  'audio/wav': 'audio/wav',
+  'image/png': 'image/png',
+  'image/jpeg': 'image/jpeg',
+  'image/webp': 'image/webp',
+  'text/plain': 'text/plain',
+  'video/mov': 'video/mov',
+  'video/mpeg': 'video/mpeg',
+  'video/mp4': 'video/mp4',
+  'video/mpg': 'video/mpg',
+  'video/avi': 'video/avi',
+  'video/wmv': 'video/wmv',
+  'video/mpegps': 'video/mpegps',
+  'video/flv': 'video/flv',
+} as const;
+
+/**
+ * Inline data in raw bytes. For gemini-2.0-flash-lite and gemini-2.0-flash, you can specify up to 3000 images by using inlineData.
+
+ */
+export interface GeminiInlineData {
+  /** The base64 encoding of the image, PDF, or video to include inline in the prompt. When including media inline, you must also specify the media type (mimeType) of the data. Size limit: 20MB
+ */
+  data?: string;
+  mimeType?: GeminiMimeType;
+}
+
+export interface GeminiPart {
+  inlineData?: GeminiInlineData;
+  /** A text prompt or code snippet. */
+  text?: string;
+}
+
+export interface GeminiGenerationConfig {
+  /**
+   * Maximum number of tokens that can be generated in the response. A token is approximately 4 characters. 100 tokens correspond to roughly 60-80 words.
+
+   * @minimum 16
+   * @maximum 8192
+   */
+  maxOutputTokens?: number;
+  /** When seed is fixed to a specific value, the model makes a best effort to provide the same response for repeated requests. Deterministic output isn't guaranteed. Also, changing the model or parameter settings, such as the temperature, can cause variations in the response even when you use the same seed value. By default, a random seed value is used. Available for the following models:, gemini-2.5-flash-preview-04-1, gemini-2.5-pro-preview-05-0, gemini-2.0-flash-lite-00, gemini-2.0-flash-001
+ */
+  seed?: number;
+  stopSequences?: string[];
+  /**
+   * The temperature is used for sampling during response generation, which occurs when topP and topK are applied. Temperature controls the degree of randomness in token selection. Lower temperatures are good for prompts that require a less open-ended or creative response, while higher temperatures can lead to more diverse or creative results. A temperature of 0 means that the highest probability tokens are always selected. In this case, responses for a given prompt are mostly deterministic, but a small amount of variation is still possible. If the model returns a response that's too generic, too short, or the model gives a fallback response, try increasing the temperature
+
+   * @minimum 0
+   * @maximum 2
+   */
+  temperature?: number;
+  /**
+   * Top-K changes how the model selects tokens for output. A top-K of 1 means the next selected token is the most probable among all tokens in the model's vocabulary. A top-K of 3 means that the next token is selected from among the 3 most probable tokens by using temperature.
+
+   * @minimum 1
+   */
+  topK?: number;
+  /**
+   * If specified, nucleus sampling is used.
+Top-P changes how the model selects tokens for output. Tokens are selected from the most (see top-K) to least probable until the sum of their probabilities equals the top-P value. For example, if tokens A, B, and C have a probability of 0.3, 0.2, and 0.1 and the top-P value is 0.5, then the model will select either A or B as the next token by using temperature and excludes C as a candidate.
+Specify a lower value for less random responses and a higher value for more random responses.
+
+   * @minimum 0
+   * @maximum 1
+   */
+  topP?: number;
+}
+
+export interface GeminiGenerateContentResponse {
+  candidates?: GeminiCandidate[];
+  promptFeedback?: GeminiPromptFeedback;
+  usageMetadata?: GeminiUsageMetadata;
+}
+
+/**
+ * JSON schema for the function parameters
+ */
+export type GeminiFunctionDeclarationParameters = { [key: string]: unknown };
+
+export interface GeminiFunctionDeclaration {
+  description?: string;
+  name: string;
+  /** JSON schema for the function parameters */
+  parameters: GeminiFunctionDeclarationParameters;
+}
+
+export type GeminiContentRole = typeof GeminiContentRole[keyof typeof GeminiContentRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GeminiContentRole = {
+  user: 'user',
+  model: 'model',
+} as const;
+
+/**
+ * The content of the current conversation with the model. For single-turn queries, this is a single instance. For multi-turn queries, this is a repeated field that contains conversation history and the latest request.
+
+ */
+export interface GeminiContent {
+  parts: GeminiPart[];
+  role: GeminiContentRole;
+}
+
+export interface GeminiGenerateContentRequest {
+  contents: GeminiContent[];
+  generationConfig?: GeminiGenerationConfig;
+  safetySettings?: GeminiSafetySetting[];
+  systemInstruction?: GeminiSystemInstructionContent;
+  tools?: GeminiTool[];
+  videoMetadata?: GeminiVideoMetadata;
+}
+
+export interface GeminiCitation {
+  authors?: string[];
+  endIndex?: number;
+  license?: string;
+  publicationDate?: string;
+  startIndex?: number;
+  title?: string;
+  uri?: string;
+}
+
+export interface GeminiCitationMetadata {
+  citations?: GeminiCitation[];
+}
+
+export interface GeminiCandidate {
+  citationMetadata?: GeminiCitationMetadata;
+  content?: GeminiContent;
+  finishReason?: string;
+  safetyRatings?: GeminiSafetyRating[];
+}
+
+/**
+ * The type of the function tool call. Always `function_call`.
+
+ */
+export type FunctionToolCallType = typeof FunctionToolCallType[keyof typeof FunctionToolCallType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const FunctionToolCallType = {
+  function_call: 'function_call',
+} as const;
+
+/**
+ * The status of the item. One of `in_progress`, `completed`, or
+`incomplete`. Populated when items are returned via API.
+
+ */
+export type FunctionToolCallStatus = typeof FunctionToolCallStatus[keyof typeof FunctionToolCallStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const FunctionToolCallStatus = {
+  in_progress: 'in_progress',
+  completed: 'completed',
+  incomplete: 'incomplete',
+} as const;
+
+/**
+ * A tool call to run a function. See the 
+[function calling guide](/docs/guides/function-calling) for more information.
+
+ */
+export interface FunctionToolCall {
+  /** A JSON string of the arguments to pass to the function.
+ */
+  arguments: string;
+  /** The unique ID of the function tool call generated by the model.
+ */
+  call_id: string;
+  /** The unique ID of the function tool call.
+ */
+  id?: string;
+  /** The name of the function to run.
+ */
+  name: string;
+  /** The status of the item. One of `in_progress`, `completed`, or
+`incomplete`. Populated when items are returned via API.
+ */
+  status?: FunctionToolCallStatus;
+  /** The type of the function tool call. Always `function_call`.
+ */
+  type: FunctionToolCallType;
+}
+
+/**
+ * The type of tool
+ */
+export type FunctionToolType = typeof FunctionToolType[keyof typeof FunctionToolType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const FunctionToolType = {
+  function: 'function',
+} as const;
+
+/**
+ * JSON Schema object describing the function parameters
+ */
+export type FunctionToolParameters = { [key: string]: unknown };
+
+export interface FunctionTool {
+  /** Description of what the function does */
+  description?: string;
+  /** Name of the function */
+  name: string;
+  /** JSON Schema object describing the function parameters */
+  parameters: FunctionToolParameters;
+  /** The type of tool */
+  type: FunctionToolType;
+}
+
+/**
+ * The type of the file search tool call. Always `file_search_call`.
+
+ */
+export type FileSearchToolCallType = typeof FileSearchToolCallType[keyof typeof FileSearchToolCallType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const FileSearchToolCallType = {
+  file_search_call: 'file_search_call',
+} as const;
+
+/**
+ * The status of the file search tool call. One of `in_progress`, 
+`searching`, `incomplete` or `failed`,
+
+ */
+export type FileSearchToolCallStatus = typeof FileSearchToolCallStatus[keyof typeof FileSearchToolCallStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const FileSearchToolCallStatus = {
+  in_progress: 'in_progress',
+  searching: 'searching',
+  completed: 'completed',
+  incomplete: 'incomplete',
+  failed: 'failed',
+} as const;
+
+export type FileSearchToolCallResultsItem = {
+  /** The unique ID of the file.
+ */
+  file_id?: string;
+  /** The name of the file.
+ */
+  filename?: string;
+  /** The relevance score of the file - a value between 0 and 1.
+ */
+  score?: number;
+  /** The text that was retrieved from the file.
+ */
+  text?: string;
+};
+
+/**
+ * The results of a file search tool call. See the 
+[file search guide](/docs/guides/tools-file-search) for more information.
+
+ */
+export interface FileSearchToolCall {
+  /** The unique ID of the file search tool call.
+ */
+  id: string;
+  /** The queries used to search for files.
+ */
+  queries: string[];
+  /** The results of the file search tool call.
+ */
+  results?: FileSearchToolCallResultsItem[];
+  /** The status of the file search tool call. One of `in_progress`, 
+`searching`, `incomplete` or `failed`,
+ */
+  status: FileSearchToolCallStatus;
+  /** The type of the file search tool call. Always `file_search_call`.
+ */
+  type: FileSearchToolCallType;
+}
+
+/**
+ * The type of tool
+ */
+export type FileSearchToolType = typeof FileSearchToolType[keyof typeof FileSearchToolType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const FileSearchToolType = {
+  file_search: 'file_search',
+} as const;
+
+export interface FileSearchTool {
+  /** The type of tool */
+  type: FileSearchToolType;
+  /** IDs of vector stores to search in */
+  vector_store_ids: string[];
+}
+
 export interface ErrorResponse {
   error: string;
   message: string;
@@ -640,6 +8060,188 @@ export interface Error {
   details?: string[];
   /** A clear and concise description of the error. */
   message?: string;
+}
+
+/**
+ * The type of the message input. Always `message`.
+
+ */
+export type EasyInputMessageType = typeof EasyInputMessageType[keyof typeof EasyInputMessageType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const EasyInputMessageType = {
+  message: 'message',
+} as const;
+
+/**
+ * The role of the message input. One of `user`, `assistant`, `system`, or
+`developer`.
+
+ */
+export type EasyInputMessageRole = typeof EasyInputMessageRole[keyof typeof EasyInputMessageRole];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const EasyInputMessageRole = {
+  user: 'user',
+  assistant: 'assistant',
+  system: 'system',
+  developer: 'developer',
+} as const;
+
+/**
+ * Text, image, or audio input to the model, used to generate a response.
+Can also contain previous assistant responses.
+
+ */
+export type EasyInputMessageContent = string | InputMessageContentList;
+
+/**
+ * A message input to the model with a role indicating instruction following
+hierarchy. Instructions given with the `developer` or `system` role take
+precedence over instructions given with the `user` role. Messages with the
+`assistant` role are presumed to have been generated by the model in previous
+interactions.
+
+ */
+export interface EasyInputMessage {
+  /** Text, image, or audio input to the model, used to generate a response.
+Can also contain previous assistant responses.
+ */
+  content: EasyInputMessageContent;
+  /** The role of the message input. One of `user`, `assistant`, `system`, or
+`developer`.
+ */
+  role: EasyInputMessageRole;
+  /** The type of the message input. Always `message`.
+ */
+  type?: EasyInputMessageType;
+}
+
+export interface CustomerStorageResourceResponse {
+  /** The signed URL to use for downloading the file from the specified path */
+  download_url?: string;
+  /** Whether an existing file with the same hash was found */
+  existing_file?: boolean;
+  /** When the signed URL will expire */
+  expires_at?: string;
+  /** The signed URL to use for uploading the file to the specified path */
+  upload_url?: string;
+}
+
+export interface Customer {
+  /** The date and time the user was created */
+  createdAt?: string;
+  /** The email address for this user */
+  email?: string;
+  /** The firebase UID of the user */
+  id: string;
+  /** Whether the user is an admin */
+  is_admin?: boolean;
+  /** The Metronome customer ID */
+  metronome_id?: string;
+  /** The name for this user */
+  name?: string;
+  /** The Stripe customer ID */
+  stripe_id?: string;
+  /** The date and time the user was last updated */
+  updatedAt?: string;
+}
+
+export type CreateModelResponseProperties = ModelResponseProperties;
+
+export interface CreateAPIKeyRequest {
+  description?: string;
+  name: string;
+}
+
+/**
+ * The type of the computer use tool. Always `computer_use_preview`.
+ */
+export type ComputerUsePreviewToolType = typeof ComputerUsePreviewToolType[keyof typeof ComputerUsePreviewToolType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ComputerUsePreviewToolType = {
+  computer_use_preview: 'computer_use_preview',
+} as const;
+
+/**
+ * The type of computer environment to control.
+ */
+export type ComputerUsePreviewToolEnvironment = typeof ComputerUsePreviewToolEnvironment[keyof typeof ComputerUsePreviewToolEnvironment];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ComputerUsePreviewToolEnvironment = {
+  windows: 'windows',
+  mac: 'mac',
+  linux: 'linux',
+  ubuntu: 'ubuntu',
+  browser: 'browser',
+} as const;
+
+/**
+ * A tool that controls a virtual computer. Learn more about the [computer tool](https://platform.openai.com/docs/guides/tools-computer-use).
+ */
+export interface ComputerUsePreviewTool {
+  /** The height of the computer display. */
+  display_height: number;
+  /** The width of the computer display. */
+  display_width: number;
+  /** The type of computer environment to control. */
+  environment: ComputerUsePreviewToolEnvironment;
+  /** The type of the computer use tool. Always `computer_use_preview`. */
+  type: ComputerUsePreviewToolType;
+}
+
+/**
+ * The type of the computer call. Always `computer_call`.
+ */
+export type ComputerToolCallType = typeof ComputerToolCallType[keyof typeof ComputerToolCallType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ComputerToolCallType = {
+  computer_call: 'computer_call',
+} as const;
+
+/**
+ * The status of the item. One of `in_progress`, `completed`, or
+`incomplete`. Populated when items are returned via API.
+
+ */
+export type ComputerToolCallStatus = typeof ComputerToolCallStatus[keyof typeof ComputerToolCallStatus];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ComputerToolCallStatus = {
+  in_progress: 'in_progress',
+  completed: 'completed',
+  incomplete: 'incomplete',
+} as const;
+
+export type ComputerToolCallAction = { [key: string]: unknown };
+
+/**
+ * A tool call to a computer use tool. See the 
+[computer use guide](/docs/guides/tools-computer-use) for more information.
+
+ */
+export interface ComputerToolCall {
+  action: ComputerToolCallAction;
+  /** An identifier used when responding to the tool call with output.
+ */
+  call_id: string;
+  /** The unique ID of the computer call. */
+  id: string;
+  /** The status of the item. One of `in_progress`, `completed`, or
+`incomplete`. Populated when items are returned via API.
+ */
+  status: ComputerToolCallStatus;
+  /** The type of the computer call. Always `computer_call`. */
+  type: ComputerToolCallType;
 }
 
 export interface ComfyNodeCloudBuildInfo {
@@ -670,6 +8272,274 @@ export interface ComfyNode {
   return_names?: string;
   /** Specifies the types of outputs produced by the node. */
   return_types?: string;
+}
+
+export type BFLValidationErrorLocItem = string | number;
+
+export interface BFLValidationError {
+  loc: BFLValidationErrorLocItem[];
+  msg: string;
+  type: string;
+}
+
+export type BFLOutputFormat = typeof BFLOutputFormat[keyof typeof BFLOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const BFLOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+} as const;
+
+export interface BFLHTTPValidationError {
+  detail?: BFLValidationError[];
+}
+
+/**
+ * Response from the BFL Flux Pro 1.1 Ultra image generation API.
+ */
+export interface BFLFluxProGenerateResponse {
+  /** The unique identifier for the generation task. */
+  id: string;
+  /** URL to poll for the generation result. */
+  polling_url: string;
+}
+
+/**
+ * Request body for the BFL Flux Pro 1.1 Ultra image generation API.
+ */
+export interface BFLFluxProGenerateRequest {
+  /**
+   * The guidance scale for generation.
+   * @minimum 1
+   * @maximum 20
+   */
+  guidance_scale?: number;
+  /**
+   * The height of the image to generate.
+   * @minimum 64
+   * @maximum 2048
+   */
+  height: number;
+  /** The negative prompt for image generation. */
+  negative_prompt?: string;
+  /**
+   * The number of images to generate.
+   * @minimum 1
+   * @maximum 4
+   */
+  num_images?: number;
+  /**
+   * The number of inference steps.
+   * @minimum 1
+   * @maximum 100
+   */
+  num_inference_steps?: number;
+  /** The text prompt for image generation. */
+  prompt: string;
+  /** The seed value for reproducibility. */
+  seed?: number;
+  /**
+   * The width of the image to generate.
+   * @minimum 64
+   * @maximum 2048
+   */
+  width: number;
+}
+
+export interface BFLFluxProFillInputs {
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** A Base64-encoded string representing the image you wish to modify. Can contain alpha mask if desired. */
+  image: string;
+  /** A Base64-encoded string representing a mask for the areas you want to modify in the image. The mask should be the same dimensions as the image and in black and white. Black areas (0%) indicate no modification, while white areas (100%) specify areas for inpainting. Optional if you provide an alpha mask in the original image. Validation: The endpoint verifies that the dimensions of the mask match the original image. */
+  mask?: string;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** The description of the changes you want to make. This text guides the inpainting process, allowing you to specify features, styles, or modifications for the masked area. */
+  prompt?: string;
+  /** Whether to perform upsampling on the prompt. If active, automatically modifies the prompt for more creative generation */
+  prompt_upsampling?: boolean;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLFluxProExpandInputs {
+  /** Number of pixels to expand at the bottom of the image */
+  bottom?: number;
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** A Base64-encoded string representing the image you wish to expand. */
+  image: string;
+  /** Number of pixels to expand on the left side of the image */
+  left?: number;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** The description of the changes you want to make. This text guides the expansion process, allowing you to specify features, styles, or modifications for the expanded areas. */
+  prompt?: string;
+  /** Whether to perform upsampling on the prompt. If active, automatically modifies the prompt for more creative generation */
+  prompt_upsampling?: boolean;
+  /** Number of pixels to expand on the right side of the image */
+  right?: number;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Number of pixels to expand at the top of the image */
+  top?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLFluxPro11GenerateResponse {
+  /** Job ID for tracking */
+  id: string;
+  /** URL to poll for results */
+  polling_url: string;
+}
+
+/**
+ * Output image format
+ */
+export type BFLFluxPro11GenerateRequestOutputFormat = typeof BFLFluxPro11GenerateRequestOutputFormat[keyof typeof BFLFluxPro11GenerateRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const BFLFluxPro11GenerateRequestOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+} as const;
+
+export interface BFLFluxPro11GenerateRequest {
+  /** Height of the generated image */
+  height: number;
+  /** Optional image prompt */
+  image_prompt?: string;
+  /** Output image format */
+  output_format?: BFLFluxPro11GenerateRequestOutputFormat;
+  /** The main text prompt for image generation */
+  prompt: string;
+  /** Whether to use prompt upsampling */
+  prompt_upsampling?: boolean;
+  /** Safety tolerance level */
+  safety_tolerance?: number;
+  /** Random seed for reproducibility */
+  seed?: number;
+  /** Optional webhook secret for async processing */
+  webhook_secret?: string;
+  /** Optional webhook URL for async processing */
+  webhook_url?: string;
+  /** Width of the generated image */
+  width: number;
+}
+
+export interface BFLDepthInputs {
+  /** Base64 encoded image to use as control input */
+  control_image?: string;
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** Optional pre-processed image that will bypass the control preprocessing step */
+  preprocessed_image?: string;
+  /** Text prompt for image generation */
+  prompt: string;
+  /** Whether to perform upsampling on the prompt */
+  prompt_upsampling?: boolean;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLCannyInputs {
+  /** High threshold for Canny edge detection */
+  canny_high_threshold?: number;
+  /** Low threshold for Canny edge detection */
+  canny_low_threshold?: number;
+  /** Base64 encoded image to use as control input if no preprocessed image is provided */
+  control_image?: string;
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** Optional pre-processed image that will bypass the control preprocessing step */
+  preprocessed_image?: string;
+  /** Text prompt for image generation */
+  prompt: string;
+  /** Whether to perform upsampling on the prompt */
+  prompt_upsampling?: boolean;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLAsyncWebhookResponse {
+  id: string;
+  status: string;
+  webhook_url: string;
+}
+
+export interface BFLAsyncResponse {
+  id: string;
+  polling_url: string;
+}
+
+/**
+ * data related to the event
+ */
+export type AuditLogParams = { [key: string]: unknown };
+
+export interface AuditLog {
+  /** The date and time the event was created */
+  createdAt?: string;
+  /** the id of the event */
+  event_id?: string;
+  /** the type of the event */
+  event_type?: string;
+  /** data related to the event */
+  params?: AuditLogParams;
 }
 
 export interface ActionJobResult {
@@ -721,6 +8591,21 @@ export interface ActionJobResult {
   /** Name of the workflow */
   workflow_name?: string;
 }
+
+export type APIKeyWithPlaintextAllOf = {
+  /** The full API key (only returned at creation) */
+  plaintext_key?: string;
+};
+
+export interface APIKey {
+  created_at?: string;
+  description?: string;
+  id?: string;
+  key_prefix?: string;
+  name?: string;
+}
+
+export type APIKeyWithPlaintext = APIKey & APIKeyWithPlaintextAllOf;
 
 
 
@@ -968,6 +8853,918 @@ export const useComfyNodesBackfill = <TError = ErrorResponse | void,
       return useMutation(mutationOptions);
     }
     
+/**
+ * Search for customers by email, name, Stripe ID, or Metronome ID.
+ * @summary Search for customers
+ */
+export const searchCustomers = (
+    params?: SearchCustomersParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<SearchCustomers200>(
+      {url: `/customers`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getSearchCustomersQueryKey = (params?: SearchCustomersParams,) => {
+    return [`/customers`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getSearchCustomersQueryOptions = <TData = Awaited<ReturnType<typeof searchCustomers>>, TError = ErrorResponse | void>(params?: SearchCustomersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchCustomers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchCustomersQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchCustomers>>> = ({ signal }) => searchCustomers(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchCustomers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type SearchCustomersQueryResult = NonNullable<Awaited<ReturnType<typeof searchCustomers>>>
+export type SearchCustomersQueryError = ErrorResponse | void
+
+/**
+ * @summary Search for customers
+ */
+export const useSearchCustomers = <TData = Awaited<ReturnType<typeof searchCustomers>>, TError = ErrorResponse | void>(
+ params?: SearchCustomersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof searchCustomers>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getSearchCustomersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Creates a new customer using the provided token. No request body is needed as user information is extracted from the token.
+ * @summary Create a new customer
+ */
+export const createCustomer = (
+    
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Customer>(
+      {url: `/customers`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getCreateCustomerMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomer>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCustomer>>, TError,void, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCustomer>>, void> = () => {
+          
+
+          return  createCustomer(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCustomerMutationResult = NonNullable<Awaited<ReturnType<typeof createCustomer>>>
+    
+    export type CreateCustomerMutationError = ErrorResponse | void
+
+    /**
+ * @summary Create a new customer
+ */
+export const useCreateCustomer = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomer>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createCustomer>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getCreateCustomerMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary List all API keys for a customer
+ */
+export const listCustomerAPIKeys = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListCustomerAPIKeys200>(
+      {url: `/customers/api-keys`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getListCustomerAPIKeysQueryKey = () => {
+    return [`/customers/api-keys`] as const;
+    }
+
+    
+export const getListCustomerAPIKeysQueryOptions = <TData = Awaited<ReturnType<typeof listCustomerAPIKeys>>, TError = void | ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerAPIKeys>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListCustomerAPIKeysQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCustomerAPIKeys>>> = ({ signal }) => listCustomerAPIKeys(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCustomerAPIKeys>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCustomerAPIKeysQueryResult = NonNullable<Awaited<ReturnType<typeof listCustomerAPIKeys>>>
+export type ListCustomerAPIKeysQueryError = void | ErrorResponse
+
+/**
+ * @summary List all API keys for a customer
+ */
+export const useListCustomerAPIKeys = <TData = Awaited<ReturnType<typeof listCustomerAPIKeys>>, TError = void | ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerAPIKeys>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListCustomerAPIKeysQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Create a new API key for a customer
+ */
+export const createCustomerAPIKey = (
+    createAPIKeyRequest: CreateAPIKeyRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<CreateCustomerAPIKey201>(
+      {url: `/customers/api-keys`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createAPIKeyRequest
+    },
+      options);
+    }
+  
+
+
+export const getCreateCustomerAPIKeyMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerAPIKey>>, TError,{data: CreateAPIKeyRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCustomerAPIKey>>, TError,{data: CreateAPIKeyRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCustomerAPIKey>>, {data: CreateAPIKeyRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCustomerAPIKey(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCustomerAPIKeyMutationResult = NonNullable<Awaited<ReturnType<typeof createCustomerAPIKey>>>
+    export type CreateCustomerAPIKeyMutationBody = CreateAPIKeyRequest
+    export type CreateCustomerAPIKeyMutationError = ErrorResponse | void
+
+    /**
+ * @summary Create a new API key for a customer
+ */
+export const useCreateCustomerAPIKey = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerAPIKey>>, TError,{data: CreateAPIKeyRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createCustomerAPIKey>>,
+        TError,
+        {data: CreateAPIKeyRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateCustomerAPIKeyMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Delete an API key for a customer
+ */
+export const deleteCustomerAPIKey = (
+    apiKeyId: string,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/customers/api-keys/${apiKeyId}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteCustomerAPIKeyMutationOptions = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteCustomerAPIKey>>, TError,{apiKeyId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteCustomerAPIKey>>, TError,{apiKeyId: string}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteCustomerAPIKey>>, {apiKeyId: string}> = (props) => {
+          const {apiKeyId} = props ?? {};
+
+          return  deleteCustomerAPIKey(apiKeyId,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteCustomerAPIKeyMutationResult = NonNullable<Awaited<ReturnType<typeof deleteCustomerAPIKey>>>
+    
+    export type DeleteCustomerAPIKeyMutationError = void | ErrorResponse
+
+    /**
+ * @summary Delete an API key for a customer
+ */
+export const useDeleteCustomerAPIKey = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteCustomerAPIKey>>, TError,{apiKeyId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteCustomerAPIKey>>,
+        TError,
+        {apiKeyId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteCustomerAPIKeyMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Returns the customer's current remaining balance in microamount and its currency.
+ * @summary Get customer's remaining balance
+ */
+export const getCustomerBalance = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetCustomerBalance200>(
+      {url: `/customers/balance`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetCustomerBalanceQueryKey = () => {
+    return [`/customers/balance`] as const;
+    }
+
+    
+export const getGetCustomerBalanceQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerBalance>>, TError = void | ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerBalanceQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerBalance>>> = ({ signal }) => getCustomerBalance(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerBalance>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCustomerBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerBalance>>>
+export type GetCustomerBalanceQueryError = void | ErrorResponse
+
+/**
+ * @summary Get customer's remaining balance
+ */
+export const useGetCustomerBalance = <TData = Awaited<ReturnType<typeof getCustomerBalance>>, TError = void | ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetCustomerBalanceQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Creates a session for the customer to access their billing portal where they can manage subscriptions, payment methods, and view invoices.
+ * @summary Access customer billing portal
+ */
+export const accessBillingPortal = (
+    accessBillingPortalBody: AccessBillingPortalBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<AccessBillingPortal200>(
+      {url: `/customers/billing`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: accessBillingPortalBody
+    },
+      options);
+    }
+  
+
+
+export const getAccessBillingPortalMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessBillingPortal>>, TError,{data: AccessBillingPortalBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof accessBillingPortal>>, TError,{data: AccessBillingPortalBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof accessBillingPortal>>, {data: AccessBillingPortalBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  accessBillingPortal(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AccessBillingPortalMutationResult = NonNullable<Awaited<ReturnType<typeof accessBillingPortal>>>
+    export type AccessBillingPortalMutationBody = AccessBillingPortalBody
+    export type AccessBillingPortalMutationError = ErrorResponse | void
+
+    /**
+ * @summary Access customer billing portal
+ */
+export const useAccessBillingPortal = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof accessBillingPortal>>, TError,{data: AccessBillingPortalBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof accessBillingPortal>>,
+        TError,
+        {data: AccessBillingPortalBody},
+        TContext
+      > => {
+
+      const mutationOptions = getAccessBillingPortalMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Initiates a Credit Purchase.
+ */
+export const initiateCreditPurchase = (
+    initiateCreditPurchaseBody: InitiateCreditPurchaseBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<InitiateCreditPurchase201>(
+      {url: `/customers/credit`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: initiateCreditPurchaseBody
+    },
+      options);
+    }
+  
+
+
+export const getInitiateCreditPurchaseMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof initiateCreditPurchase>>, TError,{data: InitiateCreditPurchaseBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof initiateCreditPurchase>>, TError,{data: InitiateCreditPurchaseBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof initiateCreditPurchase>>, {data: InitiateCreditPurchaseBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  initiateCreditPurchase(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type InitiateCreditPurchaseMutationResult = NonNullable<Awaited<ReturnType<typeof initiateCreditPurchase>>>
+    export type InitiateCreditPurchaseMutationBody = InitiateCreditPurchaseBody
+    export type InitiateCreditPurchaseMutationError = ErrorResponse | void
+
+    /**
+ * @summary Initiates a Credit Purchase.
+ */
+export const useInitiateCreditPurchase = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof initiateCreditPurchase>>, TError,{data: InitiateCreditPurchaseBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof initiateCreditPurchase>>,
+        TError,
+        {data: InitiateCreditPurchaseBody},
+        TContext
+      > => {
+
+      const mutationOptions = getInitiateCreditPurchaseMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get events related to customer
+ */
+export const getCustomerEvents = (
+    params?: GetCustomerEventsParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetCustomerEvents200>(
+      {url: `/customers/events`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetCustomerEventsQueryKey = (params?: GetCustomerEventsParams,) => {
+    return [`/customers/events`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetCustomerEventsQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerEvents>>, TError = void | ErrorResponse>(params?: GetCustomerEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerEvents>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerEventsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerEvents>>> = ({ signal }) => getCustomerEvents(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerEvents>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCustomerEventsQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerEvents>>>
+export type GetCustomerEventsQueryError = void | ErrorResponse
+
+/**
+ * @summary Get events related to customer
+ */
+export const useGetCustomerEvents = <TData = Awaited<ReturnType<typeof getCustomerEvents>>, TError = void | ErrorResponse>(
+ params?: GetCustomerEventsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerEvents>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetCustomerEventsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Returns details about the currently authenticated customer based on their JWT token.
+ * @summary Get authenticated customer details
+ */
+export const getAuthenticatedCustomer = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Customer>(
+      {url: `/customers/me`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetAuthenticatedCustomerQueryKey = () => {
+    return [`/customers/me`] as const;
+    }
+
+    
+export const getGetAuthenticatedCustomerQueryOptions = <TData = Awaited<ReturnType<typeof getAuthenticatedCustomer>>, TError = void | ErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthenticatedCustomer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAuthenticatedCustomerQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAuthenticatedCustomer>>> = ({ signal }) => getAuthenticatedCustomer(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAuthenticatedCustomer>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAuthenticatedCustomerQueryResult = NonNullable<Awaited<ReturnType<typeof getAuthenticatedCustomer>>>
+export type GetAuthenticatedCustomerQueryError = void | ErrorResponse
+
+/**
+ * @summary Get authenticated customer details
+ */
+export const useGetAuthenticatedCustomer = <TData = Awaited<ReturnType<typeof getAuthenticatedCustomer>>, TError = void | ErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getAuthenticatedCustomer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetAuthenticatedCustomerQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Store a resource for a customer. Resource will have a 24 hour expiry. The signed URL will be generated for the specified file path.
+ * @summary Store a resource for a customer
+ */
+export const createCustomerStorageResource = (
+    createCustomerStorageResourceBody: CreateCustomerStorageResourceBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<CustomerStorageResourceResponse>(
+      {url: `/customers/storage`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createCustomerStorageResourceBody
+    },
+      options);
+    }
+  
+
+
+export const getCreateCustomerStorageResourceMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerStorageResource>>, TError,{data: CreateCustomerStorageResourceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCustomerStorageResource>>, TError,{data: CreateCustomerStorageResourceBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCustomerStorageResource>>, {data: CreateCustomerStorageResourceBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCustomerStorageResource(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCustomerStorageResourceMutationResult = NonNullable<Awaited<ReturnType<typeof createCustomerStorageResource>>>
+    export type CreateCustomerStorageResourceMutationBody = CreateCustomerStorageResourceBody
+    export type CreateCustomerStorageResourceMutationError = ErrorResponse | void
+
+    /**
+ * @summary Store a resource for a customer
+ */
+export const useCreateCustomerStorageResource = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerStorageResource>>, TError,{data: CreateCustomerStorageResourceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createCustomerStorageResource>>,
+        TError,
+        {data: CreateCustomerStorageResourceBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateCustomerStorageResourceMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Returns the customer's as a dashboard URL.
+ * @summary Get customer's usage
+ */
+export const getCustomerUsage = (
+    
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<GetCustomerUsage200>(
+      {url: `/customers/usage`, method: 'POST'
+    },
+      options);
+    }
+  
+
+
+export const getGetCustomerUsageMutationOptions = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCustomerUsage>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof getCustomerUsage>>, TError,void, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getCustomerUsage>>, void> = () => {
+          
+
+          return  getCustomerUsage(requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GetCustomerUsageMutationResult = NonNullable<Awaited<ReturnType<typeof getCustomerUsage>>>
+    
+    export type GetCustomerUsageMutationError = void | ErrorResponse
+
+    /**
+ * @summary Get customer's usage
+ */
+export const useGetCustomerUsage = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getCustomerUsage>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof getCustomerUsage>>,
+        TError,
+        void,
+        TContext
+      > => {
+
+      const mutationOptions = getGetCustomerUsageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Returns details about a customer by their ID.
+ * @summary Get a customer by ID
+ */
+export const getCustomerById = (
+    customerId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetCustomerById200>(
+      {url: `/customers/${customerId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetCustomerByIdQueryKey = (customerId: string,) => {
+    return [`/customers/${customerId}`] as const;
+    }
+
+    
+export const getGetCustomerByIdQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerById>>, TError = void | ErrorResponse>(customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerByIdQueryKey(customerId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerById>>> = ({ signal }) => getCustomerById(customerId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerById>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCustomerByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerById>>>
+export type GetCustomerByIdQueryError = void | ErrorResponse
+
+/**
+ * @summary Get a customer by ID
+ */
+export const useGetCustomerById = <TData = Awaited<ReturnType<typeof getCustomerById>>, TError = void | ErrorResponse>(
+ customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetCustomerByIdQueryOptions(customerId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Returns the specified customer's current remaining balance in microamount and its currency.
+ * @summary Get customer's remaining balance by ID
+ */
+export const getCustomerBalanceById = (
+    customerId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetCustomerBalanceById200>(
+      {url: `/customers/${customerId}/balance`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetCustomerBalanceByIdQueryKey = (customerId: string,) => {
+    return [`/customers/${customerId}/balance`] as const;
+    }
+
+    
+export const getGetCustomerBalanceByIdQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerBalanceById>>, TError = ErrorResponse | void>(customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerBalanceById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerBalanceByIdQueryKey(customerId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerBalanceById>>> = ({ signal }) => getCustomerBalanceById(customerId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerBalanceById>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCustomerBalanceByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerBalanceById>>>
+export type GetCustomerBalanceByIdQueryError = ErrorResponse | void
+
+/**
+ * @summary Get customer's remaining balance by ID
+ */
+export const useGetCustomerBalanceById = <TData = Awaited<ReturnType<typeof getCustomerBalanceById>>, TError = ErrorResponse | void>(
+ customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerBalanceById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetCustomerBalanceByIdQueryOptions(customerId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Get events related to customer
+ */
+export const getCustomerEventsById = (
+    customerId: string,
+    params?: GetCustomerEventsByIdParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<GetCustomerEventsById200>(
+      {url: `/customers/${customerId}/events`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetCustomerEventsByIdQueryKey = (customerId: string,
+    params?: GetCustomerEventsByIdParams,) => {
+    return [`/customers/${customerId}/events`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetCustomerEventsByIdQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerEventsById>>, TError = void | ErrorResponse>(customerId: string,
+    params?: GetCustomerEventsByIdParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerEventsById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerEventsByIdQueryKey(customerId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerEventsById>>> = ({ signal }) => getCustomerEventsById(customerId,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerEventsById>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCustomerEventsByIdQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerEventsById>>>
+export type GetCustomerEventsByIdQueryError = void | ErrorResponse
+
+/**
+ * @summary Get events related to customer
+ */
+export const useGetCustomerEventsById = <TData = Awaited<ReturnType<typeof getCustomerEventsById>>, TError = void | ErrorResponse>(
+ customerId: string,
+    params?: GetCustomerEventsByIdParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerEventsById>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetCustomerEventsByIdQueryOptions(customerId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * Returns all runs, jobs, job results, and storage files associated with a given commit.
  * @summary Retrieve CI data for a given commit
@@ -1868,6 +10665,6118 @@ export const useGetComfyNode = <TData = Awaited<ReturnType<typeof getComfyNode>>
 
 
 
+/**
+ * Submits an image generation task with FLUX.1 Canny [pro].
+ * @summary Generate an image with FLUX.1 Canny [pro] using a control image.
+ */
+export const bFLProCannyV1FluxPro10CannyPost = (
+    bFLCannyInputs: BFLCannyInputs,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<BFLProCannyV1FluxPro10CannyPost200>(
+      {url: `/proxy/bfl/flux-pro-1.0-canny/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bFLCannyInputs
+    },
+      options);
+    }
+  
+
+
+export const getBFLProCannyV1FluxPro10CannyPostMutationOptions = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLProCannyV1FluxPro10CannyPost>>, TError,{data: BFLCannyInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof bFLProCannyV1FluxPro10CannyPost>>, TError,{data: BFLCannyInputs}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bFLProCannyV1FluxPro10CannyPost>>, {data: BFLCannyInputs}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bFLProCannyV1FluxPro10CannyPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BFLProCannyV1FluxPro10CannyPostMutationResult = NonNullable<Awaited<ReturnType<typeof bFLProCannyV1FluxPro10CannyPost>>>
+    export type BFLProCannyV1FluxPro10CannyPostMutationBody = BFLCannyInputs
+    export type BFLProCannyV1FluxPro10CannyPostMutationError = BFLHTTPValidationError
+
+    /**
+ * @summary Generate an image with FLUX.1 Canny [pro] using a control image.
+ */
+export const useBFLProCannyV1FluxPro10CannyPost = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLProCannyV1FluxPro10CannyPost>>, TError,{data: BFLCannyInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof bFLProCannyV1FluxPro10CannyPost>>,
+        TError,
+        {data: BFLCannyInputs},
+        TContext
+      > => {
+
+      const mutationOptions = getBFLProCannyV1FluxPro10CannyPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Submits an image generation task with FLUX.1 Depth [pro].
+ * @summary Generate an image with FLUX.1 Depth [pro] using a control image.
+ */
+export const bFLProDepthV1FluxPro10DepthPost = (
+    bFLDepthInputs: BFLDepthInputs,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<BFLProDepthV1FluxPro10DepthPost200>(
+      {url: `/proxy/bfl/flux-pro-1.0-depth/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bFLDepthInputs
+    },
+      options);
+    }
+  
+
+
+export const getBFLProDepthV1FluxPro10DepthPostMutationOptions = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLProDepthV1FluxPro10DepthPost>>, TError,{data: BFLDepthInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof bFLProDepthV1FluxPro10DepthPost>>, TError,{data: BFLDepthInputs}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bFLProDepthV1FluxPro10DepthPost>>, {data: BFLDepthInputs}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bFLProDepthV1FluxPro10DepthPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BFLProDepthV1FluxPro10DepthPostMutationResult = NonNullable<Awaited<ReturnType<typeof bFLProDepthV1FluxPro10DepthPost>>>
+    export type BFLProDepthV1FluxPro10DepthPostMutationBody = BFLDepthInputs
+    export type BFLProDepthV1FluxPro10DepthPostMutationError = BFLHTTPValidationError
+
+    /**
+ * @summary Generate an image with FLUX.1 Depth [pro] using a control image.
+ */
+export const useBFLProDepthV1FluxPro10DepthPost = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLProDepthV1FluxPro10DepthPost>>, TError,{data: BFLDepthInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof bFLProDepthV1FluxPro10DepthPost>>,
+        TError,
+        {data: BFLDepthInputs},
+        TContext
+      > => {
+
+      const mutationOptions = getBFLProDepthV1FluxPro10DepthPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Submits an image expansion task that adds the specified number of pixels to any combination of sides (top, bottom, left, right) while maintaining context.
+ * @summary Expand an image by adding pixels on any side.
+ */
+export const bFLExpandV1FluxPro10ExpandPost = (
+    bFLFluxProExpandInputs: BFLFluxProExpandInputs,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<BFLExpandV1FluxPro10ExpandPost200>(
+      {url: `/proxy/bfl/flux-pro-1.0-expand/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bFLFluxProExpandInputs
+    },
+      options);
+    }
+  
+
+
+export const getBFLExpandV1FluxPro10ExpandPostMutationOptions = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLExpandV1FluxPro10ExpandPost>>, TError,{data: BFLFluxProExpandInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof bFLExpandV1FluxPro10ExpandPost>>, TError,{data: BFLFluxProExpandInputs}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bFLExpandV1FluxPro10ExpandPost>>, {data: BFLFluxProExpandInputs}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bFLExpandV1FluxPro10ExpandPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BFLExpandV1FluxPro10ExpandPostMutationResult = NonNullable<Awaited<ReturnType<typeof bFLExpandV1FluxPro10ExpandPost>>>
+    export type BFLExpandV1FluxPro10ExpandPostMutationBody = BFLFluxProExpandInputs
+    export type BFLExpandV1FluxPro10ExpandPostMutationError = BFLHTTPValidationError
+
+    /**
+ * @summary Expand an image by adding pixels on any side.
+ */
+export const useBFLExpandV1FluxPro10ExpandPost = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLExpandV1FluxPro10ExpandPost>>, TError,{data: BFLFluxProExpandInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof bFLExpandV1FluxPro10ExpandPost>>,
+        TError,
+        {data: BFLFluxProExpandInputs},
+        TContext
+      > => {
+
+      const mutationOptions = getBFLExpandV1FluxPro10ExpandPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Submits an image generation task with the FLUX.1 Fill [pro] model using an input image and mask. Mask can be applied to alpha channel or submitted as a separate image.
+ * @summary Generate an image with FLUX.1 Fill [pro] using an input image and mask.
+ */
+export const bFLFillV1FluxPro10FillPost = (
+    bFLFluxProFillInputs: BFLFluxProFillInputs,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<BFLFillV1FluxPro10FillPost200>(
+      {url: `/proxy/bfl/flux-pro-1.0-fill/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bFLFluxProFillInputs
+    },
+      options);
+    }
+  
+
+
+export const getBFLFillV1FluxPro10FillPostMutationOptions = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLFillV1FluxPro10FillPost>>, TError,{data: BFLFluxProFillInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof bFLFillV1FluxPro10FillPost>>, TError,{data: BFLFluxProFillInputs}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bFLFillV1FluxPro10FillPost>>, {data: BFLFluxProFillInputs}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bFLFillV1FluxPro10FillPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BFLFillV1FluxPro10FillPostMutationResult = NonNullable<Awaited<ReturnType<typeof bFLFillV1FluxPro10FillPost>>>
+    export type BFLFillV1FluxPro10FillPostMutationBody = BFLFluxProFillInputs
+    export type BFLFillV1FluxPro10FillPostMutationError = BFLHTTPValidationError
+
+    /**
+ * @summary Generate an image with FLUX.1 Fill [pro] using an input image and mask.
+ */
+export const useBFLFillV1FluxPro10FillPost = <TError = BFLHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bFLFillV1FluxPro10FillPost>>, TError,{data: BFLFluxProFillInputs}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof bFLFillV1FluxPro10FillPost>>,
+        TError,
+        {data: BFLFluxProFillInputs},
+        TContext
+      > => {
+
+      const mutationOptions = getBFLFillV1FluxPro10FillPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Forwards image generation requests to BFL's Flux Pro 1.1 Ultra API and returns the results.
+ * @summary Proxy request to BFL Flux Pro 1.1 Ultra for image generation
+ */
+export const bflFluxProGenerate = (
+    bFLFluxProGenerateRequest: BFLFluxProGenerateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<BFLFluxProGenerateResponse>(
+      {url: `/proxy/bfl/flux-pro-1.1-ultra/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bFLFluxProGenerateRequest
+    },
+      options);
+    }
+  
+
+
+export const getBflFluxProGenerateMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bflFluxProGenerate>>, TError,{data: BFLFluxProGenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof bflFluxProGenerate>>, TError,{data: BFLFluxProGenerateRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bflFluxProGenerate>>, {data: BFLFluxProGenerateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bflFluxProGenerate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BflFluxProGenerateMutationResult = NonNullable<Awaited<ReturnType<typeof bflFluxProGenerate>>>
+    export type BflFluxProGenerateMutationBody = BFLFluxProGenerateRequest
+    export type BflFluxProGenerateMutationError = ErrorResponse | void
+
+    /**
+ * @summary Proxy request to BFL Flux Pro 1.1 Ultra for image generation
+ */
+export const useBflFluxProGenerate = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bflFluxProGenerate>>, TError,{data: BFLFluxProGenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof bflFluxProGenerate>>,
+        TError,
+        {data: BFLFluxProGenerateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getBflFluxProGenerateMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Forwards image generation requests to BFL's Flux Pro 1.1 API and returns the results.
+ * @summary Proxy request to BFL Flux Pro 1.1 for image generation
+ */
+export const bflFluxPro11Generate = (
+    bFLFluxPro11GenerateRequest: BFLFluxPro11GenerateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<BFLFluxPro11GenerateResponse>(
+      {url: `/proxy/bfl/flux-pro-1.1/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: bFLFluxPro11GenerateRequest
+    },
+      options);
+    }
+  
+
+
+export const getBflFluxPro11GenerateMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bflFluxPro11Generate>>, TError,{data: BFLFluxPro11GenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof bflFluxPro11Generate>>, TError,{data: BFLFluxPro11GenerateRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bflFluxPro11Generate>>, {data: BFLFluxPro11GenerateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bflFluxPro11Generate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BflFluxPro11GenerateMutationResult = NonNullable<Awaited<ReturnType<typeof bflFluxPro11Generate>>>
+    export type BflFluxPro11GenerateMutationBody = BFLFluxPro11GenerateRequest
+    export type BflFluxPro11GenerateMutationError = ErrorResponse | void
+
+    /**
+ * @summary Proxy request to BFL Flux Pro 1.1 for image generation
+ */
+export const useBflFluxPro11Generate = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bflFluxPro11Generate>>, TError,{data: BFLFluxPro11GenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof bflFluxPro11Generate>>,
+        TError,
+        {data: BFLFluxPro11GenerateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getBflFluxPro11GenerateMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Dummy proxy endpoint that returns a simple string
+ * @summary Dummy proxy
+ */
+export const dummyProxy = (
+    dummyProxyBody: DummyProxyBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/proxy/dummy`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: dummyProxyBody
+    },
+      options);
+    }
+  
+
+
+export const getDummyProxyMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof dummyProxy>>, TError,{data: DummyProxyBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof dummyProxy>>, TError,{data: DummyProxyBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof dummyProxy>>, {data: DummyProxyBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  dummyProxy(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DummyProxyMutationResult = NonNullable<Awaited<ReturnType<typeof dummyProxy>>>
+    export type DummyProxyMutationBody = DummyProxyBody
+    export type DummyProxyMutationError = unknown
+
+    /**
+ * @summary Dummy proxy
+ */
+export const useDummyProxy = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof dummyProxy>>, TError,{data: DummyProxyBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof dummyProxy>>,
+        TError,
+        {data: DummyProxyBody},
+        TContext
+      > => {
+
+      const mutationOptions = getDummyProxyMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Forwards image generation requests to Ideogram's API and returns the results.
+ * @summary Proxy request to Ideogram for image generation
+ */
+export const ideogramGenerate = (
+    ideogramGenerateRequest: IdeogramGenerateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<IdeogramGenerateResponse>(
+      {url: `/proxy/ideogram/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: ideogramGenerateRequest
+    },
+      options);
+    }
+  
+
+
+export const getIdeogramGenerateMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramGenerate>>, TError,{data: IdeogramGenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof ideogramGenerate>>, TError,{data: IdeogramGenerateRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ideogramGenerate>>, {data: IdeogramGenerateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  ideogramGenerate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IdeogramGenerateMutationResult = NonNullable<Awaited<ReturnType<typeof ideogramGenerate>>>
+    export type IdeogramGenerateMutationBody = IdeogramGenerateRequest
+    export type IdeogramGenerateMutationError = ErrorResponse | void
+
+    /**
+ * @summary Proxy request to Ideogram for image generation
+ */
+export const useIdeogramGenerate = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramGenerate>>, TError,{data: IdeogramGenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof ideogramGenerate>>,
+        TError,
+        {data: IdeogramGenerateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getIdeogramGenerateMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Forwards image editing requests to Ideogram's API and returns the results.
+ * @summary Proxy request to Ideogram for image editing
+ */
+export const ideogramV3Edit = (
+    ideogramV3EditRequest: IdeogramV3EditRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(ideogramV3EditRequest.color_palette !== undefined) {
+ formData.append('color_palette', JSON.stringify(ideogramV3EditRequest.color_palette));
+ }
+if(ideogramV3EditRequest.image !== undefined) {
+ formData.append('image', ideogramV3EditRequest.image)
+ }
+if(ideogramV3EditRequest.magic_prompt !== undefined) {
+ formData.append('magic_prompt', ideogramV3EditRequest.magic_prompt)
+ }
+if(ideogramV3EditRequest.mask !== undefined) {
+ formData.append('mask', ideogramV3EditRequest.mask)
+ }
+if(ideogramV3EditRequest.num_images !== undefined) {
+ formData.append('num_images', ideogramV3EditRequest.num_images.toString())
+ }
+formData.append('prompt', ideogramV3EditRequest.prompt)
+formData.append('rendering_speed', ideogramV3EditRequest.rendering_speed)
+if(ideogramV3EditRequest.seed !== undefined) {
+ formData.append('seed', ideogramV3EditRequest.seed.toString())
+ }
+if(ideogramV3EditRequest.style_codes !== undefined) {
+ ideogramV3EditRequest.style_codes.forEach(value => formData.append('style_codes', value));
+ }
+if(ideogramV3EditRequest.style_reference_images !== undefined) {
+ ideogramV3EditRequest.style_reference_images.forEach(value => formData.append('style_reference_images', value));
+ }
+
+      return customInstance<IdeogramGenerateResponse>(
+      {url: `/proxy/ideogram/ideogram-v3/edit`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getIdeogramV3EditMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Edit>>, TError,{data: IdeogramV3EditRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Edit>>, TError,{data: IdeogramV3EditRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ideogramV3Edit>>, {data: IdeogramV3EditRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  ideogramV3Edit(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IdeogramV3EditMutationResult = NonNullable<Awaited<ReturnType<typeof ideogramV3Edit>>>
+    export type IdeogramV3EditMutationBody = IdeogramV3EditRequest
+    export type IdeogramV3EditMutationError = ErrorResponse | void
+
+    /**
+ * @summary Proxy request to Ideogram for image editing
+ */
+export const useIdeogramV3Edit = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Edit>>, TError,{data: IdeogramV3EditRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof ideogramV3Edit>>,
+        TError,
+        {data: IdeogramV3EditRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getIdeogramV3EditMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Forwards image generation requests to Ideogram's API and returns the results.
+ * @summary Proxy request to Ideogram for image generation
+ */
+export const ideogramV3Generate = (
+    ideogramV3Request: IdeogramV3Request,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<IdeogramGenerateResponse>(
+      {url: `/proxy/ideogram/ideogram-v3/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: ideogramV3Request
+    },
+      options);
+    }
+  
+
+
+export const getIdeogramV3GenerateMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Generate>>, TError,{data: IdeogramV3Request}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Generate>>, TError,{data: IdeogramV3Request}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ideogramV3Generate>>, {data: IdeogramV3Request}> = (props) => {
+          const {data} = props ?? {};
+
+          return  ideogramV3Generate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IdeogramV3GenerateMutationResult = NonNullable<Awaited<ReturnType<typeof ideogramV3Generate>>>
+    export type IdeogramV3GenerateMutationBody = IdeogramV3Request
+    export type IdeogramV3GenerateMutationError = ErrorResponse
+
+    /**
+ * @summary Proxy request to Ideogram for image generation
+ */
+export const useIdeogramV3Generate = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Generate>>, TError,{data: IdeogramV3Request}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof ideogramV3Generate>>,
+        TError,
+        {data: IdeogramV3Request},
+        TContext
+      > => {
+
+      const mutationOptions = getIdeogramV3GenerateMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Reframe an image to a chosen resolution
+ */
+export const ideogramV3Reframe = (
+    ideogramV3ReframeRequest: IdeogramV3ReframeRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(ideogramV3ReframeRequest.color_palette !== undefined) {
+ formData.append('color_palette', JSON.stringify(ideogramV3ReframeRequest.color_palette));
+ }
+if(ideogramV3ReframeRequest.image !== undefined) {
+ formData.append('image', ideogramV3ReframeRequest.image)
+ }
+if(ideogramV3ReframeRequest.num_images !== undefined) {
+ formData.append('num_images', ideogramV3ReframeRequest.num_images.toString())
+ }
+if(ideogramV3ReframeRequest.rendering_speed !== undefined) {
+ formData.append('rendering_speed', ideogramV3ReframeRequest.rendering_speed)
+ }
+formData.append('resolution', ideogramV3ReframeRequest.resolution)
+if(ideogramV3ReframeRequest.seed !== undefined) {
+ formData.append('seed', ideogramV3ReframeRequest.seed.toString())
+ }
+if(ideogramV3ReframeRequest.style_codes !== undefined) {
+ ideogramV3ReframeRequest.style_codes.forEach(value => formData.append('style_codes', value));
+ }
+if(ideogramV3ReframeRequest.style_reference_images !== undefined) {
+ ideogramV3ReframeRequest.style_reference_images.forEach(value => formData.append('style_reference_images', value));
+ }
+
+      return customInstance<IdeogramV3IdeogramResponse>(
+      {url: `/proxy/ideogram/ideogram-v3/reframe`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getIdeogramV3ReframeMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Reframe>>, TError,{data: IdeogramV3ReframeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Reframe>>, TError,{data: IdeogramV3ReframeRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ideogramV3Reframe>>, {data: IdeogramV3ReframeRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  ideogramV3Reframe(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IdeogramV3ReframeMutationResult = NonNullable<Awaited<ReturnType<typeof ideogramV3Reframe>>>
+    export type IdeogramV3ReframeMutationBody = IdeogramV3ReframeRequest
+    export type IdeogramV3ReframeMutationError = void
+
+    /**
+ * @summary Reframe an image to a chosen resolution
+ */
+export const useIdeogramV3Reframe = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Reframe>>, TError,{data: IdeogramV3ReframeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof ideogramV3Reframe>>,
+        TError,
+        {data: IdeogramV3ReframeRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getIdeogramV3ReframeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Remix an image using a prompt
+ */
+export const ideogramV3Remix = (
+    ideogramV3RemixRequest: IdeogramV3RemixRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(ideogramV3RemixRequest.aspect_ratio !== undefined) {
+ formData.append('aspect_ratio', ideogramV3RemixRequest.aspect_ratio)
+ }
+if(ideogramV3RemixRequest.color_palette !== undefined) {
+ formData.append('color_palette', JSON.stringify(ideogramV3RemixRequest.color_palette));
+ }
+if(ideogramV3RemixRequest.image !== undefined) {
+ formData.append('image', ideogramV3RemixRequest.image)
+ }
+if(ideogramV3RemixRequest.image_weight !== undefined) {
+ formData.append('image_weight', ideogramV3RemixRequest.image_weight.toString())
+ }
+if(ideogramV3RemixRequest.magic_prompt !== undefined) {
+ formData.append('magic_prompt', ideogramV3RemixRequest.magic_prompt)
+ }
+if(ideogramV3RemixRequest.negative_prompt !== undefined) {
+ formData.append('negative_prompt', ideogramV3RemixRequest.negative_prompt)
+ }
+if(ideogramV3RemixRequest.num_images !== undefined) {
+ formData.append('num_images', ideogramV3RemixRequest.num_images.toString())
+ }
+formData.append('prompt', ideogramV3RemixRequest.prompt)
+if(ideogramV3RemixRequest.rendering_speed !== undefined) {
+ formData.append('rendering_speed', ideogramV3RemixRequest.rendering_speed)
+ }
+if(ideogramV3RemixRequest.resolution !== undefined) {
+ formData.append('resolution', ideogramV3RemixRequest.resolution)
+ }
+if(ideogramV3RemixRequest.seed !== undefined) {
+ formData.append('seed', ideogramV3RemixRequest.seed.toString())
+ }
+if(ideogramV3RemixRequest.style_codes !== undefined) {
+ ideogramV3RemixRequest.style_codes.forEach(value => formData.append('style_codes', value));
+ }
+if(ideogramV3RemixRequest.style_reference_images !== undefined) {
+ ideogramV3RemixRequest.style_reference_images.forEach(value => formData.append('style_reference_images', value));
+ }
+if(ideogramV3RemixRequest.style_type !== undefined) {
+ formData.append('style_type', ideogramV3RemixRequest.style_type)
+ }
+
+      return customInstance<IdeogramV3IdeogramResponse>(
+      {url: `/proxy/ideogram/ideogram-v3/remix`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getIdeogramV3RemixMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Remix>>, TError,{data: IdeogramV3RemixRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Remix>>, TError,{data: IdeogramV3RemixRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ideogramV3Remix>>, {data: IdeogramV3RemixRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  ideogramV3Remix(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IdeogramV3RemixMutationResult = NonNullable<Awaited<ReturnType<typeof ideogramV3Remix>>>
+    export type IdeogramV3RemixMutationBody = IdeogramV3RemixRequest
+    export type IdeogramV3RemixMutationError = void
+
+    /**
+ * @summary Remix an image using a prompt
+ */
+export const useIdeogramV3Remix = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3Remix>>, TError,{data: IdeogramV3RemixRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof ideogramV3Remix>>,
+        TError,
+        {data: IdeogramV3RemixRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getIdeogramV3RemixMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Replace background of an image using a prompt
+ */
+export const ideogramV3ReplaceBackground = (
+    ideogramV3ReplaceBackgroundRequest: IdeogramV3ReplaceBackgroundRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(ideogramV3ReplaceBackgroundRequest.color_palette !== undefined) {
+ formData.append('color_palette', JSON.stringify(ideogramV3ReplaceBackgroundRequest.color_palette));
+ }
+if(ideogramV3ReplaceBackgroundRequest.image !== undefined) {
+ formData.append('image', ideogramV3ReplaceBackgroundRequest.image)
+ }
+if(ideogramV3ReplaceBackgroundRequest.magic_prompt !== undefined) {
+ formData.append('magic_prompt', ideogramV3ReplaceBackgroundRequest.magic_prompt)
+ }
+if(ideogramV3ReplaceBackgroundRequest.num_images !== undefined) {
+ formData.append('num_images', ideogramV3ReplaceBackgroundRequest.num_images.toString())
+ }
+formData.append('prompt', ideogramV3ReplaceBackgroundRequest.prompt)
+if(ideogramV3ReplaceBackgroundRequest.rendering_speed !== undefined) {
+ formData.append('rendering_speed', ideogramV3ReplaceBackgroundRequest.rendering_speed)
+ }
+if(ideogramV3ReplaceBackgroundRequest.seed !== undefined) {
+ formData.append('seed', ideogramV3ReplaceBackgroundRequest.seed.toString())
+ }
+if(ideogramV3ReplaceBackgroundRequest.style_codes !== undefined) {
+ ideogramV3ReplaceBackgroundRequest.style_codes.forEach(value => formData.append('style_codes', value));
+ }
+if(ideogramV3ReplaceBackgroundRequest.style_reference_images !== undefined) {
+ ideogramV3ReplaceBackgroundRequest.style_reference_images.forEach(value => formData.append('style_reference_images', value));
+ }
+
+      return customInstance<IdeogramV3IdeogramResponse>(
+      {url: `/proxy/ideogram/ideogram-v3/replace-background`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getIdeogramV3ReplaceBackgroundMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3ReplaceBackground>>, TError,{data: IdeogramV3ReplaceBackgroundRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof ideogramV3ReplaceBackground>>, TError,{data: IdeogramV3ReplaceBackgroundRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof ideogramV3ReplaceBackground>>, {data: IdeogramV3ReplaceBackgroundRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  ideogramV3ReplaceBackground(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type IdeogramV3ReplaceBackgroundMutationResult = NonNullable<Awaited<ReturnType<typeof ideogramV3ReplaceBackground>>>
+    export type IdeogramV3ReplaceBackgroundMutationBody = IdeogramV3ReplaceBackgroundRequest
+    export type IdeogramV3ReplaceBackgroundMutationError = void
+
+    /**
+ * @summary Replace background of an image using a prompt
+ */
+export const useIdeogramV3ReplaceBackground = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof ideogramV3ReplaceBackground>>, TError,{data: IdeogramV3ReplaceBackgroundRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof ideogramV3ReplaceBackground>>,
+        TError,
+        {data: IdeogramV3ReplaceBackgroundRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getIdeogramV3ReplaceBackgroundMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Resource Package Information
+ */
+export const klingQueryResourcePackages = (
+    params: KlingQueryResourcePackagesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingResourcePackageResponse>(
+      {url: `/proxy/kling/v1/account/costs`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingQueryResourcePackagesQueryKey = (params: KlingQueryResourcePackagesParams,) => {
+    return [`/proxy/kling/v1/account/costs`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingQueryResourcePackagesQueryOptions = <TData = Awaited<ReturnType<typeof klingQueryResourcePackages>>, TError = KlingErrorResponse>(params: KlingQueryResourcePackagesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingQueryResourcePackages>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingQueryResourcePackagesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingQueryResourcePackages>>> = ({ signal }) => klingQueryResourcePackages(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingQueryResourcePackages>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingQueryResourcePackagesQueryResult = NonNullable<Awaited<ReturnType<typeof klingQueryResourcePackages>>>
+export type KlingQueryResourcePackagesQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Resource Package Information
+ */
+export const useKlingQueryResourcePackages = <TData = Awaited<ReturnType<typeof klingQueryResourcePackages>>, TError = KlingErrorResponse>(
+ params: KlingQueryResourcePackagesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingQueryResourcePackages>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingQueryResourcePackagesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Image Generation Task List
+ */
+export const klingImageGenerationsQueryTaskList = (
+    params?: KlingImageGenerationsQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingImageGenerationsResponse>(
+      {url: `/proxy/kling/v1/images/generations`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingImageGenerationsQueryTaskListQueryKey = (params?: KlingImageGenerationsQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/images/generations`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingImageGenerationsQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingImageGenerationsQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingImageGenerationsQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>> = ({ signal }) => klingImageGenerationsQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingImageGenerationsQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>>
+export type KlingImageGenerationsQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Image Generation Task List
+ */
+export const useKlingImageGenerationsQueryTaskList = <TData = Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingImageGenerationsQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImageGenerationsQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingImageGenerationsQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Create Image Generation Task
+ */
+export const klingCreateImageGeneration = (
+    klingImageGenerationsRequest: KlingImageGenerationsRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingImageGenerationsResponse>(
+      {url: `/proxy/kling/v1/images/generations`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingImageGenerationsRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingCreateImageGenerationMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateImageGeneration>>, TError,{data: KlingImageGenerationsRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingCreateImageGeneration>>, TError,{data: KlingImageGenerationsRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingCreateImageGeneration>>, {data: KlingImageGenerationsRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingCreateImageGeneration(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingCreateImageGenerationMutationResult = NonNullable<Awaited<ReturnType<typeof klingCreateImageGeneration>>>
+    export type KlingCreateImageGenerationMutationBody = KlingImageGenerationsRequest
+    export type KlingCreateImageGenerationMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Create Image Generation Task
+ */
+export const useKlingCreateImageGeneration = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateImageGeneration>>, TError,{data: KlingImageGenerationsRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingCreateImageGeneration>>,
+        TError,
+        {data: KlingImageGenerationsRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingCreateImageGenerationMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Image Generation Task
+ */
+export const klingImageGenerationsQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingImageGenerationsResponse>(
+      {url: `/proxy/kling/v1/images/generations/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingImageGenerationsQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/images/generations/${id}`] as const;
+    }
+
+    
+export const getKlingImageGenerationsQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingImageGenerationsQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>> = ({ signal }) => klingImageGenerationsQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingImageGenerationsQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>>
+export type KlingImageGenerationsQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Image Generation Task
+ */
+export const useKlingImageGenerationsQuerySingleTask = <TData = Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImageGenerationsQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingImageGenerationsQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Virtual Try-On Task List
+ */
+export const klingVirtualTryOnQueryTaskList = (
+    params?: KlingVirtualTryOnQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingVirtualTryOnResponse>(
+      {url: `/proxy/kling/v1/images/kolors-virtual-try-on`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingVirtualTryOnQueryTaskListQueryKey = (params?: KlingVirtualTryOnQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/images/kolors-virtual-try-on`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingVirtualTryOnQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingVirtualTryOnQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingVirtualTryOnQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>> = ({ signal }) => klingVirtualTryOnQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingVirtualTryOnQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>>
+export type KlingVirtualTryOnQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Virtual Try-On Task List
+ */
+export const useKlingVirtualTryOnQueryTaskList = <TData = Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingVirtualTryOnQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVirtualTryOnQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingVirtualTryOnQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Create Virtual Try-On Task
+ */
+export const klingCreateVirtualTryOn = (
+    klingVirtualTryOnRequest: KlingVirtualTryOnRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingVirtualTryOnResponse>(
+      {url: `/proxy/kling/v1/images/kolors-virtual-try-on`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingVirtualTryOnRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingCreateVirtualTryOnMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVirtualTryOn>>, TError,{data: KlingVirtualTryOnRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingCreateVirtualTryOn>>, TError,{data: KlingVirtualTryOnRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingCreateVirtualTryOn>>, {data: KlingVirtualTryOnRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingCreateVirtualTryOn(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingCreateVirtualTryOnMutationResult = NonNullable<Awaited<ReturnType<typeof klingCreateVirtualTryOn>>>
+    export type KlingCreateVirtualTryOnMutationBody = KlingVirtualTryOnRequest
+    export type KlingCreateVirtualTryOnMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Create Virtual Try-On Task
+ */
+export const useKlingCreateVirtualTryOn = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVirtualTryOn>>, TError,{data: KlingVirtualTryOnRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingCreateVirtualTryOn>>,
+        TError,
+        {data: KlingVirtualTryOnRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingCreateVirtualTryOnMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Virtual Try-On Task
+ */
+export const klingVirtualTryOnQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingVirtualTryOnResponse>(
+      {url: `/proxy/kling/v1/images/kolors-virtual-try-on/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingVirtualTryOnQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/images/kolors-virtual-try-on/${id}`] as const;
+    }
+
+    
+export const getKlingVirtualTryOnQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingVirtualTryOnQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>> = ({ signal }) => klingVirtualTryOnQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingVirtualTryOnQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>>
+export type KlingVirtualTryOnQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Virtual Try-On Task
+ */
+export const useKlingVirtualTryOnQuerySingleTask = <TData = Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVirtualTryOnQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingVirtualTryOnQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Video Effects Task List
+ */
+export const klingVideoEffectsQueryTaskList = (
+    params?: KlingVideoEffectsQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingVideoEffectsResponse>(
+      {url: `/proxy/kling/v1/videos/effects`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingVideoEffectsQueryTaskListQueryKey = (params?: KlingVideoEffectsQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/videos/effects`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingVideoEffectsQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingVideoEffectsQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingVideoEffectsQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>> = ({ signal }) => klingVideoEffectsQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingVideoEffectsQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>>
+export type KlingVideoEffectsQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Video Effects Task List
+ */
+export const useKlingVideoEffectsQueryTaskList = <TData = Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingVideoEffectsQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoEffectsQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingVideoEffectsQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Create Video Effects Task
+ */
+export const klingCreateVideoEffects = (
+    klingVideoEffectsRequest: KlingVideoEffectsRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingVideoEffectsResponse>(
+      {url: `/proxy/kling/v1/videos/effects`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingVideoEffectsRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingCreateVideoEffectsMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoEffects>>, TError,{data: KlingVideoEffectsRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoEffects>>, TError,{data: KlingVideoEffectsRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingCreateVideoEffects>>, {data: KlingVideoEffectsRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingCreateVideoEffects(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingCreateVideoEffectsMutationResult = NonNullable<Awaited<ReturnType<typeof klingCreateVideoEffects>>>
+    export type KlingCreateVideoEffectsMutationBody = KlingVideoEffectsRequest
+    export type KlingCreateVideoEffectsMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Create Video Effects Task
+ */
+export const useKlingCreateVideoEffects = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoEffects>>, TError,{data: KlingVideoEffectsRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingCreateVideoEffects>>,
+        TError,
+        {data: KlingVideoEffectsRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingCreateVideoEffectsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Video Effects Task
+ */
+export const klingVideoEffectsQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingVideoEffectsResponse>(
+      {url: `/proxy/kling/v1/videos/effects/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingVideoEffectsQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/videos/effects/${id}`] as const;
+    }
+
+    
+export const getKlingVideoEffectsQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingVideoEffectsQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>> = ({ signal }) => klingVideoEffectsQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingVideoEffectsQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>>
+export type KlingVideoEffectsQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Video Effects Task
+ */
+export const useKlingVideoEffectsQuerySingleTask = <TData = Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoEffectsQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingVideoEffectsQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Image2Video Task List
+ */
+export const klingImage2VideoQueryTaskList = (
+    params?: KlingImage2VideoQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingImage2VideoResponse>(
+      {url: `/proxy/kling/v1/videos/image2video`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingImage2VideoQueryTaskListQueryKey = (params?: KlingImage2VideoQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/videos/image2video`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingImage2VideoQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingImage2VideoQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingImage2VideoQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>> = ({ signal }) => klingImage2VideoQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingImage2VideoQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>>
+export type KlingImage2VideoQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Image2Video Task List
+ */
+export const useKlingImage2VideoQueryTaskList = <TData = Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingImage2VideoQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImage2VideoQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingImage2VideoQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Create Video from Image
+ */
+export const klingCreateVideoFromImage = (
+    klingImage2VideoRequest: KlingImage2VideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingImage2VideoResponse>(
+      {url: `/proxy/kling/v1/videos/image2video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingImage2VideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingCreateVideoFromImageMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoFromImage>>, TError,{data: KlingImage2VideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoFromImage>>, TError,{data: KlingImage2VideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingCreateVideoFromImage>>, {data: KlingImage2VideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingCreateVideoFromImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingCreateVideoFromImageMutationResult = NonNullable<Awaited<ReturnType<typeof klingCreateVideoFromImage>>>
+    export type KlingCreateVideoFromImageMutationBody = KlingImage2VideoRequest
+    export type KlingCreateVideoFromImageMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Create Video from Image
+ */
+export const useKlingCreateVideoFromImage = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoFromImage>>, TError,{data: KlingImage2VideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingCreateVideoFromImage>>,
+        TError,
+        {data: KlingImage2VideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingCreateVideoFromImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Image2Video Task
+ */
+export const klingImage2VideoQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingImage2VideoResponse>(
+      {url: `/proxy/kling/v1/videos/image2video/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingImage2VideoQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/videos/image2video/${id}`] as const;
+    }
+
+    
+export const getKlingImage2VideoQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingImage2VideoQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>> = ({ signal }) => klingImage2VideoQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingImage2VideoQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>>
+export type KlingImage2VideoQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Image2Video Task
+ */
+export const useKlingImage2VideoQuerySingleTask = <TData = Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingImage2VideoQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingImage2VideoQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Lip-Sync Task List
+ */
+export const klingLipSyncQueryTaskList = (
+    params?: KlingLipSyncQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingLipSyncResponse>(
+      {url: `/proxy/kling/v1/videos/lip-sync`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingLipSyncQueryTaskListQueryKey = (params?: KlingLipSyncQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/videos/lip-sync`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingLipSyncQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingLipSyncQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingLipSyncQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>> = ({ signal }) => klingLipSyncQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingLipSyncQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>>
+export type KlingLipSyncQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Lip-Sync Task List
+ */
+export const useKlingLipSyncQueryTaskList = <TData = Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingLipSyncQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingLipSyncQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingLipSyncQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Create Lip-Sync Video
+ */
+export const klingCreateLipSyncVideo = (
+    klingLipSyncRequest: KlingLipSyncRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingLipSyncResponse>(
+      {url: `/proxy/kling/v1/videos/lip-sync`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingLipSyncRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingCreateLipSyncVideoMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateLipSyncVideo>>, TError,{data: KlingLipSyncRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingCreateLipSyncVideo>>, TError,{data: KlingLipSyncRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingCreateLipSyncVideo>>, {data: KlingLipSyncRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingCreateLipSyncVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingCreateLipSyncVideoMutationResult = NonNullable<Awaited<ReturnType<typeof klingCreateLipSyncVideo>>>
+    export type KlingCreateLipSyncVideoMutationBody = KlingLipSyncRequest
+    export type KlingCreateLipSyncVideoMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Create Lip-Sync Video
+ */
+export const useKlingCreateLipSyncVideo = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateLipSyncVideo>>, TError,{data: KlingLipSyncRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingCreateLipSyncVideo>>,
+        TError,
+        {data: KlingLipSyncRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingCreateLipSyncVideoMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Lip-Sync Task
+ */
+export const klingLipSyncQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingLipSyncResponse>(
+      {url: `/proxy/kling/v1/videos/lip-sync/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingLipSyncQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/videos/lip-sync/${id}`] as const;
+    }
+
+    
+export const getKlingLipSyncQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingLipSyncQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>> = ({ signal }) => klingLipSyncQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingLipSyncQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>>
+export type KlingLipSyncQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Lip-Sync Task
+ */
+export const useKlingLipSyncQuerySingleTask = <TData = Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingLipSyncQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingLipSyncQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Task List
+ */
+export const klingText2VideoQueryTaskList = (
+    params?: KlingText2VideoQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingText2VideoResponse>(
+      {url: `/proxy/kling/v1/videos/text2video`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingText2VideoQueryTaskListQueryKey = (params?: KlingText2VideoQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/videos/text2video`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingText2VideoQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingText2VideoQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingText2VideoQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>> = ({ signal }) => klingText2VideoQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingText2VideoQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>>
+export type KlingText2VideoQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Task List
+ */
+export const useKlingText2VideoQueryTaskList = <TData = Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingText2VideoQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingText2VideoQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingText2VideoQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Create Video from Text
+ */
+export const klingCreateVideoFromText = (
+    klingText2VideoRequest: KlingText2VideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingText2VideoResponse>(
+      {url: `/proxy/kling/v1/videos/text2video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingText2VideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingCreateVideoFromTextMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoFromText>>, TError,{data: KlingText2VideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoFromText>>, TError,{data: KlingText2VideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingCreateVideoFromText>>, {data: KlingText2VideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingCreateVideoFromText(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingCreateVideoFromTextMutationResult = NonNullable<Awaited<ReturnType<typeof klingCreateVideoFromText>>>
+    export type KlingCreateVideoFromTextMutationBody = KlingText2VideoRequest
+    export type KlingCreateVideoFromTextMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Create Video from Text
+ */
+export const useKlingCreateVideoFromText = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingCreateVideoFromText>>, TError,{data: KlingText2VideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingCreateVideoFromText>>,
+        TError,
+        {data: KlingText2VideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingCreateVideoFromTextMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Task
+ */
+export const klingText2VideoQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingText2VideoResponse>(
+      {url: `/proxy/kling/v1/videos/text2video/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingText2VideoQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/videos/text2video/${id}`] as const;
+    }
+
+    
+export const getKlingText2VideoQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingText2VideoQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>> = ({ signal }) => klingText2VideoQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingText2VideoQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>>
+export type KlingText2VideoQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Task
+ */
+export const useKlingText2VideoQuerySingleTask = <TData = Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingText2VideoQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingText2VideoQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Query Video-Extend Task List
+ */
+export const klingVideoExtendQueryTaskList = (
+    params?: KlingVideoExtendQueryTaskListParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingVideoExtendResponse>(
+      {url: `/proxy/kling/v1/videos/video-extend`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getKlingVideoExtendQueryTaskListQueryKey = (params?: KlingVideoExtendQueryTaskListParams,) => {
+    return [`/proxy/kling/v1/videos/video-extend`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getKlingVideoExtendQueryTaskListQueryOptions = <TData = Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>, TError = KlingErrorResponse>(params?: KlingVideoExtendQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingVideoExtendQueryTaskListQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>> = ({ signal }) => klingVideoExtendQueryTaskList(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingVideoExtendQueryTaskListQueryResult = NonNullable<Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>>
+export type KlingVideoExtendQueryTaskListQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Video-Extend Task List
+ */
+export const useKlingVideoExtendQueryTaskList = <TData = Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>, TError = KlingErrorResponse>(
+ params?: KlingVideoExtendQueryTaskListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoExtendQueryTaskList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingVideoExtendQueryTaskListQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary KlingAI Extend Video Duration
+ */
+export const klingExtendVideo = (
+    klingVideoExtendRequest: KlingVideoExtendRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<KlingVideoExtendResponse>(
+      {url: `/proxy/kling/v1/videos/video-extend`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: klingVideoExtendRequest
+    },
+      options);
+    }
+  
+
+
+export const getKlingExtendVideoMutationOptions = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingExtendVideo>>, TError,{data: KlingVideoExtendRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof klingExtendVideo>>, TError,{data: KlingVideoExtendRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof klingExtendVideo>>, {data: KlingVideoExtendRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  klingExtendVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type KlingExtendVideoMutationResult = NonNullable<Awaited<ReturnType<typeof klingExtendVideo>>>
+    export type KlingExtendVideoMutationBody = KlingVideoExtendRequest
+    export type KlingExtendVideoMutationError = KlingErrorResponse
+
+    /**
+ * @summary KlingAI Extend Video Duration
+ */
+export const useKlingExtendVideo = <TError = KlingErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof klingExtendVideo>>, TError,{data: KlingVideoExtendRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof klingExtendVideo>>,
+        TError,
+        {data: KlingVideoExtendRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getKlingExtendVideoMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary KlingAI Query Single Video-Extend Task
+ */
+export const klingVideoExtendQuerySingleTask = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<KlingVideoExtendResponse>(
+      {url: `/proxy/kling/v1/videos/video-extend/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getKlingVideoExtendQuerySingleTaskQueryKey = (id: string,) => {
+    return [`/proxy/kling/v1/videos/video-extend/${id}`] as const;
+    }
+
+    
+export const getKlingVideoExtendQuerySingleTaskQueryOptions = <TData = Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>, TError = KlingErrorResponse>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getKlingVideoExtendQuerySingleTaskQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>> = ({ signal }) => klingVideoExtendQuerySingleTask(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type KlingVideoExtendQuerySingleTaskQueryResult = NonNullable<Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>>
+export type KlingVideoExtendQuerySingleTaskQueryError = KlingErrorResponse
+
+/**
+ * @summary KlingAI Query Single Video-Extend Task
+ */
+export const useKlingVideoExtendQuerySingleTask = <TData = Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>, TError = KlingErrorResponse>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof klingVideoExtendQuerySingleTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getKlingVideoExtendQuerySingleTaskQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Initiate a new generation with the provided prompt
+ * @summary Create a generation
+ */
+export const lumaCreateGeneration = (
+    lumaGenerationRequest: LumaGenerationRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<LumaGeneration>(
+      {url: `/proxy/luma/generations`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: lumaGenerationRequest
+    },
+      options);
+    }
+  
+
+
+export const getLumaCreateGenerationMutationOptions = <TError = LumaError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof lumaCreateGeneration>>, TError,{data: LumaGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof lumaCreateGeneration>>, TError,{data: LumaGenerationRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof lumaCreateGeneration>>, {data: LumaGenerationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  lumaCreateGeneration(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LumaCreateGenerationMutationResult = NonNullable<Awaited<ReturnType<typeof lumaCreateGeneration>>>
+    export type LumaCreateGenerationMutationBody = LumaGenerationRequest
+    export type LumaCreateGenerationMutationError = LumaError
+
+    /**
+ * @summary Create a generation
+ */
+export const useLumaCreateGeneration = <TError = LumaError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof lumaCreateGeneration>>, TError,{data: LumaGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof lumaCreateGeneration>>,
+        TError,
+        {data: LumaGenerationRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getLumaCreateGenerationMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Generate an image with the provided prompt
+ * @summary Generate an image
+ */
+export const lumaGenerateImage = (
+    lumaImageGenerationRequest: LumaImageGenerationRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<LumaGeneration>(
+      {url: `/proxy/luma/generations/image`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: lumaImageGenerationRequest
+    },
+      options);
+    }
+  
+
+
+export const getLumaGenerateImageMutationOptions = <TError = LumaError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof lumaGenerateImage>>, TError,{data: LumaImageGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof lumaGenerateImage>>, TError,{data: LumaImageGenerationRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof lumaGenerateImage>>, {data: LumaImageGenerationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  lumaGenerateImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LumaGenerateImageMutationResult = NonNullable<Awaited<ReturnType<typeof lumaGenerateImage>>>
+    export type LumaGenerateImageMutationBody = LumaImageGenerationRequest
+    export type LumaGenerateImageMutationError = LumaError
+
+    /**
+ * @summary Generate an image
+ */
+export const useLumaGenerateImage = <TError = LumaError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof lumaGenerateImage>>, TError,{data: LumaImageGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof lumaGenerateImage>>,
+        TError,
+        {data: LumaImageGenerationRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getLumaGenerateImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Retrieve details of a specific generation by its ID
+ * @summary Get a generation
+ */
+export const lumaGetGeneration = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<LumaGeneration>(
+      {url: `/proxy/luma/generations/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getLumaGetGenerationQueryKey = (id: string,) => {
+    return [`/proxy/luma/generations/${id}`] as const;
+    }
+
+    
+export const getLumaGetGenerationQueryOptions = <TData = Awaited<ReturnType<typeof lumaGetGeneration>>, TError = LumaError>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof lumaGetGeneration>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLumaGetGenerationQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof lumaGetGeneration>>> = ({ signal }) => lumaGetGeneration(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof lumaGetGeneration>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LumaGetGenerationQueryResult = NonNullable<Awaited<ReturnType<typeof lumaGetGeneration>>>
+export type LumaGetGenerationQueryError = LumaError
+
+/**
+ * @summary Get a generation
+ */
+export const useLumaGetGeneration = <TData = Awaited<ReturnType<typeof lumaGetGeneration>>, TError = LumaError>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof lumaGetGeneration>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getLumaGetGenerationQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Proxies a request to Minimax to get the download URL for a file
+ * @summary Retrieve download URL for a Minimax file
+ */
+export const retrieveMinimaxFile = (
+    params: RetrieveMinimaxFileParams,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<MinimaxFileRetrieveResponse>(
+      {url: `/proxy/minimax/files/retrieve`, method: 'POST',
+        params
+    },
+      options);
+    }
+  
+
+
+export const getRetrieveMinimaxFileMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof retrieveMinimaxFile>>, TError,{params: RetrieveMinimaxFileParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof retrieveMinimaxFile>>, TError,{params: RetrieveMinimaxFileParams}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof retrieveMinimaxFile>>, {params: RetrieveMinimaxFileParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  retrieveMinimaxFile(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RetrieveMinimaxFileMutationResult = NonNullable<Awaited<ReturnType<typeof retrieveMinimaxFile>>>
+    
+    export type RetrieveMinimaxFileMutationError = ErrorResponse | void
+
+    /**
+ * @summary Retrieve download URL for a Minimax file
+ */
+export const useRetrieveMinimaxFile = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof retrieveMinimaxFile>>, TError,{params: RetrieveMinimaxFileParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof retrieveMinimaxFile>>,
+        TError,
+        {params: RetrieveMinimaxFileParams},
+        TContext
+      > => {
+
+      const mutationOptions = getRetrieveMinimaxFileMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Proxies a request to Minimax to check the status of a video generation task
+ * @summary Query status of a Minimax video generation task
+ */
+export const getMinimaxVideoGeneration = (
+    params: GetMinimaxVideoGenerationParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MinimaxTaskResultResponse>(
+      {url: `/proxy/minimax/query/video_generation`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetMinimaxVideoGenerationQueryKey = (params: GetMinimaxVideoGenerationParams,) => {
+    return [`/proxy/minimax/query/video_generation`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetMinimaxVideoGenerationQueryOptions = <TData = Awaited<ReturnType<typeof getMinimaxVideoGeneration>>, TError = ErrorResponse | void>(params: GetMinimaxVideoGenerationParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMinimaxVideoGeneration>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMinimaxVideoGenerationQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMinimaxVideoGeneration>>> = ({ signal }) => getMinimaxVideoGeneration(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMinimaxVideoGeneration>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMinimaxVideoGenerationQueryResult = NonNullable<Awaited<ReturnType<typeof getMinimaxVideoGeneration>>>
+export type GetMinimaxVideoGenerationQueryError = ErrorResponse | void
+
+/**
+ * @summary Query status of a Minimax video generation task
+ */
+export const useGetMinimaxVideoGeneration = <TData = Awaited<ReturnType<typeof getMinimaxVideoGeneration>>, TError = ErrorResponse | void>(
+ params: GetMinimaxVideoGenerationParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMinimaxVideoGeneration>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetMinimaxVideoGenerationQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Forwards video generation requests to Minimax's API and returns the task ID for asynchronous processing.
+ * @summary Proxy request to Minimax for video generation
+ */
+export const minimaxVideoGeneration = (
+    minimaxVideoGenerationRequest: MinimaxVideoGenerationRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<MinimaxVideoGenerationResponse>(
+      {url: `/proxy/minimax/video_generation`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: minimaxVideoGenerationRequest
+    },
+      options);
+    }
+  
+
+
+export const getMinimaxVideoGenerationMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof minimaxVideoGeneration>>, TError,{data: MinimaxVideoGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof minimaxVideoGeneration>>, TError,{data: MinimaxVideoGenerationRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof minimaxVideoGeneration>>, {data: MinimaxVideoGenerationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  minimaxVideoGeneration(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MinimaxVideoGenerationMutationResult = NonNullable<Awaited<ReturnType<typeof minimaxVideoGeneration>>>
+    export type MinimaxVideoGenerationMutationBody = MinimaxVideoGenerationRequest
+    export type MinimaxVideoGenerationMutationError = ErrorResponse | void
+
+    /**
+ * @summary Proxy request to Minimax for video generation
+ */
+export const useMinimaxVideoGeneration = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof minimaxVideoGeneration>>, TError,{data: MinimaxVideoGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof minimaxVideoGeneration>>,
+        TError,
+        {data: MinimaxVideoGenerationRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMinimaxVideoGenerationMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Create Text-to-Video or Image-to-Video Prompt
+ */
+export const moonvalleyCreatePrompt = (
+    moonvalleyCreatePromptRequest: MoonvalleyCreatePromptRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<MoonvalleyCreatePromptResponse>(
+      {url: `/proxy/moonvalley/prompts`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyCreatePromptRequest
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyCreatePromptMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, {data: MoonvalleyCreatePromptRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyCreatePrompt(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyCreatePromptMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>>
+    export type MoonvalleyCreatePromptMutationBody = MoonvalleyCreatePromptRequest
+    export type MoonvalleyCreatePromptMutationError = unknown
+
+    /**
+ * @summary Create Text-to-Video or Image-to-Video Prompt
+ */
+export const useMoonvalleyCreatePrompt = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyCreatePrompt>>,
+        TError,
+        {data: MoonvalleyCreatePromptRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyCreatePromptMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Create Text-to-Image Prompt
+ */
+export const moonvalleyCreateTextToImagePrompt = (
+    moonvalleyCreatePromptRequest: MoonvalleyCreatePromptRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<MoonvalleyCreatePromptResponse>(
+      {url: `/proxy/moonvalley/prompts/text-to-image`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyCreatePromptRequest
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyCreateTextToImagePromptMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, {data: MoonvalleyCreatePromptRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyCreateTextToImagePrompt(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyCreateTextToImagePromptMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>>
+    export type MoonvalleyCreateTextToImagePromptMutationBody = MoonvalleyCreatePromptRequest
+    export type MoonvalleyCreateTextToImagePromptMutationError = unknown
+
+    /**
+ * @summary Create Text-to-Image Prompt
+ */
+export const useMoonvalleyCreateTextToImagePrompt = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>,
+        TError,
+        {data: MoonvalleyCreatePromptRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyCreateTextToImagePromptMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Create Video-to-Video Prompt
+ */
+export const moonvalleyCreateVideoToVideoPrompt = (
+    moonvalleyCreateVideoToVideoRequest: MoonvalleyCreateVideoToVideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<MoonvalleyCreatePromptResponse>(
+      {url: `/proxy/moonvalley/prompts/video-to-video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyCreateVideoToVideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyCreateVideoToVideoPromptMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, TError,{data: MoonvalleyCreateVideoToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, TError,{data: MoonvalleyCreateVideoToVideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, {data: MoonvalleyCreateVideoToVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyCreateVideoToVideoPrompt(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyCreateVideoToVideoPromptMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>>
+    export type MoonvalleyCreateVideoToVideoPromptMutationBody = MoonvalleyCreateVideoToVideoRequest
+    export type MoonvalleyCreateVideoToVideoPromptMutationError = unknown
+
+    /**
+ * @summary Create Video-to-Video Prompt
+ */
+export const useMoonvalleyCreateVideoToVideoPrompt = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, TError,{data: MoonvalleyCreateVideoToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>,
+        TError,
+        {data: MoonvalleyCreateVideoToVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyCreateVideoToVideoPromptMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get Prompt Details
+ */
+export const moonvalley = (
+    promptId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/${promptId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getMoonvalleyQueryKey = (promptId: string,) => {
+    return [`/proxy/moonvalley/prompts/${promptId}`] as const;
+    }
+
+    
+export const getMoonvalleyQueryOptions = <TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getMoonvalleyQueryKey(promptId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof moonvalley>>> = ({ signal }) => moonvalley(promptId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(promptId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type MoonvalleyQueryResult = NonNullable<Awaited<ReturnType<typeof moonvalley>>>
+export type MoonvalleyQueryError = unknown
+
+/**
+ * @summary Get Prompt Details
+ */
+export const useMoonvalley = <TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(
+ promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getMoonvalleyQueryOptions(promptId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Upload File
+ */
+export const moonvalleyUploadFile = (
+    moonvalleyUploadFileBody: MoonvalleyUploadFileBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(moonvalleyUploadFileBody.file !== undefined) {
+ formData.append('file', moonvalleyUploadFileBody.file)
+ }
+
+      return customInstance<MoonvalleyUploadResponse>(
+      {url: `/proxy/moonvalley/uploads`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyUploadFileMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUploadFile>>, TError,{data: MoonvalleyUploadFileBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUploadFile>>, TError,{data: MoonvalleyUploadFileBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyUploadFile>>, {data: MoonvalleyUploadFileBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyUploadFile(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyUploadFileMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyUploadFile>>>
+    export type MoonvalleyUploadFileMutationBody = MoonvalleyUploadFileBody
+    export type MoonvalleyUploadFileMutationError = unknown
+
+    /**
+ * @summary Upload File
+ */
+export const useMoonvalleyUploadFile = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUploadFile>>, TError,{data: MoonvalleyUploadFileBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyUploadFile>>,
+        TError,
+        {data: MoonvalleyUploadFileBody},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyUploadFileMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Edit an image using OpenAI's DALL-E model
+ */
+export const openAIEditImage = (
+    openAIImageEditRequest: OpenAIImageEditRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(openAIImageEditRequest.background !== undefined) {
+ formData.append('background', openAIImageEditRequest.background)
+ }
+formData.append('model', openAIImageEditRequest.model)
+if(openAIImageEditRequest.moderation !== undefined) {
+ formData.append('moderation', openAIImageEditRequest.moderation)
+ }
+if(openAIImageEditRequest.n !== undefined) {
+ formData.append('n', openAIImageEditRequest.n.toString())
+ }
+if(openAIImageEditRequest.output_compression !== undefined) {
+ formData.append('output_compression', openAIImageEditRequest.output_compression.toString())
+ }
+if(openAIImageEditRequest.output_format !== undefined) {
+ formData.append('output_format', openAIImageEditRequest.output_format)
+ }
+formData.append('prompt', openAIImageEditRequest.prompt)
+if(openAIImageEditRequest.quality !== undefined) {
+ formData.append('quality', openAIImageEditRequest.quality)
+ }
+if(openAIImageEditRequest.size !== undefined) {
+ formData.append('size', openAIImageEditRequest.size)
+ }
+if(openAIImageEditRequest.user !== undefined) {
+ formData.append('user', openAIImageEditRequest.user)
+ }
+
+      return customInstance<OpenAIImageGenerationResponse>(
+      {url: `/proxy/openai/images/edits`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getOpenAIEditImageMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof openAIEditImage>>, TError,{data: OpenAIImageEditRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof openAIEditImage>>, TError,{data: OpenAIImageEditRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof openAIEditImage>>, {data: OpenAIImageEditRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  openAIEditImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type OpenAIEditImageMutationResult = NonNullable<Awaited<ReturnType<typeof openAIEditImage>>>
+    export type OpenAIEditImageMutationBody = OpenAIImageEditRequest
+    export type OpenAIEditImageMutationError = ErrorResponse | void
+
+    /**
+ * @summary Edit an image using OpenAI's DALL-E model
+ */
+export const useOpenAIEditImage = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof openAIEditImage>>, TError,{data: OpenAIImageEditRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof openAIEditImage>>,
+        TError,
+        {data: OpenAIImageEditRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getOpenAIEditImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate an image using OpenAI's models
+ */
+export const openAIGenerateImage = (
+    openAIImageGenerationRequest: OpenAIImageGenerationRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<OpenAIImageGenerationResponse>(
+      {url: `/proxy/openai/images/generations`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: openAIImageGenerationRequest
+    },
+      options);
+    }
+  
+
+
+export const getOpenAIGenerateImageMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof openAIGenerateImage>>, TError,{data: OpenAIImageGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof openAIGenerateImage>>, TError,{data: OpenAIImageGenerationRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof openAIGenerateImage>>, {data: OpenAIImageGenerationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  openAIGenerateImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type OpenAIGenerateImageMutationResult = NonNullable<Awaited<ReturnType<typeof openAIGenerateImage>>>
+    export type OpenAIGenerateImageMutationBody = OpenAIImageGenerationRequest
+    export type OpenAIGenerateImageMutationError = ErrorResponse | void
+
+    /**
+ * @summary Generate an image using OpenAI's models
+ */
+export const useOpenAIGenerateImage = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof openAIGenerateImage>>, TError,{data: OpenAIImageGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof openAIGenerateImage>>,
+        TError,
+        {data: OpenAIImageGenerationRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getOpenAIGenerateImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+export const createOpenAIResponse = (
+    openAICreateResponse: OpenAICreateResponse,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<OpenAIResponse | OpenAIResponseStreamEvent>(
+      {url: `/proxy/openai/v1/responses`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: openAICreateResponse
+    },
+      options);
+    }
+  
+
+
+export const getCreateOpenAIResponseMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOpenAIResponse>>, TError,{data: OpenAICreateResponse}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createOpenAIResponse>>, TError,{data: OpenAICreateResponse}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createOpenAIResponse>>, {data: OpenAICreateResponse}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createOpenAIResponse(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateOpenAIResponseMutationResult = NonNullable<Awaited<ReturnType<typeof createOpenAIResponse>>>
+    export type CreateOpenAIResponseMutationBody = OpenAICreateResponse
+    export type CreateOpenAIResponseMutationError = unknown
+
+    export const useCreateOpenAIResponse = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createOpenAIResponse>>, TError,{data: OpenAICreateResponse}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createOpenAIResponse>>,
+        TError,
+        {data: OpenAICreateResponse},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateOpenAIResponseMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Retrieves a model response with the given ID.
+
+ */
+export const getOpenAIResponse = (
+    id: string,
+    params?: GetOpenAIResponseParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<OpenAIResponse>(
+      {url: `/proxy/openai/v1/responses/${id}`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetOpenAIResponseQueryKey = (id: string,
+    params?: GetOpenAIResponseParams,) => {
+    return [`/proxy/openai/v1/responses/${id}`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetOpenAIResponseQueryOptions = <TData = Awaited<ReturnType<typeof getOpenAIResponse>>, TError = unknown>(id: string,
+    params?: GetOpenAIResponseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOpenAIResponse>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOpenAIResponseQueryKey(id,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOpenAIResponse>>> = ({ signal }) => getOpenAIResponse(id,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOpenAIResponse>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOpenAIResponseQueryResult = NonNullable<Awaited<ReturnType<typeof getOpenAIResponse>>>
+export type GetOpenAIResponseQueryError = unknown
+
+/**
+ * @summary Retrieves a model response with the given ID.
+
+ */
+export const useGetOpenAIResponse = <TData = Awaited<ReturnType<typeof getOpenAIResponse>>, TError = unknown>(
+ id: string,
+    params?: GetOpenAIResponseParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOpenAIResponse>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetOpenAIResponseQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Generate 2 2 I2V
+ */
+export const pikaGenerate22I2vGenerate22I2vPost = (
+    pikaBodyGenerate22I2vGenerate22I2vPost: PikaBodyGenerate22I2vGenerate22I2vPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pikaBodyGenerate22I2vGenerate22I2vPost.duration !== undefined) {
+ formData.append('duration', pikaBodyGenerate22I2vGenerate22I2vPost.duration.toString())
+ }
+if(pikaBodyGenerate22I2vGenerate22I2vPost.image !== undefined && pikaBodyGenerate22I2vGenerate22I2vPost.image !== null) {
+ formData.append('image', pikaBodyGenerate22I2vGenerate22I2vPost.image)
+ }
+if(pikaBodyGenerate22I2vGenerate22I2vPost.negativePrompt !== undefined && pikaBodyGenerate22I2vGenerate22I2vPost.negativePrompt !== null) {
+ formData.append('negativePrompt', pikaBodyGenerate22I2vGenerate22I2vPost.negativePrompt)
+ }
+if(pikaBodyGenerate22I2vGenerate22I2vPost.promptText !== undefined && pikaBodyGenerate22I2vGenerate22I2vPost.promptText !== null) {
+ formData.append('promptText', pikaBodyGenerate22I2vGenerate22I2vPost.promptText)
+ }
+if(pikaBodyGenerate22I2vGenerate22I2vPost.resolution !== undefined) {
+ formData.append('resolution', pikaBodyGenerate22I2vGenerate22I2vPost.resolution)
+ }
+if(pikaBodyGenerate22I2vGenerate22I2vPost.seed !== undefined && pikaBodyGenerate22I2vGenerate22I2vPost.seed !== null) {
+ formData.append('seed', pikaBodyGenerate22I2vGenerate22I2vPost.seed.toString())
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/2.2/i2v`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPikaGenerate22I2vGenerate22I2vPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22I2vGenerate22I2vPost>>, TError,{data: PikaBodyGenerate22I2vGenerate22I2vPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22I2vGenerate22I2vPost>>, TError,{data: PikaBodyGenerate22I2vGenerate22I2vPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGenerate22I2vGenerate22I2vPost>>, {data: PikaBodyGenerate22I2vGenerate22I2vPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGenerate22I2vGenerate22I2vPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGenerate22I2vGenerate22I2vPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGenerate22I2vGenerate22I2vPost>>>
+    export type PikaGenerate22I2vGenerate22I2vPostMutationBody = PikaBodyGenerate22I2vGenerate22I2vPost
+    export type PikaGenerate22I2vGenerate22I2vPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate 2 2 I2V
+ */
+export const usePikaGenerate22I2vGenerate22I2vPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22I2vGenerate22I2vPost>>, TError,{data: PikaBodyGenerate22I2vGenerate22I2vPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGenerate22I2vGenerate22I2vPost>>,
+        TError,
+        {data: PikaBodyGenerate22I2vGenerate22I2vPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGenerate22I2vGenerate22I2vPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate 2 2 Keyframe
+ */
+export const pikaGenerate22KeyframeGenerate22PikaframesPost = (
+    pikaBodyGenerate22KeyframeGenerate22PikaframesPost: PikaBodyGenerate22KeyframeGenerate22PikaframesPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.duration !== undefined) {
+ formData.append('duration', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.duration.toString())
+ }
+if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.keyFrames !== undefined) {
+ pikaBodyGenerate22KeyframeGenerate22PikaframesPost.keyFrames.forEach(value => formData.append('keyFrames', value));
+ }
+if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.negativePrompt !== undefined) {
+ formData.append('negativePrompt', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.negativePrompt)
+ }
+formData.append('promptText', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.promptText)
+if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.resolution !== undefined) {
+ formData.append('resolution', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.resolution)
+ }
+if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.seed !== undefined) {
+ formData.append('seed', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.seed)
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/2.2/pikaframes`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPikaGenerate22KeyframeGenerate22PikaframesPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22KeyframeGenerate22PikaframesPost>>, TError,{data: PikaBodyGenerate22KeyframeGenerate22PikaframesPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22KeyframeGenerate22PikaframesPost>>, TError,{data: PikaBodyGenerate22KeyframeGenerate22PikaframesPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGenerate22KeyframeGenerate22PikaframesPost>>, {data: PikaBodyGenerate22KeyframeGenerate22PikaframesPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGenerate22KeyframeGenerate22PikaframesPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGenerate22KeyframeGenerate22PikaframesPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGenerate22KeyframeGenerate22PikaframesPost>>>
+    export type PikaGenerate22KeyframeGenerate22PikaframesPostMutationBody = PikaBodyGenerate22KeyframeGenerate22PikaframesPost
+    export type PikaGenerate22KeyframeGenerate22PikaframesPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate 2 2 Keyframe
+ */
+export const usePikaGenerate22KeyframeGenerate22PikaframesPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22KeyframeGenerate22PikaframesPost>>, TError,{data: PikaBodyGenerate22KeyframeGenerate22PikaframesPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGenerate22KeyframeGenerate22PikaframesPost>>,
+        TError,
+        {data: PikaBodyGenerate22KeyframeGenerate22PikaframesPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGenerate22KeyframeGenerate22PikaframesPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate 2 2 C2V
+ */
+export const pikaGenerate22C2vGenerate22PikascenesPost = (
+    pikaBodyGenerate22C2vGenerate22PikascenesPost: PikaBodyGenerate22C2vGenerate22PikascenesPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.aspectRatio !== undefined) {
+ formData.append('aspectRatio', pikaBodyGenerate22C2vGenerate22PikascenesPost.aspectRatio)
+ }
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.duration !== undefined) {
+ formData.append('duration', pikaBodyGenerate22C2vGenerate22PikascenesPost.duration.toString())
+ }
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.images !== undefined) {
+ pikaBodyGenerate22C2vGenerate22PikascenesPost.images.forEach(value => formData.append('images', value));
+ }
+formData.append('ingredientsMode', pikaBodyGenerate22C2vGenerate22PikascenesPost.ingredientsMode)
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.negativePrompt !== undefined) {
+ formData.append('negativePrompt', pikaBodyGenerate22C2vGenerate22PikascenesPost.negativePrompt)
+ }
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.promptText !== undefined) {
+ formData.append('promptText', pikaBodyGenerate22C2vGenerate22PikascenesPost.promptText)
+ }
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.resolution !== undefined) {
+ formData.append('resolution', pikaBodyGenerate22C2vGenerate22PikascenesPost.resolution)
+ }
+if(pikaBodyGenerate22C2vGenerate22PikascenesPost.seed !== undefined) {
+ formData.append('seed', pikaBodyGenerate22C2vGenerate22PikascenesPost.seed)
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/2.2/pikascenes`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPikaGenerate22C2vGenerate22PikascenesPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22C2vGenerate22PikascenesPost>>, TError,{data: PikaBodyGenerate22C2vGenerate22PikascenesPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22C2vGenerate22PikascenesPost>>, TError,{data: PikaBodyGenerate22C2vGenerate22PikascenesPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGenerate22C2vGenerate22PikascenesPost>>, {data: PikaBodyGenerate22C2vGenerate22PikascenesPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGenerate22C2vGenerate22PikascenesPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGenerate22C2vGenerate22PikascenesPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGenerate22C2vGenerate22PikascenesPost>>>
+    export type PikaGenerate22C2vGenerate22PikascenesPostMutationBody = PikaBodyGenerate22C2vGenerate22PikascenesPost
+    export type PikaGenerate22C2vGenerate22PikascenesPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate 2 2 C2V
+ */
+export const usePikaGenerate22C2vGenerate22PikascenesPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22C2vGenerate22PikascenesPost>>, TError,{data: PikaBodyGenerate22C2vGenerate22PikascenesPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGenerate22C2vGenerate22PikascenesPost>>,
+        TError,
+        {data: PikaBodyGenerate22C2vGenerate22PikascenesPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGenerate22C2vGenerate22PikascenesPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate 2 2 T2V
+ */
+export const pikaGenerate22T2vGenerate22T2vPost = (
+    pikaBodyGenerate22T2vGenerate22T2vPost: PikaBodyGenerate22T2vGenerate22T2vPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formUrlEncoded = new URLSearchParams();
+if(pikaBodyGenerate22T2vGenerate22T2vPost.aspectRatio !== undefined) {
+ formUrlEncoded.append('aspectRatio', pikaBodyGenerate22T2vGenerate22T2vPost.aspectRatio.toString())
+ }
+if(pikaBodyGenerate22T2vGenerate22T2vPost.duration !== undefined) {
+ formUrlEncoded.append('duration', pikaBodyGenerate22T2vGenerate22T2vPost.duration.toString())
+ }
+if(pikaBodyGenerate22T2vGenerate22T2vPost.negativePrompt !== undefined && pikaBodyGenerate22T2vGenerate22T2vPost.negativePrompt !== null) {
+ formUrlEncoded.append('negativePrompt', pikaBodyGenerate22T2vGenerate22T2vPost.negativePrompt)
+ }
+formUrlEncoded.append('promptText', pikaBodyGenerate22T2vGenerate22T2vPost.promptText)
+if(pikaBodyGenerate22T2vGenerate22T2vPost.resolution !== undefined) {
+ formUrlEncoded.append('resolution', pikaBodyGenerate22T2vGenerate22T2vPost.resolution)
+ }
+if(pikaBodyGenerate22T2vGenerate22T2vPost.seed !== undefined && pikaBodyGenerate22T2vGenerate22T2vPost.seed !== null) {
+ formUrlEncoded.append('seed', pikaBodyGenerate22T2vGenerate22T2vPost.seed.toString())
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/2.2/t2v`, method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded', },
+       data: formUrlEncoded
+    },
+      options);
+    }
+  
+
+
+export const getPikaGenerate22T2vGenerate22T2vPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22T2vGenerate22T2vPost>>, TError,{data: PikaBodyGenerate22T2vGenerate22T2vPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22T2vGenerate22T2vPost>>, TError,{data: PikaBodyGenerate22T2vGenerate22T2vPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGenerate22T2vGenerate22T2vPost>>, {data: PikaBodyGenerate22T2vGenerate22T2vPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGenerate22T2vGenerate22T2vPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGenerate22T2vGenerate22T2vPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGenerate22T2vGenerate22T2vPost>>>
+    export type PikaGenerate22T2vGenerate22T2vPostMutationBody = PikaBodyGenerate22T2vGenerate22T2vPost
+    export type PikaGenerate22T2vGenerate22T2vPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate 2 2 T2V
+ */
+export const usePikaGenerate22T2vGenerate22T2vPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGenerate22T2vGenerate22T2vPost>>, TError,{data: PikaBodyGenerate22T2vGenerate22T2vPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGenerate22T2vGenerate22T2vPost>>,
+        TError,
+        {data: PikaBodyGenerate22T2vGenerate22T2vPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGenerate22T2vGenerate22T2vPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate Pikadditions
+ */
+export const pikaGeneratePikadditionsGeneratePikadditionsPost = (
+    pikaBodyGeneratePikadditionsGeneratePikadditionsPost: PikaBodyGeneratePikadditionsGeneratePikadditionsPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.image !== undefined) {
+ formData.append('image', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.image)
+ }
+if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.negativePrompt !== undefined) {
+ formData.append('negativePrompt', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.negativePrompt)
+ }
+if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.promptText !== undefined) {
+ formData.append('promptText', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.promptText)
+ }
+if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.seed !== undefined) {
+ formData.append('seed', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.seed)
+ }
+if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.video !== undefined) {
+ formData.append('video', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.video)
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/pikadditions`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPikaGeneratePikadditionsGeneratePikadditionsPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikadditionsGeneratePikadditionsPost>>, TError,{data: PikaBodyGeneratePikadditionsGeneratePikadditionsPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikadditionsGeneratePikadditionsPost>>, TError,{data: PikaBodyGeneratePikadditionsGeneratePikadditionsPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGeneratePikadditionsGeneratePikadditionsPost>>, {data: PikaBodyGeneratePikadditionsGeneratePikadditionsPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGeneratePikadditionsGeneratePikadditionsPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGeneratePikadditionsGeneratePikadditionsPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGeneratePikadditionsGeneratePikadditionsPost>>>
+    export type PikaGeneratePikadditionsGeneratePikadditionsPostMutationBody = PikaBodyGeneratePikadditionsGeneratePikadditionsPost
+    export type PikaGeneratePikadditionsGeneratePikadditionsPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate Pikadditions
+ */
+export const usePikaGeneratePikadditionsGeneratePikadditionsPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikadditionsGeneratePikadditionsPost>>, TError,{data: PikaBodyGeneratePikadditionsGeneratePikadditionsPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGeneratePikadditionsGeneratePikadditionsPost>>,
+        TError,
+        {data: PikaBodyGeneratePikadditionsGeneratePikadditionsPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGeneratePikadditionsGeneratePikadditionsPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Generate a video with a specific Pikaffect. Supported Pikaffects: Cake-ify, Crumble, Crush, Decapitate, Deflate, Dissolve, Explode, Eye-pop, Inflate, Levitate, Melt, Peel, Poke, Squish, Ta-da, Tear
+ * @summary Generate Pikaffects
+ */
+export const pikaGeneratePikaffectsGeneratePikaffectsPost = (
+    pikaBodyGeneratePikaffectsGeneratePikaffectsPost: PikaBodyGeneratePikaffectsGeneratePikaffectsPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.image !== undefined) {
+ formData.append('image', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.image)
+ }
+if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.negativePrompt !== undefined) {
+ formData.append('negativePrompt', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.negativePrompt)
+ }
+if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.pikaffect !== undefined) {
+ formData.append('pikaffect', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.pikaffect)
+ }
+if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.promptText !== undefined) {
+ formData.append('promptText', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.promptText)
+ }
+if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.seed !== undefined) {
+ formData.append('seed', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.seed)
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/pikaffects`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPikaGeneratePikaffectsGeneratePikaffectsPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikaffectsGeneratePikaffectsPost>>, TError,{data: PikaBodyGeneratePikaffectsGeneratePikaffectsPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikaffectsGeneratePikaffectsPost>>, TError,{data: PikaBodyGeneratePikaffectsGeneratePikaffectsPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGeneratePikaffectsGeneratePikaffectsPost>>, {data: PikaBodyGeneratePikaffectsGeneratePikaffectsPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGeneratePikaffectsGeneratePikaffectsPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGeneratePikaffectsGeneratePikaffectsPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGeneratePikaffectsGeneratePikaffectsPost>>>
+    export type PikaGeneratePikaffectsGeneratePikaffectsPostMutationBody = PikaBodyGeneratePikaffectsGeneratePikaffectsPost
+    export type PikaGeneratePikaffectsGeneratePikaffectsPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate Pikaffects
+ */
+export const usePikaGeneratePikaffectsGeneratePikaffectsPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikaffectsGeneratePikaffectsPost>>, TError,{data: PikaBodyGeneratePikaffectsGeneratePikaffectsPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGeneratePikaffectsGeneratePikaffectsPost>>,
+        TError,
+        {data: PikaBodyGeneratePikaffectsGeneratePikaffectsPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGeneratePikaffectsGeneratePikaffectsPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Exactly one of `modifyRegionMask` and `modifyRegionRoi` must be provided.
+ * @summary Generate Pikaswaps
+ */
+export const pikaGeneratePikaswapsGeneratePikaswapsPost = (
+    pikaBodyGeneratePikaswapsGeneratePikaswapsPost: PikaBodyGeneratePikaswapsGeneratePikaswapsPost,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.image !== undefined) {
+ formData.append('image', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.image)
+ }
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.modifyRegionMask !== undefined) {
+ formData.append('modifyRegionMask', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.modifyRegionMask)
+ }
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.modifyRegionRoi !== undefined) {
+ formData.append('modifyRegionRoi', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.modifyRegionRoi)
+ }
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.negativePrompt !== undefined) {
+ formData.append('negativePrompt', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.negativePrompt)
+ }
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.promptText !== undefined) {
+ formData.append('promptText', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.promptText)
+ }
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.seed !== undefined) {
+ formData.append('seed', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.seed)
+ }
+if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.video !== undefined) {
+ formData.append('video', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.video)
+ }
+
+      return customInstance<PikaGenerateResponse>(
+      {url: `/proxy/pika/generate/pikaswaps`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPikaGeneratePikaswapsGeneratePikaswapsPostMutationOptions = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikaswapsGeneratePikaswapsPost>>, TError,{data: PikaBodyGeneratePikaswapsGeneratePikaswapsPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikaswapsGeneratePikaswapsPost>>, TError,{data: PikaBodyGeneratePikaswapsGeneratePikaswapsPost}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pikaGeneratePikaswapsGeneratePikaswapsPost>>, {data: PikaBodyGeneratePikaswapsGeneratePikaswapsPost}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pikaGeneratePikaswapsGeneratePikaswapsPost(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PikaGeneratePikaswapsGeneratePikaswapsPostMutationResult = NonNullable<Awaited<ReturnType<typeof pikaGeneratePikaswapsGeneratePikaswapsPost>>>
+    export type PikaGeneratePikaswapsGeneratePikaswapsPostMutationBody = PikaBodyGeneratePikaswapsGeneratePikaswapsPost
+    export type PikaGeneratePikaswapsGeneratePikaswapsPostMutationError = PikaHTTPValidationError
+
+    /**
+ * @summary Generate Pikaswaps
+ */
+export const usePikaGeneratePikaswapsGeneratePikaswapsPost = <TError = PikaHTTPValidationError,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pikaGeneratePikaswapsGeneratePikaswapsPost>>, TError,{data: PikaBodyGeneratePikaswapsGeneratePikaswapsPost}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pikaGeneratePikaswapsGeneratePikaswapsPost>>,
+        TError,
+        {data: PikaBodyGeneratePikaswapsGeneratePikaswapsPost},
+        TContext
+      > => {
+
+      const mutationOptions = getPikaGeneratePikaswapsGeneratePikaswapsPostMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get Video
+ */
+export const pikaGetVideoVideosVideoIdGet = (
+    videoId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PikaVideoResponse>(
+      {url: `/proxy/pika/videos/${videoId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getPikaGetVideoVideosVideoIdGetQueryKey = (videoId: string,) => {
+    return [`/proxy/pika/videos/${videoId}`] as const;
+    }
+
+    
+export const getPikaGetVideoVideosVideoIdGetQueryOptions = <TData = Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>, TError = PikaHTTPValidationError>(videoId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPikaGetVideoVideosVideoIdGetQueryKey(videoId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>> = ({ signal }) => pikaGetVideoVideosVideoIdGet(videoId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(videoId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type PikaGetVideoVideosVideoIdGetQueryResult = NonNullable<Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>>
+export type PikaGetVideoVideosVideoIdGetQueryError = PikaHTTPValidationError
+
+/**
+ * @summary Get Video
+ */
+export const usePikaGetVideoVideosVideoIdGet = <TData = Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>, TError = PikaHTTPValidationError>(
+ videoId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pikaGetVideoVideosVideoIdGet>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getPikaGetVideoVideosVideoIdGetQueryOptions(videoId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Upload an image to the server.
+ */
+export const pixverseUploadImage = (
+    pixverseUploadImageBody: PixverseUploadImageBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(pixverseUploadImageBody.image !== undefined) {
+ formData.append('image', pixverseUploadImageBody.image)
+ }
+
+      return customInstance<PixverseImageUploadResponse>(
+      {url: `/proxy/pixverse/image/upload`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getPixverseUploadImageMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseUploadImage>>, TError,{data: PixverseUploadImageBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pixverseUploadImage>>, TError,{data: PixverseUploadImageBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pixverseUploadImage>>, {data: PixverseUploadImageBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pixverseUploadImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PixverseUploadImageMutationResult = NonNullable<Awaited<ReturnType<typeof pixverseUploadImage>>>
+    export type PixverseUploadImageMutationBody = PixverseUploadImageBody
+    export type PixverseUploadImageMutationError = ErrorResponse | void
+
+    /**
+ * @summary Upload an image to the server.
+ */
+export const usePixverseUploadImage = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseUploadImage>>, TError,{data: PixverseUploadImageBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pixverseUploadImage>>,
+        TError,
+        {data: PixverseUploadImageBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPixverseUploadImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate video from image.
+ */
+export const pixverseGenerateImageVideo = (
+    pixverseImageVideoRequest: PixverseImageVideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PixverseVideoResponse>(
+      {url: `/proxy/pixverse/video/img/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: pixverseImageVideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getPixverseGenerateImageVideoMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateImageVideo>>, TError,{data: PixverseImageVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateImageVideo>>, TError,{data: PixverseImageVideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pixverseGenerateImageVideo>>, {data: PixverseImageVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pixverseGenerateImageVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PixverseGenerateImageVideoMutationResult = NonNullable<Awaited<ReturnType<typeof pixverseGenerateImageVideo>>>
+    export type PixverseGenerateImageVideoMutationBody = PixverseImageVideoRequest
+    export type PixverseGenerateImageVideoMutationError = ErrorResponse | void
+
+    /**
+ * @summary Generate video from image.
+ */
+export const usePixverseGenerateImageVideo = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateImageVideo>>, TError,{data: PixverseImageVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pixverseGenerateImageVideo>>,
+        TError,
+        {data: PixverseImageVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPixverseGenerateImageVideoMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get the result of a video generation.
+ */
+export const pixverseGetVideoResult = (
+    id: number,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<PixverseVideoResultResponse>(
+      {url: `/proxy/pixverse/video/result/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getPixverseGetVideoResultQueryKey = (id: number,) => {
+    return [`/proxy/pixverse/video/result/${id}`] as const;
+    }
+
+    
+export const getPixverseGetVideoResultQueryOptions = <TData = Awaited<ReturnType<typeof pixverseGetVideoResult>>, TError = unknown>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pixverseGetVideoResult>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getPixverseGetVideoResultQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof pixverseGetVideoResult>>> = ({ signal }) => pixverseGetVideoResult(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof pixverseGetVideoResult>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type PixverseGetVideoResultQueryResult = NonNullable<Awaited<ReturnType<typeof pixverseGetVideoResult>>>
+export type PixverseGetVideoResultQueryError = unknown
+
+/**
+ * @summary Get the result of a video generation.
+ */
+export const usePixverseGetVideoResult = <TData = Awaited<ReturnType<typeof pixverseGetVideoResult>>, TError = unknown>(
+ id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof pixverseGetVideoResult>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getPixverseGetVideoResultQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Generate video from text prompt.
+ */
+export const pixverseGenerateTextVideo = (
+    pixverseTextVideoRequest: PixverseTextVideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PixverseVideoResponse>(
+      {url: `/proxy/pixverse/video/text/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: pixverseTextVideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getPixverseGenerateTextVideoMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateTextVideo>>, TError,{data: PixverseTextVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateTextVideo>>, TError,{data: PixverseTextVideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pixverseGenerateTextVideo>>, {data: PixverseTextVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pixverseGenerateTextVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PixverseGenerateTextVideoMutationResult = NonNullable<Awaited<ReturnType<typeof pixverseGenerateTextVideo>>>
+    export type PixverseGenerateTextVideoMutationBody = PixverseTextVideoRequest
+    export type PixverseGenerateTextVideoMutationError = ErrorResponse | void
+
+    /**
+ * @summary Generate video from text prompt.
+ */
+export const usePixverseGenerateTextVideo = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateTextVideo>>, TError,{data: PixverseTextVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pixverseGenerateTextVideo>>,
+        TError,
+        {data: PixverseTextVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPixverseGenerateTextVideoMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate transition video between two images.
+ */
+export const pixverseGenerateTransitionVideo = (
+    pixverseTransitionVideoRequest: PixverseTransitionVideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<PixverseVideoResponse>(
+      {url: `/proxy/pixverse/video/transition/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: pixverseTransitionVideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getPixverseGenerateTransitionVideoMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateTransitionVideo>>, TError,{data: PixverseTransitionVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateTransitionVideo>>, TError,{data: PixverseTransitionVideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof pixverseGenerateTransitionVideo>>, {data: PixverseTransitionVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  pixverseGenerateTransitionVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PixverseGenerateTransitionVideoMutationResult = NonNullable<Awaited<ReturnType<typeof pixverseGenerateTransitionVideo>>>
+    export type PixverseGenerateTransitionVideoMutationBody = PixverseTransitionVideoRequest
+    export type PixverseGenerateTransitionVideoMutationError = ErrorResponse | void
+
+    /**
+ * @summary Generate transition video between two images.
+ */
+export const usePixverseGenerateTransitionVideo = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof pixverseGenerateTransitionVideo>>, TError,{data: PixverseTransitionVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof pixverseGenerateTransitionVideo>>,
+        TError,
+        {data: PixverseTransitionVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getPixverseGenerateTransitionVideoMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Forwards image generation requests to Recraft's API and returns the generated images.
+ * @summary Proxy request to Recraft for image generation
+ */
+export const recraftImageGeneration = (
+    recraftImageGenerationRequest: RecraftImageGenerationRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<RecraftImageGenerationResponse>(
+      {url: `/proxy/recraft/image_generation`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: recraftImageGenerationRequest
+    },
+      options);
+    }
+  
+
+
+export const getRecraftImageGenerationMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftImageGeneration>>, TError,{data: RecraftImageGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftImageGeneration>>, TError,{data: RecraftImageGenerationRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftImageGeneration>>, {data: RecraftImageGenerationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftImageGeneration(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftImageGenerationMutationResult = NonNullable<Awaited<ReturnType<typeof recraftImageGeneration>>>
+    export type RecraftImageGenerationMutationBody = RecraftImageGenerationRequest
+    export type RecraftImageGenerationMutationError = ErrorResponse | void
+
+    /**
+ * @summary Proxy request to Recraft for image generation
+ */
+export const useRecraftImageGeneration = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftImageGeneration>>, TError,{data: RecraftImageGenerationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftImageGeneration>>,
+        TError,
+        {data: RecraftImageGenerationRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftImageGenerationMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Creative Upscale
+ */
+export const recraftCreativeUpscale = (
+    recraftProcessImageRequest: RecraftProcessImageRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('image', recraftProcessImageRequest.image)
+if(recraftProcessImageRequest.image_format !== undefined) {
+ formData.append('image_format', recraftProcessImageRequest.image_format)
+ }
+if(recraftProcessImageRequest.response_format !== undefined) {
+ formData.append('response_format', recraftProcessImageRequest.response_format)
+ }
+
+      return customInstance<RecraftProcessImageResponse>(
+      {url: `/proxy/recraft/images/creativeUpscale`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftCreativeUpscaleMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftCreativeUpscale>>, TError,{data: RecraftProcessImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftCreativeUpscale>>, TError,{data: RecraftProcessImageRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftCreativeUpscale>>, {data: RecraftProcessImageRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftCreativeUpscale(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftCreativeUpscaleMutationResult = NonNullable<Awaited<ReturnType<typeof recraftCreativeUpscale>>>
+    export type RecraftCreativeUpscaleMutationBody = RecraftProcessImageRequest
+    export type RecraftCreativeUpscaleMutationError = unknown
+
+    /**
+ * @summary Creative Upscale
+ */
+export const useRecraftCreativeUpscale = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftCreativeUpscale>>, TError,{data: RecraftProcessImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftCreativeUpscale>>,
+        TError,
+        {data: RecraftProcessImageRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftCreativeUpscaleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Upscale an image
+ */
+export const recraftCrispUpscale = (
+    recraftCrispUpscaleBody: RecraftCrispUpscaleBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('file', recraftCrispUpscaleBody.file)
+
+      return customInstance<RecraftImageGenerationResponse>(
+      {url: `/proxy/recraft/images/crispUpscale`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftCrispUpscaleMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftCrispUpscale>>, TError,{data: RecraftCrispUpscaleBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftCrispUpscale>>, TError,{data: RecraftCrispUpscaleBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftCrispUpscale>>, {data: RecraftCrispUpscaleBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftCrispUpscale(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftCrispUpscaleMutationResult = NonNullable<Awaited<ReturnType<typeof recraftCrispUpscale>>>
+    export type RecraftCrispUpscaleMutationBody = RecraftCrispUpscaleBody
+    export type RecraftCrispUpscaleMutationError = void
+
+    /**
+ * @summary Upscale an image
+ */
+export const useRecraftCrispUpscale = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftCrispUpscale>>, TError,{data: RecraftCrispUpscaleBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftCrispUpscale>>,
+        TError,
+        {data: RecraftCrispUpscaleBody},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftCrispUpscaleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate image from image and prompt
+ */
+export const recraftImageToImage = (
+    recraftImageToImageRequest: RecraftImageToImageRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(recraftImageToImageRequest.block_nsfw !== undefined) {
+ formData.append('block_nsfw', recraftImageToImageRequest.block_nsfw.toString())
+ }
+if(recraftImageToImageRequest.calculate_features !== undefined) {
+ formData.append('calculate_features', recraftImageToImageRequest.calculate_features.toString())
+ }
+if(recraftImageToImageRequest.controls !== undefined) {
+ formData.append('controls', JSON.stringify(recraftImageToImageRequest.controls));
+ }
+formData.append('image', recraftImageToImageRequest.image)
+if(recraftImageToImageRequest.image_format !== undefined) {
+ formData.append('image_format', recraftImageToImageRequest.image_format)
+ }
+if(recraftImageToImageRequest.model !== undefined) {
+ formData.append('model', recraftImageToImageRequest.model)
+ }
+if(recraftImageToImageRequest.n !== undefined) {
+ formData.append('n', recraftImageToImageRequest.n.toString())
+ }
+if(recraftImageToImageRequest.negative_prompt !== undefined) {
+ formData.append('negative_prompt', recraftImageToImageRequest.negative_prompt)
+ }
+formData.append('prompt', recraftImageToImageRequest.prompt)
+if(recraftImageToImageRequest.response_format !== undefined) {
+ formData.append('response_format', recraftImageToImageRequest.response_format)
+ }
+formData.append('strength', recraftImageToImageRequest.strength.toString())
+if(recraftImageToImageRequest.style !== undefined) {
+ formData.append('style', recraftImageToImageRequest.style)
+ }
+if(recraftImageToImageRequest.style_id !== undefined) {
+ formData.append('style_id', recraftImageToImageRequest.style_id)
+ }
+if(recraftImageToImageRequest.substyle !== undefined) {
+ formData.append('substyle', recraftImageToImageRequest.substyle)
+ }
+if(recraftImageToImageRequest.text_layout !== undefined) {
+ recraftImageToImageRequest.text_layout.forEach(value => formData.append('text_layout', value));
+ }
+
+      return customInstance<RecraftGenerateImageResponse>(
+      {url: `/proxy/recraft/images/imageToImage`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftImageToImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftImageToImage>>, TError,{data: RecraftImageToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftImageToImage>>, TError,{data: RecraftImageToImageRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftImageToImage>>, {data: RecraftImageToImageRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftImageToImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftImageToImageMutationResult = NonNullable<Awaited<ReturnType<typeof recraftImageToImage>>>
+    export type RecraftImageToImageMutationBody = RecraftImageToImageRequest
+    export type RecraftImageToImageMutationError = unknown
+
+    /**
+ * @summary Generate image from image and prompt
+ */
+export const useRecraftImageToImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftImageToImage>>, TError,{data: RecraftImageToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftImageToImage>>,
+        TError,
+        {data: RecraftImageToImageRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftImageToImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Inpaint Image
+ */
+export const recraftInpaintImage = (
+    recraftTransformImageWithMaskRequest: RecraftTransformImageWithMaskRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(recraftTransformImageWithMaskRequest.block_nsfw !== undefined) {
+ formData.append('block_nsfw', recraftTransformImageWithMaskRequest.block_nsfw.toString())
+ }
+if(recraftTransformImageWithMaskRequest.calculate_features !== undefined) {
+ formData.append('calculate_features', recraftTransformImageWithMaskRequest.calculate_features.toString())
+ }
+formData.append('image', recraftTransformImageWithMaskRequest.image)
+if(recraftTransformImageWithMaskRequest.image_format !== undefined) {
+ formData.append('image_format', recraftTransformImageWithMaskRequest.image_format)
+ }
+formData.append('mask', recraftTransformImageWithMaskRequest.mask)
+if(recraftTransformImageWithMaskRequest.model !== undefined) {
+ formData.append('model', recraftTransformImageWithMaskRequest.model)
+ }
+if(recraftTransformImageWithMaskRequest.n !== undefined) {
+ formData.append('n', recraftTransformImageWithMaskRequest.n.toString())
+ }
+if(recraftTransformImageWithMaskRequest.negative_prompt !== undefined) {
+ formData.append('negative_prompt', recraftTransformImageWithMaskRequest.negative_prompt)
+ }
+formData.append('prompt', recraftTransformImageWithMaskRequest.prompt)
+if(recraftTransformImageWithMaskRequest.response_format !== undefined) {
+ formData.append('response_format', recraftTransformImageWithMaskRequest.response_format)
+ }
+if(recraftTransformImageWithMaskRequest.style !== undefined) {
+ formData.append('style', recraftTransformImageWithMaskRequest.style)
+ }
+if(recraftTransformImageWithMaskRequest.style_id !== undefined) {
+ formData.append('style_id', recraftTransformImageWithMaskRequest.style_id)
+ }
+if(recraftTransformImageWithMaskRequest.substyle !== undefined) {
+ formData.append('substyle', recraftTransformImageWithMaskRequest.substyle)
+ }
+if(recraftTransformImageWithMaskRequest.text_layout !== undefined) {
+ recraftTransformImageWithMaskRequest.text_layout.forEach(value => formData.append('text_layout', value));
+ }
+
+      return customInstance<RecraftGenerateImageResponse>(
+      {url: `/proxy/recraft/images/inpaint`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftInpaintImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftInpaintImage>>, TError,{data: RecraftTransformImageWithMaskRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftInpaintImage>>, TError,{data: RecraftTransformImageWithMaskRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftInpaintImage>>, {data: RecraftTransformImageWithMaskRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftInpaintImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftInpaintImageMutationResult = NonNullable<Awaited<ReturnType<typeof recraftInpaintImage>>>
+    export type RecraftInpaintImageMutationBody = RecraftTransformImageWithMaskRequest
+    export type RecraftInpaintImageMutationError = unknown
+
+    /**
+ * @summary Inpaint Image
+ */
+export const useRecraftInpaintImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftInpaintImage>>, TError,{data: RecraftTransformImageWithMaskRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftInpaintImage>>,
+        TError,
+        {data: RecraftTransformImageWithMaskRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftInpaintImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Remove background from an image
+ */
+export const recraftRemoveBackground = (
+    recraftRemoveBackgroundBody: RecraftRemoveBackgroundBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('file', recraftRemoveBackgroundBody.file)
+
+      return customInstance<RecraftRemoveBackground200>(
+      {url: `/proxy/recraft/images/removeBackground`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftRemoveBackgroundMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftRemoveBackground>>, TError,{data: RecraftRemoveBackgroundBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftRemoveBackground>>, TError,{data: RecraftRemoveBackgroundBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftRemoveBackground>>, {data: RecraftRemoveBackgroundBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftRemoveBackground(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftRemoveBackgroundMutationResult = NonNullable<Awaited<ReturnType<typeof recraftRemoveBackground>>>
+    export type RecraftRemoveBackgroundMutationBody = RecraftRemoveBackgroundBody
+    export type RecraftRemoveBackgroundMutationError = void
+
+    /**
+ * @summary Remove background from an image
+ */
+export const useRecraftRemoveBackground = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftRemoveBackground>>, TError,{data: RecraftRemoveBackgroundBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftRemoveBackground>>,
+        TError,
+        {data: RecraftRemoveBackgroundBody},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftRemoveBackgroundMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Replace Background
+ */
+export const recraftReplaceBackground = (
+    recraftTransformImageWithMaskRequest: RecraftTransformImageWithMaskRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(recraftTransformImageWithMaskRequest.block_nsfw !== undefined) {
+ formData.append('block_nsfw', recraftTransformImageWithMaskRequest.block_nsfw.toString())
+ }
+if(recraftTransformImageWithMaskRequest.calculate_features !== undefined) {
+ formData.append('calculate_features', recraftTransformImageWithMaskRequest.calculate_features.toString())
+ }
+formData.append('image', recraftTransformImageWithMaskRequest.image)
+if(recraftTransformImageWithMaskRequest.image_format !== undefined) {
+ formData.append('image_format', recraftTransformImageWithMaskRequest.image_format)
+ }
+formData.append('mask', recraftTransformImageWithMaskRequest.mask)
+if(recraftTransformImageWithMaskRequest.model !== undefined) {
+ formData.append('model', recraftTransformImageWithMaskRequest.model)
+ }
+if(recraftTransformImageWithMaskRequest.n !== undefined) {
+ formData.append('n', recraftTransformImageWithMaskRequest.n.toString())
+ }
+if(recraftTransformImageWithMaskRequest.negative_prompt !== undefined) {
+ formData.append('negative_prompt', recraftTransformImageWithMaskRequest.negative_prompt)
+ }
+formData.append('prompt', recraftTransformImageWithMaskRequest.prompt)
+if(recraftTransformImageWithMaskRequest.response_format !== undefined) {
+ formData.append('response_format', recraftTransformImageWithMaskRequest.response_format)
+ }
+if(recraftTransformImageWithMaskRequest.style !== undefined) {
+ formData.append('style', recraftTransformImageWithMaskRequest.style)
+ }
+if(recraftTransformImageWithMaskRequest.style_id !== undefined) {
+ formData.append('style_id', recraftTransformImageWithMaskRequest.style_id)
+ }
+if(recraftTransformImageWithMaskRequest.substyle !== undefined) {
+ formData.append('substyle', recraftTransformImageWithMaskRequest.substyle)
+ }
+if(recraftTransformImageWithMaskRequest.text_layout !== undefined) {
+ recraftTransformImageWithMaskRequest.text_layout.forEach(value => formData.append('text_layout', value));
+ }
+
+      return customInstance<RecraftGenerateImageResponse>(
+      {url: `/proxy/recraft/images/replaceBackground`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftReplaceBackgroundMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftReplaceBackground>>, TError,{data: RecraftTransformImageWithMaskRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftReplaceBackground>>, TError,{data: RecraftTransformImageWithMaskRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftReplaceBackground>>, {data: RecraftTransformImageWithMaskRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftReplaceBackground(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftReplaceBackgroundMutationResult = NonNullable<Awaited<ReturnType<typeof recraftReplaceBackground>>>
+    export type RecraftReplaceBackgroundMutationBody = RecraftTransformImageWithMaskRequest
+    export type RecraftReplaceBackgroundMutationError = unknown
+
+    /**
+ * @summary Replace Background
+ */
+export const useRecraftReplaceBackground = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftReplaceBackground>>, TError,{data: RecraftTransformImageWithMaskRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftReplaceBackground>>,
+        TError,
+        {data: RecraftTransformImageWithMaskRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftReplaceBackgroundMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Vectorize an image
+ */
+export const recraftVectorize = (
+    recraftVectorizeBody: RecraftVectorizeBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('file', recraftVectorizeBody.file)
+
+      return customInstance<RecraftImageGenerationResponse>(
+      {url: `/proxy/recraft/images/vectorize`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRecraftVectorizeMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftVectorize>>, TError,{data: RecraftVectorizeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof recraftVectorize>>, TError,{data: RecraftVectorizeBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recraftVectorize>>, {data: RecraftVectorizeBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  recraftVectorize(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecraftVectorizeMutationResult = NonNullable<Awaited<ReturnType<typeof recraftVectorize>>>
+    export type RecraftVectorizeMutationBody = RecraftVectorizeBody
+    export type RecraftVectorizeMutationError = void
+
+    /**
+ * @summary Vectorize an image
+ */
+export const useRecraftVectorize = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recraftVectorize>>, TError,{data: RecraftVectorizeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof recraftVectorize>>,
+        TError,
+        {data: RecraftVectorizeBody},
+        TContext
+      > => {
+
+      const mutationOptions = getRecraftVectorizeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get rodin 3D Assets download list.
+ */
+export const rodinDownload = (
+    rodin3DDownloadRequest: Rodin3DDownloadRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('task_uuid', rodin3DDownloadRequest.task_uuid)
+
+      return customInstance<Rodin3DDownloadResponse>(
+      {url: `/proxy/rodin/api/v2/download`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRodinDownloadMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rodinDownload>>, TError,{data: Rodin3DDownloadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof rodinDownload>>, TError,{data: Rodin3DDownloadRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rodinDownload>>, {data: Rodin3DDownloadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  rodinDownload(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RodinDownloadMutationResult = NonNullable<Awaited<ReturnType<typeof rodinDownload>>>
+    export type RodinDownloadMutationBody = Rodin3DDownloadRequest
+    export type RodinDownloadMutationError = void
+
+    /**
+ * @summary Get rodin 3D Assets download list.
+ */
+export const useRodinDownload = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rodinDownload>>, TError,{data: Rodin3DDownloadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof rodinDownload>>,
+        TError,
+        {data: Rodin3DDownloadRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRodinDownloadMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Create 3D generate Task using Rodin API.
+ */
+export const rodinGenerate3DAsset = (
+    rodin3DGenerateRequest: Rodin3DGenerateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('images', rodin3DGenerateRequest.images)
+if(rodin3DGenerateRequest.material !== undefined) {
+ formData.append('material', rodin3DGenerateRequest.material)
+ }
+if(rodin3DGenerateRequest.mesh_mode !== undefined) {
+ formData.append('mesh_mode', rodin3DGenerateRequest.mesh_mode)
+ }
+if(rodin3DGenerateRequest.quality !== undefined) {
+ formData.append('quality', rodin3DGenerateRequest.quality)
+ }
+if(rodin3DGenerateRequest.seed !== undefined) {
+ formData.append('seed', rodin3DGenerateRequest.seed.toString())
+ }
+if(rodin3DGenerateRequest.tier !== undefined) {
+ formData.append('tier', rodin3DGenerateRequest.tier)
+ }
+
+      return customInstance<Rodin3DGenerateResponse>(
+      {url: `/proxy/rodin/api/v2/rodin`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRodinGenerate3DAssetMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rodinGenerate3DAsset>>, TError,{data: Rodin3DGenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof rodinGenerate3DAsset>>, TError,{data: Rodin3DGenerateRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rodinGenerate3DAsset>>, {data: Rodin3DGenerateRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  rodinGenerate3DAsset(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RodinGenerate3DAssetMutationResult = NonNullable<Awaited<ReturnType<typeof rodinGenerate3DAsset>>>
+    export type RodinGenerate3DAssetMutationBody = Rodin3DGenerateRequest
+    export type RodinGenerate3DAssetMutationError = void
+
+    /**
+ * @summary Create 3D generate Task using Rodin API.
+ */
+export const useRodinGenerate3DAsset = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rodinGenerate3DAsset>>, TError,{data: Rodin3DGenerateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof rodinGenerate3DAsset>>,
+        TError,
+        {data: Rodin3DGenerateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRodinGenerate3DAssetMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Check Rodin 3D Generate Status.
+ */
+export const rodinCheckStatus = (
+    rodin3DCheckStatusRequest: Rodin3DCheckStatusRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('subscription_key', rodin3DCheckStatusRequest.subscription_key)
+
+      return customInstance<Rodin3DCheckStatusResponse>(
+      {url: `/proxy/rodin/api/v2/status`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getRodinCheckStatusMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rodinCheckStatus>>, TError,{data: Rodin3DCheckStatusRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof rodinCheckStatus>>, TError,{data: Rodin3DCheckStatusRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rodinCheckStatus>>, {data: Rodin3DCheckStatusRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  rodinCheckStatus(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RodinCheckStatusMutationResult = NonNullable<Awaited<ReturnType<typeof rodinCheckStatus>>>
+    export type RodinCheckStatusMutationBody = Rodin3DCheckStatusRequest
+    export type RodinCheckStatusMutationError = void
+
+    /**
+ * @summary Check Rodin 3D Generate Status.
+ */
+export const useRodinCheckStatus = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rodinCheckStatus>>, TError,{data: Rodin3DCheckStatusRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof rodinCheckStatus>>,
+        TError,
+        {data: Rodin3DCheckStatusRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRodinCheckStatusMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Converts an image to a video using Runway's API
+ * @summary Runway Image to Video Generation
+ */
+export const runwayImageToVideo = (
+    runwayImageToVideoRequest: RunwayImageToVideoRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<RunwayImageToVideoResponse>(
+      {url: `/proxy/runway/image_to_video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: runwayImageToVideoRequest
+    },
+      options);
+    }
+  
+
+
+export const getRunwayImageToVideoMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof runwayImageToVideo>>, TError,{data: RunwayImageToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof runwayImageToVideo>>, TError,{data: RunwayImageToVideoRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof runwayImageToVideo>>, {data: RunwayImageToVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  runwayImageToVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RunwayImageToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof runwayImageToVideo>>>
+    export type RunwayImageToVideoMutationBody = RunwayImageToVideoRequest
+    export type RunwayImageToVideoMutationError = ErrorResponse | void
+
+    /**
+ * @summary Runway Image to Video Generation
+ */
+export const useRunwayImageToVideo = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof runwayImageToVideo>>, TError,{data: RunwayImageToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof runwayImageToVideo>>,
+        TError,
+        {data: RunwayImageToVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRunwayImageToVideoMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Get the status and output of a Runway task
+ * @summary Get Runway Task Status
+ */
+export const runwayGetTaskStatus = (
+    taskId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<RunwayTaskStatusResponse>(
+      {url: `/proxy/runway/tasks/${taskId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getRunwayGetTaskStatusQueryKey = (taskId: string,) => {
+    return [`/proxy/runway/tasks/${taskId}`] as const;
+    }
+
+    
+export const getRunwayGetTaskStatusQueryOptions = <TData = Awaited<ReturnType<typeof runwayGetTaskStatus>>, TError = ErrorResponse | void>(taskId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof runwayGetTaskStatus>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getRunwayGetTaskStatusQueryKey(taskId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof runwayGetTaskStatus>>> = ({ signal }) => runwayGetTaskStatus(taskId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(taskId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof runwayGetTaskStatus>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type RunwayGetTaskStatusQueryResult = NonNullable<Awaited<ReturnType<typeof runwayGetTaskStatus>>>
+export type RunwayGetTaskStatusQueryError = ErrorResponse | void
+
+/**
+ * @summary Get Runway Task Status
+ */
+export const useRunwayGetTaskStatus = <TData = Awaited<ReturnType<typeof runwayGetTaskStatus>>, TError = ErrorResponse | void>(
+ taskId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof runwayGetTaskStatus>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getRunwayGetTaskStatusQueryOptions(taskId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Generates an image from text using Runway's API
+ * @summary Runway Text to Image Generation
+ */
+export const runwayTextToImage = (
+    runwayTextToImageRequest: RunwayTextToImageRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<RunwayTextToImageResponse>(
+      {url: `/proxy/runway/text_to_image`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: runwayTextToImageRequest
+    },
+      options);
+    }
+  
+
+
+export const getRunwayTextToImageMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof runwayTextToImage>>, TError,{data: RunwayTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof runwayTextToImage>>, TError,{data: RunwayTextToImageRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof runwayTextToImage>>, {data: RunwayTextToImageRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  runwayTextToImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RunwayTextToImageMutationResult = NonNullable<Awaited<ReturnType<typeof runwayTextToImage>>>
+    export type RunwayTextToImageMutationBody = RunwayTextToImageRequest
+    export type RunwayTextToImageMutationError = ErrorResponse | void
+
+    /**
+ * @summary Runway Text to Image Generation
+ */
+export const useRunwayTextToImage = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof runwayTextToImage>>, TError,{data: RunwayTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof runwayTextToImage>>,
+        TError,
+        {data: RunwayTextToImageRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getRunwayTextToImageMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Get the result of a generation
+ * @summary Get Result
+ */
+export const stabilityGetResult = (
+    id: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<StabilityGetResult200One | StabilityGetResult200Two | StabilityGetResult200Three | Blob | StabilityGetResultResponse202>(
+      {url: `/proxy/stability/v2beta/results/${id}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getStabilityGetResultQueryKey = (id: string,) => {
+    return [`/proxy/stability/v2beta/results/${id}`] as const;
+    }
+
+    
+export const getStabilityGetResultQueryOptions = <TData = Awaited<ReturnType<typeof stabilityGetResult>>, TError = StabilityError>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof stabilityGetResult>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getStabilityGetResultQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof stabilityGetResult>>> = ({ signal }) => stabilityGetResult(id, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof stabilityGetResult>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type StabilityGetResultQueryResult = NonNullable<Awaited<ReturnType<typeof stabilityGetResult>>>
+export type StabilityGetResultQueryError = StabilityError
+
+/**
+ * @summary Get Result
+ */
+export const useStabilityGetResult = <TData = Awaited<ReturnType<typeof stabilityGetResult>>, TError = StabilityError>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof stabilityGetResult>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getStabilityGetResultQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Generate using Stable Diffusion 3.5 models, Stability AI latest base model:
+
+- **Stable Diffusion 3.5 Large**: At 8 billion parameters, with superior quality and
+
+
+
+  prompt adherence, this base model is the most powerful in the Stable Diffusion
+  family. This model is ideal for professional use cases at 1 megapixel resolution.
+
+- **Stable Diffusion 3.5 Large Turbo**: A distilled version of Stable Diffusion 3.5 Large.
+
+
+
+  SD3.5 Large Turbo generates high-quality images with exceptional prompt adherence
+  in just 4 steps, making it considerably faster than Stable Diffusion 3.5 Large.
+
+- **Stable Diffusion 3.5 Medium**: With 2.5 billion parameters, the model delivers an
+
+
+
+  optimal balance between prompt accuracy and image quality, making it an efficient
+  choice for fast high-performance image generation.
+
+Read more about the model capabilities [here](https://stability.ai/news/introducing-stable-diffusion-3-5).
+
+As of April 17, 2025, we have deprecated the Stable Diffusion 3.0 APIs and will be automatically
+re-routing calls to Stable Diffusion 3.0 models to Stable Diffusion 3.5 APIs at no extra cost.
+You can read more in the [release notes](/docs/release-notes#api-deprecation-notice).
+
+### Try it out
+Grab your [API key](https://platform.stability.ai/account/keys) and head over to [![Open Google Colab](https://platform.stability.ai/svg/google-colab.svg)](https://colab.research.google.com/github/stability-ai/stability-sdk/blob/main/nbs/SD3_API.ipynb)
+
+### How to use
+Please invoke this endpoint with a `POST` request.
+
+The headers of the request must include an API key in the `authorization` field. The body of the request must be
+`multipart/form-data`.  The accept header should be set to one of the following:
+- `image/*` to receive the image in the format specified by the `output_format` parameter.
+- `application/json` to receive the image encoded as base64 in a JSON response.
+
+#### **Generating with a prompt**
+Commonly referred to as **text-to-image**, this mode generates an image from text alone. While the only required
+parameter is the `prompt`, it also supports an `aspect_ratio` parameter which can be used to control the
+aspect ratio of the generated image.
+
+#### **Generating with a prompt *and* an image**
+Commonly referred to as **image-to-image**, this mode also generates an image from text but uses an existing image as the
+starting point. The required parameters are:
+- `prompt` - text to generate the image from
+- `image` - the image to use as the starting point for the generation
+- `strength` - controls how much influence the `image` parameter has on the output image
+- `mode` - must be set to `image-to-image`
+
+> **Note:** maximum request size is 10MiB.
+
+#### **Optional Parameters:**
+Both modes support the following optional parameters:
+- `model` - the model to use (SD3.5 Large, SD3.5 Large Turbo, SD3.5 Medium)
+- `output_format` - the the format of the output image
+- `seed` - the randomness seed to use for the generation
+- `negative_prompt` - keywords of what you **do not** wish to see in the output image
+- `cfg_scale` - controls how strictly the diffusion process adheres to the prompt text
+- `style_preset` - guides the image model towards a particular style
+
+> **Note:** for more details about these parameters please see the request schema below.
+
+### Output
+The resolution of the generated image will be 1MP. The default resolution is 1024x1024.
+
+### Credits
+- **SD 3.5 Large**: Flat rate of 6.5 credits per successful generation.
+- **SD 3.5 Large Turbo**: Flat rate of 4 credits per successful generation.
+- **SD 3.5 Medium**: Flat rate of 3.5 credits per successful generation.
+
+As always, you will not be charged for failed generations.
+ * @summary Stable Diffusion 3.5
+ */
+export const stabilityImageGenrationSD3 = (
+    stabilityImageGenerationSD3Request: StabilityImageGenerationSD3Request,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(stabilityImageGenerationSD3Request.aspect_ratio !== undefined) {
+ formData.append('aspect_ratio', stabilityImageGenerationSD3Request.aspect_ratio)
+ }
+if(stabilityImageGenerationSD3Request.cfg_scale !== undefined) {
+ formData.append('cfg_scale', stabilityImageGenerationSD3Request.cfg_scale.toString())
+ }
+if(stabilityImageGenerationSD3Request.image !== undefined) {
+ formData.append('image', stabilityImageGenerationSD3Request.image)
+ }
+if(stabilityImageGenerationSD3Request.mode !== undefined) {
+ formData.append('mode', stabilityImageGenerationSD3Request.mode)
+ }
+if(stabilityImageGenerationSD3Request.model !== undefined) {
+ formData.append('model', stabilityImageGenerationSD3Request.model)
+ }
+if(stabilityImageGenerationSD3Request.negative_prompt !== undefined) {
+ formData.append('negative_prompt', stabilityImageGenerationSD3Request.negative_prompt)
+ }
+if(stabilityImageGenerationSD3Request.output_format !== undefined) {
+ formData.append('output_format', stabilityImageGenerationSD3Request.output_format)
+ }
+formData.append('prompt', stabilityImageGenerationSD3Request.prompt)
+if(stabilityImageGenerationSD3Request.seed !== undefined) {
+ formData.append('seed', stabilityImageGenerationSD3Request.seed.toString())
+ }
+if(stabilityImageGenerationSD3Request.strength !== undefined) {
+ formData.append('strength', stabilityImageGenerationSD3Request.strength.toString())
+ }
+if(stabilityImageGenerationSD3Request.style_preset !== undefined) {
+ formData.append('style_preset', stabilityImageGenerationSD3Request.style_preset)
+ }
+
+      return customInstance<StabilityImageGenrationSD3Response200 | Blob>(
+      {url: `/proxy/stability/v2beta/stable-image/generate/sd3`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getStabilityImageGenrationSD3MutationOptions = <TError = StabilityImageGenrationSD3Response400 | StabilityContentModerationResponse | StabilityImageGenrationSD3Response413 | StabilityImageGenrationSD3Response422 | StabilityImageGenrationSD3Response429 | StabilityImageGenrationSD3Response500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationSD3>>, TError,{data: StabilityImageGenerationSD3Request}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationSD3>>, TError,{data: StabilityImageGenerationSD3Request}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof stabilityImageGenrationSD3>>, {data: StabilityImageGenerationSD3Request}> = (props) => {
+          const {data} = props ?? {};
+
+          return  stabilityImageGenrationSD3(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StabilityImageGenrationSD3MutationResult = NonNullable<Awaited<ReturnType<typeof stabilityImageGenrationSD3>>>
+    export type StabilityImageGenrationSD3MutationBody = StabilityImageGenerationSD3Request
+    export type StabilityImageGenrationSD3MutationError = StabilityImageGenrationSD3Response400 | StabilityContentModerationResponse | StabilityImageGenrationSD3Response413 | StabilityImageGenrationSD3Response422 | StabilityImageGenrationSD3Response429 | StabilityImageGenrationSD3Response500
+
+    /**
+ * @summary Stable Diffusion 3.5
+ */
+export const useStabilityImageGenrationSD3 = <TError = StabilityImageGenrationSD3Response400 | StabilityContentModerationResponse | StabilityImageGenrationSD3Response413 | StabilityImageGenrationSD3Response422 | StabilityImageGenrationSD3Response429 | StabilityImageGenrationSD3Response500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationSD3>>, TError,{data: StabilityImageGenerationSD3Request}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof stabilityImageGenrationSD3>>,
+        TError,
+        {data: StabilityImageGenerationSD3Request},
+        TContext
+      > => {
+
+      const mutationOptions = getStabilityImageGenrationSD3MutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Our most advanced text to image generation service, Stable Image Ultra creates the highest quality images with unprecedented prompt understanding. Ultra excels in typography, complex compositions, dynamic lighting, vibrant hues, and overall cohesion and structure of an art piece. Made from the most advanced models, including Stable Diffusion 3.5, Ultra offers the best of the Stable Diffusion ecosystem. ### Try it out Grab your [API key](https://platform.stability.ai/account/keys) and head over to [![Open Google Colab](https://platform.stability.ai/svg/google-colab.svg)](https://colab.research.google.com/github/stability-ai/stability-sdk/blob/main/nbs/Stable_Image_API_Public.ipynb#scrollTo=yXhs626oZdr1) ### How to use Please invoke this endpoint with a `POST` request. The headers of the request must include an API key in the `authorization` field. The body of the request must be `multipart/form-data`.  The accept header should be set to one of the following: - `image/*` to receive the image in the format specified by the `output_format` parameter. - `application/json` to receive the image in the format specified by the `output_format` parameter, but encoded to base64 in a JSON response. The only required parameter is the `prompt` field, which should contain the text prompt for the image generation. The body of the request should include: - `prompt` - text to generate the image from The body may optionally include: - `image` - the image to use as the starting point for the generation - `strength` - controls how much influence the `image` parameter has on the output image - `aspect_ratio` - the aspect ratio of the output image - `negative_prompt` - keywords of what you **do not** wish to see in the output image - `seed` - the randomness seed to use for the generation - `output_format` - the the format of the output image > **Note:** for the full list of optional parameters, please see the request schema below. ### Output The resolution of the generated image will be 1 megapixel. The default resolution is 1024x1024. ### Credits The Ultra service uses 8 credits per successful result. You will not be charged for failed results.
+ * @summary Stable Image Ultra
+ */
+export const stabilityImageGenrationUltra = (
+    stabilityImageGenrationUltraBody: StabilityImageGenrationUltraBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(stabilityImageGenrationUltraBody.aspect_ratio !== undefined) {
+ formData.append('aspect_ratio', stabilityImageGenrationUltraBody.aspect_ratio)
+ }
+if(stabilityImageGenrationUltraBody.image !== undefined) {
+ formData.append('image', stabilityImageGenrationUltraBody.image)
+ }
+if(stabilityImageGenrationUltraBody.negative_prompt !== undefined) {
+ formData.append('negative_prompt', stabilityImageGenrationUltraBody.negative_prompt)
+ }
+if(stabilityImageGenrationUltraBody.output_format !== undefined) {
+ formData.append('output_format', stabilityImageGenrationUltraBody.output_format)
+ }
+formData.append('prompt', stabilityImageGenrationUltraBody.prompt)
+if(stabilityImageGenrationUltraBody.seed !== undefined) {
+ formData.append('seed', stabilityImageGenrationUltraBody.seed.toString())
+ }
+if(stabilityImageGenrationUltraBody.strength !== undefined) {
+ formData.append('strength', stabilityImageGenrationUltraBody.strength.toString())
+ }
+if(stabilityImageGenrationUltraBody.style_preset !== undefined) {
+ formData.append('style_preset', stabilityImageGenrationUltraBody.style_preset)
+ }
+
+      return customInstance<StabilityImageGenrationUltra200One | StabilityImageGenrationUltra200Two | StabilityImageGenrationUltra200Three | Blob>(
+      {url: `/proxy/stability/v2beta/stable-image/generate/ultra`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getStabilityImageGenrationUltraMutationOptions = <TError = StabilityImageGenrationUltra400 | StabilityContentModerationResponse | StabilityImageGenrationUltra413 | StabilityImageGenrationUltra422 | StabilityImageGenrationUltra429 | StabilityImageGenrationUltra500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUltra>>, TError,{data: StabilityImageGenrationUltraBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUltra>>, TError,{data: StabilityImageGenrationUltraBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof stabilityImageGenrationUltra>>, {data: StabilityImageGenrationUltraBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  stabilityImageGenrationUltra(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StabilityImageGenrationUltraMutationResult = NonNullable<Awaited<ReturnType<typeof stabilityImageGenrationUltra>>>
+    export type StabilityImageGenrationUltraMutationBody = StabilityImageGenrationUltraBody
+    export type StabilityImageGenrationUltraMutationError = StabilityImageGenrationUltra400 | StabilityContentModerationResponse | StabilityImageGenrationUltra413 | StabilityImageGenrationUltra422 | StabilityImageGenrationUltra429 | StabilityImageGenrationUltra500
+
+    /**
+ * @summary Stable Image Ultra
+ */
+export const useStabilityImageGenrationUltra = <TError = StabilityImageGenrationUltra400 | StabilityContentModerationResponse | StabilityImageGenrationUltra413 | StabilityImageGenrationUltra422 | StabilityImageGenrationUltra429 | StabilityImageGenrationUltra500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUltra>>, TError,{data: StabilityImageGenrationUltraBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof stabilityImageGenrationUltra>>,
+        TError,
+        {data: StabilityImageGenrationUltraBody},
+        TContext
+      > => {
+
+      const mutationOptions = getStabilityImageGenrationUltraMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Takes images between 64x64 and 1 megapixel and upscales them all the way to 4K resolution. Put more generally, it can upscale images ~20-40x times while preserving all aspects. Conservative Upscale minimizes alterations to the image and should not be used to reimagine an image.
+
+### Try it out
+Grab your [API key](https://platform.stability.ai/account/keys) and head over to [![Open Google Colab](https://platform.stability.ai/svg/google-colab.svg)](https://colab.research.google.com/github/stability-ai/stability-sdk/blob/main/nbs/Stable_Image_API_Public.ipynb#scrollTo=t1Q4w2uvvza0)
+
+### How to use
+
+Please invoke this endpoint with a `POST` request.
+
+The headers of the request must include an API key in the `authorization` field. The body of the request must be
+`multipart/form-data`, and the `accept` header should be set to one of the following:
+
+
+
+  - `image/*` to receive the image in the format specified by the `output_format` parameter.
+  - `application/json` to receive the image encoded as base64 in a JSON response.
+
+The body of the request must include:
+- `image`
+- `prompt`
+
+Optionally, the body of the request may also include:
+- `negative_prompt`
+- `seed`
+- `output_format`
+- `creativity`
+
+> **Note:** for more details about these parameters please see the request schema below.
+
+### Output
+The resolution of the generated image will be 4 megapixels.
+
+### Credits
+Flat rate of 25 credits per successful generation.  You will not be charged for failed generations.
+ * @summary Conservative
+ */
+export const stabilityImageGenrationUpscaleConservative = (
+    stabilityImageGenrationUpscaleConservativeRequest: StabilityImageGenrationUpscaleConservativeRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(stabilityImageGenrationUpscaleConservativeRequest.creativity !== undefined) {
+ formData.append('creativity', stabilityImageGenrationUpscaleConservativeRequest.creativity.toString())
+ }
+formData.append('image', stabilityImageGenrationUpscaleConservativeRequest.image)
+if(stabilityImageGenrationUpscaleConservativeRequest.negative_prompt !== undefined) {
+ formData.append('negative_prompt', stabilityImageGenrationUpscaleConservativeRequest.negative_prompt)
+ }
+if(stabilityImageGenrationUpscaleConservativeRequest.output_format !== undefined) {
+ formData.append('output_format', stabilityImageGenrationUpscaleConservativeRequest.output_format)
+ }
+formData.append('prompt', stabilityImageGenrationUpscaleConservativeRequest.prompt)
+if(stabilityImageGenrationUpscaleConservativeRequest.seed !== undefined) {
+ formData.append('seed', stabilityImageGenrationUpscaleConservativeRequest.seed.toString())
+ }
+
+      return customInstance<StabilityImageGenrationUpscaleConservativeResponse200 | Blob>(
+      {url: `/proxy/stability/v2beta/stable-image/upscale/conservative`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getStabilityImageGenrationUpscaleConservativeMutationOptions = <TError = StabilityImageGenrationUpscaleConservativeResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleConservativeResponse413 | StabilityImageGenrationUpscaleConservativeResponse422 | StabilityImageGenrationUpscaleConservativeResponse429 | StabilityImageGenrationUpscaleConservativeResponse500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleConservative>>, TError,{data: StabilityImageGenrationUpscaleConservativeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleConservative>>, TError,{data: StabilityImageGenrationUpscaleConservativeRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleConservative>>, {data: StabilityImageGenrationUpscaleConservativeRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  stabilityImageGenrationUpscaleConservative(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StabilityImageGenrationUpscaleConservativeMutationResult = NonNullable<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleConservative>>>
+    export type StabilityImageGenrationUpscaleConservativeMutationBody = StabilityImageGenrationUpscaleConservativeRequest
+    export type StabilityImageGenrationUpscaleConservativeMutationError = StabilityImageGenrationUpscaleConservativeResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleConservativeResponse413 | StabilityImageGenrationUpscaleConservativeResponse422 | StabilityImageGenrationUpscaleConservativeResponse429 | StabilityImageGenrationUpscaleConservativeResponse500
+
+    /**
+ * @summary Conservative
+ */
+export const useStabilityImageGenrationUpscaleConservative = <TError = StabilityImageGenrationUpscaleConservativeResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleConservativeResponse413 | StabilityImageGenrationUpscaleConservativeResponse422 | StabilityImageGenrationUpscaleConservativeResponse429 | StabilityImageGenrationUpscaleConservativeResponse500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleConservative>>, TError,{data: StabilityImageGenrationUpscaleConservativeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof stabilityImageGenrationUpscaleConservative>>,
+        TError,
+        {data: StabilityImageGenrationUpscaleConservativeRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getStabilityImageGenrationUpscaleConservativeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Takes images between 64x64 and 1 megapixel and upscales them all the way to **4K** resolution.  Put more
+generally, it can upscale images ~20-40x times while preserving, and often enhancing, quality.
+Creative Upscale **works best on highly degraded images and is not for photos of 1mp or above** as it performs
+heavy reimagining (controlled by creativity scale).
+
+### Try it out
+Grab your [API key](https://platform.stability.ai/account/keys) and head over to [![Open Google Colab](https://platform.stability.ai/svg/google-colab.svg)](https://colab.research.google.com/github/stability-ai/stability-sdk/blob/main/nbs/Stable_Image_API_Public.ipynb#scrollTo=QXxi9tfI425t)
+
+
+### How to use
+Please invoke this endpoint with a `POST` request.
+
+The headers of the request must include an API key in the `authorization` field. The body of the request must be
+`multipart/form-data`.
+
+The body of the request should include:
+- `image`
+- `prompt`
+
+The body may optionally include:
+- `seed`
+- `negative_prompt`
+- `output_format`
+- `creativity`
+- `style_preset`
+
+> **Note:** for more details about these parameters please see the request schema below.
+
+### Results
+After invoking this endpoint with the required parameters, use the `id` in the response to poll for results at the
+[results/{id} endpoint](#tag/Results/paths/~1v2beta~1results~1%7Bid%7D/get).  Rate-limiting or other errors may occur if you poll more than once every 10 seconds.
+
+### Credits
+Flat rate of 25 credits per successful generation.  You will not be charged for failed generations.
+ * @summary Creative Upscale (async)
+ */
+export const stabilityImageGenrationUpscaleCreative = (
+    stabilityImageGenrationUpscaleCreativeRequest: StabilityImageGenrationUpscaleCreativeRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+if(stabilityImageGenrationUpscaleCreativeRequest.creativity !== undefined) {
+ formData.append('creativity', stabilityImageGenrationUpscaleCreativeRequest.creativity.toString())
+ }
+formData.append('image', stabilityImageGenrationUpscaleCreativeRequest.image)
+if(stabilityImageGenrationUpscaleCreativeRequest.negative_prompt !== undefined) {
+ formData.append('negative_prompt', stabilityImageGenrationUpscaleCreativeRequest.negative_prompt)
+ }
+if(stabilityImageGenrationUpscaleCreativeRequest.output_format !== undefined) {
+ formData.append('output_format', stabilityImageGenrationUpscaleCreativeRequest.output_format)
+ }
+formData.append('prompt', stabilityImageGenrationUpscaleCreativeRequest.prompt)
+if(stabilityImageGenrationUpscaleCreativeRequest.seed !== undefined) {
+ formData.append('seed', stabilityImageGenrationUpscaleCreativeRequest.seed.toString())
+ }
+if(stabilityImageGenrationUpscaleCreativeRequest.style_preset !== undefined) {
+ formData.append('style_preset', stabilityImageGenrationUpscaleCreativeRequest.style_preset)
+ }
+
+      return customInstance<StabilityImageGenrationUpscaleCreativeResponse200>(
+      {url: `/proxy/stability/v2beta/stable-image/upscale/creative`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getStabilityImageGenrationUpscaleCreativeMutationOptions = <TError = StabilityImageGenrationUpscaleCreativeResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleCreativeResponse413 | StabilityImageGenrationUpscaleCreativeResponse422 | StabilityImageGenrationUpscaleCreativeResponse429 | StabilityImageGenrationUpscaleCreativeResponse500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleCreative>>, TError,{data: StabilityImageGenrationUpscaleCreativeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleCreative>>, TError,{data: StabilityImageGenrationUpscaleCreativeRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleCreative>>, {data: StabilityImageGenrationUpscaleCreativeRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  stabilityImageGenrationUpscaleCreative(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StabilityImageGenrationUpscaleCreativeMutationResult = NonNullable<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleCreative>>>
+    export type StabilityImageGenrationUpscaleCreativeMutationBody = StabilityImageGenrationUpscaleCreativeRequest
+    export type StabilityImageGenrationUpscaleCreativeMutationError = StabilityImageGenrationUpscaleCreativeResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleCreativeResponse413 | StabilityImageGenrationUpscaleCreativeResponse422 | StabilityImageGenrationUpscaleCreativeResponse429 | StabilityImageGenrationUpscaleCreativeResponse500
+
+    /**
+ * @summary Creative Upscale (async)
+ */
+export const useStabilityImageGenrationUpscaleCreative = <TError = StabilityImageGenrationUpscaleCreativeResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleCreativeResponse413 | StabilityImageGenrationUpscaleCreativeResponse422 | StabilityImageGenrationUpscaleCreativeResponse429 | StabilityImageGenrationUpscaleCreativeResponse500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenrationUpscaleCreative>>, TError,{data: StabilityImageGenrationUpscaleCreativeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof stabilityImageGenrationUpscaleCreative>>,
+        TError,
+        {data: StabilityImageGenrationUpscaleCreativeRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getStabilityImageGenrationUpscaleCreativeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * Our Fast Upscaler service enhances image resolution by 4x using predictive and generative AI. This lightweight and fast service (processing in ~1 second) is ideal for enhancing the quality of compressed images, making it suitable for social media posts and other applications.
+
+### Try it out
+Grab your [API key](https://platform.stability.ai/account/keys) and head over to [![Open Google Colab](https://platform.stability.ai/svg/google-colab.svg)](https://colab.research.google.com/github/stability-ai/stability-sdk/blob/main/nbs/Stable_Image_API_Public.ipynb#scrollTo=t1Q4w2uvvza0)
+
+### How to use
+
+Please invoke this endpoint with a `POST` request.
+
+The headers of the request must include an API key in the `authorization` field. The body of the request must be
+`multipart/form-data`, and the `accept` header should be set to one of the following:
+
+
+
+  - `image/*` to receive the image in the format specified by the `output_format` parameter.
+  - `application/json` to receive the image encoded as base64 in a JSON response.
+
+The body of the request must include:
+- `image`
+
+Optionally, the body of the request may also include:
+- `output_format`
+
+> **Note:** for more details about these parameters please see the request schema below.
+
+### Output
+The resolution of the generated image is 4 times that of the input image with a maximum size of 16 megapixels.
+
+### Credits
+Flat rate of 1 credit per successful generation. You will not be charged for failed generations.
+ * @summary Fast
+ */
+export const stabilityImageGenerationUpscaleFast = (
+    stabilityImageGenrationUpscaleFastRequest: StabilityImageGenrationUpscaleFastRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('image', stabilityImageGenrationUpscaleFastRequest.image)
+if(stabilityImageGenrationUpscaleFastRequest.output_format !== undefined) {
+ formData.append('output_format', stabilityImageGenrationUpscaleFastRequest.output_format)
+ }
+
+      return customInstance<StabilityImageGenrationUpscaleFastResponse200 | Blob>(
+      {url: `/proxy/stability/v2beta/stable-image/upscale/fast`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getStabilityImageGenerationUpscaleFastMutationOptions = <TError = StabilityImageGenrationUpscaleFastResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleFastResponse413 | StabilityImageGenrationUpscaleFastResponse422 | StabilityImageGenrationUpscaleFastResponse429 | StabilityImageGenrationUpscaleFastResponse500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenerationUpscaleFast>>, TError,{data: StabilityImageGenrationUpscaleFastRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenerationUpscaleFast>>, TError,{data: StabilityImageGenrationUpscaleFastRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof stabilityImageGenerationUpscaleFast>>, {data: StabilityImageGenrationUpscaleFastRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  stabilityImageGenerationUpscaleFast(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StabilityImageGenerationUpscaleFastMutationResult = NonNullable<Awaited<ReturnType<typeof stabilityImageGenerationUpscaleFast>>>
+    export type StabilityImageGenerationUpscaleFastMutationBody = StabilityImageGenrationUpscaleFastRequest
+    export type StabilityImageGenerationUpscaleFastMutationError = StabilityImageGenrationUpscaleFastResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleFastResponse413 | StabilityImageGenrationUpscaleFastResponse422 | StabilityImageGenrationUpscaleFastResponse429 | StabilityImageGenrationUpscaleFastResponse500
+
+    /**
+ * @summary Fast
+ */
+export const useStabilityImageGenerationUpscaleFast = <TError = StabilityImageGenrationUpscaleFastResponse400 | StabilityContentModerationResponse | StabilityImageGenrationUpscaleFastResponse413 | StabilityImageGenrationUpscaleFastResponse422 | StabilityImageGenrationUpscaleFastResponse429 | StabilityImageGenrationUpscaleFastResponse500,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stabilityImageGenerationUpscaleFast>>, TError,{data: StabilityImageGenrationUpscaleFastRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof stabilityImageGenerationUpscaleFast>>,
+        TError,
+        {data: StabilityImageGenrationUpscaleFastRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getStabilityImageGenerationUpscaleFastMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Create 3D Generation Task
+ */
+export const tripoCreateTask = (
+    tripoCreateTaskBody: TripoCreateTaskBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<TripoSuccessTask>(
+      {url: `/proxy/tripo/v2/openapi/task`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: tripoCreateTaskBody
+    },
+      options);
+    }
+  
+
+
+export const getTripoCreateTaskMutationOptions = <TError = TripoErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tripoCreateTask>>, TError,{data: TripoCreateTaskBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof tripoCreateTask>>, TError,{data: TripoCreateTaskBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof tripoCreateTask>>, {data: TripoCreateTaskBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  tripoCreateTask(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TripoCreateTaskMutationResult = NonNullable<Awaited<ReturnType<typeof tripoCreateTask>>>
+    export type TripoCreateTaskMutationBody = TripoCreateTaskBody
+    export type TripoCreateTaskMutationError = TripoErrorResponse
+
+    /**
+ * @summary Create 3D Generation Task
+ */
+export const useTripoCreateTask = <TError = TripoErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tripoCreateTask>>, TError,{data: TripoCreateTaskBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof tripoCreateTask>>,
+        TError,
+        {data: TripoCreateTaskBody},
+        TContext
+      > => {
+
+      const mutationOptions = getTripoCreateTaskMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Get Task Status
+ */
+export const tripoGetTask = (
+    taskId: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TripoGetTask200>(
+      {url: `/proxy/tripo/v2/openapi/task/${taskId}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getTripoGetTaskQueryKey = (taskId: string,) => {
+    return [`/proxy/tripo/v2/openapi/task/${taskId}`] as const;
+    }
+
+    
+export const getTripoGetTaskQueryOptions = <TData = Awaited<ReturnType<typeof tripoGetTask>>, TError = TripoErrorResponse>(taskId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tripoGetTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getTripoGetTaskQueryKey(taskId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof tripoGetTask>>> = ({ signal }) => tripoGetTask(taskId, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(taskId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof tripoGetTask>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type TripoGetTaskQueryResult = NonNullable<Awaited<ReturnType<typeof tripoGetTask>>>
+export type TripoGetTaskQueryError = TripoErrorResponse
+
+/**
+ * @summary Get Task Status
+ */
+export const useTripoGetTask = <TData = Awaited<ReturnType<typeof tripoGetTask>>, TError = TripoErrorResponse>(
+ taskId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tripoGetTask>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getTripoGetTaskQueryOptions(taskId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Upload File for 3D Generation
+ */
+export const tripoUploadFile = (
+    tripoUploadFileBody: TripoUploadFileBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      const formData = new FormData();
+formData.append('file', tripoUploadFileBody.file)
+
+      return customInstance<TripoUploadFile200>(
+      {url: `/proxy/tripo/v2/openapi/upload`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      options);
+    }
+  
+
+
+export const getTripoUploadFileMutationOptions = <TError = TripoErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tripoUploadFile>>, TError,{data: TripoUploadFileBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof tripoUploadFile>>, TError,{data: TripoUploadFileBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof tripoUploadFile>>, {data: TripoUploadFileBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  tripoUploadFile(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TripoUploadFileMutationResult = NonNullable<Awaited<ReturnType<typeof tripoUploadFile>>>
+    export type TripoUploadFileMutationBody = TripoUploadFileBody
+    export type TripoUploadFileMutationError = TripoErrorResponse
+
+    /**
+ * @summary Upload File for 3D Generation
+ */
+export const useTripoUploadFile = <TError = TripoErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tripoUploadFile>>, TError,{data: TripoUploadFileBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof tripoUploadFile>>,
+        TError,
+        {data: TripoUploadFileBody},
+        TContext
+      > => {
+
+      const mutationOptions = getTripoUploadFileMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Query Account Balance
+ */
+export const tripoGetBalance = (
+    
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<TripoGetBalance200>(
+      {url: `/proxy/tripo/v2/openapi/user/balance`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getTripoGetBalanceQueryKey = () => {
+    return [`/proxy/tripo/v2/openapi/user/balance`] as const;
+    }
+
+    
+export const getTripoGetBalanceQueryOptions = <TData = Awaited<ReturnType<typeof tripoGetBalance>>, TError = TripoErrorResponse>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tripoGetBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getTripoGetBalanceQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof tripoGetBalance>>> = ({ signal }) => tripoGetBalance(requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof tripoGetBalance>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type TripoGetBalanceQueryResult = NonNullable<Awaited<ReturnType<typeof tripoGetBalance>>>
+export type TripoGetBalanceQueryError = TripoErrorResponse
+
+/**
+ * @summary Query Account Balance
+ */
+export const useTripoGetBalance = <TData = Awaited<ReturnType<typeof tripoGetBalance>>, TError = TripoErrorResponse>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof tripoGetBalance>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getTripoGetBalanceQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary Generate a video from a text prompt and optional image
+ */
+export const veoGenerate = (
+    veo2GenVidRequest: Veo2GenVidRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Veo2GenVidResponse>(
+      {url: `/proxy/veo/generate`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: veo2GenVidRequest
+    },
+      options);
+    }
+  
+
+
+export const getVeoGenerateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof veoGenerate>>, TError,{data: Veo2GenVidRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof veoGenerate>>, TError,{data: Veo2GenVidRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof veoGenerate>>, {data: Veo2GenVidRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  veoGenerate(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VeoGenerateMutationResult = NonNullable<Awaited<ReturnType<typeof veoGenerate>>>
+    export type VeoGenerateMutationBody = Veo2GenVidRequest
+    export type VeoGenerateMutationError = void
+
+    /**
+ * @summary Generate a video from a text prompt and optional image
+ */
+export const useVeoGenerate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof veoGenerate>>, TError,{data: Veo2GenVidRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof veoGenerate>>,
+        TError,
+        {data: Veo2GenVidRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getVeoGenerateMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Poll the status of a Veo prediction operation
+ */
+export const veoPoll = (
+    veo2GenVidPollRequest: Veo2GenVidPollRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Veo2GenVidPollResponse>(
+      {url: `/proxy/veo/poll`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: veo2GenVidPollRequest
+    },
+      options);
+    }
+  
+
+
+export const getVeoPollMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof veoPoll>>, TError,{data: Veo2GenVidPollRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof veoPoll>>, TError,{data: Veo2GenVidPollRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof veoPoll>>, {data: Veo2GenVidPollRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  veoPoll(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type VeoPollMutationResult = NonNullable<Awaited<ReturnType<typeof veoPoll>>>
+    export type VeoPollMutationBody = Veo2GenVidPollRequest
+    export type VeoPollMutationError = void
+
+    /**
+ * @summary Poll the status of a Veo prediction operation
+ */
+export const useVeoPoll = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof veoPoll>>, TError,{data: Veo2GenVidPollRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof veoPoll>>,
+        TError,
+        {data: Veo2GenVidPollRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getVeoPollMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate content using a specified model.
+ */
+export const geminiGenerateContent = (
+    model: string,
+    geminiGenerateContentRequest: GeminiGenerateContentRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<GeminiGenerateContentResponse>(
+      {url: `/proxy/vertexai/gemini/${model}`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: geminiGenerateContentRequest
+    },
+      options);
+    }
+  
+
+
+export const getGeminiGenerateContentMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof geminiGenerateContent>>, TError,{model: string;data: GeminiGenerateContentRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof geminiGenerateContent>>, TError,{model: string;data: GeminiGenerateContentRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof geminiGenerateContent>>, {model: string;data: GeminiGenerateContentRequest}> = (props) => {
+          const {model,data} = props ?? {};
+
+          return  geminiGenerateContent(model,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type GeminiGenerateContentMutationResult = NonNullable<Awaited<ReturnType<typeof geminiGenerateContent>>>
+    export type GeminiGenerateContentMutationBody = GeminiGenerateContentRequest
+    export type GeminiGenerateContentMutationError = void
+
+    /**
+ * @summary Generate content using a specified model.
+ */
+export const useGeminiGenerateContent = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof geminiGenerateContent>>, TError,{model: string;data: GeminiGenerateContentRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof geminiGenerateContent>>,
+        TError,
+        {model: string;data: GeminiGenerateContentRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getGeminiGenerateContentMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Generate images from a text prompt
+ */
+export const imagenGenerateImages = (
+    model: 'imagen-3.0-generate-002' | 'imagen-3.0-generate-001' | 'imagen-3.0-fast-generate-001' | 'imagegeneration@006' | 'imagegeneration@005' | 'imagegeneration@002',
+    imagenGenerateImageRequest: ImagenGenerateImageRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<ImagenGenerateImageResponse>(
+      {url: `/proxy/vertexai/imagen/${model}`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: imagenGenerateImageRequest
+    },
+      options);
+    }
+  
+
+
+export const getImagenGenerateImagesMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof imagenGenerateImages>>, TError,{model: 'imagen-3.0-generate-002' | 'imagen-3.0-generate-001' | 'imagen-3.0-fast-generate-001' | 'imagegeneration@006' | 'imagegeneration@005' | 'imagegeneration@002';data: ImagenGenerateImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof imagenGenerateImages>>, TError,{model: 'imagen-3.0-generate-002' | 'imagen-3.0-generate-001' | 'imagen-3.0-fast-generate-001' | 'imagegeneration@006' | 'imagegeneration@005' | 'imagegeneration@002';data: ImagenGenerateImageRequest}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof imagenGenerateImages>>, {model: 'imagen-3.0-generate-002' | 'imagen-3.0-generate-001' | 'imagen-3.0-fast-generate-001' | 'imagegeneration@006' | 'imagegeneration@005' | 'imagegeneration@002';data: ImagenGenerateImageRequest}> = (props) => {
+          const {model,data} = props ?? {};
+
+          return  imagenGenerateImages(model,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ImagenGenerateImagesMutationResult = NonNullable<Awaited<ReturnType<typeof imagenGenerateImages>>>
+    export type ImagenGenerateImagesMutationBody = ImagenGenerateImageRequest
+    export type ImagenGenerateImagesMutationError = void
+
+    /**
+ * @summary Generate images from a text prompt
+ */
+export const useImagenGenerateImages = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof imagenGenerateImages>>, TError,{model: 'imagen-3.0-generate-002' | 'imagen-3.0-generate-001' | 'imagen-3.0-fast-generate-001' | 'imagegeneration@006' | 'imagegeneration@005' | 'imagegeneration@002';data: ImagenGenerateImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof imagenGenerateImages>>,
+        TError,
+        {model: 'imagen-3.0-generate-002' | 'imagen-3.0-generate-001' | 'imagen-3.0-fast-generate-001' | 'imagegeneration@006' | 'imagegeneration@005' | 'imagegeneration@002';data: ImagenGenerateImageRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getImagenGenerateImagesMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * @summary Retrieve all publishers
  */
@@ -3203,6 +18112,7 @@ export const useSecurityScan = <TData = Awaited<ReturnType<typeof securityScan>>
 
 
 /**
+ * Receive artifacts (output files) from the ComfyUI GitHub Action
  * @summary Receive artifacts (output files) from the ComfyUI GitHub Action
  */
 export const postUploadArtifact = (
@@ -3323,7 +18233,7 @@ export const useGetUser = <TData = Awaited<ReturnType<typeof getUser>>, TError =
 
 
 /**
- * @summary Retrieve all publishers for a given userf/
+ * @summary Retrieve all publishers for a given user
  */
 export const listPublishersForUser = (
     
@@ -3447,6 +18357,122 @@ export const useListAllNodeVersions = <TData = Awaited<ReturnType<typeof listAll
 
 
 
+/**
+ * @summary receive alert on remaining balance is 0
+ */
+export const metronomeZeroBalance = (
+    metronomeZeroBalanceBody: MetronomeZeroBalanceBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<IdeogramGenerateResponse>(
+      {url: `/webhook/metronome/zero-balance`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: metronomeZeroBalanceBody
+    },
+      options);
+    }
+  
+
+
+export const getMetronomeZeroBalanceMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof metronomeZeroBalance>>, TError,{data: MetronomeZeroBalanceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof metronomeZeroBalance>>, TError,{data: MetronomeZeroBalanceBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof metronomeZeroBalance>>, {data: MetronomeZeroBalanceBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  metronomeZeroBalance(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MetronomeZeroBalanceMutationResult = NonNullable<Awaited<ReturnType<typeof metronomeZeroBalance>>>
+    export type MetronomeZeroBalanceMutationBody = MetronomeZeroBalanceBody
+    export type MetronomeZeroBalanceMutationError = ErrorResponse | void
+
+    /**
+ * @summary receive alert on remaining balance is 0
+ */
+export const useMetronomeZeroBalance = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof metronomeZeroBalance>>, TError,{data: MetronomeZeroBalanceBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof metronomeZeroBalance>>,
+        TError,
+        {data: MetronomeZeroBalanceBody},
+        TContext
+      > => {
+
+      const mutationOptions = getMetronomeZeroBalanceMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
+ * @summary Handle Stripe checkout.session.completed webhook event
+ */
+export const stripeInvoiceStatus = (
+    stripeEvent: StripeEvent,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/webhook/stripe/invoice-status`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: stripeEvent
+    },
+      options);
+    }
+  
+
+
+export const getStripeInvoiceStatusMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stripeInvoiceStatus>>, TError,{data: StripeEvent}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof stripeInvoiceStatus>>, TError,{data: StripeEvent}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof stripeInvoiceStatus>>, {data: StripeEvent}> = (props) => {
+          const {data} = props ?? {};
+
+          return  stripeInvoiceStatus(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type StripeInvoiceStatusMutationResult = NonNullable<Awaited<ReturnType<typeof stripeInvoiceStatus>>>
+    export type StripeInvoiceStatusMutationBody = StripeEvent
+    export type StripeInvoiceStatusMutationError = ErrorResponse | void
+
+    /**
+ * @summary Handle Stripe checkout.session.completed webhook event
+ */
+export const useStripeInvoiceStatus = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof stripeInvoiceStatus>>, TError,{data: StripeEvent}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof stripeInvoiceStatus>>,
+        TError,
+        {data: StripeEvent},
+        TContext
+      > => {
+
+      const mutationOptions = getStripeInvoiceStatusMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
 /**
  * @summary Retrieve a specific commit by ID
  */
