@@ -117,7 +117,7 @@ function NodeVersionList({}) {
             pageSize: 8,
             statuses: selectedStatus,
             include_status_reason: true,
-            status_reason: queryForStatusReason || undefined,
+            status_reason: queryForStatusReason || '',
 
             // failed to filter, TODO: fix this in the backend
             // nodeId: queryForNodeId || undefined,
