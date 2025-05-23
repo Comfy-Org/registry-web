@@ -1,7 +1,7 @@
-require('dotenv/config') // load backend url from .env
+import 'dotenv/config'; // load backend url from .env
+import { defineConfig } from 'orval'
 
-// orval.config.js
-module.exports = {
+export default defineConfig({
     dripApi: {
         input: {
             target: `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
@@ -17,4 +17,4 @@ module.exports = {
             },
         },
     },
-}
+})
