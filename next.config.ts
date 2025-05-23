@@ -13,7 +13,7 @@ const withMDX = mdx({
 const conf: NextConfig = {
     reactStrictMode: true,
     // swcMinify: true,
-    swcMinify: true,
+    // swcMinify: true,
 
     // Append the default value with md extensions
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
