@@ -384,6 +384,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                             <li
                                 key={i}
                                 className="flex gap-2 items-center w-full justify-start text-xs"
+                                    title={`${yaml.stringify(e)}`}
                             >
                                 <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[14rem]">
                                     {/* show green checkmark if approved before */}
@@ -403,7 +404,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     </Link>
                                     <code
                                         className="text-gray-400 whitespace-nowrap flex-1"
-                                        title={`${e.file_path} L${e.line_number}`}
                                     >
                                         {(e.file_path?.length ?? 0) > 18 + 2
                                             ? `…${e.file_path?.slice(-18)}`
@@ -413,7 +413,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                                 </div>
                                 <code
                                     className="flex-1 ml-4 whitespace-nowrap text"
-                                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim() ?? ''}`}
                                 >
                                     &nbsp;
                                     {e.issue_type}
