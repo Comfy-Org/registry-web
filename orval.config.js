@@ -4,7 +4,7 @@ require('dotenv/config') // load backend url from .env
 module.exports = {
     dripApi: {
         input: {
-            target: 'https://api.comfy.org/openapi',
+            target: `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
         },
         output: {
             target: './src/api/generated.ts',
