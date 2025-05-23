@@ -1,4 +1,4 @@
-import 'dotenv/config'; // load backend url from .env
+import 'dotenv/config' // load backend url from .env
 import { defineConfig } from 'orval'
 
 export default defineConfig({

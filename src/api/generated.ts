@@ -4,10 +4,6 @@
  * Comfy API
  * OpenAPI spec version: 1.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query'
 import type {
   MutationFunction,
   QueryFunction,
@@ -16,7 +12,11 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult
-} from '@tanstack/react-query'
+} from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import { customInstance } from './mutator/axios-instance';
 export type MetronomeZeroBalanceBodyProperties = {
   /** the metronome customer id */
@@ -6396,6 +6396,15 @@ export const KlingDualCharacterEffectsScene = {
 } as const;
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
+export const KlingSingleImageEffectsScene = {
+  bloombloom: 'bloombloom',
+  dizzydizzy: 'dizzydizzy',
+  fuzzyfuzzy: 'fuzzyfuzzy',
+  squish: 'squish',
+  expansion: 'expansion',
+} as const;
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const KlingVideoEffectsRequestEffectScene = {...KlingDualCharacterEffectsScene,...KlingSingleImageEffectsScene,} as const;
 
 export interface KlingVideoEffectsRequest {
@@ -6490,16 +6499,6 @@ export const KlingTaskStatus = {
  * Scene Name. Single Image Effects (bloombloom, dizzydizzy, fuzzyfuzzy, squish, expansion).
  */
 export type KlingSingleImageEffectsScene = typeof KlingSingleImageEffectsScene[keyof typeof KlingSingleImageEffectsScene];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const KlingSingleImageEffectsScene = {
-  bloombloom: 'bloombloom',
-  dizzydizzy: 'dizzydizzy',
-  fuzzyfuzzy: 'fuzzyfuzzy',
-  squish: 'squish',
-  expansion: 'expansion',
-} as const;
 
 /**
  * Model Name. Only kling-v1-6 is supported for single image effects.
@@ -13913,7 +13912,7 @@ if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.resolution !== undefined) 
  formData.append('resolution', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.resolution)
  }
 if(pikaBodyGenerate22KeyframeGenerate22PikaframesPost.seed !== undefined) {
- formData.append('seed', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.seed)
+ formData.append('seed', pikaBodyGenerate22KeyframeGenerate22PikaframesPost.seed?.toString())
  }
 
       return customInstance<PikaGenerateResponse>(
@@ -13975,7 +13974,7 @@ export const pikaGenerate22C2vGenerate22PikascenesPost = (
       
       const formData = new FormData();
 if(pikaBodyGenerate22C2vGenerate22PikascenesPost.aspectRatio !== undefined) {
- formData.append('aspectRatio', pikaBodyGenerate22C2vGenerate22PikascenesPost.aspectRatio)
+ formData.append('aspectRatio', pikaBodyGenerate22C2vGenerate22PikascenesPost.aspectRatio?.toString())
  }
 if(pikaBodyGenerate22C2vGenerate22PikascenesPost.duration !== undefined) {
  formData.append('duration', pikaBodyGenerate22C2vGenerate22PikascenesPost.duration.toString())
@@ -13994,7 +13993,7 @@ if(pikaBodyGenerate22C2vGenerate22PikascenesPost.resolution !== undefined) {
  formData.append('resolution', pikaBodyGenerate22C2vGenerate22PikascenesPost.resolution)
  }
 if(pikaBodyGenerate22C2vGenerate22PikascenesPost.seed !== undefined) {
- formData.append('seed', pikaBodyGenerate22C2vGenerate22PikascenesPost.seed)
+ formData.append('seed', pikaBodyGenerate22C2vGenerate22PikascenesPost.seed?.toString())
  }
 
       return customInstance<PikaGenerateResponse>(
@@ -14140,7 +14139,7 @@ if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.promptText !== undefined
  formData.append('promptText', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.promptText)
  }
 if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.seed !== undefined) {
- formData.append('seed', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.seed)
+ formData.append('seed', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.seed?.toString())
  }
 if(pikaBodyGeneratePikadditionsGeneratePikadditionsPost.video !== undefined) {
  formData.append('video', pikaBodyGeneratePikadditionsGeneratePikadditionsPost.video)
@@ -14218,7 +14217,7 @@ if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.promptText !== undefined) {
  formData.append('promptText', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.promptText)
  }
 if(pikaBodyGeneratePikaffectsGeneratePikaffectsPost.seed !== undefined) {
- formData.append('seed', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.seed)
+ formData.append('seed', pikaBodyGeneratePikaffectsGeneratePikaffectsPost.seed?.toString())
  }
 
       return customInstance<PikaGenerateResponse>(
@@ -14296,7 +14295,7 @@ if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.promptText !== undefined) {
  formData.append('promptText', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.promptText)
  }
 if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.seed !== undefined) {
- formData.append('seed', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.seed)
+ formData.append('seed', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.seed?.toString())
  }
 if(pikaBodyGeneratePikaswapsGeneratePikaswapsPost.video !== undefined) {
  formData.append('video', pikaBodyGeneratePikaswapsGeneratePikaswapsPost.video)
@@ -14942,7 +14941,7 @@ if(recraftImageToImageRequest.substyle !== undefined) {
  formData.append('substyle', recraftImageToImageRequest.substyle)
  }
 if(recraftImageToImageRequest.text_layout !== undefined) {
- recraftImageToImageRequest.text_layout.forEach(value => formData.append('text_layout', value));
+ recraftImageToImageRequest.text_layout.forEach(value => formData.append('text_layout', value?.toString()));
  }
 
       return customInstance<RecraftGenerateImageResponse>(
@@ -15037,7 +15036,7 @@ if(recraftTransformImageWithMaskRequest.substyle !== undefined) {
  formData.append('substyle', recraftTransformImageWithMaskRequest.substyle)
  }
 if(recraftTransformImageWithMaskRequest.text_layout !== undefined) {
- recraftTransformImageWithMaskRequest.text_layout.forEach(value => formData.append('text_layout', value));
+ recraftTransformImageWithMaskRequest.text_layout.forEach(value => formData.append('text_layout', value?.toString()));
  }
 
       return customInstance<RecraftGenerateImageResponse>(
@@ -15192,7 +15191,7 @@ if(recraftTransformImageWithMaskRequest.substyle !== undefined) {
  formData.append('substyle', recraftTransformImageWithMaskRequest.substyle)
  }
 if(recraftTransformImageWithMaskRequest.text_layout !== undefined) {
- recraftTransformImageWithMaskRequest.text_layout.forEach(value => formData.append('text_layout', value));
+ recraftTransformImageWithMaskRequest.text_layout.forEach(value => formData.append('text_layout', value?.toString()));
  }
 
       return customInstance<RecraftGenerateImageResponse>(
