@@ -17,17 +17,17 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v2
               with:
-                  node-version: '18'
-            - name: Install pnpm
-              run: npm install -g pnpm
+                  node-version: '20'
+            - name: Install bun
+              run: npm install -g bun
             - name: Install Dependencies
-              run: pnpm install
+              run: bun install
             - name: Run Next.js Lint
-              run: pnpm run lint
+              run: bun run lint
             - name: Check Formatting with Prettier
               run: npx prettier --write .
             - name: Build the Next.js Project
-              run: pnpm run build
+              run: bun run build
             # commit prettier fixed code
             - uses: stefanzweifel/git-auto-commit-action@v5
               with:

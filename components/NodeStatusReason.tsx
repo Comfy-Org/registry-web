@@ -376,7 +376,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                             <li
                                 key={i}
                                 className="flex gap-2 items-center w-full justify-start text-xs"
-                                    title={`${yaml.stringify(e)}`}
+                                title={`${yaml.stringify(e)}`}
                             >
                                 <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[14rem]">
                                     {/* show green checkmark if approved before */}
@@ -394,18 +394,14 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     >
                                         <FaGithub className="w-5 h-5 ml-4" />
                                     </Link>
-                                    <code
-                                        className="text-gray-400 whitespace-nowrap flex-1"
-                                    >
+                                    <code className="text-gray-400 whitespace-nowrap flex-1">
                                         {(e.file_path?.length ?? 0) > 18 + 2
                                             ? `…${e.file_path?.slice(-18)}`
                                             : e.file_path}
                                         &nbsp;L{e.line_number}
                                     </code>
                                 </div>
-                                <code
-                                    className="flex-1 ml-4 whitespace-nowrap text"
-                                >
+                                <code className="flex-1 ml-4 whitespace-nowrap text">
                                     &nbsp;
                                     {e.issue_type}
                                     &nbsp;
