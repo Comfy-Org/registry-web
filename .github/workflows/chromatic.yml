@@ -20,27 +20,23 @@ jobs:
               with:
                   fetch-depth: 0 # Required for Chromatic to retrieve git history
 
-            # Install pnpm first
-            - name: Install pnpm
-              uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-                  run_install: false
-
-            # Setup Node.js with pnpm cache
+            # Setup Node.js
             - name: Setup Node.js
               uses: actions/setup-node@v3
               with:
                   node-version: '22'
-                  cache: 'pnpm'
+
+            # Install Bun
+            - name: Install Bun
+              run: npm install -g bun
 
             # Install dependencies
             - name: Install dependencies
-              run: pnpm install
+              run: bun install
 
             # Build Storybook
             - name: Build Storybook
-              run: pnpm run build-storybook
+              run: bun run build-storybook
 
             # Publish to Chromatic
             - name: Publish to Chromatic
