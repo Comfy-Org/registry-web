@@ -385,9 +385,12 @@ function NodeVersionList({}) {
         message?: string | null,
         batchId?: string
     ) => {
-        if (nv.status !== NodeVersionStatus.NodeVersionStatusFlagged) {
+        if (
+            nv.status !== NodeVersionStatus.NodeVersionStatusFlagged &&
+            nv.status !== NodeVersionStatus.NodeVersionStatusActive
+        ) {
             toast.error(
-                `Node version ${nv.node_id}@${nv.version} is not flagged, skip`
+                `Node version ${nv.node_id}@${nv.version} is not flagged or active, skip`
             )
             return
         }
@@ -1050,23 +1053,34 @@ function NodeVersionList({}) {
                         <NodeStatusReason {...nv} />
 
                         <div className="flex gap-2">
-                            {nv.status ===
-                                NodeVersionStatus.NodeVersionStatusFlagged && (
-                                <>
-                                    <Button
-                                        color="blue"
-                                        className="flex"
-                                        onClick={() => onApprove(nv)}
-                                    >
-                                        Approve
-                                    </Button>
-                                    <Button
-                                        color="failure"
-                                        onClick={() => onReject(nv)}
-                                    >
-                                        Reject
-                                    </Button>
-                                </>
+                            {/* show approve only flagged/banned node versions */}
+                            {(nv.status ===
+                                NodeVersionStatus.NodeVersionStatusPending ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusFlagged ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusBanned) && (
+                                <Button
+                                    color="blue"
+                                    className="flex"
+                                    onClick={() => onApprove(nv)}
+                                >
+                                    Approve
+                                </Button>
+                            )}
+                            {/* show reject only flagged/active node versions */}
+                            {(nv.status ===
+                                NodeVersionStatus.NodeVersionStatusPending ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusActive ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusFlagged) && (
+                                <Button
+                                    color="failure"
+                                    onClick={() => onReject(nv)}
+                                >
+                                    Reject
+                                </Button>
                             )}
 
                             {checkIsUndoable(nv) && (
