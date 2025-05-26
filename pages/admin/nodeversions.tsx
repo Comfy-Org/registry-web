@@ -31,7 +31,7 @@ import {
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
     useGetUser,
-    useListAllNodeVersions
+    useListAllNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
