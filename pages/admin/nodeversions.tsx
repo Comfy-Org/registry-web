@@ -31,8 +31,7 @@ import {
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
     useGetUser,
-    useListAllNodeVersions,
-    useListNodeVersions,
+    useListAllNodeVersions
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
@@ -111,40 +110,20 @@ function NodeVersionList({}) {
     const queryForNodeId = router.query.nodeId as string
     const queryForStatusReason = router.query.statusReason as string
 
-    const getAllNodeVersionsQuery = useListAllNodeVersions(
-        {
-            page: page,
-            pageSize: 8,
-            statuses: selectedStatus,
-            include_status_reason: true,
-            status_reason: queryForStatusReason || '',
-
-            // failed to filter, TODO: fix this in the backend
-            // nodeId: queryForNodeId || undefined,
-        },
-        { query: { enabled: !queryForNodeId } }
-    )
-
-    console.log('queryForNodeId', queryForNodeId)
-    // patched from frontend if queryForNodeId is set
-    const getSpecificNodeVersionQuery = useListNodeVersions(
-        queryForNodeId,
-        {
-            statuses: selectedStatus,
-            include_status_reason: true,
-        },
-        { query: { enabled: !!queryForNodeId } }
-    )
+    const getAllNodeVersionsQuery = useListAllNodeVersions({
+        page: page,
+        pageSize: 8,
+        statuses: selectedStatus,
+        include_status_reason: true,
+        status_reason: queryForStatusReason || undefined,
+        nodeId: queryForNodeId || undefined,
+    })
 
     // todo: also implement this in the backend
     const queryForVersion = router.query.version as string
 
     const versions =
-        (
-            getSpecificNodeVersionQuery.data ||
-            getAllNodeVersionsQuery.data?.versions ||
-            []
-        )?.filter((nv) => {
+        (getAllNodeVersionsQuery.data?.versions || [])?.filter((nv) => {
             if (queryForVersion) return nv.version === queryForVersion
             return true
         }) || []
@@ -158,10 +137,7 @@ function NodeVersionList({}) {
         }
     }, [getAllNodeVersionsQuery])
 
-    if (
-        getAllNodeVersionsQuery.isLoading ||
-        getSpecificNodeVersionQuery.isLoading
-    ) {
+    if (getAllNodeVersionsQuery.isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner />
