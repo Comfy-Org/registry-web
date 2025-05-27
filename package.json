@@ -71,7 +71,8 @@
     "sflow": "^1.19.14",
     "styled-jsx": "^5.1.7",
     "yaml": "^2.8.0",
-    "zod": "^3.24.4"
+    "zod": "^3.24.4",
+    "use-async-effect": "^2.2.7"
   },
   "devDependencies": {
     "@babel/core": "7.19.3",
