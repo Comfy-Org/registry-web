@@ -25,6 +25,7 @@ import { z } from 'zod'
 import { NodeStatusBadge } from './NodeStatusBadge'
 import { parseIssueList } from './parseIssueList'
 import { parseJsonSafe } from './parseJsonSafe'
+import { SummariseIssues } from './SummariseIssues'
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
 export const zErrorArray = z
@@ -182,13 +183,13 @@ export function NodeStatusReason(nv: NodeVersion) {
         })
         // mark if the issue was approved before
         ?.map((e) => {
-            const isApproved = approvedIssueList?.some(
+            const isApprovedBefore = approvedIssueList?.some(
                 (approvedIssue) =>
                     approvedIssue.file_path === e.file_path &&
                     approvedIssue.line_number === e.line_number &&
                     approvedIssue.code_snippet === e.code_snippet
             )
-            return { ...e, isApproved }
+            return { ...e, isApprovedBefore }
         })
 
     const lastFullfilledIssueList = approvedIssueList // guess url from node
@@ -210,11 +211,11 @@ export function NodeStatusReason(nv: NodeVersion) {
         })
 
     // get a summary for the issues, including weather it was approved before
-    const problemsSummary = fullfilledIssueList?.sort(
+    const problemsList = fullfilledIssueList?.sort(
         compareBy(
             (e) =>
                 // sort by approved before
-                (e.isApproved ? '0' : '1') +
+                (e.isApprovedBefore ? '0' : '1') +
                 // and then filepath + line number (padStart to order numbers by number, instead of string)
                 e.url
                     .split(/\b/)
@@ -236,6 +237,7 @@ export function NodeStatusReason(nv: NodeVersion) {
     const code = fullfilledIssueList
         ? JSON.stringify(fullfilledIssueList)
         : status_reason
+
     return (
         <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
             {/* HistoryVersions */}
@@ -368,18 +370,24 @@ export function NodeStatusReason(nv: NodeVersion) {
                 </details>
             )}
 
-            {!!problemsSummary?.length && (
+            {nv.node_id &&
+                nv.version &&
+                nv.status === NodeVersionStatus.NodeVersionStatusFlagged && (
+                    <SummariseIssues nodeId={nv.node_id} version={nv.version} />
+                )}
+
+            {!!problemsList?.length && (
                 <>
-                    <h4>{'Problems Summary: '}</h4>
+                    <h4>{'Problems List: '}</h4>
                     <ol className="ml-4 overflow-x-auto">
-                        {problemsSummary.map((e, i) => (
+                        {problemsList.map((e, i) => (
                             <li
                                 key={i}
                                 className="flex gap-2 items-center w-full justify-start text-xs"
                             >
                                 <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[14rem]">
                                     {/* show green checkmark if approved before */}
-                                    {e.isApproved ? (
+                                    {e.isApprovedBefore ? (
                                         <span className="text-green-500">
                                             ✅
                                         </span>
@@ -419,7 +427,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             )}
 
             {!!code?.trim() && (
-                <details open={!problemsSummary}>
+                <details open={!problemsList}>
                     <summary>{'Status Reason: '}</summary>
                     {fullfilledIssueList ? (
                         <PrettieredYamlDiffView
