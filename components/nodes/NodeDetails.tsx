@@ -77,9 +77,9 @@ export function formatDownloadCount(count: number): string {
     return `${cleanNum}${units[unitIndex]}`
 }
 
-const NodeDetails = () => {
+const NodeDetails: React.FC = () => {
     const router = useRouter()
-    const { publisherId: _publisherId, nodeId } = router.query // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    const { nodeId, publisherId: _publisherId } = router.query
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
@@ -133,6 +133,15 @@ const NodeDetails = () => {
 
     const onCloseEditModal = () => {
         setIsEditModal(false)
+    }
+
+    const handleClaimNode = () => {
+        if (!user) {
+            router.push(`/auth/login?fromUrl=${router.asPath}`)
+            return
+        }
+        // Redirect to publisher selection page for claiming
+        router.push(`/nodes/${nodeId}/claim`)
     }
 
     if (isError) {
@@ -280,14 +289,25 @@ const NodeDetails = () => {
                             </div>
                             <div className="mt-5 mb-10">
                                 {isUnclaimed ? (
-                                    <p className="text-base font-normal text-gray-200">
-                                        This node can only be installed via git
-                                        {node.repository && (
-                                            <CopyableCodeBlock
-                                                code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
-                                            />
+                                    <>
+                                        <p className="text-base font-normal text-gray-200">
+                                            This node can only be installed via git
+                                            {node.repository && (
+                                                <CopyableCodeBlock
+                                                    code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
+                                                />
+                                            )}
+                                        </p>
+                                        {user && (
+                                            <Button
+                                                color="blue"
+                                                className="mt-4 font-bold"
+                                                onClick={handleClaimNode}
+                                            >
+                                                Claim this node
+                                            </Button>
                                         )}
-                                    </p>
+                                    </>
                                 ) : (
                                     <CopyableCodeBlock
                                         code={`comfy node registry-install ${nodeId}`}
