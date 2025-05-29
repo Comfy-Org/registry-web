@@ -12,8 +12,8 @@ import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
 
 // Initialize Algolia search client with custom host and headers
 const searchClient = algoliasearch(
-    '4E0RO38HS8',
-    '684d998c36b67a9a9fce8fc2d8860579',
+    process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
+    process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
     {
         hosts: [
             {
@@ -23,8 +23,8 @@ const searchClient = algoliasearch(
             },
         ],
         baseHeaders: {
-            'X-Algolia-Application-Id': '4E0RO38HS8',
-            'X-Algolia-API-Key': '684d998c36b67a9a9fce8fc2d8860579',
+            'X-Algolia-Application-Id': process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
+            'X-Algolia-API-Key': process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
         },
     }
 )
