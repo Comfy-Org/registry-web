@@ -12,18 +12,20 @@ import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
 
 // Initialize Algolia search client with custom host and headers
 const searchClient = algoliasearch(
-    "4E0RO38HS8",
-    "684d998c36b67a9a9fce8fc2d8860579",
+    '4E0RO38HS8',
+    '684d998c36b67a9a9fce8fc2d8860579',
     {
-        hosts: [{
-            url: 'search.comfy.org/api/search',
-            accept: 'readWrite',
-            protocol: 'https'
-        }],
+        hosts: [
+            {
+                url: 'search.comfy.org/api/search',
+                accept: 'readWrite',
+                protocol: 'https',
+            },
+        ],
         baseHeaders: {
-            'X-Algolia-Application-Id': "4E0RO38HS8",
-            'X-Algolia-API-Key': "684d998c36b67a9a9fce8fc2d8860579"
-        }
+            'X-Algolia-Application-Id': '4E0RO38HS8',
+            'X-Algolia-API-Key': '684d998c36b67a9a9fce8fc2d8860579',
+        },
     }
 )
 
