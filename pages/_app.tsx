@@ -30,7 +30,10 @@ const persistEffect = () =>
         }),
         // Only persist queries with these query keys
         dehydrateOptions: {
-            shouldDehydrateQuery: ({ queryKey }) => {
+            shouldDehydrateQuery: ({ queryKey, state }) => {
+                // Don't persist pending queries as they can't be properly restored
+                if (state.status === 'pending') return false
+
                 // Persist user data (queryKey is ['/users'])
                 const persistKeys: Record<string, true> = {
                     '/users': true,
