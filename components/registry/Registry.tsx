@@ -23,8 +23,10 @@ const searchClient = algoliasearch(
             },
         ],
         baseHeaders: {
-            'X-Algolia-Application-Id': process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
-            'X-Algolia-API-Key': process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
+            'X-Algolia-Application-Id': process.env
+                .NEXT_PUBLIC_ALGOLIA_APP_ID as string,
+            'X-Algolia-API-Key': process.env
+                .NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
         },
     }
 )
