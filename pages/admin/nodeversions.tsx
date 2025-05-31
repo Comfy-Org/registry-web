@@ -1,12 +1,13 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
 import { parseJsonSafe } from '@/components/parseJsonSafe'
+import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
-    Badge,
     Button,
     Checkbox,
     Label,
@@ -61,7 +62,7 @@ function NodeVersionList({}) {
         deleted: NodeVersionStatus.NodeVersionStatusDeleted,
         pending: NodeVersionStatus.NodeVersionStatusPending,
         active: NodeVersionStatus.NodeVersionStatusActive,
-    } // satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
+    } satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
     const flagColors = {
         all: 'success',
         flagged: 'warning',
@@ -108,6 +109,7 @@ function NodeVersionList({}) {
         useState(false)
 
     const queryForNodeId = router.query.nodeId as string
+    const queryForStatusReason = router.query.statusReason as string
 
     const getAllNodeVersionsQuery = useListAllNodeVersions(
         {
@@ -115,9 +117,10 @@ function NodeVersionList({}) {
             pageSize: 8,
             statuses: selectedStatus,
             include_status_reason: true,
+            status_reason: queryForStatusReason || '',
 
             // failed to filter, TODO: fix this in the backend
-            // nodeId: queryForNodeId ?? undefined,
+            // nodeId: queryForNodeId || undefined,
         },
         { query: { enabled: !queryForNodeId } }
     )
@@ -170,10 +173,12 @@ function NodeVersionList({}) {
         nodeVersion: nv,
         status,
         message,
+        batchId,
     }: {
         nodeVersion: NodeVersion
         status: NodeVersionStatus
         message: string
+        batchId?: string // Optional batchId for batch operations
     }) {
         // parse previous status reason with fallbacks
         const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data
@@ -194,13 +199,14 @@ function NodeVersionList({}) {
                 by: previousBy,
             },
         ]
-        console.log('History', statusHistory)
+        // console.log('History', statusHistory)
 
-        // updated status reason, with history
+        // updated status reason, with history and optionally batchId
         const reason = zStatusReason.parse({
             message,
             by: user?.email ?? 'admin@comfy.org', // if user is not loaded, use 'Admin'
             statusHistory,
+            ...(batchId ? { batchId } : {}), // Include batchId if provided
         })
         await updateNodeVersionMutation.mutateAsync(
             {
@@ -223,7 +229,146 @@ function NodeVersionList({}) {
             }
         )
     }
-    const onApprove = async (nv: NodeVersion, message?: string | null) => {
+
+    // For batch operations that include batchId in the status reason
+    const onApproveBatch = async (
+        nv: NodeVersion,
+        message: string,
+        batchId: string
+    ) => {
+        if (!message) return toast.error('Please provide a reason')
+
+        // parse previous status reason with fallbacks
+        const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data
+        const prevStatusReason =
+            zStatusReason.safeParse(prevStatusReasonJson).data
+        const previousHistory = prevStatusReason?.statusHistory ?? []
+        const previousStatus = nv.status ?? 'Unknown Status' // should not happen
+        const previousMessage =
+            prevStatusReason?.message ?? nv.status_reason ?? '' // use raw msg if fail to parse json
+        const previousBy = prevStatusReason?.by ?? 'admin@comfy.org' // unknown admin
+
+        // concat history
+        const statusHistory = [
+            ...previousHistory,
+            {
+                status: previousStatus,
+                message: previousMessage,
+                by: previousBy,
+            },
+        ]
+
+        // updated status reason, with history and batchId for future undo-a-batch
+        const reason = zStatusReason.parse({
+            message,
+            by: user?.email ?? 'admin@comfy.org',
+            statusHistory,
+            batchId, // Include the batchId for future undo-a-batch functionality
+        })
+
+        await updateNodeVersionMutation.mutateAsync(
+            {
+                nodeId: nv.node_id!.toString(),
+                versionNumber: nv.version!.toString(),
+                data: {
+                    status: NodeVersionStatus.NodeVersionStatusActive,
+                    status_reason: JSON.stringify(reason),
+                },
+            },
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ['/versions'],
+                    })
+                },
+                onError: (error) => {
+                    console.error(
+                        'Error approving node version in batch',
+                        error
+                    )
+                    toast.error(
+                        `Error approving node version ${nv.node_id!}@${nv.version!} in batch`
+                    )
+                },
+            }
+        )
+    }
+
+    const onRejectBatch = async (
+        nv: NodeVersion,
+        message: string,
+        batchId: string
+    ) => {
+        if (!message) return toast.error('Please provide a reason')
+
+        // parse previous status reason with fallbacks
+        const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data
+        const prevStatusReason =
+            zStatusReason.safeParse(prevStatusReasonJson).data
+        const previousHistory = prevStatusReason?.statusHistory ?? []
+        const previousStatus = nv.status ?? 'Unknown Status' // should not happen
+        const previousMessage =
+            prevStatusReason?.message ?? nv.status_reason ?? '' // use raw msg if fail to parse json
+        const previousBy = prevStatusReason?.by ?? 'admin@comfy.org' // unknown admin
+
+        // concat history
+        const statusHistory = [
+            ...previousHistory,
+            {
+                status: previousStatus,
+                message: previousMessage,
+                by: previousBy,
+            },
+        ]
+
+        // updated status reason, with history and batchId for future undo-a-batch
+        const reason = zStatusReason.parse({
+            message,
+            by: user?.email ?? 'admin@comfy.org',
+            statusHistory,
+            batchId, // Include the batchId for future undo-a-batch functionality
+        })
+
+        await updateNodeVersionMutation.mutateAsync(
+            {
+                nodeId: nv.node_id!.toString(),
+                versionNumber: nv.version!.toString(),
+                data: {
+                    status: NodeVersionStatus.NodeVersionStatusBanned,
+                    status_reason: JSON.stringify(reason),
+                },
+            },
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ['/versions'],
+                    })
+                },
+                onError: (error) => {
+                    console.error(
+                        'Error rejecting node version in batch',
+                        error
+                    )
+                    toast.error(
+                        `Error rejecting node version ${nv.node_id!}@${nv.version!} in batch`
+                    )
+                },
+            }
+        )
+    }
+
+    const onApprove = async (
+        nv: NodeVersion,
+        message?: string | null,
+        batchId?: string
+    ) => {
+        if (nv.status !== NodeVersionStatus.NodeVersionStatusFlagged) {
+            toast.error(
+                `Node version ${nv.node_id}@${nv.version} is not flagged, skip`
+            )
+            return
+        }
+
         message ||= prompt('Approve Reason: ', 'Approved by admin')
         if (!message) return toast.error('Please provide a reason')
 
@@ -231,10 +376,24 @@ function NodeVersionList({}) {
             nodeVersion: nv,
             status: NodeVersionStatus.NodeVersionStatusActive,
             message,
+            batchId, // Pass batchId to onReview if provided
         })
         toast.success(`${nv.node_id!}@${nv.version!} Approved`)
     }
-    const onReject = async (nv: NodeVersion, message?: string | null) => {
+    const onReject = async (
+        nv: NodeVersion,
+        message?: string | null,
+        batchId?: string
+    ) => {
+        if (
+            nv.status !== NodeVersionStatus.NodeVersionStatusFlagged &&
+            nv.status !== NodeVersionStatus.NodeVersionStatusActive
+        ) {
+            toast.error(
+                `Node version ${nv.node_id}@${nv.version} is not flagged or active, skip`
+            )
+            return
+        }
         message ||= prompt('Reject Reason: ', 'Rejected by admin')
         if (!message) return toast.error('Please provide a reason')
 
@@ -242,12 +401,76 @@ function NodeVersionList({}) {
             nodeVersion: nv,
             status: NodeVersionStatus.NodeVersionStatusBanned,
             message,
+            batchId, // Pass batchId to onReview if provided
         })
         toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
     }
     const checkIsUndoable = (nv: NodeVersion) =>
         !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
             ?.statusHistory?.length
+
+    const checkHasBatchId = (nv: NodeVersion) => {
+        return false // TODO: remove this after undoBatch is ready
+        const statusReason = zStatusReason.safeParse(
+            parseJsonSafe(nv.status_reason).data
+        ).data
+        return !!statusReason?.batchId
+    }
+
+    const undoBatch = async (nv: NodeVersion) => {
+        const statusReason = zStatusReason.safeParse(
+            parseJsonSafe(nv.status_reason).data
+        ).data
+        if (!statusReason?.batchId) {
+            toast.error(`No batch ID found for ${nv.node_id}@${nv.version}`)
+            return
+        }
+
+        // todo: search for this batchId and get a list of nodeVersions
+        //
+        // and show the list for confirmation
+        //
+        // and undo all of them
+
+        // // Ask for confirmation
+        // if (
+        //     !confirm(
+        //         `Do you want to undo the entire batch with ID: ${statusReason.batchId}?`
+        //     )
+        // ) {
+        //     return
+        // }
+
+        // const batchId = statusReason.batchId
+
+        // // Find all node versions in the current view that have the same batch ID
+        // const batchNodes = versions.filter((v) => {
+        //     const vStatusReason = zStatusReason.safeParse(
+        //         parseJsonSafe(v.status_reason).data
+        //     ).data
+        //     return vStatusReason?.batchId === batchId
+        // })
+
+        // if (batchNodes.length === 0) {
+        //     toast.error(`No nodes found with batch ID: ${batchId}`)
+        //     return
+        // }
+
+        // toast.info(
+        //     `Undoing batch with ID: ${batchId} (${batchNodes.length} nodes)`
+        // )
+
+        // // Process all items in the batch using the undo function
+        // await pMap(
+        //     batchNodes,
+        //     async (nodeVersion) => {
+        //         await onUndo(nodeVersion)
+        //     },
+        //     { concurrency: 5, stopOnError: false }
+        // )
+
+        // toast.success(`Successfully undid batch with ID: ${batchId}`)
+    }
 
     const onUndo = async (nv: NodeVersion) => {
         const statusHistory = zStatusReason.safeParse(
@@ -326,15 +549,27 @@ function NodeVersionList({}) {
             toast.error('No versions selected')
             return
         }
-        const reason =
+
+        // Generate a batch ID from the selected nodeId@version strings
+        const batchId = generateBatchId(selectedKeys)
+
+        // Format the reason with the batch ID if applicable
+        let reason =
             batchReason ||
             (batchAction in defaultBatchReasons
                 ? prompt('Reason', defaultBatchReasons[batchAction])
                 : '')
+
+        if (!reason) {
+            toast.error('Please provide a reason')
+            return
+        }
+
         // Map batch actions to their corresponding handlers
         const batchActions = {
-            approve: (nv: NodeVersion) => onApprove(nv, reason),
-            reject: (nv: NodeVersion) => onReject(nv, reason),
+            // For batch approval and rejection, we'll include the batchId in the status reason
+            approve: (nv: NodeVersion) => onApprove(nv, reason, batchId),
+            reject: (nv: NodeVersion) => onReject(nv, reason, batchId),
             undo: (nv: NodeVersion) => onUndo(nv),
         }
 
@@ -579,6 +814,32 @@ function NodeVersionList({}) {
 
                     <Button color="blue">Search</Button>
                 </form>
+                <form
+                    className="flex gap-2 items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        const inputElement = document.getElementById(
+                            'filter-status-reason'
+                        ) as HTMLInputElement
+                        const statusReason = inputElement.value.trim()
+                        const searchParams = new URLSearchParams({
+                            ...(omit(['statusReason'])(router.query) as object),
+                            ...(statusReason ? { statusReason } : {}),
+                        })
+                            .toString()
+                            .replace(/^(?!$)/, '?')
+                        router.push(
+                            router.pathname + searchParams + location.hash
+                        )
+                    }}
+                >
+                    <TextInput
+                        id="filter-status-reason"
+                        placeholder="Filter by status reason"
+                        defaultValue={queryForStatusReason || ''}
+                    />
+                    <Button color="blue">Search by Reason</Button>
+                </form>
                 <div className="flex gap-2">
                     <Button
                         color={
@@ -742,9 +1003,9 @@ function NodeVersionList({}) {
                                     </span>
                                 </Label>
 
-                                <Badge color="warning" className="text-[14px]">
-                                    {NodeVersionStatusToReadable(nv.status)}
-                                </Badge>
+                                <NodeStatusBadge
+                                    status={nv.status as NodeVersionStatus}
+                                />
                             </div>
                             <div className="flex gap-2 items-center">
                                 <Link
@@ -792,23 +1053,48 @@ function NodeVersionList({}) {
                         <NodeStatusReason {...nv} />
 
                         <div className="flex gap-2">
-                            <Button
-                                color="blue"
-                                className="flex"
-                                onClick={() => onApprove(nv)}
-                            >
-                                Approve
-                            </Button>
-                            <Button
-                                color="failure"
-                                onClick={() => onReject(nv)}
-                            >
-                                Reject
-                            </Button>
+                            {/* show approve only flagged/banned node versions */}
+                            {(nv.status ===
+                                NodeVersionStatus.NodeVersionStatusPending ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusFlagged ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusBanned) && (
+                                <Button
+                                    color="blue"
+                                    className="flex"
+                                    onClick={() => onApprove(nv)}
+                                >
+                                    Approve
+                                </Button>
+                            )}
+                            {/* show reject only flagged/active node versions */}
+                            {(nv.status ===
+                                NodeVersionStatus.NodeVersionStatusPending ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusActive ||
+                                nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusFlagged) && (
+                                <Button
+                                    color="failure"
+                                    onClick={() => onReject(nv)}
+                                >
+                                    Reject
+                                </Button>
+                            )}
 
                             {checkIsUndoable(nv) && (
                                 <Button color="gray" onClick={() => onUndo(nv)}>
                                     Undo
+                                </Button>
+                            )}
+
+                            {checkHasBatchId(nv) && (
+                                <Button
+                                    color="warning"
+                                    onClick={() => undoBatch(nv)}
+                                >
+                                    Undo Batch
                                 </Button>
                             )}
                         </div>

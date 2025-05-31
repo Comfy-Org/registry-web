@@ -1,6 +1,6 @@
 import { DiffEditor, Editor } from '@monaco-editor/react'
 import { compareBy } from 'comparing'
-import { Badge, Button } from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import Link from 'next/link'
 import prettierPluginBabel from 'prettier/plugins/babel'
 import prettierPluginEstree from 'prettier/plugins/estree'
@@ -22,6 +22,7 @@ import {
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { NodeStatusBadge } from './NodeStatusBadge'
 import { parseIssueList } from './parseIssueList'
 import { parseJsonSafe } from './parseJsonSafe'
 
@@ -99,6 +100,9 @@ export const zStatusReason = z.object({
 
     // statusHistory, allow undo
     statusHistory: zStatusHistory.optional(),
+
+    // batchId for batch operations (for future batch-undo)
+    batchId: z.string().optional(),
 })
 
 export function NodeStatusReason(nv: NodeVersion) {
@@ -242,14 +246,7 @@ export function NodeStatusReason(nv: NodeVersion) {
 
                         <h4 className="text-lg font-bold flex gap-2 items-center cursor-pointer ">
                             <FaHistory className="w-5 h-5 ml-4" />
-                            Node Version History:
-                            <Link
-                                href={`/admin/nodeversions?nodeId=${node?.id}`}
-                                target="_blank"
-                                className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
-                            >
-                                <MdOpenInNew className="w-6 h-6" />
-                            </Link>
+                            Node history:
                         </h4>
                         <ul className="ml-4 flex gap-2 overflow-x-auto">
                             {Object.entries(
@@ -266,28 +263,22 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     key={status}
                                     className="flex gap-2 items-center"
                                 >
-                                    <Badge
-                                        color={
-                                            {
-                                                [NodeVersionStatus.NodeVersionStatusActive]:
-                                                    'success',
-                                                [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                    'failure',
-                                                [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                    'warning',
-                                            }[status as NodeVersionStatus] ||
-                                            'gray'
-                                        }
-                                        className="text-[14px]"
-                                    >
-                                        {NodeVersionStatusToReadable(
-                                            status as NodeVersionStatus
-                                        )}
-                                        <span> x{count}</span>
-                                    </Badge>
+                                    <NodeStatusBadge
+                                        status={status as NodeVersionStatus}
+                                        count={count}
+                                    />
                                 </li>
                             ))}
                         </ul>
+
+                        <Link
+                            href={`/admin/nodeversions?nodeId=${nv.node_id}`}
+                            target="_blank"
+                            className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
+                            title={`View all node versions for ${nv.node_id}`}
+                        >
+                            <MdOpenInNew className="w-6 h-6" />
+                        </Link>
                     </summary>
                     <div className="overflow-x-auto overflow-hidden max-w-full">
                         <ol className="ml-4 w-max">
@@ -306,26 +297,24 @@ export function NodeStatusReason(nv: NodeVersion) {
                                         zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason
+                                    }${
+                                        zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.batchId
+                                            ? ` [Batch: ${
+                                                  zStatusReason.safeParse(
+                                                      nv.status_reason
+                                                  ).data?.batchId
+                                              }]`
+                                            : ''
                                     }`}
                                 >
                                     <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[8rem] justify-end flex-0 justify-between">
-                                        <Badge
-                                            color={
-                                                {
-                                                    [NodeVersionStatus.NodeVersionStatusActive]:
-                                                        'success',
-                                                    [NodeVersionStatus.NodeVersionStatusBanned]:
-                                                        'failure',
-                                                    [NodeVersionStatus.NodeVersionStatusFlagged]:
-                                                        'warning',
-                                                }[nv.status!] || 'gray'
+                                        <NodeStatusBadge
+                                            status={
+                                                nv.status as NodeVersionStatus
                                             }
-                                            className="text-[14px]"
-                                        >
-                                            {NodeVersionStatusToReadable(
-                                                nv.status
-                                            )}
-                                        </Badge>
+                                        />
                                         {nv.version}
                                         <Link
                                             href={`/admin/nodeversions?nodeId=${nv.node_id}&version=${nv.version}`}
@@ -343,11 +332,34 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             zStatusReason.safeParse(
                                                 nv.status_reason
                                             ).data?.message ?? nv.status_reason
+                                        }${
+                                            zStatusReason.safeParse(
+                                                nv.status_reason
+                                            ).data?.batchId
+                                                ? ` [Batch: ${
+                                                      zStatusReason.safeParse(
+                                                          nv.status_reason
+                                                      ).data?.batchId
+                                                  }]`
+                                                : ''
                                         }`}
                                     >
                                         {zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason}
+                                        {zStatusReason.safeParse(
+                                            nv.status_reason
+                                        ).data?.batchId && (
+                                            <span className="ml-2 text-xs text-gray-500">
+                                                [Batch:{' '}
+                                                {
+                                                    zStatusReason.safeParse(
+                                                        nv.status_reason
+                                                    ).data?.batchId
+                                                }
+                                                ]
+                                            </span>
+                                        )}
                                     </code>
                                 </li>
                             ))}
@@ -364,6 +376,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                             <li
                                 key={i}
                                 className="flex gap-2 items-center w-full justify-start text-xs"
+                                title={`${yaml.stringify(e)}`}
                             >
                                 <div className="sticky left-0 z-10 flex gap-1 whitespace-nowrap bg-gray-800 w-[14rem]">
                                     {/* show green checkmark if approved before */}
@@ -381,20 +394,14 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     >
                                         <FaGithub className="w-5 h-5 ml-4" />
                                     </Link>
-                                    <code
-                                        className="text-gray-400 whitespace-nowrap flex-1"
-                                        title={`${e.file_path} L${e.line_number}`}
-                                    >
+                                    <code className="text-gray-400 whitespace-nowrap flex-1">
                                         {(e.file_path?.length ?? 0) > 18 + 2
                                             ? `…${e.file_path?.slice(-18)}`
                                             : e.file_path}
                                         &nbsp;L{e.line_number}
                                     </code>
                                 </div>
-                                <code
-                                    className="flex-1 ml-4 whitespace-nowrap text"
-                                    title={`${e.file_path} L${e.line_number} ${e.issue_type}\n${e.code_snippet?.trim() ?? ''}`}
-                                >
+                                <code className="flex-1 ml-4 whitespace-nowrap text">
                                     &nbsp;
                                     {e.issue_type}
                                     &nbsp;

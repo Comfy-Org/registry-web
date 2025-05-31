@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Image from 'next/image'
 import React from 'react'
 import { NodeVersion } from 'src/api/generated'
 interface RegistryCard {
@@ -29,7 +29,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
             <div className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4">
                 <div>
                     {image && (
-                        <img
+                        <Image
                             className="object-cover w-20 h-20 rounded-3lg sm:rounded-lg"
                             src={image}
                             alt={`${name}'s Avatar`}

@@ -22,12 +22,39 @@ Run the development server
 
 ```bash
 git checkout dev
-brew install pnpm
-pnpm install
-pnpm run dev
+curl -fsSL https://bun.sh/install | bash
+bun install
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Storybook
+
+We use Storybook for component development and documentation. To run Storybook:
+
+```bash
+pnpm run storybook
+```
+
+Open [http://localhost:6006](http://localhost:6006) to view the component library. Storybook allows you to:
+
+- View and interact with components in isolation
+- Test different component states and variations
+- See documentation for components
+- Develop UI components in isolation without running the full app
+
+#### Visual Testing with Chromatic
+
+We use Chromatic for visual testing and UI reviews:
+
+```bash
+# Make sure to set your project token
+export CHROMATIC_PROJECT_TOKEN=your_token
+pnpm run chromatic
+```
+
+See [docs/chromatic-setup.md](docs/chromatic-setup.md) for more details on our Chromatic CI/CD integration.
 
 ### Generate Code Stub based on OpenAPI Spec
 
