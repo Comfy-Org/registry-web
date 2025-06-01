@@ -30,7 +30,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
         <div className="pt-20">
             <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold leading-tight tracking-tight text-white sm:text-2xl">
-                    <Link legacyBehavior href={`publishers/${publisher.id}`}>
+                    <Link legacyBehavior href={`/publishers/${publisher.id}`}>
                         {publisher.name !== '' ? publisher.name : publisher.id}
                     </Link>
                 </h1>
@@ -61,7 +61,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
                     <NodesCard
                         key={node.id}
                         node={node}
-                        buttonLink={`publishers/${publisher.id}/nodes/${node.id}`}
+                        buttonLink={`/publishers/${publisher.id}/nodes/${node.id}`}
                     />
                 ))}
             </div>
