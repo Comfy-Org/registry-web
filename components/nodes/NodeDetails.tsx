@@ -315,13 +315,17 @@ const NodeDetails = () => {
                                             className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
                                             key={index}
                                         >
-                                            <h3 className="text-base font-semibold text-gray-200 flex gap-2">
+                                            <h3 className="text-base font-semibold text-gray-200 flex gap-2 flex-row">
                                                 Version {version.version}
-                                                {canEdit && (
-                                                    <NodeVersionStatusBadge
-                                                        status={version.status}
-                                                    />
-                                                )}
+                                                <div>
+                                                    {canEdit && (
+                                                        <NodeVersionStatusBadge
+                                                            status={
+                                                                version.status
+                                                            }
+                                                        />
+                                                    )}
+                                                </div>
                                             </h3>
                                             <p className="mt-3 text-sm font-normal text-gray-400 ">
                                                 {formatRelativeDate(
