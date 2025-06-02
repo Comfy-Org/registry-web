@@ -315,10 +315,10 @@ const NodeDetails = () => {
                                         >
                                             <h3 className="text-base font-semibold text-gray-200">
                                                 Version {version.version}
+                                                <NodeVersionStatusBadge
+                                                    status={version.status}
+                                                />
                                             </h3>
-                                            <NodeVersionStatusBadge
-                                                status={version.status}
-                                            />
                                             <p className="mt-3 text-sm font-normal text-gray-400 ">
                                                 {formatRelativeDate(
                                                     version.createdAt || ''
