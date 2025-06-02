@@ -45,6 +45,7 @@ const persistEffect = () =>
                 return true
             },
         },
+        maxAge: 86400e3, // 1 day in seconds
         buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1', // build versioning to clear cache when needed
     })[0]
 
