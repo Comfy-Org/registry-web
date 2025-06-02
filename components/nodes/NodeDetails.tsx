@@ -97,7 +97,6 @@ const NodeDetails = () => {
         nodeId as string
     )
 
-
     const { data: user } = useGetUser()
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
