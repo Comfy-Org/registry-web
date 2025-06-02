@@ -28,9 +28,10 @@ export function MailtoNodeVersionModal({
     const newIssueLink = !node?.repository
         ? 'javascript:'
         : `${node?.repository}/issues/new?title=${encodeURIComponent(`Issue with Node Version ${nv?.node_id}@${nv?.version}`)}&body=${encodeURIComponent(`Node Version: ${nv?.node_id}@${nv?.version}\n\nPlease describe the issue or request you have regarding this node version.`)}`
+
     if (!nv) return null
     return (
-        <Modal show={open && !!publisher?.members} onClose={onClose} >
+        <Modal show={open && !!publisher?.members} onClose={onClose}>
             <Modal.Header>
                 Contact Publisher: {publisher?.name || publisher?.id}
             </Modal.Header>

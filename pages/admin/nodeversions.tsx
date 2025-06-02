@@ -49,6 +49,9 @@ function NodeVersionList({}) {
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
 
+    // Contect button, send issues or email to ndoeversion publisher
+    const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
+    
     // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
         if (router.query.page) {
@@ -406,10 +409,6 @@ function NodeVersionList({}) {
         })
         toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
     }
-
-    // Contect button, send issues or email to ndoeversion publisher
-    const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
-
     const checkIsUndoable = (nv: NodeVersion) =>
         !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
             ?.statusHistory?.length
