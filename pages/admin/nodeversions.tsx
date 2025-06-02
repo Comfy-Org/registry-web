@@ -51,7 +51,7 @@ function NodeVersionList({}) {
 
     // Contect button, send issues or email to ndoeversion publisher
     const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
-    
+
     // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
         if (router.query.page) {
@@ -682,7 +682,7 @@ function NodeVersionList({}) {
             </div>
         )
     }
-    
+
     if (
         getAllNodeVersionsQuery.isLoading ||
         getSpecificNodeVersionQuery.isLoading
@@ -1096,7 +1096,7 @@ function NodeVersionList({}) {
                                 Contact Publisher
                             </Button>
                             <MailtoNodeVersionModal
-                                nodeVersion={mailtoNv??undefined}
+                                nodeVersion={mailtoNv ?? undefined}
                                 open={!!mailtoNv}
                                 onClose={() => setMailtoNv(null)}
                             />
