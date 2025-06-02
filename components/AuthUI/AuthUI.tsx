@@ -1,6 +1,7 @@
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
@@ -67,10 +68,7 @@ const AuthUI: React.FC<{}> = ({}) => {
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
                     <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
-                        <div
-                            className="flex justify-center"
-                            onClick={() => router.push('/')}
-                        >
+                        <Link className="flex justify-center" href={'/'}>
                             <Image
                                 alt="Comfy Logo"
                                 src="https://storage.googleapis.com/comfy-assets/logo.png"
@@ -78,7 +76,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 width={80}
                                 height={80}
                             />
-                        </div>
+                        </Link>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
                             Sign In
