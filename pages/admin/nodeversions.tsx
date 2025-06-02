@@ -35,6 +35,7 @@ import {
     useListNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
+import { MailtoNodeVersionModal } from './MailtoNodeVersionModal'
 
 function NodeVersionList({}) {
     const router = useRouter()
@@ -405,6 +406,10 @@ function NodeVersionList({}) {
         })
         toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
     }
+
+    // Contect button, send issues or email to ndoeversion publisher
+    const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
+
     const checkIsUndoable = (nv: NodeVersion) =>
         !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
             ?.statusHistory?.length
@@ -1082,6 +1087,19 @@ function NodeVersionList({}) {
                                     Reject
                                 </Button>
                             )}
+
+                            <Button
+                                color="gray"
+                                onClick={() => setMailtoNv(nv)}
+                                disabled={!nv.node_id}
+                            >
+                                Contact Publisher
+                            </Button>
+                            <MailtoNodeVersionModal
+                                nodeVersion={mailtoNv??undefined}
+                                open={!!mailtoNv}
+                                onClose={() => setMailtoNv(null)}
+                            />
 
                             {checkIsUndoable(nv) && (
                                 <Button color="gray" onClick={() => onUndo(nv)}>
