@@ -1,8 +1,9 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { getAuth } from 'firebase/auth'
 import { Avatar, Dropdown } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth'
 import { HiChevronDown } from 'react-icons/hi'
 import { useGetUser } from 'src/api/generated'
 import app from '../../src/firebase'
@@ -10,14 +11,17 @@ import app from '../../src/firebase'
 const ProfileDropdown: React.FC = () => {
     const router = useRouter()
     const auth = getAuth(app)
+    const [signOut] = useSignOut(auth)
     const [firebaseUser] = useAuthState(auth)
     const { data: user } = useGetUser()
-
+    const qc = useQueryClient()
     if (!firebaseUser) return null
 
-    const handleLogout = async () => {
-        await auth.signOut()
-        router.push('/auth/logout')
+    const onSignOut = async () => {
+        qc.clear() // Clear the query cache to remove user data
+        window.localStorage.clear() // Clear local storage
+        window.sessionStorage.clear() // Clear session storage
+        await signOut()
     }
 
     return (
@@ -62,7 +66,7 @@ const ProfileDropdown: React.FC = () => {
                 </Dropdown.Item>
             )}
             <Dropdown.Divider />
-            <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+            <Dropdown.Item onClick={onSignOut}>Logout</Dropdown.Item>
         </Dropdown>
     )
 }
