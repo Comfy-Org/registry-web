@@ -1,14 +1,17 @@
+import { Button, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
+    NodeVersionStatus,
     useGetNodeVersion,
+    useListNodeVersions,
     useUpdateNodeVersion,
 } from 'src/api/generated'
 import { formatRelativeDate } from './NodeDetails'
-import { toast } from 'react-toastify'
-import { Button, Spinner } from 'flowbite-react'
-import analytic from 'src/analytic/analytic'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
+import NodeVersionStatusBadge from './NodeVersionStatusBadge'
 type NodeVDrawerProps = {
     isDrawerOpen: boolean
     toggleDrawer: () => void
@@ -37,6 +40,26 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
     const isVersionAvailable = version && !version.deprecated
     const updateNodeVersionMutation = useUpdateNodeVersion()
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+    // When node is banned, we want to show the status message to publisher.
+    const nodeVersionsWithStatusReason = useListNodeVersions(
+        nodeId,
+        { include_status_reason: true },
+        {
+            query: {
+                enabled: Boolean(
+                    nodeId &&
+                        versionNumber &&
+                        canEdit &&
+                        version?.status === NodeVersionStatus.NodeVersionStatusBanned
+                ),
+            },
+        }
+    )
+    const nvWithStatusReason = nodeVersionsWithStatusReason.data?.find(
+        (v) => v.version === versionNumber
+    )
+    const statusReason = nvWithStatusReason?.status_feedback
 
     const handleToggleDeprecate = () => {
         if (!version || !version.id) {
@@ -120,15 +143,19 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     </button>
                 </div>
                 <div>
-                    {/* <h5
+                    <h5
                         id="drawer-label"
                         className="inline-flex items-center mb-6 text-xl font-semibold text-white "
                     >
                         {version ? version.version : ''}{' '}
-                        <div className="ml-1">
-                            <NodeVersionStatusBadge status={version?.status} />
-                        </div>
-                    </h5> */}
+                        {canEdit && (
+                            <div className="ml-1">
+                                <NodeVersionStatusBadge
+                                    status={version?.status}
+                                />
+                            </div>
+                        )}
+                    </h5>
 
                     {version?.createdAt && (
                         <p className="text-gray-400">
@@ -162,6 +189,21 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             </Button>
                         )}
                     </div>
+
+                    {/* status reason */}
+                    {canEdit && !!statusMessage && (
+                        <>
+                            <hr className="h-px my-8 bg-gray-700 border-0"></hr>
+                            <div className="space-y-4">
+                                <h2 className="font-bold">Status Message</h2>
+                                <p className="text-gray-400">{statusMessage}</p>
+                                <p className="text-xs text-gray-500">
+                                    * This message is only visible to you.
+                                </p>
+                            </div>
+                        </>
+                    )}
+
                     <hr className="h-px my-8 bg-gray-700 border-0"></hr>
 
                     <div className="space-y-4">
