@@ -1,15 +1,33 @@
-import { Badge } from 'flowbite-react';
-import { NodeVersionStatus } from 'src/api/generated';
+import { Badge } from 'flowbite-react'
+import { NodeVersionStatus } from 'src/api/generated'
 
 const NodeVersionStatusBadge: React.FC<{ status?: NodeVersionStatus }> = ({
     status,
 }) => {
-    const statusMap: Record<NodeVersionStatus, { color: string; label: string }> = {
-        [NodeVersionStatus.NodeVersionStatusActive]: { color: 'success', label: 'Live' },
-        [NodeVersionStatus.NodeVersionStatusPending]: { color: 'warning', label: 'Pending Security Review' },
-        [NodeVersionStatus.NodeVersionStatusFlagged]: { color: 'warning', label: 'Pending Security Review' },
-        [NodeVersionStatus.NodeVersionStatusBanned]: { color: 'failure', label: 'Rejected' },
-        [NodeVersionStatus.NodeVersionStatusDeleted]: { color: 'failure', label: 'Deleted' },
+    const statusMap: Record<
+        NodeVersionStatus,
+        { color: string; label: string }
+    > = {
+        [NodeVersionStatus.NodeVersionStatusActive]: {
+            color: 'success',
+            label: 'Live',
+        },
+        [NodeVersionStatus.NodeVersionStatusPending]: {
+            color: 'warning',
+            label: 'Pending Security Review',
+        },
+        [NodeVersionStatus.NodeVersionStatusFlagged]: {
+            color: 'warning',
+            label: 'Pending Security Review',
+        },
+        [NodeVersionStatus.NodeVersionStatusBanned]: {
+            color: 'failure',
+            label: 'Rejected',
+        },
+        [NodeVersionStatus.NodeVersionStatusDeleted]: {
+            color: 'failure',
+            label: 'Deleted',
+        },
     }
 
     if (status && statusMap[status]) {
