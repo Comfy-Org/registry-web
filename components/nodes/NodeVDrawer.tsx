@@ -200,9 +200,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             <hr className="h-px my-8 bg-gray-700 border-0"></hr>
                             <div className="space-y-4">
                                 <h2 className="font-bold">Status Message</h2>
-                                <p className="text-gray-400">
-                                    {statusMessage }
-                                </p>
+                                <p className="text-gray-400">{statusMessage}</p>
                                 <p className="text-xs text-gray-500">
                                     * This message is only visible to you.
                                 </p>
