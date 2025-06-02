@@ -35,7 +35,7 @@ import {
     useListNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
-import MailtoNodeVersionModal from './MailtoNodeVersionModal'
+import MailtoNodeVersionModal from '../../components/MailtoNodeVersionModal'
 
 function NodeVersionList({}) {
     const router = useRouter()
