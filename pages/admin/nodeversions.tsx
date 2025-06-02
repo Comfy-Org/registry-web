@@ -35,7 +35,7 @@ import {
     useListNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
-import { MailtoNodeVersionModal } from './MailtoNodeVersionModal'
+import MailtoNodeVersionModal from './MailtoNodeVersionModal'
 
 function NodeVersionList({}) {
     const router = useRouter()
@@ -161,17 +161,6 @@ function NodeVersionList({}) {
             toast.error('Error getting node versions')
         }
     }, [getAllNodeVersionsQuery])
-
-    if (
-        getAllNodeVersionsQuery.isLoading ||
-        getSpecificNodeVersionQuery.isLoading
-    ) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <Spinner />
-            </div>
-        )
-    }
 
     async function onReview({
         nodeVersion: nv,
@@ -693,6 +682,18 @@ function NodeVersionList({}) {
             </div>
         )
     }
+    
+    if (
+        getAllNodeVersionsQuery.isLoading ||
+        getSpecificNodeVersionQuery.isLoading
+    ) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Spinner />
+            </div>
+        )
+    }
+
     return (
         <div>
             <BatchOperationBar />
@@ -1126,12 +1127,6 @@ function NodeVersionList({}) {
             </div>
         </div>
     )
-}
-
-const getNodeString = (url?: string): string => {
-    if (!url) return ''
-    const match = url.match(/comfy-registry\/(.+?)\/\d+\.\d+\.\d+\/node\.zip/)
-    return match ? match[1] : ''
 }
 
 export default withAdmin(NodeVersionList)

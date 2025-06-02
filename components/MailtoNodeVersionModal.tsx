@@ -2,7 +2,7 @@ import { NodeVersion, useGetNode, useGetPublisher } from '@/src/api/generated'
 import { Button, Modal, Spinner } from 'flowbite-react'
 import { FaGithub } from 'react-icons/fa'
 
-export function MailtoNodeVersionModal({
+export default function MailtoNodeVersionModal({
     nodeVersion: nv,
     open,
     onClose,
