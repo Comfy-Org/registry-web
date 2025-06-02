@@ -1,26 +1,24 @@
-import { useSignOut } from 'react-firebase-hooks/auth'
-import app from '../../src/firebase'
+import { useQueryClient } from '@tanstack/react-query'
 import { getAuth } from 'firebase/auth'
 import { Button } from 'flowbite-react'
-import { useRouter } from 'next/router'
+import { useSignOut } from 'react-firebase-hooks/auth'
+import app from '../../src/firebase'
 
 const Logout = () => {
     const auth = getAuth(app)
     const [signOut, user, loading] = useSignOut(auth)
-    const router = useRouter()
-
+    const qc = useQueryClient()
+    const onLogout = async () => {
+        qc.clear() // Clear the query cache to remove user data
+        window.localStorage.clear() // Clear local storage
+        window.sessionStorage.clear() // Clear session storage
+        await signOut()
+    }
     return (
         <div className="flex items-center justify-center min-h-screen ">
             <section className="p-4">
                 <div className="text-center">
-                    <Button
-                        onClick={async () => {
-                            await signOut()
-                            router.push('/')
-                        }}
-                    >
-                        Logout
-                    </Button>
+                    <Button onClick={onLogout}>Logout</Button>
                     {loading && <p>Logging out...</p>}
                 </div>
             </section>

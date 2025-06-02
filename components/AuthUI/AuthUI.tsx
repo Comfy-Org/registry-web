@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
+    useAuthState,
     useSignInWithGithub,
     useSignInWithGoogle,
 } from 'react-firebase-hooks/auth'
@@ -16,23 +17,26 @@ const AuthUI: React.FC<{}> = ({}) => {
     const auth = getAuth(app)
     const [
         signInWithGoogle,
-        googleUser,
-        loadingGoogleSignin,
+        _googleUser,
+        _loadingGoogleSignin,
         googleSignInError,
     ] = useSignInWithGoogle(auth)
     const [
         signInWithGithub,
-        githubUser,
-        loadingGithubSignIn,
+        _githubUser,
+        _loadingGithubSignIn,
         githubSignInError,
     ] = useSignInWithGithub(auth)
 
-    const loggedIn = Boolean(googleUser || githubUser)
+    // redirect back when user is logged in
+    const [firebaseUser, _loadingFirebaseUser] = useAuthState(auth)
+    const loggedIn = Boolean(firebaseUser)
     React.useEffect(() => {
         const fromUrl = new URLSearchParams(location.search).get('fromUrl')
         if (loggedIn) router.push(fromUrl ?? '/nodes')
     }, [loggedIn, router])
 
+    // handle errors
     React.useEffect(() => {
         if (googleSignInError) {
             if (
