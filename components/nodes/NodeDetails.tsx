@@ -20,6 +20,7 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
+import NodeVersionStatusBadge from './NodeVersionStatusBadge'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -96,6 +97,11 @@ const NodeDetails = () => {
         nodeId as string
     )
 
+    const { data: user } = useGetUser()
+    const isAdmin = user?.isAdmin
+    const canEdit = isAdmin || permissions?.canEdit
+    const warningForAdminEdit = isAdmin && !permissions?.canEdit
+
     const {
         data: nodeVersions,
         isLoading: loadingNodeVersions,
@@ -106,13 +112,10 @@ const NodeDetails = () => {
             NodeVersionStatus.NodeVersionStatusActive,
             NodeVersionStatus.NodeVersionStatusPending,
             NodeVersionStatus.NodeVersionStatusFlagged,
+            // show rejected versions only to publisher
+            ...(!canEdit ? [] : [NodeVersionStatus.NodeVersionStatusBanned]),
         ],
     })
-
-    const { data: user } = useGetUser()
-    const isAdmin = user?.isAdmin
-    const canEdit = isAdmin || permissions?.canEdit
-    const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
@@ -312,8 +315,19 @@ const NodeDetails = () => {
                                             className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
                                             key={index}
                                         >
-                                            <h3 className="text-base font-semibold text-gray-200">
-                                                Version {version.version}
+                                            <h3 className="text-base font-semibold text-gray-200 flex gap-2 flex-row">
+                                                <span>
+                                                    Version {version.version}
+                                                </span>
+                                                <span>
+                                                    {canEdit && (
+                                                        <NodeVersionStatusBadge
+                                                            status={
+                                                                version.status
+                                                            }
+                                                        />
+                                                    )}
+                                                </span>
                                             </h3>
                                             <p className="mt-3 text-sm font-normal text-gray-400 ">
                                                 {formatRelativeDate(
