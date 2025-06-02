@@ -35,14 +35,14 @@ const persistEffect = () =>
                 if (state.status === 'pending') return false
 
                 // Persist user data (queryKey is ['/users'])
-                const persistKeys: Record<string, true> = {
-                    '/users': true,
-                    '/users/publishers/': true,
-                }
-                if (persistKeys[String(queryKey[0])]) return true
+                // const persistKeys: Record<string, true> = {
+                //     '/users': true,
+                //     '/users/publishers/': true,
+                // }
+                // if (persistKeys[String(queryKey[0])]) return true
 
                 // Persist all queries with 'nodes' in the key for future
-                return false
+                return true
             },
         },
     })[0]
