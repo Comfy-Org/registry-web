@@ -12,6 +12,7 @@ import {
     useGetPermissionOnPublisherNodes,
     useGetUser,
     useListNodeVersions,
+    useListPublishersForUser,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
@@ -112,7 +113,9 @@ const NodeDetails = () => {
     const { data: user } = useGetUser()
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
-    const warningForAdminEdit = isAdmin && !permissions?.canEdit
+    const { data: myPublishers } = useListPublishersForUser({})
+    const warningForAdminEdit =
+        isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
