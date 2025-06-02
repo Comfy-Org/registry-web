@@ -1,11 +1,31 @@
+import { AXIOS_INSTANCE } from '@/src/api/mutator/axios-instance'
+import app from '@/src/firebase'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
+import { getAuth } from 'firebase/auth'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
+
+// Add an interceptor to attach the Firebase JWT token to every request
+// Put in _app.tsx because this only works in react-dom environment
+AXIOS_INSTANCE.interceptors.request.use(async (config) => {
+    const auth = getAuth(app)
+    const user = auth.currentUser
+    if (user) {
+        const token = await user.getIdToken()
+        sessionStorage.setItem('idToken', token)
+        config.headers.Authorization = `Bearer ${token}`
+    } else {
+        const cachedIdtoken = sessionStorage.getItem('idToken') ?? ''
+        if (cachedIdtoken)
+            config.headers.Authorization = `Bearer ${cachedIdtoken}`
+    }
+    return config
+})
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -21,8 +41,8 @@ const queryClient = new QueryClient({
     },
 })
 
-const persistEffect = () =>
-    persistQueryClient({
+const persistEffect = () => {
+    const [unsubscribe] = persistQueryClient({
         queryClient: queryClient as any,
         persister: createSyncStoragePersister({
             storage: window.localStorage,
@@ -46,8 +66,10 @@ const persistEffect = () =>
             },
         },
         maxAge: 86400e3, // 1 day in seconds
-        buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1', // build versioning to clear cache when needed
-    })[0]
+        buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1',
+    })
+    return unsubscribe
+}
 
 export default function App({ Component, pageProps }: AppProps) {
     useEffect(persistEffect, [])
