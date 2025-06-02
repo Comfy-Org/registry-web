@@ -315,7 +315,7 @@ const NodeDetails = () => {
                                             className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
                                             key={index}
                                         >
-                                            <h3 className="text-base font-semibold text-gray-200">
+                                            <h3 className="text-base font-semibold text-gray-200 flex gap-2">
                                                 Version {version.version}
                                                 {canEdit && (
                                                     <NodeVersionStatusBadge
