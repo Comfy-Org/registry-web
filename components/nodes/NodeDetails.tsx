@@ -20,6 +20,7 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
+import NodeVersionStatusBadge from './NodeVersionStatusBadge'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -315,6 +316,9 @@ const NodeDetails = () => {
                                             <h3 className="text-base font-semibold text-gray-200">
                                                 Version {version.version}
                                             </h3>
+                                            <NodeVersionStatusBadge
+                                                status={version.status}
+                                            />
                                             <p className="mt-3 text-sm font-normal text-gray-400 ">
                                                 {formatRelativeDate(
                                                     version.createdAt || ''
