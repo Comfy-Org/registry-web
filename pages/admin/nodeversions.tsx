@@ -1056,65 +1056,69 @@ function NodeVersionList({}) {
                             </div>
                         </div>
                         <NodeStatusReason {...nv} />
+                        <div className="flex gap-2 justify-between">
+                            <div className="flex gap-2">
+                                {/* show approve only flagged/banned node versions */}
+                                {(nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusPending ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusFlagged ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusBanned) && (
+                                    <Button
+                                        color="blue"
+                                        className="flex"
+                                        onClick={() => onApprove(nv)}
+                                    >
+                                        Approve
+                                    </Button>
+                                )}
+                                {/* show reject only flagged/active node versions */}
+                                {(nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusPending ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusActive ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusFlagged) && (
+                                    <Button
+                                        color="failure"
+                                        onClick={() => onReject(nv)}
+                                    >
+                                        Reject
+                                    </Button>
+                                )}
 
-                        <div className="flex gap-2">
-                            {/* show approve only flagged/banned node versions */}
-                            {(nv.status ===
-                                NodeVersionStatus.NodeVersionStatusPending ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusFlagged ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusBanned) && (
+                                {checkIsUndoable(nv) && (
+                                    <Button
+                                        color="gray"
+                                        onClick={() => onUndo(nv)}
+                                    >
+                                        Undo
+                                    </Button>
+                                )}
+
+                                {checkHasBatchId(nv) && (
+                                    <Button
+                                        color="warning"
+                                        onClick={() => undoBatch(nv)}
+                                    >
+                                        Undo Batch
+                                    </Button>
+                                )}
+                            </div>
+                            <div className="flex gap-2">
                                 <Button
-                                    color="blue"
-                                    className="flex"
-                                    onClick={() => onApprove(nv)}
+                                    color="gray"
+                                    onClick={() => setMailtoNv(nv)}
                                 >
-                                    Approve
+                                    Contact Publisher
                                 </Button>
-                            )}
-                            {/* show reject only flagged/active node versions */}
-                            {(nv.status ===
-                                NodeVersionStatus.NodeVersionStatusPending ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusActive ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusFlagged) && (
-                                <Button
-                                    color="failure"
-                                    onClick={() => onReject(nv)}
-                                >
-                                    Reject
-                                </Button>
-                            )}
-
-                            <Button
-                                color="gray"
-                                onClick={() => setMailtoNv(nv)}
-                                disabled={!nv.node_id}
-                            >
-                                Contact Publisher
-                            </Button>
-                            <MailtoNodeVersionModal
-                                nodeVersion={mailtoNv ?? undefined}
-                                open={!!mailtoNv}
-                                onClose={() => setMailtoNv(null)}
-                            />
-
-                            {checkIsUndoable(nv) && (
-                                <Button color="gray" onClick={() => onUndo(nv)}>
-                                    Undo
-                                </Button>
-                            )}
-
-                            {checkHasBatchId(nv) && (
-                                <Button
-                                    color="warning"
-                                    onClick={() => undoBatch(nv)}
-                                >
-                                    Undo Batch
-                                </Button>
-                            )}
+                                <MailtoNodeVersionModal
+                                    nodeVersion={mailtoNv ?? undefined}
+                                    open={!!mailtoNv}
+                                    onClose={() => setMailtoNv(null)}
+                                />
+                            </div>
                         </div>
                     </div>
                 ))}
