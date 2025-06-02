@@ -45,6 +45,7 @@ const persistEffect = () =>
                 return true
             },
         },
+        buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1', // build versioning to clear cache when needed
     })[0]
 
 export default function App({ Component, pageProps }: AppProps) {
