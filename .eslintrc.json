@@ -2,6 +2,7 @@
     "extends": [
         "next/core-web-vitals",
         "plugin:storybook/recommended",
+        // eslint-plugin-storybook
         "prettier" // Should be last to override eslint config.
     ],
     "plugins": [],
