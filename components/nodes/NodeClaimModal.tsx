@@ -1,5 +1,4 @@
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import console from 'console'
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
@@ -72,7 +71,6 @@ export function NodeClaimModal({
                 onClose()
             },
             onError: (error) => {
-                console.error('Error updating node:', error)
                 toast.error(
                     `Failed to update node: ${String(error?.message || error) || 'Unknown error'}`
                 )
@@ -140,7 +138,6 @@ export function NodeClaimModal({
                     return
                 }
             } catch (error) {
-                console.error(`Error fetching ${file}:`, error)
                 toast.error(
                     `Error fetching ${file}: ${error instanceof Error ? error.message : String(error)}`
                 )
@@ -189,7 +186,6 @@ export function NodeClaimModal({
                 verified: !!matchesSelected,
             })
         } catch (error) {
-            console.error('Error verifying repository:', error)
             setVerificationResult({
                 error:
                     'Failed to verify repository: ' +
@@ -218,7 +214,7 @@ export function NodeClaimModal({
             })
         } catch (error) {
             // Error is handled in the mutation's onError
-            console.error('Error in handleClaimNode:', error)
+            toast.error('An unexpected error occurred while claiming the node.')
         }
     }
 
