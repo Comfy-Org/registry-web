@@ -4,6 +4,7 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { HiPlus } from 'react-icons/hi'
 import {
     Node,
     useAdminCreateNode,
@@ -226,6 +227,7 @@ export function AdminCreateNodeFormModal({
                             aria-busy={mutation.isPending}
                             disabled={mutation.isPending}
                         >
+                            <HiPlus className="mr-2 h-5 w-5" />
                             Add
                         </Button>
                     </div>
