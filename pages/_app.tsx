@@ -54,7 +54,7 @@ const persistEffect = () => {
                 // Don't persist pending queries as they can't be properly restored
                 if (state.status === 'pending') return false
                 
-                // Persist all queries with 'nodes' in the key for future
+                // Persist all queries in localStorage, share across tabs
                 return true
             },
         },
