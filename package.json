@@ -16,8 +16,8 @@
     "lint": "next lint",
     "orval": "bunx orval@latest",
     "start": "next start",
-    "test": "bun test --coverage",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
+    "test": "bun test --coverage"
   },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.19.2",
