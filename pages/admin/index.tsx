@@ -3,10 +3,12 @@ import { Breadcrumb, Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import {
     HiHome,
+    HiOutlineAdjustments,
     HiOutlineClipboardCheck,
     HiOutlineCollection,
 } from 'react-icons/hi'
 
+export default withAdmin(AdminDashboard)
 function AdminDashboard() {
     const router = useRouter()
 
@@ -27,7 +29,8 @@ function AdminDashboard() {
                     onClick={() => router.push('/admin/search-ranking')}
                     className="w-fit"
                 >
-                    Search Ranking
+                    <HiOutlineAdjustments className="mr-2 h-5 w-5" />
+                    Search Ranking Table
                 </Button>
                 <Button
                     color="blue"
@@ -53,4 +56,3 @@ function AdminDashboard() {
     )
 }
 
-export default withAdmin(AdminDashboard)
