@@ -1,7 +1,7 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { formatDownloadCount } from '@/components/nodes/NodeDetails'
-import PreemptiveNamesEditModal from '@/components/nodes/PreemptiveNamesEditModal'
+import PreemptedComfyNodeNamesEditModal from '@/components/nodes/PreemptedComfyNodeNamesEditModal'
 import { Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -9,7 +9,7 @@ import { MdEdit } from 'react-icons/md'
 import { Node, useSearchNodes } from 'src/api/generated'
 import { useRouterQuery } from 'src/hooks/useRouterQuery'
 
-function PreemptiveNamesAdminPage() {
+function PreemptedComfyNodeNamesAdminPage() {
     const [selectedNode, setSelectedNode] = useState<Node | null>(null)
 
     // Use the custom hook for query parameters
@@ -45,7 +45,7 @@ function PreemptiveNamesAdminPage() {
         })
     }
 
-    const handleEditPreemptiveNames = (node: Node) => {
+    const handleEditPreemptedComfyNodeNames = (node: Node) => {
         setSelectedNode(node)
     }
 
@@ -61,7 +61,7 @@ function PreemptiveNamesAdminPage() {
         return (
             <div className="p-4">
                 <h1 className="text-2xl font-bold text-gray-200 mb-6">
-                    Preemptive Names Management
+                    Preempted Comfy Node Names Management
                 </h1>
                 <div className="text-red-500">
                     Error loading nodes. Please try again later.
@@ -73,7 +73,7 @@ function PreemptiveNamesAdminPage() {
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
-                Preemptive Names Management
+                Preempted Comfy Node Names Management
             </h1>
 
             {/* Search form */}
@@ -108,7 +108,7 @@ function PreemptiveNamesAdminPage() {
                         <div>Node ID</div>
                         <div>Publisher ID</div>
                         <div>Downloads</div>
-                        <div>Preemptive Names</div>
+                        <div>Preempted Comfy Node Names</div>
                         <div>Operations</div>
                     </li>
 
@@ -133,16 +133,16 @@ function PreemptiveNamesAdminPage() {
                                 {formatDownloadCount(node.downloads || 0)}
                             </div>
                             <div className="text-gray-300">
-                                {node.preemptive_names && node.preemptive_names.length > 0
-                                    ? node.preemptive_names.slice(0, 3).join(', ') + 
-                                      (node.preemptive_names.length > 3 ? '...' : '')
+                                {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
+                                    ? node.preempted_comfy_node_names.slice(0, 3).join(', ') + 
+                                      (node.preempted_comfy_node_names.length > 3 ? '...' : '')
                                     : 'N/A'}
                             </div>
                             <div>
                                 <Button
                                     size="xs"
                                     color="blue"
-                                    onClick={() => handleEditPreemptiveNames(node)}
+                                    onClick={() => handleEditPreemptedComfyNodeNames(node)}
                                 >
                                     <MdEdit className="mr-1" /> Edit
                                 </Button>
@@ -170,9 +170,9 @@ function PreemptiveNamesAdminPage() {
 
             {/* Edit Modal */}
             {selectedNode && (
-                <PreemptiveNamesEditModal
+                <PreemptedComfyNodeNamesEditModal
                     nodeId={selectedNode.id || ''}
-                    defaultPreemptiveNames={selectedNode.preemptive_names || []}
+                    defaultPreemptedComfyNodeNames={selectedNode.preempted_comfy_node_names || []}
                     open={!!selectedNode}
                     onClose={() => setSelectedNode(null)}
                 />
@@ -181,4 +181,4 @@ function PreemptiveNamesAdminPage() {
     )
 }
 
-export default withAdmin(PreemptiveNamesAdminPage)
+export default withAdmin(PreemptedComfyNodeNamesAdminPage)

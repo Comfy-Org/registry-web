@@ -12,20 +12,20 @@ import {
     useUpdateNode,
 } from 'src/api/generated'
 
-export default function PreemptiveNamesEditModal({
+export default function PreemptedComfyNodeNamesEditModal({
     open,
     onClose,
     nodeId,
-    defaultPreemptiveNames,
+    defaultPreemptedComfyNodeNames,
     quickMode = true,
 }: {
     quickMode?: boolean
     open: boolean
     onClose: () => void
     nodeId: string
-    defaultPreemptiveNames: string[]
+    defaultPreemptedComfyNodeNames: string[]
 }) {
-    const [preemptiveNames, setPreemptiveNames] = useState<string[]>(defaultPreemptiveNames || [])
+    const [preemptedComfyNodeNames, setPreemptedComfyNodeNames] = useState<string[]>(defaultPreemptedComfyNodeNames || [])
     const [newName, setNewName] = useState<string>('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     // Get the node data
@@ -36,12 +36,12 @@ export default function PreemptiveNamesEditModal({
     const updateNodeMutation = useUpdateNode({
         mutation: {
             onSuccess: () => {
-                toast.success('Preemptive names updated successfully')
+                toast.success('Preempted comfy node names updated successfully')
             },
             onError: (error: AxiosError<Error>) => {
                 toast.error(
                     error.response?.data?.message ||
-                        'Failed to update preemptive names'
+                        'Failed to update preempted comfy node names'
                 )
             },
         },
@@ -49,7 +49,7 @@ export default function PreemptiveNamesEditModal({
 
     useEffect(() => {
         if (node?.preempted_comfy_node_names) {
-            setPreemptiveNames(node.preempted_comfy_node_names)
+            setPreemptedComfyNodeNames(node.preempted_comfy_node_names)
         }
     }, [node?.preempted_comfy_node_names])
 
@@ -57,7 +57,7 @@ export default function PreemptiveNamesEditModal({
     const onSubmit: FormEventHandler = async (e) => {
         e.preventDefault()
         if (!publisherId) {
-            toast.error('Publisher ID is required to update preemptive names')
+            toast.error('Publisher ID is required to update preempted comfy node names')
             return null
         }
         setIsSubmitting(true)
@@ -66,7 +66,7 @@ export default function PreemptiveNamesEditModal({
         qc.setQueryData(
             getGetNodeQueryKey(nodeId),
             (oldData: Node | undefined) =>
-                oldData && { ...oldData, preempted_comfy_node_names: preemptiveNames }
+                oldData && { ...oldData, preempted_comfy_node_names: preemptedComfyNodeNames }
         )
         qc.setQueriesData(
             {
@@ -79,7 +79,7 @@ export default function PreemptiveNamesEditModal({
                         ...oldData,
                         nodes: oldData?.nodes?.map((n) =>
                             n.id === nodeId
-                                ? { ...n, preempted_comfy_node_names: preemptiveNames }
+                                ? { ...n, preempted_comfy_node_names: preemptedComfyNodeNames }
                                 : n
                         ),
                     }
@@ -91,7 +91,7 @@ export default function PreemptiveNamesEditModal({
             .mutateAsync({
                 nodeId,
                 publisherId,
-                data: { preempted_comfy_node_names: preemptiveNames },
+                data: { preempted_comfy_node_names: preemptedComfyNodeNames },
             })
             .finally(() => {
                 // Invalidate queries to ensure fresh data
@@ -110,19 +110,19 @@ export default function PreemptiveNamesEditModal({
         if (!newName.trim()) return
         
         // Check if name already exists in the list
-        if (preemptiveNames.includes(newName.trim())) {
+        if (preemptedComfyNodeNames.includes(newName.trim())) {
             toast.info('This name is already in the list')
             return
         }
         
-        setPreemptiveNames([...preemptiveNames, newName.trim()])
+        setPreemptedComfyNodeNames([...preemptedComfyNodeNames, newName.trim()])
         setNewName('')
     }
 
     const handleRemoveName = (index: number) => {
-        const updatedNames = [...preemptiveNames]
+        const updatedNames = [...preemptedComfyNodeNames]
         updatedNames.splice(index, 1)
-        setPreemptiveNames(updatedNames)
+        setPreemptedComfyNodeNames(updatedNames)
     }
 
     return (
@@ -152,26 +152,26 @@ export default function PreemptiveNamesEditModal({
             size="md"
         >
             <form onSubmit={onSubmit}>
-                <Modal.Header>Edit Preemptive Names</Modal.Header>
+                <Modal.Header>Edit Preempted Comfy Node Names</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-sm text-gray-300">
-                            Preemptive Names: List of names that should be treated as the same comfy-node.
+                            Preempted Comfy Node Names: List of names that should be treated as the same comfy-node.
                             This helps maintain consistent search results across differently named nodes.
                         </p>
                         <div>
                             <div className="mb-2 block">
                                 <Label
-                                    htmlFor="preemptive-names"
-                                    value="Current Preemptive Names"
+                                    htmlFor="preempted-comfy-node-names"
+                                    value="Current Preempted Comfy Node Names"
                                     className="text-white"
                                 />
                             </div>
                             <div className="flex flex-wrap gap-2 mb-4">
-                                {preemptiveNames.length === 0 ? (
-                                    <p className="text-gray-400">No preemptive names added yet</p>
+                                {preemptedComfyNodeNames.length === 0 ? (
+                                    <p className="text-gray-400">No preempted comfy node names added yet</p>
                                 ) : (
-                                    preemptiveNames.map((name, index) => (
+                                    preemptedComfyNodeNames.map((name, index) => (
                                         <div 
                                             key={index} 
                                             className="flex items-center bg-gray-600 px-3 py-1 rounded-full"

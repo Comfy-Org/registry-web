@@ -22,7 +22,7 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
-import PreemptiveNamesEditModal from './PreemptiveNamesEditModal'
+import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
 
 export function formatRelativeDate(dateString: string) {
@@ -91,7 +91,7 @@ const NodeDetails = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
         useState(false)
-    const [isPreemptiveNamesEditModalOpen, setIsPreemptiveNamesEditModalOpen] =
+    const [isPreemptedComfyNodeNamesEditModalOpen, setIsPreemptedComfyNodeNamesEditModalOpen] =
         useState(false)
     // useNodeList
     // parse query parameters from the URL
@@ -483,15 +483,15 @@ const NodeDetails = () => {
                                     </>
                                 )}
                                 
-                                {/* Preemptive Names management section */}
+                                {/* Preempted Comfy Node Names management section */}
                                 <>
                                     <Label
                                         className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
-                                        htmlFor="edit-preemptive-names"
+                                        htmlFor="edit-preempted-comfy-node-names"
                                     >
                                         <div className="flex items-center">
                                             <span>
-                                                Preemptive Names:{' '}
+                                                Preempted Comfy Node Names:{' '}
                                                 {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
                                                     ? node.preempted_comfy_node_names.slice(0, 3).join(', ') + 
                                                       (node.preempted_comfy_node_names.length > 3 ? '...' : '')
@@ -500,27 +500,27 @@ const NodeDetails = () => {
                                         </div>
                                         <button
                                             className="ml-2 flex items-center justify-center"
-                                            id="edit-preemptive-names"
+                                            id="edit-preempted-comfy-node-names"
                                             onClick={() => {
-                                                setIsPreemptiveNamesEditModalOpen(
+                                                setIsPreemptedComfyNodeNamesEditModalOpen(
                                                     true
                                                 )
                                                 analytic.track(
-                                                    'Edit Preemptive Names'
+                                                    'Edit Preempted Comfy Node Names'
                                                 )
                                             }}
                                         >
                                             <MdEdit className="w-5 h-5 text-white" />
                                         </button>
                                     </Label>
-                                    <PreemptiveNamesEditModal
+                                    <PreemptedComfyNodeNamesEditModal
                                         nodeId={nodeId}
-                                        defaultPreemptiveNames={
+                                        defaultPreemptedComfyNodeNames={
                                             node.preempted_comfy_node_names || []
                                         }
-                                        open={isPreemptiveNamesEditModalOpen}
+                                        open={isPreemptedComfyNodeNamesEditModalOpen}
                                         onClose={() =>
-                                            setIsPreemptiveNamesEditModalOpen(
+                                            setIsPreemptedComfyNodeNamesEditModalOpen(
                                                 false
                                             )
                                         }
