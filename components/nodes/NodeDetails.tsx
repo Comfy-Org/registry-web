@@ -346,17 +346,18 @@ const NodeDetails = () => {
                         {node.repository && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                onClick={() => {
+                                onClick={(e) => {
                                     analytic.track('View Repository')
+                                    e.preventDefault()
+                                    window.open(
+                                        node.repository,
+                                        '_blank',
+                                        'noopener noreferrer'
+                                    )
                                 }}
+                                href={node.repository || ''}
                             >
-                                <a
-                                    href={node.repository || ''}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    View Repository
-                                </a>
+                                View Repository
                             </Button>
                         )}
 
