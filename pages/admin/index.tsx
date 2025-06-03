@@ -13,6 +13,13 @@ function AdminDashboard() {
             <div className="flex flex-col gap-4">
                 <Button
                     color="blue"
+                    onClick={() => router.push('/admin/search-ranking')}
+                    className="w-fit"
+                >
+                    Search Ranking
+                </Button>
+                <Button
+                    color="blue"
                     onClick={() =>
                         router.push('/admin/nodeversions?filter=flagged')
                     }
