@@ -49,7 +49,7 @@ function NodeVersionList({}) {
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
 
-    // Contect button, send issues or email to ndoeversion publisher
+    // Contact button, send issues or email to node version publisher
     const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
 
     // todo: optimize this, use fallback value instead of useEffect
