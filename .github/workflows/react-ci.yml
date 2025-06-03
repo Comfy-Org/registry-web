@@ -25,7 +25,9 @@ jobs:
             - name: Run Next.js Lint
               run: bun run lint
             - name: Check Formatting with Prettier
-              run: npx prettier --write .
+              run: bunx prettier --write .
+            - name: Sort package.json
+              run: bunx sort-package-json
             - name: Build the Next.js Project
               run: bun run build
             # commit prettier fixed code
