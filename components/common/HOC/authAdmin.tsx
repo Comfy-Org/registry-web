@@ -1,7 +1,10 @@
+import { getAuth } from 'firebase/auth'
 import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useAuthState } from 'react-firebase-hooks/auth'
 import { useGetUser } from 'src/api/generated'
+import { getFromUrlSearchParam } from './getFromUrlSearchParam'
 
 /**
  * Admin dashboard HOC
@@ -14,19 +17,21 @@ import { useGetUser } from 'src/api/generated'
 const withAdmin = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        const { data: user, isLoading } = useGetUser({
-            query: {
-                // Add cache configuration for this particular query
-                staleTime: 5 * 60 * 1000, // 5 minutes
-                gcTime: 60 * 60 * 1000, // 1 hour (previously cacheTime)
-            },
-        })
+        const auth = getAuth()
 
+        // if firebaseUser is signed out, redirect to login page
+        const [firebaseUser, firebaseUserLoading] = useAuthState(auth)
         useEffect(() => {
-            if (!isLoading && !user) {
-                router.push(`/auth/login?fromUrl=${router.asPath}`)
+            if (!firebaseUserLoading && !firebaseUser) {
+                router.push(`/auth/login?${getFromUrlSearchParam()}`)
             }
-        }, [user, router, isLoading])
+        }, [router, firebaseUser, firebaseUserLoading])
+
+        const { data: user, isLoading } = useGetUser({})
+        useEffect(() => {
+            if (!isLoading && !user)
+                router.push(`/auth/login?${getFromUrlSearchParam()}`)
+        }, [router, user, isLoading])
 
         if (isLoading)
             return (
@@ -35,13 +40,7 @@ const withAdmin = (WrappedComponent) => {
                 </div>
             )
 
-        if (!user) {
-            return (
-                <div className="text-white dark:text-white">
-                    401 Unauthorized: You have no permission to this page.
-                </div>
-            )
-        }
+        if (!user) return null // show nothing while redirecting to login page
 
         if (!user.isAdmin) {
             return (
