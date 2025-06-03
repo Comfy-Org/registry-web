@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
-import { MdEdit } from 'react-icons/md'
+import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -363,7 +363,9 @@ const NodeDetails = () => {
                                     href={node.repository || ''}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="flex items-center"
                                 >
+                                    <MdOpenInNew className="w-5 h-5 mr-2" />
                                     View Repository
                                 </a>
                             </Button>
