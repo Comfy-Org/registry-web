@@ -8,6 +8,7 @@ import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
+    Breadcrumb,
     Button,
     Checkbox,
     Label,
@@ -22,7 +23,7 @@ import pMap from 'p-map'
 import { omit } from 'rambda'
 import React, { useRef, useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
-import { HiBan, HiCheck, HiReply } from 'react-icons/hi'
+import { HiBan, HiCheck, HiHome, HiReply } from 'react-icons/hi'
 import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import {
@@ -691,6 +692,20 @@ function NodeVersionList({}) {
     }
     return (
         <div>
+            <Breadcrumb className="py-4 px-4">
+                <Breadcrumb.Item
+                    href="/admin"
+                    icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/admin')
+                    }}
+                >
+                    Admin Dashboard
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
+            </Breadcrumb>
+            
             <BatchOperationBar />
 
             {/* Batch operation modal */}
