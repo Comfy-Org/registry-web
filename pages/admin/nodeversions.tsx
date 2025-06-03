@@ -7,6 +7,7 @@ import { parseJsonSafe } from '@/components/parseJsonSafe'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
+import MailtoNodeVersionModal from 'components/MailtoNodeVersionModal'
 import {
     Button,
     Checkbox,
@@ -35,7 +36,6 @@ import {
     useListNodeVersions,
 } from 'src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
-import MailtoNodeVersionModal from 'src/components/MailtoNodeVersionModal'
 
 function NodeVersionList({}) {
     const router = useRouter()
