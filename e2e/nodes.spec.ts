@@ -1,28 +1,29 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Nodes page', () => {
-  test('should navigate to nodes page', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     // Go to the nodes page
     await page.goto('/nodes');
-    
+  });
+  
+  test('should navigate to nodes page', async ({ page }) => {
     // Page should have the correct title
     await expect(page).toHaveTitle(/Nodes/);
   });
   
   test('should display node cards', async ({ page }) => {
-    // Go to the nodes page
-    await page.goto('/nodes');
-    
     // Wait for node cards to be visible
     await expect(page.locator('.node-card')).toBeVisible({ timeout: 10000 });
   });
 });
 
 test.describe('Node details', () => {
-  test('should be able to navigate to a node detail page', async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     // Start at the nodes page
     await page.goto('/nodes');
-    
+  });
+  
+  test('should be able to navigate to a node detail page', async ({ page }) => {
     // Click on the first node card (if available)
     const nodeCard = page.locator('.node-card').first();
     
