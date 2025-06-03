@@ -6,6 +6,7 @@ import {
     HiOutlineAdjustments,
     HiOutlineClipboardCheck,
     HiOutlineCollection,
+    HiOutlineDuplicate,
 } from 'react-icons/hi'
 
 export default withAdmin(AdminDashboard)
@@ -31,6 +32,18 @@ function AdminDashboard() {
                 >
                     <HiOutlineAdjustments className="h-20 w-20 mb-4" />
                     <span className="text-center">Search Ranking Table</span>
+                </Button>
+                <Button
+                    color="blue"
+                    onClick={() =>
+                        router.push('/admin/preempted-comfy-node-names')
+                    }
+                    className="w-full h-48 flex flex-col items-center justify-center p-6"
+                >
+                    <HiOutlineDuplicate className="h-20 w-20 mb-4" />
+                    <span className="text-center">
+                        Preempted Comfy Node Names Management
+                    </span>
                 </Button>
                 <Button
                     color="blue"
