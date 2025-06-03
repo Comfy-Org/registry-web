@@ -4,6 +4,7 @@ import NodesCard from '@/components/nodes/NodesCard'
 import { Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { HiArrowLeft, HiPlus } from 'react-icons/hi'
 import { useSearchNodes } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
@@ -72,12 +73,14 @@ function ClaimNodesPage() {
                         onClick={() => router.push('/admin/add-unclaimed-node')}
                         className="mr-2"
                     >
+                        <HiPlus className="mr-2 h-5 w-5" />
                         Add New Unclaimed Node
                     </Button>
                     <Button
                         color="gray"
                         onClick={() => router.push('/admin')}
                     >
+                        <HiArrowLeft className="mr-2 h-5 w-5" />
                         Back to Dashboard
                     </Button>
                 </div>
