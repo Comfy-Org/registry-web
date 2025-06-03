@@ -7,7 +7,7 @@ import { Node } from 'src/api/generated'
 import { PublisherId } from '../Search/PublisherId'
 import { NodeClaimModal } from './NodeClaimModal'
 
-export default function UnclaimedNodeCard({ node }: { node: Node }) {
+export default function UnclaimedNodeCard({ node, onSuccess }: { node: Node, onSuccess?: () => void }) {
     const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
     const { name, description, icon, rating, id } = node
     const buttonLink = `/nodes/${id}`
@@ -66,6 +66,7 @@ export default function UnclaimedNodeCard({ node }: { node: Node }) {
                 isOpen={isClaimModalOpen}
                 onClose={() => setIsClaimModalOpen(false)}
                 node={node}
+                onSuccess={onSuccess}
             />
         </div>
     )

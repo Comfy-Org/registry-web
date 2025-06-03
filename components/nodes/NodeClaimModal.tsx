@@ -17,9 +17,15 @@ interface NodeClaimModalProps {
     isOpen: boolean
     onClose: () => void
     node: Node
+    onSuccess?: () => void
 }
 
-export function NodeClaimModal({ isOpen, onClose, node }: NodeClaimModalProps) {
+export function NodeClaimModal({
+    isOpen,
+    onClose,
+    node,
+    onSuccess,
+}: NodeClaimModalProps) {
     const [selectedPublisher, setSelectedPublisher] =
         useState<Publisher | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -62,6 +68,7 @@ export function NodeClaimModal({ isOpen, onClose, node }: NodeClaimModalProps) {
                 toast.success(
                     `Node ${node.name} successfully claimed by ${selectedPublisher?.name}`
                 )
+                onSuccess?.()
                 onClose()
             },
             onError: (error) => {

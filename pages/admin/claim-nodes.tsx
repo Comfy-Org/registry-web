@@ -1,15 +1,20 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import UnclaimedNodeCard from '@/components/nodes/UnclaimedNodeCard'
+import { useQueryClient } from '@tanstack/react-query'
 import { Breadcrumb, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome, HiPlus } from 'react-icons/hi'
-import { useListNodesForPublisherV2 } from 'src/api/generated'
+import {
+    getListNodesForPublisherQueryKey,
+    useListNodesForPublisherV2,
+} from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
 export default withAdmin(ClaimNodesPage)
 function ClaimNodesPage() {
     const router = useRouter()
+    const queryClient = useQueryClient()
     const pageSize = 36
     // Get page from URL query params, defaulting to 1
     const currentPage = router.query.page
@@ -102,7 +107,19 @@ function ClaimNodesPage() {
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                         {data?.nodes?.map((node) => (
-                            <UnclaimedNodeCard key={node.id} node={node} />
+                            <UnclaimedNodeCard
+                                key={node.id}
+                                node={node}
+                                onSuccess={() => {
+                                    // Revalidate the node list undef admin-publisher-id when a node is successfully claimed
+                                    queryClient.invalidateQueries({
+                                        queryKey:
+                                            getListNodesForPublisherQueryKey(
+                                                UNCLAIMED_ADMIN_PUBLISHER_ID
+                                            ).slice(0, 1),
+                                    })
+                                }}
+                            />
                         ))}
                     </div>
 
