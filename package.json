@@ -60,7 +60,10 @@
     "zod": "^3.25.46"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.0.0",
     "@mdx-js/react": "2.1.4",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-onboarding": "^9.0.4",
     "@storybook/experimental-addon-test": "^8.6.14",
     "@storybook/experimental-nextjs-vite": "8.6.12",
     "@storybook/react": "^8.6.14",
@@ -79,11 +82,11 @@
     "eslint": "8.56.0",
     "eslint-config-next": "12.3.1",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-storybook": "^0.6.15",
     "orval": "^7.9.0",
     "playwright": "^1.52.0",
     "postcss": "8.4.17",
     "prettier": "^3.5.3",
-    "eslint-plugin-storybook": "^0.6.15",
     "storybook": "^8.6.14",
     "tailwindcss": "^3.4.17",
     "typescript": "5.8.3",
