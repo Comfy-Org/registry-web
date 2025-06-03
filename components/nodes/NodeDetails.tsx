@@ -516,7 +516,7 @@ const NodeDetails = () => {
                                     <PreemptiveNamesEditModal
                                         nodeId={nodeId}
                                         defaultPreemptiveNames={
-                                            node.preemptive_names || []
+                                            node.preempted_comfy_node_names || []
                                         }
                                         open={isPreemptiveNamesEditModalOpen}
                                         onClose={() =>
