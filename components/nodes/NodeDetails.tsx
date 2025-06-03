@@ -376,6 +376,29 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
+                        {!!node.latest_version?.downloadUrl && (
+                            <Button
+                                hidden={isUnclaimed}
+                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                onClick={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => {
+                                    e.preventDefault()
+                                    if (node?.latest_version?.downloadUrl) {
+                                        downloadFile(
+                                            node.latest_version?.downloadUrl,
+                                            `${node.name}_${node.latest_version.version}.zip`
+                                        )
+                                    }
+                                    analytic.track(
+                                        'Download Latest Node Version'
+                                    )
+                                }}
+                            >
+                                <a>Download Latest</a>
+                            </Button>
+                        )}
+
                         {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
@@ -411,29 +434,6 @@ const NodeDetails = () => {
                                 <HiTrash className="w-5 h-5 mr-2" />
                                 <span>Delete</span>
                                 {warningForAdminEdit && <>&nbsp;(admin)</>}
-                            </Button>
-                        )}
-
-                        {!!node.latest_version?.downloadUrl && (
-                            <Button
-                                hidden={isUnclaimed}
-                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                onClick={(
-                                    e: React.MouseEvent<HTMLButtonElement>
-                                ) => {
-                                    e.preventDefault()
-                                    if (node?.latest_version?.downloadUrl) {
-                                        downloadFile(
-                                            node.latest_version?.downloadUrl,
-                                            `${node.name}_${node.latest_version.version}.zip`
-                                        )
-                                    }
-                                    analytic.track(
-                                        'Download Latest Node Version'
-                                    )
-                                }}
-                            >
-                                <a>Download Latest</a>
                             </Button>
                         )}
 
