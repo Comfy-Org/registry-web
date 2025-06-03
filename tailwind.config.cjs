@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors')
+// Remove deprecated color names from Tailwind colors
+const { lightBlue, warmGray, trueGray, coolGray, blueGray, ...safeColors } = require('tailwindcss/colors')
 
 module.exports = {
     // important: true,
@@ -25,7 +26,7 @@ module.exports = {
             black: '#000000',
             'grey-regular': '#2D353F',
             'bright-charcoal': '#A4C4D2',
-            ...colors,
+            ...safeColors,
             primary: '#1A56DB',
             'gray-300': '#D1D5DB',
         },
