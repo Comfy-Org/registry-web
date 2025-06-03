@@ -133,16 +133,24 @@ function PreemptedComfyNodeNamesAdminPage() {
                                 {formatDownloadCount(node.downloads || 0)}
                             </div>
                             <div className="text-gray-300">
-                                {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
-                                    ? node.preempted_comfy_node_names.slice(0, 3).join(', ') + 
-                                      (node.preempted_comfy_node_names.length > 3 ? '...' : '')
+                                {node.preempted_comfy_node_names &&
+                                node.preempted_comfy_node_names.length > 0
+                                    ? node.preempted_comfy_node_names
+                                          .slice(0, 3)
+                                          .join(', ') +
+                                      (node.preempted_comfy_node_names.length >
+                                      3
+                                          ? '...'
+                                          : '')
                                     : 'N/A'}
                             </div>
                             <div>
                                 <Button
                                     size="xs"
                                     color="blue"
-                                    onClick={() => handleEditPreemptedComfyNodeNames(node)}
+                                    onClick={() =>
+                                        handleEditPreemptedComfyNodeNames(node)
+                                    }
                                 >
                                     <MdEdit className="mr-1" /> Edit
                                 </Button>
@@ -172,7 +180,9 @@ function PreemptedComfyNodeNamesAdminPage() {
             {selectedNode && (
                 <PreemptedComfyNodeNamesEditModal
                     nodeId={selectedNode.id || ''}
-                    defaultPreemptedComfyNodeNames={selectedNode.preempted_comfy_node_names || []}
+                    defaultPreemptedComfyNodeNames={
+                        selectedNode.preempted_comfy_node_names || []
+                    }
                     open={!!selectedNode}
                     onClose={() => setSelectedNode(null)}
                 />
