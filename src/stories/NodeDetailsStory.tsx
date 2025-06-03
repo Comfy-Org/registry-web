@@ -1,0 +1,275 @@
+import CopyableCodeBlock from '@/components/CodeBlock/CodeBlock'
+import NodeStatusBadge from '@/components/nodes/NodeStatusBadge'
+import { NodeStatus } from '@/src/api/generated'
+import { Button, Label, Spinner } from 'flowbite-react'
+import Image from 'next/image'
+import React from 'react'
+import { HiTrash } from 'react-icons/hi'
+import { MdEdit, MdOpenInNew } from 'react-icons/md'
+import nodesLogo from '../public/images/nodesLogo.svg'
+
+/**
+ * A simplified version of the NodeDetails component for Storybook
+ * This avoids dependency issues with Next.js router and API calls
+ */
+const NodeDetailsStory: React.FC<{
+  isAdmin?: boolean;
+  showPreemptedNames?: boolean;
+  isLoading?: boolean;
+}> = ({ 
+  isAdmin = false, 
+  showPreemptedNames = true,
+  isLoading = false 
+}) => {
+  // Mock data
+  const node = {
+    id: 'node-123',
+    name: 'Example ComfyUI Node',
+    description: 'This is an example node for ComfyUI with various features and capabilities.',
+    icon: '',
+    downloads: 12500,
+    status: NodeStatus.NodeStatusActive,
+    publisher: {
+      id: 'publisher-123',
+    },
+    latest_version: {
+      version: '1.2.3',
+      downloadUrl: 'https://example.com/download/node-123.zip',
+    },
+    repository: 'https://github.com/example/comfy-node',
+    search_ranking: 3,
+    preempted_comfy_node_names: showPreemptedNames ? ['ComfyNode1', 'ExampleNode2'] : [],
+  }
+
+  const formatDownloadCount = (count: number): string => {
+    if (count === 0) return '0'
+    const units = ['', 'K', 'M', 'B']
+    const unitSize = 1000
+    const unitIndex = Math.floor(Math.log10(count) / Math.log10(unitSize))
+    if (unitIndex === 0) return count.toString()
+    const formattedNum = (count / Math.pow(unitSize, unitIndex)).toFixed(1)
+    const cleanNum = formattedNum.endsWith('.0')
+        ? formattedNum.slice(0, -2)
+        : formattedNum
+    return `${cleanNum}${units[unitIndex]}`
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner className="" />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
+        <div className="w-full lg:w-1/5 ">
+          <Image
+            src={node?.icon || nodesLogo}
+            alt="icon"
+            width={240}
+            height={240}
+            layout="fixed"
+            className="rounded-md"
+          />
+        </div>
+        <div className="w-full mx-auto lg:w-2/3">
+          <div className="rounded-lg shadow ">
+            <div className="">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h1 className="text-[48px] font-bold">{node.name}</h1>
+                  <p className="text-[18px] pt-2 text-gray-300">
+                    {node.publisher?.id?.replace(/^(?!$)/, '@')}
+                    {node.latest_version && (
+                      <span>
+                        {!!node.publisher?.id && ` | `}
+                        {`v${node.latest_version?.version}`}
+                        <span className="pl-3 text-gray-400">{' Most recent version'}</span>
+                      </span>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <NodeStatusBadge status={node.status} />
+              <div className="flex flex-col mt-6 mb-6 ">
+                {node.downloads != 0 && (
+                  <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
+                    <svg
+                      className="w-6 h-6"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"
+                      />
+                    </svg>
+                    <span className="ml-4 text-[18px]">
+                      {formatDownloadCount(node.downloads || 0)}{' '}
+                      downloads
+                    </span>
+                  </p>
+                )}
+              </div>
+              <div className="mt-5 mb-10">
+                <CopyableCodeBlock code={`comfy node registry-install ${node.id}`} />
+              </div>
+              <div>
+                <h2 className="mb-2 text-lg font-bold">Description</h2>
+                <p className="text-base font-normal text-gray-200">{node.description}</p>
+              </div>
+              <div className="mt-10">
+                <h2 className="mb-2 text-lg font-semibold">Version history</h2>
+                <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
+                  <div className="bg-gray-700 border-gray-500 border p-[32px] rounded-xl">
+                    <h3 className="text-base font-semibold text-gray-200">Version {node.latest_version?.version}</h3>
+                    <p className="mt-3 text-sm font-normal text-gray-400">Today</p>
+                    <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
+                      Example changelog for version {node.latest_version?.version}
+                      <span className="text-sm font-normal text-blue-500 cursor-pointer">
+                        <a>More</a>
+                      </span>
+                    </p>
+                  </div>
+                  <div className="bg-gray-700 border-gray-500 border p-[32px] rounded-xl">
+                    <h3 className="text-base font-semibold text-gray-200">Version 1.1.0</h3>
+                    <p className="mt-3 text-sm font-normal text-gray-400">5 days ago</p>
+                    <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
+                      Previous version changelog
+                      <span className="text-sm font-normal text-blue-500 cursor-pointer">
+                        <a>More</a>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full mt-4 lg:w-1/6 ">
+          <div className="flex flex-col gap-4">
+            {node.repository && (
+              <Button
+                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+              >
+                <a
+                  href={node.repository || ''}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <MdOpenInNew className="w-5 h-5 mr-2" />
+                  View Repository
+                </a>
+              </Button>
+            )}
+
+            {!!node.latest_version?.downloadUrl && (
+              <Button
+                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+              >
+                <a>Download Latest</a>
+              </Button>
+            )}
+
+            <Button
+              className="flex-shrink-0 px-4 flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
+            >
+              <svg
+                className="w-5 h-5 mr-2 text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                />
+              </svg>
+              <span>Edit details</span>
+            </Button>
+
+            <Button
+              className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
+            >
+              <HiTrash className="w-5 h-5 mr-2" />
+              <span>Delete</span>
+            </Button>
+
+            {/* admin zone */}
+            {isAdmin && (
+              <>
+                <hr />
+
+                {/* Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal */}
+                {null != node.search_ranking && (
+                  <>
+                    <Label
+                      className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                      htmlFor="edit-search-ranking"
+                    >
+                      <button
+                        className="mr-2 flex items-center justify-center"
+                        id="edit-search-ranking"
+                      >
+                        <MdEdit className="w-4 h-4 text-white" />
+                      </button>
+                      <div className="flex items-center">
+                        <span>
+                          Search Ranking: {node.search_ranking}
+                        </span>
+                      </div>
+                    </Label>
+                  </>
+                )}
+
+                {/* Preempted Comfy Node Names management section */}
+                <>
+                  <Label
+                    className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                    htmlFor="edit-preempted-comfy-node-names"
+                  >
+                    <button
+                      className="mr-2 flex items-center justify-center"
+                      id="edit-preempted-comfy-node-names"
+                    >
+                      <MdEdit className="w-4 h-4 text-white" />
+                    </button>
+                    <div className="flex items-center">
+                      <span>
+                        Preempted Names:{' '}
+                        <pre className="whitespace-pre-wrap text-xs">
+                          {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
+                            ? node.preempted_comfy_node_names.join('\n')
+                            : 'None'}
+                        </pre>
+                      </span>
+                    </div>
+                  </Label>
+                </>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default NodeDetailsStory
