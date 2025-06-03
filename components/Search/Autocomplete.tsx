@@ -1,6 +1,6 @@
 import type { BaseItem } from '@algolia/autocomplete-core'
 import type { AutocompleteOptions } from '@algolia/autocomplete-js'
-import type { SearchClient } from 'algoliasearch/lite'
+import type { SearchClient } from 'algoliasearch'
 
 import {
     createElement,
