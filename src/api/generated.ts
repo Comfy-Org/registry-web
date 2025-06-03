@@ -39,6 +39,274 @@ export type APIKeyWithPlaintextAllOf = {
 
 export type APIKeyWithPlaintext = APIKey & APIKeyWithPlaintextAllOf;
 
+export type BFLValidationErrorLocItem = string | number;
+
+export interface BFLValidationError {
+  loc: BFLValidationErrorLocItem[];
+  msg: string;
+  type: string;
+}
+
+export type BFLOutputFormat = typeof BFLOutputFormat[keyof typeof BFLOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const BFLOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+} as const;
+
+export interface BFLHTTPValidationError {
+  detail?: BFLValidationError[];
+}
+
+/**
+ * Response from the BFL Flux Pro 1.1 Ultra image generation API.
+ */
+export interface BFLFluxProGenerateResponse {
+  /** The unique identifier for the generation task. */
+  id: string;
+  /** URL to poll for the generation result. */
+  polling_url: string;
+}
+
+/**
+ * Request body for the BFL Flux Pro 1.1 Ultra image generation API.
+ */
+export interface BFLFluxProGenerateRequest {
+  /**
+   * The guidance scale for generation.
+   * @minimum 1
+   * @maximum 20
+   */
+  guidance_scale?: number;
+  /**
+   * The height of the image to generate.
+   * @minimum 64
+   * @maximum 2048
+   */
+  height: number;
+  /** The negative prompt for image generation. */
+  negative_prompt?: string;
+  /**
+   * The number of images to generate.
+   * @minimum 1
+   * @maximum 4
+   */
+  num_images?: number;
+  /**
+   * The number of inference steps.
+   * @minimum 1
+   * @maximum 100
+   */
+  num_inference_steps?: number;
+  /** The text prompt for image generation. */
+  prompt: string;
+  /** The seed value for reproducibility. */
+  seed?: number;
+  /**
+   * The width of the image to generate.
+   * @minimum 64
+   * @maximum 2048
+   */
+  width: number;
+}
+
+export interface BFLFluxProFillInputs {
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** A Base64-encoded string representing the image you wish to modify. Can contain alpha mask if desired. */
+  image: string;
+  /** A Base64-encoded string representing a mask for the areas you want to modify in the image. The mask should be the same dimensions as the image and in black and white. Black areas (0%) indicate no modification, while white areas (100%) specify areas for inpainting. Optional if you provide an alpha mask in the original image. Validation: The endpoint verifies that the dimensions of the mask match the original image. */
+  mask?: string;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** The description of the changes you want to make. This text guides the inpainting process, allowing you to specify features, styles, or modifications for the masked area. */
+  prompt?: string;
+  /** Whether to perform upsampling on the prompt. If active, automatically modifies the prompt for more creative generation */
+  prompt_upsampling?: boolean;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLFluxProExpandInputs {
+  /** Number of pixels to expand at the bottom of the image */
+  bottom?: number;
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** A Base64-encoded string representing the image you wish to expand. */
+  image: string;
+  /** Number of pixels to expand on the left side of the image */
+  left?: number;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** The description of the changes you want to make. This text guides the expansion process, allowing you to specify features, styles, or modifications for the expanded areas. */
+  prompt?: string;
+  /** Whether to perform upsampling on the prompt. If active, automatically modifies the prompt for more creative generation */
+  prompt_upsampling?: boolean;
+  /** Number of pixels to expand on the right side of the image */
+  right?: number;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Number of pixels to expand at the top of the image */
+  top?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLFluxPro11GenerateResponse {
+  /** Job ID for tracking */
+  id: string;
+  /** URL to poll for results */
+  polling_url: string;
+}
+
+/**
+ * Output image format
+ */
+export type BFLFluxPro11GenerateRequestOutputFormat = typeof BFLFluxPro11GenerateRequestOutputFormat[keyof typeof BFLFluxPro11GenerateRequestOutputFormat];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const BFLFluxPro11GenerateRequestOutputFormat = {
+  jpeg: 'jpeg',
+  png: 'png',
+} as const;
+
+export interface BFLFluxPro11GenerateRequest {
+  /** Height of the generated image */
+  height: number;
+  /** Optional image prompt */
+  image_prompt?: string;
+  /** Output image format */
+  output_format?: BFLFluxPro11GenerateRequestOutputFormat;
+  /** The main text prompt for image generation */
+  prompt: string;
+  /** Whether to use prompt upsampling */
+  prompt_upsampling?: boolean;
+  /** Safety tolerance level */
+  safety_tolerance?: number;
+  /** Random seed for reproducibility */
+  seed?: number;
+  /** Optional webhook secret for async processing */
+  webhook_secret?: string;
+  /** Optional webhook URL for async processing */
+  webhook_url?: string;
+  /** Width of the generated image */
+  width: number;
+}
+
+export interface BFLDepthInputs {
+  /** Base64 encoded image to use as control input */
+  control_image?: string;
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** Optional pre-processed image that will bypass the control preprocessing step */
+  preprocessed_image?: string;
+  /** Text prompt for image generation */
+  prompt: string;
+  /** Whether to perform upsampling on the prompt */
+  prompt_upsampling?: boolean;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLCannyInputs {
+  /** High threshold for Canny edge detection */
+  canny_high_threshold?: number;
+  /** Low threshold for Canny edge detection */
+  canny_low_threshold?: number;
+  /** Base64 encoded image to use as control input if no preprocessed image is provided */
+  control_image?: string;
+  /** Guidance strength for the image generation process */
+  guidance?: number;
+  /** Output format for the generated image. Can be 'jpeg' or 'png'. */
+  output_format?: BFLOutputFormat;
+  /** Optional pre-processed image that will bypass the control preprocessing step */
+  preprocessed_image?: string;
+  /** Text prompt for image generation */
+  prompt: string;
+  /** Whether to perform upsampling on the prompt */
+  prompt_upsampling?: boolean;
+  /**
+   * Tolerance level for input and output moderation. Between 0 and 6, 0 being most strict, 6 being least strict.
+   * @minimum 0
+   * @maximum 6
+   */
+  safety_tolerance?: number;
+  /** Optional seed for reproducibility */
+  seed?: number;
+  /** Number of steps for the image generation process */
+  steps?: number;
+  /** Optional secret for webhook signature verification */
+  webhook_secret?: string;
+  /** URL to receive webhook notifications */
+  webhook_url?: string;
+}
+
+export interface BFLAsyncWebhookResponse {
+  id: string;
+  status: string;
+  webhook_url: string;
+}
+
+export interface BFLAsyncResponse {
+  id: string;
+  polling_url: string;
+}
+
+/**
+ * data related to the event
+ */
+export type AuditLogParams = { [key: string]: unknown };
+
+export interface AuditLog {
+  /** The date and time the event was created */
+  createdAt?: string;
+  /** the id of the event */
+  event_id?: string;
+  /** the type of the event */
+  event_type?: string;
+  /** data related to the event */
+  params?: AuditLogParams;
+}
+
 export interface ActionJobResult {
   /** Identifier of the job this result belongs to */
   action_job_id?: string;
@@ -8871,6 +9139,64 @@ export const useAdminCreateNode = <TError = ErrorResponse | void,
     }
     
 /**
+ * @summary Create a new custom node using admin priviledge
+ */
+export const adminCreateNode = (
+    node: Node,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/admin/nodes`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: node
+    },
+      options);
+    }
+  
+
+
+export const getAdminCreateNodeMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateNode>>, TError,{data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminCreateNode>>, TError,{data: Node}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminCreateNode>>, {data: Node}> = (props) => {
+          const {data} = props ?? {};
+
+          return  adminCreateNode(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminCreateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof adminCreateNode>>>
+    export type AdminCreateNodeMutationBody = Node
+    export type AdminCreateNodeMutationError = ErrorResponse | void
+
+    /**
+ * @summary Create a new custom node using admin priviledge
+ */
+export const useAdminCreateNode = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateNode>>, TError,{data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof adminCreateNode>>,
+        TError,
+        {data: Node},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminCreateNodeMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
  * Only admins can approve a node version.
  * @summary Admin Update Node Version Status
  */
@@ -11012,6 +11338,65 @@ export const useCreateNodeTranslations = <TError = void | Error | ErrorResponse,
     }
     
 /**
+ * @summary Create Node Translations
+ */
+export const createNodeTranslations = (
+    nodeId: string,
+    createNodeTranslationsBody: CreateNodeTranslationsBody,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<void>(
+      {url: `/nodes/${nodeId}/translations`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: createNodeTranslationsBody
+    },
+      options);
+    }
+  
+
+
+export const getCreateNodeTranslationsMutationOptions = <TError = void | Error | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createNodeTranslations>>, {nodeId: string;data: CreateNodeTranslationsBody}> = (props) => {
+          const {nodeId,data} = props ?? {};
+
+          return  createNodeTranslations(nodeId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateNodeTranslationsMutationResult = NonNullable<Awaited<ReturnType<typeof createNodeTranslations>>>
+    export type CreateNodeTranslationsMutationBody = CreateNodeTranslationsBody
+    export type CreateNodeTranslationsMutationError = void | Error | ErrorResponse
+
+    /**
+ * @summary Create Node Translations
+ */
+export const useCreateNodeTranslations = <TError = void | Error | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createNodeTranslations>>, TError,{nodeId: string;data: CreateNodeTranslationsBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof createNodeTranslations>>,
+        TError,
+        {nodeId: string;data: CreateNodeTranslationsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getCreateNodeTranslationsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    
+/**
  * @summary List all versions of a node
  */
 export const listNodeVersions = (
@@ -11296,6 +11681,77 @@ export function useListComfyNodes<TData = Awaited<ReturnType<typeof listComfyNod
   const queryOptions = getListComfyNodesQueryOptions(nodeId,version,params,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary list comfy-nodes for certain node
+ */
+export const listComfyNodes = (
+    nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListComfyNodes200>(
+      {url: `/nodes/${nodeId}/versions/${version}/comfy-nodes`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListComfyNodesQueryKey = (nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams,) => {
+    return [`/nodes/${nodeId}/versions/${version}/comfy-nodes`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListComfyNodesQueryOptions = <TData = Awaited<ReturnType<typeof listComfyNodes>>, TError = void | ErrorResponse>(nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListComfyNodesQueryKey(nodeId,version,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listComfyNodes>>> = ({ signal }) => listComfyNodes(nodeId,version,params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(nodeId && version), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listComfyNodes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListComfyNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listComfyNodes>>>
+export type ListComfyNodesQueryError = void | ErrorResponse
+
+/**
+ * @summary list comfy-nodes for certain node
+ */
+export const useListComfyNodes = <TData = Awaited<ReturnType<typeof listComfyNodes>>, TError = void | ErrorResponse>(
+ nodeId: string,
+    version: string,
+    params?: ListComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getListComfyNodesQueryOptions(nodeId,version,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
   query.queryKey = queryOptions.queryKey ;
 
