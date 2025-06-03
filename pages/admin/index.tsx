@@ -1,7 +1,11 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { Breadcrumb, Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { HiHome, HiOutlineClipboardCheck, HiOutlineCollection } from 'react-icons/hi'
+import {
+    HiHome,
+    HiOutlineClipboardCheck,
+    HiOutlineCollection,
+} from 'react-icons/hi'
 
 function AdminDashboard() {
     const router = useRouter()
@@ -9,14 +13,11 @@ function AdminDashboard() {
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
-                <Breadcrumb.Item
-                    href="#"
-                    icon={HiHome}
-                >
+                <Breadcrumb.Item href="#" icon={HiHome}>
                     Admin Dashboard
                 </Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 Admin Dashboard
             </h1>

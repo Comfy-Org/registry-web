@@ -705,7 +705,7 @@ function NodeVersionList({}) {
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <BatchOperationBar />
 
             {/* Batch operation modal */}
