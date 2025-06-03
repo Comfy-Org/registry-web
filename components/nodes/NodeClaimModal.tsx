@@ -383,7 +383,7 @@ export function NodeClaimModal({
                             {updateNodeMutation.isPending ? (
                                 <>
                                     <Spinner size="sm" className="mr-2" />
-                                    Claiming...
+                                    Claiming... (WIP)
                                 </>
                             ) : (
                                 'Claim Node (WIP)'
