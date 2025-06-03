@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import {
     Error,
     getGetNodeQueryKey,
+    getSearchNodesQueryKey,
     Node,
     useGetNode,
     useUpdateNode,
@@ -16,7 +17,9 @@ export default function SearchRankingEditModal({
     onClose,
     nodeId,
     defaultSearchRanking,
+    quickMode = true,
 }: {
+    quickMode?: boolean
     open: boolean
     onClose: () => void
     nodeId: string
@@ -34,24 +37,12 @@ export default function SearchRankingEditModal({
         mutation: {
             onSuccess: () => {
                 toast.success('Search ranking updated successfully')
-                // refresh data
-                qc.invalidateQueries({
-                    queryKey: getGetNodeQueryKey(nodeId),
-                })
-                qc.setQueryData(
-                    getGetNodeQueryKey(nodeId),
-                    (oldData: Node | undefined) =>
-                        oldData && { ...oldData, search_ranking: searchRanking }
-                )
-                setIsSubmitting(false)
-                onClose()
             },
             onError: (error: AxiosError<Error>) => {
                 toast.error(
                     error.response?.data?.message ||
                         'Failed to update search ranking'
                 )
-                setIsSubmitting(false)
             },
         },
     })
@@ -70,13 +61,49 @@ export default function SearchRankingEditModal({
             return null
         }
         setIsSubmitting(true)
-        await updateNodeMutation.mutateAsync({
-            nodeId,
-            publisherId,
-            data: {
-                search_ranking: searchRanking,
+
+        // optimistically update the cache
+        qc.setQueryData(
+            getGetNodeQueryKey(nodeId),
+            (oldData: Node | undefined) =>
+                oldData && { ...oldData, search_ranking: searchRanking }
+        )
+        qc.setQueriesData(
+            {
+                queryKey: getSearchNodesQueryKey().slice(0, 1),
+                exact: false,
             },
-        })
+            (oldData: { nodes?: Node[] } | undefined) => {
+                return (
+                    oldData && {
+                        ...oldData,
+                        nodes: oldData?.nodes?.map((n) =>
+                            n.id === nodeId
+                                ? { ...n, search_ranking: searchRanking }
+                                : n
+                        ),
+                    }
+                )
+            }
+        )
+        if (quickMode) onClose()
+        await updateNodeMutation
+            .mutateAsync({
+                nodeId,
+                publisherId,
+                data: { search_ranking: searchRanking },
+            })
+            .finally(() => {
+                // Invalidate queries to ensure fresh data
+                qc.invalidateQueries({
+                    queryKey: getGetNodeQueryKey(nodeId),
+                })
+                qc.invalidateQueries({
+                    queryKey: getSearchNodesQueryKey().slice(0, 1),
+                })
+                setIsSubmitting(false)
+                onClose()
+            })
     }
 
     return (
