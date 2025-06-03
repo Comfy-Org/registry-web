@@ -207,9 +207,7 @@ export function NodeClaimModal({ isOpen, onClose, node }: NodeClaimModalProps) {
             await updateNodeMutation.mutateAsync({
                 nodeId: node.id!,
                 publisherId: UNCLAIMED_ADMIN_PUBLISHER_ID,
-                data: {
-                    publisher: selectedPublisher,
-                },
+                data: { publisher: selectedPublisher },
             })
         } catch (error) {
             // Error is handled in the mutation's onError
@@ -357,6 +355,14 @@ export function NodeClaimModal({ isOpen, onClose, node }: NodeClaimModalProps) {
                         </div>
                     )}
 
+                    <div className="p-2 bg-yellow-900 bg-opacity-50 text-yellow-200 rounded text-sm mb-2">
+                        <strong>Note:</strong> Claiming a node requires backend
+                        API support for updating <code>publisherId</code> via{' '}
+                        <code>updateNode(...)</code>. This feature is a work in
+                        progress (WIP) and may not function until the backend is
+                        updated.
+                    </div>
+
                     <div className="flex justify-end space-x-3">
                         <Button color="gray" onClick={onClose}>
                             Cancel
@@ -377,7 +383,7 @@ export function NodeClaimModal({ isOpen, onClose, node }: NodeClaimModalProps) {
                                     Claiming...
                                 </>
                             ) : (
-                                'Claim Node'
+                                'Claim Node (WIP)'
                             )}
                         </Button>
                     </div>
