@@ -1,4 +1,4 @@
-// load backend url from .env, not neccessary if you use bun
+// load backend url from .env, not necessary if you use bun
 if (!globalThis.Bun) require('dotenv/config')
 
 /**
