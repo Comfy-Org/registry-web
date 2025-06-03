@@ -91,8 +91,10 @@ const NodeDetails = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
         useState(false)
-    const [isPreemptedComfyNodeNamesEditModalOpen, setIsPreemptedComfyNodeNamesEditModalOpen] =
-        useState(false)
+    const [
+        isPreemptedComfyNodeNamesEditModalOpen,
+        setIsPreemptedComfyNodeNamesEditModalOpen,
+    ] = useState(false)
     // useNodeList
     // parse query parameters from the URL
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
@@ -482,7 +484,7 @@ const NodeDetails = () => {
                                         />
                                     </>
                                 )}
-                                
+
                                 {/* Preempted Comfy Node Names management section */}
                                 <>
                                     <Label
@@ -492,9 +494,17 @@ const NodeDetails = () => {
                                         <div className="flex items-center">
                                             <span>
                                                 Preempted Comfy Node Names:{' '}
-                                                {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
-                                                    ? node.preempted_comfy_node_names.slice(0, 3).join(', ') + 
-                                                      (node.preempted_comfy_node_names.length > 3 ? '...' : '')
+                                                {node.preempted_comfy_node_names &&
+                                                node.preempted_comfy_node_names
+                                                    .length > 0
+                                                    ? node.preempted_comfy_node_names
+                                                          .slice(0, 3)
+                                                          .join(', ') +
+                                                      (node
+                                                          .preempted_comfy_node_names
+                                                          .length > 3
+                                                          ? '...'
+                                                          : '')
                                                     : 'None'}
                                             </span>
                                         </div>
@@ -516,9 +526,12 @@ const NodeDetails = () => {
                                     <PreemptedComfyNodeNamesEditModal
                                         nodeId={nodeId}
                                         defaultPreemptedComfyNodeNames={
-                                            node.preempted_comfy_node_names || []
+                                            node.preempted_comfy_node_names ||
+                                            []
                                         }
-                                        open={isPreemptedComfyNodeNamesEditModalOpen}
+                                        open={
+                                            isPreemptedComfyNodeNamesEditModalOpen
+                                        }
                                         onClose={() =>
                                             setIsPreemptedComfyNodeNamesEditModalOpen(
                                                 false

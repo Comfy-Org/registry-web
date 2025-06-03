@@ -25,7 +25,9 @@ export default function PreemptedComfyNodeNamesEditModal({
     nodeId: string
     defaultPreemptedComfyNodeNames: string[]
 }) {
-    const [preemptedComfyNodeNames, setPreemptedComfyNodeNames] = useState<string[]>(defaultPreemptedComfyNodeNames || [])
+    const [preemptedComfyNodeNames, setPreemptedComfyNodeNames] = useState<
+        string[]
+    >(defaultPreemptedComfyNodeNames || [])
     const [newName, setNewName] = useState<string>('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     // Get the node data
@@ -57,7 +59,9 @@ export default function PreemptedComfyNodeNamesEditModal({
     const onSubmit: FormEventHandler = async (e) => {
         e.preventDefault()
         if (!publisherId) {
-            toast.error('Publisher ID is required to update preempted comfy node names')
+            toast.error(
+                'Publisher ID is required to update preempted comfy node names'
+            )
             return null
         }
         setIsSubmitting(true)
@@ -66,7 +70,10 @@ export default function PreemptedComfyNodeNamesEditModal({
         qc.setQueryData(
             getGetNodeQueryKey(nodeId),
             (oldData: Node | undefined) =>
-                oldData && { ...oldData, preempted_comfy_node_names: preemptedComfyNodeNames }
+                oldData && {
+                    ...oldData,
+                    preempted_comfy_node_names: preemptedComfyNodeNames,
+                }
         )
         qc.setQueriesData(
             {
@@ -79,7 +86,11 @@ export default function PreemptedComfyNodeNamesEditModal({
                         ...oldData,
                         nodes: oldData?.nodes?.map((n) =>
                             n.id === nodeId
-                                ? { ...n, preempted_comfy_node_names: preemptedComfyNodeNames }
+                                ? {
+                                      ...n,
+                                      preempted_comfy_node_names:
+                                          preemptedComfyNodeNames,
+                                  }
                                 : n
                         ),
                     }
@@ -108,13 +119,13 @@ export default function PreemptedComfyNodeNamesEditModal({
 
     const handleAddName = () => {
         if (!newName.trim()) return
-        
+
         // Check if name already exists in the list
         if (preemptedComfyNodeNames.includes(newName.trim())) {
             toast.info('This name is already in the list')
             return
         }
-        
+
         setPreemptedComfyNodeNames([...preemptedComfyNodeNames, newName.trim()])
         setNewName('')
     }
@@ -156,8 +167,10 @@ export default function PreemptedComfyNodeNamesEditModal({
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-sm text-gray-300">
-                            Preempted Comfy Node Names: List of names that should be treated as the same comfy-node.
-                            This helps maintain consistent search results across differently named nodes.
+                            Preempted Comfy Node Names: List of names that
+                            should be treated as the same comfy-node. This helps
+                            maintain consistent search results across
+                            differently named nodes.
                         </p>
                         <div>
                             <div className="mb-2 block">
@@ -169,23 +182,31 @@ export default function PreemptedComfyNodeNamesEditModal({
                             </div>
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {preemptedComfyNodeNames.length === 0 ? (
-                                    <p className="text-gray-400">No preempted comfy node names added yet</p>
+                                    <p className="text-gray-400">
+                                        No preempted comfy node names added yet
+                                    </p>
                                 ) : (
-                                    preemptedComfyNodeNames.map((name, index) => (
-                                        <div 
-                                            key={index} 
-                                            className="flex items-center bg-gray-600 px-3 py-1 rounded-full"
-                                        >
-                                            <span className="mr-2">{name}</span>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemoveName(index)}
-                                                className="text-gray-300 hover:text-white"
+                                    preemptedComfyNodeNames.map(
+                                        (name, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-center bg-gray-600 px-3 py-1 rounded-full"
                                             >
-                                                ×
-                                            </button>
-                                        </div>
-                                    ))
+                                                <span className="mr-2">
+                                                    {name}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleRemoveName(index)
+                                                    }
+                                                    className="text-gray-300 hover:text-white"
+                                                >
+                                                    ×
+                                                </button>
+                                            </div>
+                                        )
+                                    )
                                 )}
                             </div>
                             <div className="flex gap-2">
@@ -197,9 +218,9 @@ export default function PreemptedComfyNodeNamesEditModal({
                                     placeholder="Add new name"
                                     className="flex-grow p-2.5 bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 rounded-lg"
                                 />
-                                <Button 
-                                    type="button" 
-                                    color="blue" 
+                                <Button
+                                    type="button"
+                                    color="blue"
                                     onClick={handleAddName}
                                 >
                                     Add
