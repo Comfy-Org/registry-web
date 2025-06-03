@@ -3,6 +3,7 @@ import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
+import { HiPlus } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import {
     Node,
@@ -112,7 +113,7 @@ export function AdminCreateNodeFormModal({
             popup
             //@ts-ignore
             theme={customThemeTModal}
-            dismissible
+            dismissible={false}
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
                 <Modal.Header className="!bg-gray-800">
@@ -226,6 +227,7 @@ export function AdminCreateNodeFormModal({
                             aria-busy={mutation.isPending}
                             disabled={mutation.isPending}
                         >
+                            <HiPlus className="mr-2 h-5 w-5" />
                             Add
                         </Button>
                     </div>
