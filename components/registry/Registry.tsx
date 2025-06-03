@@ -85,7 +85,6 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                     </div>
 
                     <CustomSearchPagination />
-
                 </InstantSearch>
             </div>
         </div>
