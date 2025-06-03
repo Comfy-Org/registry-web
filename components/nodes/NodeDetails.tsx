@@ -24,7 +24,6 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
-import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -496,8 +495,13 @@ const NodeDetails = () => {
                                             <span>
                                                 Preempted Names:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
-                                                    {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
-                                                        ? node.preempted_comfy_node_names.join('\n')
+                                                    {node.preempted_comfy_node_names &&
+                                                    node
+                                                        .preempted_comfy_node_names
+                                                        .length > 0
+                                                        ? node.preempted_comfy_node_names.join(
+                                                              '\n'
+                                                          )
                                                         : 'None'}
                                                 </pre>
                                             </span>
