@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
 import { Button, Spinner } from 'flowbite-react'
 import Image from 'next/image'
@@ -6,6 +7,7 @@ import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import analytic from 'src/analytic/analytic'
 import {
+    getGetNodeQueryKey,
     NodeVersion,
     NodeVersionStatus,
     useGetNode,
@@ -78,36 +80,40 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const router = useRouter()
-    const { publisherId: _publisherId, nodeId } = router.query // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
     )
-
     const [isEditModalOpen, setIsEditModal] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
+        useState(false)
 
-    const { data: node, isLoading, isError } = useGetNode(nodeId as string)
+    // parse query parameters from the URL
+    // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    const qc = useQueryClient()
+    const router = useRouter()
+    const { publisherId: _publisherId, nodeId: _nodeId } = router.query
+    const nodeId = String(_nodeId) // nodeId is always string
+
+    // fetch node details and permissions
+    const { data: node, isLoading, isError } = useGetNode(nodeId)
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
-        publisherId as string,
-        nodeId as string
+        publisherId,
+        nodeId
     )
 
-    const {
-        data: nodeVersions,
-        isLoading: loadingNodeVersions,
-        error: listNodeVersionsError,
-        refetch: refetchVersions,
-    } = useListNodeVersions(nodeId as string, {
-        statuses: [
-            NodeVersionStatus.NodeVersionStatusActive,
-            NodeVersionStatus.NodeVersionStatusPending,
-            NodeVersionStatus.NodeVersionStatusFlagged,
-        ],
-    })
+    const { data: nodeVersions, refetch: refetchVersions } =
+        useListNodeVersions(nodeId, {
+            statuses: [
+                NodeVersionStatus.NodeVersionStatusActive,
+                NodeVersionStatus.NodeVersionStatusPending,
+                NodeVersionStatus.NodeVersionStatusFlagged,
+            ],
+        })
 
     const { data: user } = useGetUser()
     const isAdmin = user?.isAdmin
@@ -417,6 +423,36 @@ const NodeDetails = () => {
                                 <a>Download Latest</a>
                             </Button>
                         )}
+
+                        {/* Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal */}
+                        {isAdmin && null != node.search_ranking && (
+                            <>
+                                <Button
+                                    className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                    onClick={() => {
+                                        router.push(
+                                            `/admin/search-ranking?nodeId=${nodeId}`
+                                        )
+                                    }}
+                                >
+                                    Edit Search Ranking: ({node.search_ranking})
+                                </Button>
+                                <SearchRankingEditModal
+                                    nodeId={nodeId}
+                                    publisherId={publisherId}
+                                    isOpen={isSearchRankingEditModalOpen}
+                                    onClose={() => {
+                                        setIsSearchRankingEditModalOpen(false)
+                                        // Refetch node details to update search ranking
+
+                                        qc.invalidateQueries({
+                                            queryKey:
+                                                getGetNodeQueryKey(nodeId),
+                                        })
+                                    }}
+                                />
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -424,23 +460,23 @@ const NodeDetails = () => {
                     onCloseEditModal={onCloseEditModal}
                     nodeData={node}
                     openEditModal={isEditModalOpen}
-                    publisherId={publisherId as string}
+                    publisherId={publisherId}
                 />
 
                 <NodeDeleteModal
                     openDeleteModal={isDeleteModalOpen}
                     onClose={() => setIsDeleteModalOpen(false)}
-                    nodeId={nodeId as string}
-                    publisherId={publisherId as string}
+                    nodeId={nodeId}
+                    publisherId={publisherId}
                 />
 
                 {isDrawerOpen && selectedVersion && nodeId && (
                     <NodeVDrawer
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
-                        nodeId={nodeId as string}
-                        publisherId={publisherId as string}
-                        versionNumber={selectedVersion.version as string}
+                        nodeId={nodeId}
+                        publisherId={publisherId}
+                        versionNumber={selectedVersion.version}
                         canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()
