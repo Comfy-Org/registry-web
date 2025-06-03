@@ -7,6 +7,7 @@ import { parseJsonSafe } from '@/components/parseJsonSafe'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
+import MailtoNodeVersionModal from 'components/MailtoNodeVersionModal'
 import {
     Breadcrumb,
     Button,
@@ -48,6 +49,9 @@ function NodeVersionList({}) {
     const [batchReason, setBatchReason] = useState<string>('')
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
+
+    // Contact button, send issues or email to node version publisher
+    const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
 
     // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
@@ -158,17 +162,6 @@ function NodeVersionList({}) {
             toast.error('Error getting node versions')
         }
     }, [getAllNodeVersionsQuery])
-
-    if (
-        getAllNodeVersionsQuery.isLoading ||
-        getSpecificNodeVersionQuery.isLoading
-    ) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <Spinner />
-            </div>
-        )
-    }
 
     async function onReview({
         nodeVersion: nv,
@@ -690,6 +683,18 @@ function NodeVersionList({}) {
             </div>
         )
     }
+
+    if (
+        getAllNodeVersionsQuery.isLoading ||
+        getSpecificNodeVersionQuery.isLoading
+    ) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Spinner />
+            </div>
+        )
+    }
+
     return (
         <div>
             <Breadcrumb className="py-4 px-4">
@@ -1066,52 +1071,69 @@ function NodeVersionList({}) {
                             </div>
                         </div>
                         <NodeStatusReason {...nv} />
+                        <div className="flex gap-2 justify-between">
+                            <div className="flex gap-2">
+                                {/* show approve only flagged/banned node versions */}
+                                {(nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusPending ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusFlagged ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusBanned) && (
+                                    <Button
+                                        color="blue"
+                                        className="flex"
+                                        onClick={() => onApprove(nv)}
+                                    >
+                                        Approve
+                                    </Button>
+                                )}
+                                {/* show reject only flagged/active node versions */}
+                                {(nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusPending ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusActive ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusFlagged) && (
+                                    <Button
+                                        color="failure"
+                                        onClick={() => onReject(nv)}
+                                    >
+                                        Reject
+                                    </Button>
+                                )}
 
-                        <div className="flex gap-2">
-                            {/* show approve only flagged/banned node versions */}
-                            {(nv.status ===
-                                NodeVersionStatus.NodeVersionStatusPending ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusFlagged ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusBanned) && (
-                                <Button
-                                    color="blue"
-                                    className="flex"
-                                    onClick={() => onApprove(nv)}
-                                >
-                                    Approve
-                                </Button>
-                            )}
-                            {/* show reject only flagged/active node versions */}
-                            {(nv.status ===
-                                NodeVersionStatus.NodeVersionStatusPending ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusActive ||
-                                nv.status ===
-                                    NodeVersionStatus.NodeVersionStatusFlagged) && (
-                                <Button
-                                    color="failure"
-                                    onClick={() => onReject(nv)}
-                                >
-                                    Reject
-                                </Button>
-                            )}
+                                {checkIsUndoable(nv) && (
+                                    <Button
+                                        color="gray"
+                                        onClick={() => onUndo(nv)}
+                                    >
+                                        Undo
+                                    </Button>
+                                )}
 
-                            {checkIsUndoable(nv) && (
-                                <Button color="gray" onClick={() => onUndo(nv)}>
-                                    Undo
-                                </Button>
-                            )}
-
-                            {checkHasBatchId(nv) && (
+                                {checkHasBatchId(nv) && (
+                                    <Button
+                                        color="warning"
+                                        onClick={() => undoBatch(nv)}
+                                    >
+                                        Undo Batch
+                                    </Button>
+                                )}
+                            </div>
+                            <div className="flex gap-2">
                                 <Button
-                                    color="warning"
-                                    onClick={() => undoBatch(nv)}
+                                    color="gray"
+                                    onClick={() => setMailtoNv(nv)}
                                 >
-                                    Undo Batch
+                                    Contact Publisher
                                 </Button>
-                            )}
+                                <MailtoNodeVersionModal
+                                    nodeVersion={mailtoNv ?? undefined}
+                                    open={!!mailtoNv}
+                                    onClose={() => setMailtoNv(null)}
+                                />
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -1124,12 +1146,6 @@ function NodeVersionList({}) {
             </div>
         </div>
     )
-}
-
-const getNodeString = (url?: string): string => {
-    if (!url) return ''
-    const match = url.match(/comfy-registry\/(.+?)\/\d+\.\d+\.\d+\/node\.zip/)
-    return match ? match[1] : ''
 }
 
 export default withAdmin(NodeVersionList)
