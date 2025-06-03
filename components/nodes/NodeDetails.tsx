@@ -22,6 +22,7 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
+import PreemptiveNamesEditModal from './PreemptiveNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
 
 export function formatRelativeDate(dateString: string) {
@@ -89,6 +90,8 @@ const NodeDetails = () => {
     const [isEditModalOpen, setIsEditModal] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
+        useState(false)
+    const [isPreemptiveNamesEditModalOpen, setIsPreemptiveNamesEditModalOpen] =
         useState(false)
     // useNodeList
     // parse query parameters from the URL
@@ -479,6 +482,50 @@ const NodeDetails = () => {
                                         />
                                     </>
                                 )}
+                                
+                                {/* Preemptive Names management section */}
+                                <>
+                                    <Label
+                                        className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                                        htmlFor="edit-preemptive-names"
+                                    >
+                                        <div className="flex items-center">
+                                            <span>
+                                                Preemptive Names:{' '}
+                                                {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
+                                                    ? node.preempted_comfy_node_names.slice(0, 3).join(', ') + 
+                                                      (node.preempted_comfy_node_names.length > 3 ? '...' : '')
+                                                    : 'None'}
+                                            </span>
+                                        </div>
+                                        <button
+                                            className="ml-2 flex items-center justify-center"
+                                            id="edit-preemptive-names"
+                                            onClick={() => {
+                                                setIsPreemptiveNamesEditModalOpen(
+                                                    true
+                                                )
+                                                analytic.track(
+                                                    'Edit Preemptive Names'
+                                                )
+                                            }}
+                                        >
+                                            <MdEdit className="w-5 h-5 text-white" />
+                                        </button>
+                                    </Label>
+                                    <PreemptiveNamesEditModal
+                                        nodeId={nodeId}
+                                        defaultPreemptiveNames={
+                                            node.preemptive_names || []
+                                        }
+                                        open={isPreemptiveNamesEditModalOpen}
+                                        onClose={() =>
+                                            setIsPreemptiveNamesEditModalOpen(
+                                                false
+                                            )
+                                        }
+                                    />
+                                </>
                             </>
                         )}
                     </div>
