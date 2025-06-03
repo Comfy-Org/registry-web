@@ -35,7 +35,7 @@ type RegistryProps = {}
 
 const Registry: React.FC<RegistryProps> = ({}) => {
     return (
-        <div className="relative mt-8 bg-gray-900 lg:mt-20">
+        <div className="relative mt-8 bg-gray-900 lg:mt-20 mb-8">
             <GenericHeader
                 title="Welcome to the Registry"
                 subTitle="View nodes or sign in to create and publish your own"
@@ -85,6 +85,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                     </div>
 
                     <CustomSearchPagination />
+
                 </InstantSearch>
             </div>
         </div>
