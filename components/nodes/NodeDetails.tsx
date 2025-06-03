@@ -491,11 +491,12 @@ const NodeDetails = () => {
                                     >
                                         <div className="flex items-center">
                                             <span>
-                                                Preempted Comfy Node Names:{' '}
-                                                {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
-                                                    ? node.preempted_comfy_node_names.slice(0, 3).join(', ') + 
-                                                      (node.preempted_comfy_node_names.length > 3 ? '...' : '')
-                                                    : 'None'}
+                                                Preempted Names:{' '}
+                                                <pre className="whitespace-pre-wrap text-xs">
+                                                    {node.preempted_comfy_node_names && node.preempted_comfy_node_names.length > 0
+                                                        ? node.preempted_comfy_node_names.join('\n')
+                                                        : 'None'}
+                                                </pre>
                                             </span>
                                         </div>
                                         <button
