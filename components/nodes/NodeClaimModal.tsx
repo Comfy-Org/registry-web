@@ -1,4 +1,5 @@
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import console from 'console'
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
@@ -16,15 +17,9 @@ interface NodeClaimModalProps {
     isOpen: boolean
     onClose: () => void
     node: Node
-    onSuccess?: () => void
 }
 
-export function NodeClaimModal({
-    isOpen,
-    onClose,
-    node,
-    onSuccess,
-}: NodeClaimModalProps) {
+export function NodeClaimModal({ isOpen, onClose, node }: NodeClaimModalProps) {
     const [selectedPublisher, setSelectedPublisher] =
         useState<Publisher | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -67,7 +62,6 @@ export function NodeClaimModal({
                 toast.success(
                     `Node ${node.name} successfully claimed by ${selectedPublisher?.name}`
                 )
-                onSuccess?.()
                 onClose()
             },
             onError: (error) => {
