@@ -7,7 +7,6 @@ import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import analytic from 'src/analytic/analytic'
 import {
-    getGetNodeQueryKey,
     NodeVersion,
     NodeVersionStatus,
     useGetNode,
@@ -431,26 +430,12 @@ const NodeDetails = () => {
                                     className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                     onClick={() => {
                                         router.push(
-                                            `/admin/search-ranking?nodeId=${nodeId}`
+                                            `/admin/search-ranking?nodeId=${nodeId}&mode=edit`
                                         )
                                     }}
                                 >
-                                    Edit Search Ranking: ({node.search_ranking})
+                                    Edit Search Ranking: {node.search_ranking}
                                 </Button>
-                                <SearchRankingEditModal
-                                    nodeId={nodeId}
-                                    publisherId={publisherId}
-                                    isOpen={isSearchRankingEditModalOpen}
-                                    onClose={() => {
-                                        setIsSearchRankingEditModalOpen(false)
-                                        // Refetch node details to update search ranking
-
-                                        qc.invalidateQueries({
-                                            queryKey:
-                                                getGetNodeQueryKey(nodeId),
-                                        })
-                                    }}
-                                />
                             </>
                         )}
                     </div>
@@ -476,7 +461,7 @@ const NodeDetails = () => {
                         isDrawerOpen={isDrawerOpen}
                         nodeId={nodeId}
                         publisherId={publisherId}
-                        versionNumber={selectedVersion.version}
+                        versionNumber={selectedVersion.version ?? ''}
                         canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()
