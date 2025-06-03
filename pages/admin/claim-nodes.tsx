@@ -1,9 +1,8 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
-import NodesCard from '@/components/nodes/NodesCard'
+import UnclaimedNodeCard from '@/components/nodes/UnclaimedNodeCard'
 import { Breadcrumb, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import { HiHome, HiPlus } from 'react-icons/hi'
 import { useListNodesForPublisherV2 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
@@ -11,15 +10,25 @@ import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 export default withAdmin(ClaimNodesPage)
 function ClaimNodesPage() {
     const router = useRouter()
-    const [page, setPage] = useState<number>(1)
-    const pageSize = 12
+    const pageSize = 36
+    // Get page from URL query params, defaulting to 1
+    const currentPage = router.query.page
+        ? parseInt(router.query.page as string, 10)
+        : 1
 
     const handlePageChange = (page: number) => {
-        setPage(page)
+        // Update URL with new page parameter
+        router.push(
+            { pathname: router.pathname, query: { ...router.query, page } },
+            undefined,
+            { shallow: true }
+        )
     }
+
+    // Use the page from router.query for the API call
     const { data, isError, isLoading } = useListNodesForPublisherV2(
         UNCLAIMED_ADMIN_PUBLISHER_ID,
-        { page, limit: 12 }
+        { page: currentPage, limit: pageSize }
     )
 
     if (isLoading) {
@@ -93,18 +102,14 @@ function ClaimNodesPage() {
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                         {data?.nodes?.map((node) => (
-                            <NodesCard
-                                key={node.id}
-                                node={node}
-                                buttonLink={`/nodes/${node.id}`}
-                            />
+                            <UnclaimedNodeCard key={node.id} node={node} />
                         ))}
                     </div>
 
                     <div className="mt-4">
                         <CustomPagination
                             onPageChange={handlePageChange}
-                            currentPage={page}
+                            currentPage={currentPage}
                             totalPages={Math.ceil(
                                 (data?.total || 0) / pageSize
                             )}
