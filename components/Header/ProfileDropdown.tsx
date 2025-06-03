@@ -6,19 +6,15 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { HiChevronDown } from 'react-icons/hi'
 import { useGetUser } from 'src/api/generated'
 import app from '../../src/firebase'
+import { useLogout } from '../AuthUI/Logout'
 
 const ProfileDropdown: React.FC = () => {
     const router = useRouter()
-    const auth = getAuth(app)
-    const [firebaseUser] = useAuthState(auth)
+    const [onSignOut, isSignoutLoading, error] = useLogout()
     const { data: user } = useGetUser()
 
+    const [firebaseUser] = useAuthState(getAuth(app))
     if (!firebaseUser) return null
-
-    const handleLogout = async () => {
-        await auth.signOut()
-        router.push('/auth/logout')
-    }
 
     return (
         <Dropdown
@@ -62,7 +58,7 @@ const ProfileDropdown: React.FC = () => {
                 </Dropdown.Item>
             )}
             <Dropdown.Divider />
-            <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+            <Dropdown.Item onClick={onSignOut}>Logout</Dropdown.Item>
         </Dropdown>
     )
 }
