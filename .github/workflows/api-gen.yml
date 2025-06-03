@@ -31,7 +31,7 @@ jobs:
               run: bun i
             - name: Update api definition
               run: bun orval
-              
+
             # commit generated api
             - name: Configure git
               run: |
