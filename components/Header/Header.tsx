@@ -61,10 +61,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <ProfileDropdown />
                 ) : (
                     <>
-                        <Button
-                            onClick={handleLogIn}
-                            color="dark"
-                        >
+                        <Button onClick={handleLogIn} color="dark">
                             <span className="text-white text-xs md:text-base">
                                 Log in
                             </span>
