@@ -1,6 +1,7 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
+import { HiOutlineClipboardCheck, HiOutlineCollection } from 'react-icons/hi'
 
 function AdminDashboard() {
     const router = useRouter()
@@ -18,14 +19,16 @@ function AdminDashboard() {
                     }
                     className="w-fit"
                 >
+                    <HiOutlineClipboardCheck className="mr-2 h-5 w-5" />
                     Review Node Versions
                 </Button>
                 <Button
                     color="blue"
-                    onClick={() => router.push('/admin/add-unclaimed-node')}
+                    onClick={() => router.push('/admin/claim-nodes')}
                     className="w-fit"
                 >
-                    Add Unclaimed Node
+                    <HiOutlineCollection className="mr-2 h-5 w-5" />
+                    Manage Unclaimed Nodes
                 </Button>
                 {/* Add more admin links here as needed */}
             </div>
