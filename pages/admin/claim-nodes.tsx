@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useSearchNodes } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
+export default withAdmin(ClaimNodesPage)
 function ClaimNodesPage() {
     const router = useRouter()
     const [page, setPage] = useState<number>(1)
@@ -31,7 +32,7 @@ function ClaimNodesPage() {
                             (node) => node.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
                         ).length || 0
                     }
-                }
+                }       
             }
         }
     )
@@ -115,4 +116,3 @@ function ClaimNodesPage() {
     )
 }
 
-export default withAdmin(ClaimNodesPage)
