@@ -5,7 +5,7 @@ import { Breadcrumb, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { HiHome, HiPlus } from 'react-icons/hi'
-import { useSearchNodes } from 'src/api/generated'
+import { useListNodesForPublisherV2 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
 export default withAdmin(ClaimNodesPage)
@@ -14,43 +14,13 @@ function ClaimNodesPage() {
     const [page, setPage] = useState<number>(1)
     const pageSize = 12
 
-    const {
-        data: nodesData,
-        isLoading,
-        error,
-    } = useSearchNodes(
-        {
-            page,
-            limit: pageSize,
-            include_banned: false,
-        },
-        {
-            query: {
-                select: (data) => {
-                    // Filter to only include unclaimed nodes
-                    return {
-                        ...data,
-                        nodes:
-                            data.nodes?.filter(
-                                (node) =>
-                                    node.publisher?.id ===
-                                    UNCLAIMED_ADMIN_PUBLISHER_ID
-                            ) || [],
-                        total:
-                            data.nodes?.filter(
-                                (node) =>
-                                    node.publisher?.id ===
-                                    UNCLAIMED_ADMIN_PUBLISHER_ID
-                            ).length || 0,
-                    }
-                },
-            },
-        }
-    )
-
     const handlePageChange = (page: number) => {
         setPage(page)
     }
+    const { data, isError, isLoading } = useListNodesForPublisherV2(
+        UNCLAIMED_ADMIN_PUBLISHER_ID,
+        { page, limit: 12 }
+    )
 
     if (isLoading) {
         return (
@@ -60,7 +30,7 @@ function ClaimNodesPage() {
         )
     }
 
-    if (error) {
+    if (isError) {
         return (
             <div className="p-4 text-white">
                 <h1 className="text-2xl font-bold text-gray-200 mb-6">
@@ -115,14 +85,14 @@ function ClaimNodesPage() {
                 claimed by publishers or edited by administrators.
             </div>
 
-            {nodesData?.nodes?.length === 0 ? (
+            {data?.nodes?.length === 0 ? (
                 <div className="bg-gray-800 p-4 rounded text-gray-200">
                     No unclaimed nodes found.
                 </div>
             ) : (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                        {nodesData?.nodes?.map((node) => (
+                        {data?.nodes?.map((node) => (
                             <NodesCard
                                 key={node.id}
                                 node={node}
@@ -133,11 +103,11 @@ function ClaimNodesPage() {
 
                     <div className="mt-4">
                         <CustomPagination
+                            onPageChange={handlePageChange}
                             currentPage={page}
                             totalPages={Math.ceil(
-                                (nodesData?.total || 0) / pageSize
+                                (data?.total || 0) / pageSize
                             )}
-                            onPageChange={handlePageChange}
                         />
                     </div>
                 </>
