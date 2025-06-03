@@ -36,7 +36,7 @@ function SearchRankingAdminPage() {
     // Fetch all nodes with pagination
     const { data, isLoading, isError } = useSearchNodes({
         page,
-        limit: 30,
+        limit: 24,
         search: searchTerm || undefined,
     })
 
