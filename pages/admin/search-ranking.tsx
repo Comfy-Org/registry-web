@@ -4,70 +4,45 @@ import { formatDownloadCount } from '@/components/nodes/NodeDetails'
 import SearchRankingEditModal from '@/components/nodes/SearchRankingEditModal'
 import { Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { MdEdit } from 'react-icons/md'
 import { Node, useSearchNodes } from 'src/api/generated'
+import { useRouterQuery } from 'src/hooks/useRouterQuery'
 
 function SearchRankingAdminPage() {
-    const router = useRouter()
-    const [page, setPage] = useState(
-        router.query.page ? parseInt(router.query.page as string) : 1
-    )
-    const [searchTerm, setSearchTerm] = useState('')
-    const [filterInput, setFilterInput] = useState('')
     const [selectedNode, setSelectedNode] = useState<Node | null>(null)
 
-    // Handle page from query parameters
-    useEffect(() => {
-        if (router.query.page) {
-            setPage(parseInt(router.query.page as string))
-        }
-    }, [router.query.page])
+    // Use the custom hook for query parameters
+    const [query, updateQuery] = useRouterQuery()
 
-    // Handle search term from query parameters
-    useEffect(() => {
-        if (router.query.search) {
-            setSearchTerm(router.query.search as string)
-            setFilterInput(router.query.search as string)
-        }
-    }, [router.query.search])
+    // Extract and parse query parameters directly
+    const page = Number(query.page || 1)
+    const searchQuery = String(query.search || '')
 
-    // Fetch all nodes with pagination
+    // Fetch all nodes with pagination - searchQuery being undefined is handled properly
     const { data, isLoading, isError } = useSearchNodes({
         page,
         limit: 24,
-        search: searchTerm || undefined,
+        search: searchQuery || undefined,
     })
 
+    // Handle page change - just update router
     const handlePageChange = (newPage: number) => {
-        setPage(newPage)
-        router.push(
-            {
-                pathname: router.pathname,
-                query: { ...router.query, page: newPage },
-            },
-            undefined,
-            { shallow: true }
-        )
+        updateQuery({ page: String(newPage) })
     }
 
-    const handleSearch = (e: React.FormEvent) => {
+    // Handle search form submission
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        router.push(
-            {
-                pathname: router.pathname,
-                query: {
-                    ...router.query,
-                    search: filterInput,
-                    page: 1, // Reset to first page on new search
-                },
-            },
-            undefined,
-            { shallow: true }
-        )
-        setPage(1)
-        setSearchTerm(filterInput)
+        const form = e.currentTarget
+        const searchInput =
+            (form.elements.namedItem('search-nodes') as HTMLInputElement)
+                ?.value || ''
+
+        updateQuery({
+            search: searchInput,
+            page: String(1), // Reset to first page on new search
+        })
     }
 
     const handleEditRanking = (node: Node) => {
@@ -108,9 +83,9 @@ function SearchRankingAdminPage() {
             >
                 <TextInput
                     id="search-nodes"
+                    name="search-nodes"
                     placeholder="Search nodes by name or ID"
-                    value={filterInput}
-                    onChange={(e) => setFilterInput(e.target.value)}
+                    defaultValue={searchQuery}
                     className="flex-grow"
                 />
                 <Button color="blue" type="submit">
