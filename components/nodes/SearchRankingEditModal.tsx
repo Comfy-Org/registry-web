@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal } from 'flowbite-react'
-import { useEffect, useState } from 'react'
+import { FormEventHandler, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import {
     Error,
@@ -63,13 +63,14 @@ export default function SearchRankingEditModal({
     }, [node?.search_ranking])
 
     const publisherId = node?.publisher?.id
-    const handleUpdateSearchRanking = () => {
+    const onSubmit: FormEventHandler = async (e) => {
+        e.preventDefault()
         if (!publisherId) {
             toast.error('Publisher ID is required to update search ranking')
             return null
         }
         setIsSubmitting(true)
-        updateNodeMutation.mutate({
+        await updateNodeMutation.mutateAsync({
             nodeId,
             publisherId,
             data: {
@@ -104,58 +105,60 @@ export default function SearchRankingEditModal({
             }}
             size="md"
         >
-            <Modal.Header>Edit Search Ranking</Modal.Header>
-            <Modal.Body>
-                <div className="space-y-6">
-                    <p className="text-sm text-gray-300">
-                        Search Ranking: integer from 1 to 10. Lower number means
-                        higher search ranking, all else equal.
-                    </p>
-                    <div>
-                        <div className="mb-2 block">
-                            <Label
-                                htmlFor="search-ranking"
-                                value="Search Ranking"
-                                className="text-white"
-                            />
-                        </div>
-                        <input
-                            id="search-ranking"
-                            type="number"
-                            min={1}
-                            max={10}
-                            value={searchRanking}
-                            onChange={(e) =>
-                                setSearchRanking(
-                                    Math.max(
-                                        1,
-                                        Math.min(
-                                            10,
-                                            parseInt(e.target.value) || 1
+            <form onSubmit={onSubmit}>
+                <Modal.Header>Edit Search Ranking</Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-6">
+                        <p className="text-sm text-gray-300">
+                            Search Ranking: integer from 1 to 10. Lower number
+                            means higher search ranking, all else equal.
+                        </p>
+                        <div>
+                            <div className="mb-2 block">
+                                <Label
+                                    htmlFor="search-ranking"
+                                    value="Search Ranking"
+                                    className="text-white"
+                                />
+                            </div>
+                            <input
+                                id="search-ranking"
+                                type="number"
+                                min={1}
+                                max={10}
+                                value={searchRanking}
+                                onChange={(e) =>
+                                    setSearchRanking(
+                                        Math.max(
+                                            1,
+                                            Math.min(
+                                                10,
+                                                parseInt(e.target.value) || 1
+                                            )
                                         )
                                     )
-                                )
-                            }
-                            className={`w-full p-2.5 bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 rounded-lg`}
-                            required
-                        />
+                                }
+                                className={`w-full p-2.5 bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 rounded-lg`}
+                                required
+                            />
+                        </div>
                     </div>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <div className="flex justify-end gap-2">
-                    <Button color="gray" onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button
-                        color="blue"
-                        onClick={handleUpdateSearchRanking}
-                        isProcessing={isSubmitting}
-                    >
-                        Update
-                    </Button>
-                </div>
-            </Modal.Footer>
+                </Modal.Body>
+                <Modal.Footer>
+                    <div className="flex justify-end gap-2 w-full">
+                        <Button color="gray" onClick={onClose}>
+                            Cancel
+                        </Button>
+                        <Button
+                            color="blue"
+                            isProcessing={isSubmitting}
+                            type="submit"
+                        >
+                            Update
+                        </Button>
+                    </div>
+                </Modal.Footer>
+            </form>
         </Modal>
     )
 }
