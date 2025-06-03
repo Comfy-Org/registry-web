@@ -325,14 +325,15 @@ const NodeDetails = () => {
                                             </p>
                                             <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                                                 {version.changelog}
-                                                <span
+                                                <div
                                                     className="text-sm font-normal text-blue-500 cursor-pointer"
                                                     onClick={() =>
                                                         selectVersion(version)
                                                     }
+                                                    tabIndex={0}
                                                 >
-                                                    <a>More</a>
-                                                </span>
+                                                    More
+                                                </div>
                                             </p>
                                         </div>
                                     ))}
