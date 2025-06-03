@@ -63,8 +63,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <>
                         <Button
                             onClick={handleLogIn}
-                            color="light"
-                            className="bg-gray-800 border-none outline-none"
+                            color="dark"
                         >
                             <span className="text-white text-xs md:text-base">
                                 Log in
