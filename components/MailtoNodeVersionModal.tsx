@@ -86,17 +86,17 @@ function ListPublisherEmails({ publisher }: { publisher: Publisher }) {
     return (
         <ul className="list-disc pl-5 space-y-2">
             {publisher?.members
-                ?.filter(
-                    (member) => member.user?.email && member.user?.email !== ''
-                )
-                .map((member) => (
-                    <li key={member.user?.email}>
-                        <a
-                            href={`mailto:${member.user?.email}`}
+                ?.map((member) => member.user?.email)
+                // type-safe filter to remove empty emails
+                ?.flatMap((e) => (e ? [e] : []))
+                .map((email) => (
+                    <li key={email}>
+                        <Link
+                            href={`mailto:${email}`}
                             className="text-blue-600 hover:underline"
                         >
-                            {member.user?.email}
-                        </a>
+                            {email}
+                        </Link>
                     </li>
                 ))}
         </ul>
