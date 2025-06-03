@@ -96,6 +96,11 @@ const NodeDetails = () => {
         nodeId as string
     )
 
+    const { data: user } = useGetUser()
+    const isAdmin = user?.isAdmin
+    const canEdit = isAdmin || permissions?.canEdit
+    const warningForAdminEdit = isAdmin && !permissions?.canEdit
+
     const {
         data: nodeVersions,
         isLoading: loadingNodeVersions,
@@ -106,13 +111,10 @@ const NodeDetails = () => {
             NodeVersionStatus.NodeVersionStatusActive,
             NodeVersionStatus.NodeVersionStatusPending,
             NodeVersionStatus.NodeVersionStatusFlagged,
+            // show rejected versions only to publisher
+            ...(!canEdit ? [] : [NodeVersionStatus.NodeVersionStatusBanned]),
         ],
     })
-
-    const { data: user } = useGetUser()
-    const isAdmin = user?.isAdmin
-    const canEdit = isAdmin || permissions?.canEdit
-    const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
