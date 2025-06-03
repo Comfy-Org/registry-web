@@ -23,32 +23,32 @@ function AdminDashboard() {
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 Admin Dashboard
             </h1>
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Button
                     color="blue"
                     onClick={() => router.push('/admin/search-ranking')}
-                    className="w-fit"
+                    className="w-full h-48 flex flex-col items-center justify-center p-6"
                 >
-                    <HiOutlineAdjustments className="mr-2 h-5 w-5" />
-                    Search Ranking Table
+                    <HiOutlineAdjustments className="h-20 w-20 mb-4" />
+                    <span className="text-center">Search Ranking Table</span>
                 </Button>
                 <Button
                     color="blue"
                     onClick={() =>
                         router.push('/admin/nodeversions?filter=flagged')
                     }
-                    className="w-fit"
+                    className="w-full h-48 flex flex-col items-center justify-center p-6"
                 >
-                    <HiOutlineClipboardCheck className="mr-2 h-5 w-5" />
-                    Review Node Versions
+                    <HiOutlineClipboardCheck className="h-20 w-20 mb-4" />
+                    <span className="text-center">Review Node Versions</span>
                 </Button>
                 <Button
                     color="blue"
                     onClick={() => router.push('/admin/claim-nodes')}
-                    className="w-fit"
+                    className="w-full h-48 flex flex-col items-center justify-center p-6"
                 >
-                    <HiOutlineCollection className="mr-2 h-5 w-5" />
-                    Manage Unclaimed Nodes
+                    <HiOutlineCollection className="h-20 w-20 mb-4" />
+                    <span className="text-center">Manage Unclaimed Nodes</span>
                 </Button>
                 {/* Add more admin links here as needed */}
             </div>
