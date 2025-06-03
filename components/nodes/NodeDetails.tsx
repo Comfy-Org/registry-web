@@ -1,10 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
-import { Button, Spinner } from 'flowbite-react'
+import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
+import { MdEdit } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -89,7 +90,7 @@ const NodeDetails = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
     const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
         useState(false)
-
+    // useNodeList
     // parse query parameters from the URL
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
     const qc = useQueryClient()
@@ -175,6 +176,7 @@ const NodeDetails = () => {
 
     return (
         <>
+            {/* TODO(sno): unwrap this div out of fragment in another PR */}
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
                 <div className="w-full lg:w-1/5 ">
                     <Image
@@ -428,28 +430,53 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {/* Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal */}
-                        {isAdmin && null != node.search_ranking && (
+                        {/* admin zone */}
+                        {isAdmin && (
                             <>
-                                <Button
-                                    className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                    onClick={() => {
-                                        setIsSearchRankingEditModalOpen(true)
-                                        analytic.track('Edit Search Ranking')
-                                    }}
-                                >
-                                    Edit Search Ranking: {node.search_ranking}
-                                </Button>
-                                <SearchRankingEditModal
-                                    nodeId={nodeId}
-                                    defaultSearchRanking={
-                                        node.search_ranking ?? 5
-                                    }
-                                    open={isSearchRankingEditModalOpen}
-                                    onClose={() =>
-                                        setIsSearchRankingEditModalOpen(false)
-                                    }
-                                />
+                                <hr />
+
+                                {/* Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal */}
+                                {null != node.search_ranking && (
+                                    <>
+                                        <Label
+                                            className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                                            htmlFor="edit-search-ranking"
+                                        >
+                                            <div className="flex items-center">
+                                                <span>
+                                                    Search Ranking:{' '}
+                                                    {node.search_ranking}
+                                                </span>
+                                            </div>
+                                            <button
+                                                className="ml-2 flex items-center justify-center"
+                                                id="edit-search-ranking"
+                                                onClick={() => {
+                                                    setIsSearchRankingEditModalOpen(
+                                                        true
+                                                    )
+                                                    analytic.track(
+                                                        'Edit Search Ranking'
+                                                    )
+                                                }}
+                                            >
+                                                <MdEdit className="w-5 h-5 text-white" />
+                                            </button>
+                                        </Label>
+                                        <SearchRankingEditModal
+                                            nodeId={nodeId}
+                                            defaultSearchRanking={
+                                                node.search_ranking ?? 5
+                                            }
+                                            open={isSearchRankingEditModalOpen}
+                                            onClose={() =>
+                                                setIsSearchRankingEditModalOpen(
+                                                    false
+                                                )
+                                            }
+                                        />
+                                    </>
+                                )}
                             </>
                         )}
                     </div>
