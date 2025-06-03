@@ -1,9 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
-import { Button, Spinner } from 'flowbite-react'
+import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
+import { MdEdit } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -20,6 +22,7 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
+import SearchRankingEditModal from './SearchRankingEditModal'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -78,22 +81,30 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const router = useRouter()
-    const { publisherId: _publisherId, nodeId } = router.query // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
     )
-
     const [isEditModalOpen, setIsEditModal] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
+        useState(false)
+    // useNodeList
+    // parse query parameters from the URL
+    // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    const qc = useQueryClient()
+    const router = useRouter()
+    const { publisherId: _publisherId, nodeId: _nodeId } = router.query
+    const nodeId = String(_nodeId) // nodeId is always string
 
-    const { data: node, isLoading, isError } = useGetNode(nodeId as string)
+    // fetch node details and permissions
+    const { data: node, isLoading, isError } = useGetNode(nodeId)
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
-        publisherId as string,
-        nodeId as string
+        publisherId,
+        nodeId
     )
 
     const { data: user } = useGetUser()
@@ -101,20 +112,18 @@ const NodeDetails = () => {
     const canEdit = isAdmin || permissions?.canEdit
     const warningForAdminEdit = isAdmin && !permissions?.canEdit
 
-    const {
-        data: nodeVersions,
-        isLoading: loadingNodeVersions,
-        error: listNodeVersionsError,
-        refetch: refetchVersions,
-    } = useListNodeVersions(nodeId as string, {
-        statuses: [
-            NodeVersionStatus.NodeVersionStatusActive,
-            NodeVersionStatus.NodeVersionStatusPending,
-            NodeVersionStatus.NodeVersionStatusFlagged,
-            // show rejected versions only to publisher
-            ...(!canEdit ? [] : [NodeVersionStatus.NodeVersionStatusBanned]),
-        ],
-    })
+    const { data: nodeVersions, refetch: refetchVersions } =
+        useListNodeVersions(nodeId as string, {
+            statuses: [
+                NodeVersionStatus.NodeVersionStatusActive,
+                NodeVersionStatus.NodeVersionStatusPending,
+                NodeVersionStatus.NodeVersionStatusFlagged,
+                // show rejected versions only to publisher
+                ...(!canEdit
+                    ? []
+                    : [NodeVersionStatus.NodeVersionStatusBanned]),
+            ],
+        })
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
@@ -167,6 +176,7 @@ const NodeDetails = () => {
 
     return (
         <>
+            {/* TODO(sno): unwrap this div out of fragment in another PR */}
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
                 <div className="w-full lg:w-1/5 ">
                     <Image
@@ -419,6 +429,56 @@ const NodeDetails = () => {
                                 <a>Download Latest</a>
                             </Button>
                         )}
+
+                        {/* admin zone */}
+                        {isAdmin && (
+                            <>
+                                <hr />
+
+                                {/* Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal */}
+                                {null != node.search_ranking && (
+                                    <>
+                                        <Label
+                                            className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                                            htmlFor="edit-search-ranking"
+                                        >
+                                            <div className="flex items-center">
+                                                <span>
+                                                    Search Ranking:{' '}
+                                                    {node.search_ranking}
+                                                </span>
+                                            </div>
+                                            <button
+                                                className="ml-2 flex items-center justify-center"
+                                                id="edit-search-ranking"
+                                                onClick={() => {
+                                                    setIsSearchRankingEditModalOpen(
+                                                        true
+                                                    )
+                                                    analytic.track(
+                                                        'Edit Search Ranking'
+                                                    )
+                                                }}
+                                            >
+                                                <MdEdit className="w-5 h-5 text-white" />
+                                            </button>
+                                        </Label>
+                                        <SearchRankingEditModal
+                                            nodeId={nodeId}
+                                            defaultSearchRanking={
+                                                node.search_ranking ?? 5
+                                            }
+                                            open={isSearchRankingEditModalOpen}
+                                            onClose={() =>
+                                                setIsSearchRankingEditModalOpen(
+                                                    false
+                                                )
+                                            }
+                                        />
+                                    </>
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
 
@@ -426,23 +486,23 @@ const NodeDetails = () => {
                     onCloseEditModal={onCloseEditModal}
                     nodeData={node}
                     openEditModal={isEditModalOpen}
-                    publisherId={publisherId as string}
+                    publisherId={publisherId}
                 />
 
                 <NodeDeleteModal
                     openDeleteModal={isDeleteModalOpen}
                     onClose={() => setIsDeleteModalOpen(false)}
-                    nodeId={nodeId as string}
-                    publisherId={publisherId as string}
+                    nodeId={nodeId}
+                    publisherId={publisherId}
                 />
 
                 {isDrawerOpen && selectedVersion && nodeId && (
                     <NodeVDrawer
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
-                        nodeId={nodeId as string}
-                        publisherId={publisherId as string}
-                        versionNumber={selectedVersion.version as string}
+                        nodeId={nodeId}
+                        publisherId={publisherId}
+                        versionNumber={selectedVersion.version ?? ''}
                         canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()
