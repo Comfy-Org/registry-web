@@ -21,6 +21,7 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
+import SearchRankingEditModal from './SearchRankingEditModal'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -429,13 +430,22 @@ const NodeDetails = () => {
                                 <Button
                                     className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                                     onClick={() => {
-                                        router.push(
-                                            `/admin/search-ranking?nodeId=${nodeId}&mode=edit`
-                                        )
+                                        setIsSearchRankingEditModalOpen(true)
+                                        analytic.track('Edit Search Ranking')
                                     }}
                                 >
                                     Edit Search Ranking: {node.search_ranking}
                                 </Button>
+                                <SearchRankingEditModal
+                                    nodeId={nodeId}
+                                    defaultSearchRanking={
+                                        node.search_ranking ?? 5
+                                    }
+                                    open={isSearchRankingEditModalOpen}
+                                    onClose={() =>
+                                        setIsSearchRankingEditModalOpen(false)
+                                    }
+                                />
                             </>
                         )}
                     </div>
