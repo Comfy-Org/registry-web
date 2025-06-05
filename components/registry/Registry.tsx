@@ -18,7 +18,7 @@ const searchClient = algoliasearch(
         hosts: [
             {
                 url: 'search.comfy.org/api/search',
-                accept: 'readWrite',
+                accept: 'read',
                 protocol: 'https',
             },
         ],
