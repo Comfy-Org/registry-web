@@ -61,6 +61,7 @@
         "@babel/core": "7.19.3",
         "@chromatic-com/storybook": "^3.2.6",
         "@mdx-js/react": "2.1.4",
+        "@playwright/test": "^1.52.0",
         "@storybook/addon-essentials": "^8.6.14",
         "@storybook/addon-onboarding": "^8.6.14",
         "@storybook/blocks": "^8.6.14",
@@ -510,6 +511,8 @@
     "@orval/zod": ["@orval/zod@7.9.0", "", { "dependencies": { "@orval/core": "7.9.0", "lodash.uniq": "^4.5.0" } }, "sha512-LkkofL+iSswsBVWCr3bPZ6un8065wB7x34DZVnF/gN3kBxy8A35I9X0Eld4EajI/1rbMmxzt7wHUYAf5NlJWHQ=="],
 
     "@pkgjs/parseargs": ["@pkgjs/parseargs@0.11.0", "", {}, "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg=="],
+
+    "@playwright/test": ["@playwright/test@1.52.0", "", { "dependencies": { "playwright": "1.52.0" }, "bin": { "playwright": "cli.js" } }, "sha512-uh6W7sb55hl7D6vsAeA+V2p5JnlAqzhqFyF0VcJkKZXkgnFcVG9PziERRHQfPLfNGx1C292a4JqbWzhR8L4R1g=="],
 
     "@polka/url": ["@polka/url@1.0.0-next.29", "", {}, "sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww=="],
 
