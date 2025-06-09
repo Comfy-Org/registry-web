@@ -102,7 +102,10 @@ export default function PreemptedComfyNodeNamesEditModal({
             .mutateAsync({
                 nodeId,
                 publisherId,
-                data: { preempted_comfy_node_names: preemptedComfyNodeNames },
+                data: {
+                    ...node,
+                    preempted_comfy_node_names: preemptedComfyNodeNames,
+                },
             })
             .finally(() => {
                 // Invalidate queries to ensure fresh data
