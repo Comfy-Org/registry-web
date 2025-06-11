@@ -405,7 +405,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     &nbsp;
                                     {e.issue_type}
                                     &nbsp;
-                                    {e.code_snippet}
+                                    {e.code_snippet || e.message}
                                 </code>
                             </li>
                         ))}
