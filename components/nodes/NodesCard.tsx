@@ -34,9 +34,7 @@ const NodesCard: React.FC<NodesCard> = ({
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
                         {' '}
-                        <Link legacyBehavior href={buttonLink}>
-                            <a>More</a>
-                        </Link>
+                        <Link href={buttonLink}>More</Link>
                     </p>
                 </div>
 
