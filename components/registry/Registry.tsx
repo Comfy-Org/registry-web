@@ -1,5 +1,5 @@
 import Autocomplete from '@/components/Search/Autocomplete'
-import { algoliasearch } from 'algoliasearch'
+import algoliasearch from 'algoliasearch/lite'
 import singletonRouter from 'next/router'
 import React from 'react'
 import { Configure, Hits, InstantSearch } from 'react-instantsearch'
@@ -10,25 +10,10 @@ import Hit from '../Search/SearchHit'
 
 import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
 
-// Initialize Algolia search client with custom host and headers
+// Initialize Algolia search client
 const searchClient = algoliasearch(
     process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string,
-    process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
-    {
-        hosts: [
-            {
-                url: 'search.comfy.org/api/search',
-                accept: 'readWrite',
-                protocol: 'https',
-            },
-        ],
-        baseHeaders: {
-            'X-Algolia-Application-Id': process.env
-                .NEXT_PUBLIC_ALGOLIA_APP_ID as string,
-            'X-Algolia-API-Key': process.env
-                .NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string,
-        },
-    }
+    process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string
 )
 
 type RegistryProps = {}
