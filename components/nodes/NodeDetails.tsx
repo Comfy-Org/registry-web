@@ -376,6 +376,29 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
+                        {!!node.latest_version?.downloadUrl && (
+                            <Button
+                                hidden={isUnclaimed}
+                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                onClick={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => {
+                                    e.preventDefault()
+                                    if (node?.latest_version?.downloadUrl) {
+                                        downloadFile(
+                                            node.latest_version?.downloadUrl,
+                                            `${node.name}_${node.latest_version.version}.zip`
+                                        )
+                                    }
+                                    analytic.track(
+                                        'Download Latest Node Version'
+                                    )
+                                }}
+                            >
+                                <a>Download Latest</a>
+                            </Button>
+                        )}
+
                         {canEdit && (
                             <Button
                                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
@@ -414,29 +437,6 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {!!node.latest_version?.downloadUrl && (
-                            <Button
-                                hidden={isUnclaimed}
-                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                onClick={(
-                                    e: React.MouseEvent<HTMLButtonElement>
-                                ) => {
-                                    e.preventDefault()
-                                    if (node?.latest_version?.downloadUrl) {
-                                        downloadFile(
-                                            node.latest_version?.downloadUrl,
-                                            `${node.name}_${node.latest_version.version}.zip`
-                                        )
-                                    }
-                                    analytic.track(
-                                        'Download Latest Node Version'
-                                    )
-                                }}
-                            >
-                                <a>Download Latest</a>
-                            </Button>
-                        )}
-
                         {/* admin zone */}
                         {isAdmin && (
                             <>
@@ -449,14 +449,8 @@ const NodeDetails = () => {
                                             className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
                                             htmlFor="edit-search-ranking"
                                         >
-                                            <div className="flex items-center">
-                                                <span>
-                                                    Search Ranking:{' '}
-                                                    {node.search_ranking}
-                                                </span>
-                                            </div>
                                             <button
-                                                className="ml-2 flex items-center justify-center"
+                                                className="mr-2 flex items-center justify-center"
                                                 id="edit-search-ranking"
                                                 onClick={() => {
                                                     setIsSearchRankingEditModalOpen(
@@ -467,8 +461,14 @@ const NodeDetails = () => {
                                                     )
                                                 }}
                                             >
-                                                <MdEdit className="w-5 h-5 text-white" />
+                                                <MdEdit className="w-4 h-4 text-white" />
                                             </button>
+                                            <div className="flex items-center">
+                                                <span>
+                                                    Search Ranking:{' '}
+                                                    {node.search_ranking}
+                                                </span>
+                                            </div>
                                         </Label>
                                         <SearchRankingEditModal
                                             nodeId={nodeId}
@@ -491,6 +491,20 @@ const NodeDetails = () => {
                                         className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
                                         htmlFor="edit-preempted-comfy-node-names"
                                     >
+                                        <button
+                                            className="mr-2 flex items-center justify-center"
+                                            id="edit-preempted-comfy-node-names"
+                                            onClick={() => {
+                                                setIsPreemptedComfyNodeNamesEditModalOpen(
+                                                    true
+                                                )
+                                                analytic.track(
+                                                    'Edit Preempted Comfy Node Names'
+                                                )
+                                            }}
+                                        >
+                                            <MdEdit className="w-4 h-4 text-white" />
+                                        </button>
                                         <div className="flex items-center">
                                             <span>
                                                 Preempted Names:{' '}
@@ -506,20 +520,6 @@ const NodeDetails = () => {
                                                 </pre>
                                             </span>
                                         </div>
-                                        <button
-                                            className="ml-2 flex items-center justify-center"
-                                            id="edit-preempted-comfy-node-names"
-                                            onClick={() => {
-                                                setIsPreemptedComfyNodeNamesEditModalOpen(
-                                                    true
-                                                )
-                                                analytic.track(
-                                                    'Edit Preempted Comfy Node Names'
-                                                )
-                                            }}
-                                        >
-                                            <MdEdit className="w-5 h-5 text-white" />
-                                        </button>
                                     </Label>
                                     <PreemptedComfyNodeNamesEditModal
                                         nodeId={nodeId}
