@@ -91,7 +91,7 @@ export default function SearchRankingEditModal({
             .mutateAsync({
                 nodeId,
                 publisherId,
-                data: { search_ranking: searchRanking },
+                data: { ...node, search_ranking: searchRanking },
             })
             .finally(() => {
                 // Invalidate queries to ensure fresh data
