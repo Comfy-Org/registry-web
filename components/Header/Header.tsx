@@ -89,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
 
                 <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />
             </div>
-            <NavbarCollapse></NavbarCollapse>
+            <NavbarCollapse />
         </Navbar>
     )
 }
