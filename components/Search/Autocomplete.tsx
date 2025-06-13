@@ -147,7 +147,7 @@ export default function Autocomplete({
                     debouncedSetInstantSearchUiState({ query: state.query })
                 }
             },
-            onInput({ event }) {
+            oninput({ event }) {
                 if (!hasUserInteracted) setHasUserInteracted(true)
             },
             renderer: { createElement, Fragment, render: () => {} },
