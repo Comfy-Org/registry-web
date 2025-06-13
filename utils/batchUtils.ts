@@ -27,12 +27,9 @@ function simpleHash(str: string): string {
  */
 export function generateBatchId(keys: string[]): string {
     // Sort to ensure consistent hash regardless of order
-    const sortedKeys = [...keys].sort()
-    const timestamp =
-        new Date().toISOString() + Math.random().toString(36).substring(2, 15)
-    // Combine all keys with timestamp to create a unique hash
-    const input = `${sortedKeys.join('|')}|${timestamp}`
-    return simpleHash(input)
+    const sortedKeys = [...keys].sort().join('|')
+    // Generate a hash from the sorted keys
+    return simpleHash(sortedKeys)
 }
 
 /**
