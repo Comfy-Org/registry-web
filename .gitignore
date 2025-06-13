@@ -60,3 +60,8 @@ yarn.lock
 # ignore storybook files
 storybook-static
 *storybook.log
+
+# ignore playwright reports and test results
+playwright-report/
+test-results/
+/playwright/.cache/
