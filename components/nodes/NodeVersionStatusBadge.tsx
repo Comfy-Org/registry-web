@@ -16,7 +16,7 @@ const NodeVersionStatusBadge: React.FC<{ status?: NodeVersionStatus }> = ({
     }
 
     if (status === NodeVersionStatus.NodeVersionStatusBanned) {
-        return <Badge color="failure">Banned</Badge>
+        return <Badge color="failure">Rejected</Badge>
     }
 
     return null

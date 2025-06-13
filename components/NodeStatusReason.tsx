@@ -33,6 +33,7 @@ export const zErrorArray = z
         file_path: z.string().optional(), // File name is a string and may or may not be present
         line_number: z.number().optional(), // Line number can be a string or number and may or may not be present
         code_snippet: z.string().optional(), // Line content where the error is found is a string and optional
+        message: z.string().optional(), // Line content where the error is found is a string and optional
         scanner: z.string().optional(), // Scanner name is a string and optional
         // yara
         // meta: z
@@ -405,7 +406,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     &nbsp;
                                     {e.issue_type}
                                     &nbsp;
-                                    {e.code_snippet}
+                                    {e.code_snippet || e.message}
                                 </code>
                             </li>
                         ))}

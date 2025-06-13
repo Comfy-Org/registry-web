@@ -31,9 +31,7 @@ describe('Batch Utilities', () => {
             // The batchId should be deterministic for the same set of keys, regardless of order
             const batchId1 = generateBatchId(testKeys1)
             const batchId2 = generateBatchId(testKeys2)
-
-            // Only the keys part should be deterministic; full hash still contains timestamp
-            expect(batchId1).not.toBe(batchId2) // Different due to timestamp
+            expect(batchId1).toBe(batchId2)
         })
     })
 

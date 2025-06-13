@@ -95,9 +95,9 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                     </Modal.Header>
                     <div className="flex justify-evenly">
                         <div className="relative max-w-sm transition-all duration-300 cursor-pointer ">
-                            <p className="mb-2 text-sm text-white">
+                            {/* <p className="mb-2 text-sm text-white">
                                 Upload Logo
-                            </p>
+                            </p> */}
                             <Image
                                 src={nodesLogo}
                                 alt="icon"

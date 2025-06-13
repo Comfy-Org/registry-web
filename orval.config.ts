@@ -1,7 +1,10 @@
-import 'dotenv/config' // load backend url from .env
-import { defineConfig } from 'orval'
+// load backend url from .env, not necessary if you use bun
+if (!globalThis.Bun) require('dotenv/config')
 
-export default defineConfig({
+/**
+ * @type {import('orval').ConfigExternal}
+ */
+export default {
     dripApi: {
         input: {
             target: `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
@@ -17,4 +20,4 @@ export default defineConfig({
             },
         },
     },
-})
+}

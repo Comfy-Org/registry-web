@@ -1,9 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
-import { Button, Spinner } from 'flowbite-react'
+import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
+import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
@@ -20,6 +22,8 @@ import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
 import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
+import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
+import SearchRankingEditModal from './SearchRankingEditModal'
 
 export function formatRelativeDate(dateString: string) {
     const date = new Date(dateString)
@@ -78,41 +82,53 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const router = useRouter()
-    const { publisherId: _publisherId, nodeId } = router.query // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
         null
     )
-
     const [isEditModalOpen, setIsEditModal] = useState(false)
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
+        useState(false)
+    const [
+        isPreemptedComfyNodeNamesEditModalOpen,
+        setIsPreemptedComfyNodeNamesEditModalOpen,
+    ] = useState(false)
+    // useNodeList
+    // parse query parameters from the URL
+    // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
+    const qc = useQueryClient()
+    const router = useRouter()
+    const { publisherId: _publisherId, nodeId: _nodeId } = router.query
+    const nodeId = String(_nodeId) // nodeId is always string
 
-    const { data: node, isLoading, isError } = useGetNode(nodeId as string)
+    // fetch node details and permissions
+    const { data: node, isLoading, isError } = useGetNode(nodeId)
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
-        publisherId as string,
-        nodeId as string
+        publisherId,
+        nodeId
     )
-
-    const {
-        data: nodeVersions,
-        isLoading: loadingNodeVersions,
-        error: listNodeVersionsError,
-        refetch: refetchVersions,
-    } = useListNodeVersions(nodeId as string, {
-        statuses: [
-            NodeVersionStatus.NodeVersionStatusActive,
-            NodeVersionStatus.NodeVersionStatusPending,
-            NodeVersionStatus.NodeVersionStatusFlagged,
-        ],
-    })
 
     const { data: user } = useGetUser()
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
     const warningForAdminEdit = isAdmin && !permissions?.canEdit
+
+    const { data: nodeVersions, refetch: refetchVersions } =
+        useListNodeVersions(nodeId as string, {
+            statuses: [
+                NodeVersionStatus.NodeVersionStatusActive,
+                NodeVersionStatus.NodeVersionStatusPending,
+                NodeVersionStatus.NodeVersionStatusFlagged,
+                // show rejected versions only to publisher
+                ...(!canEdit
+                    ? []
+                    : [NodeVersionStatus.NodeVersionStatusBanned]),
+            ],
+        })
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
@@ -165,6 +181,7 @@ const NodeDetails = () => {
 
     return (
         <>
+            {/* TODO(sno): unwrap this div out of fragment in another PR */}
             <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
                 <div className="w-full lg:w-1/5 ">
                     <Image
@@ -351,9 +368,34 @@ const NodeDetails = () => {
                                     href={node.repository || ''}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    className="flex items-center"
                                 >
+                                    <MdOpenInNew className="w-5 h-5 mr-2" />
                                     View Repository
                                 </a>
+                            </Button>
+                        )}
+
+                        {!!node.latest_version?.downloadUrl && (
+                            <Button
+                                hidden={isUnclaimed}
+                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
+                                onClick={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => {
+                                    e.preventDefault()
+                                    if (node?.latest_version?.downloadUrl) {
+                                        downloadFile(
+                                            node.latest_version?.downloadUrl,
+                                            `${node.name}_${node.latest_version.version}.zip`
+                                        )
+                                    }
+                                    analytic.track(
+                                        'Download Latest Node Version'
+                                    )
+                                }}
+                            >
+                                <a>Download Latest</a>
                             </Button>
                         )}
 
@@ -395,27 +437,107 @@ const NodeDetails = () => {
                             </Button>
                         )}
 
-                        {!!node.latest_version?.downloadUrl && (
-                            <Button
-                                hidden={isUnclaimed}
-                                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                onClick={(
-                                    e: React.MouseEvent<HTMLButtonElement>
-                                ) => {
-                                    e.preventDefault()
-                                    if (node?.latest_version?.downloadUrl) {
-                                        downloadFile(
-                                            node.latest_version?.downloadUrl,
-                                            `${node.name}_${node.latest_version.version}.zip`
-                                        )
-                                    }
-                                    analytic.track(
-                                        'Download Latest Node Version'
-                                    )
-                                }}
-                            >
-                                <a>Download Latest</a>
-                            </Button>
+                        {/* admin zone */}
+                        {isAdmin && (
+                            <>
+                                <hr />
+
+                                {/* Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal */}
+                                {null != node.search_ranking && (
+                                    <>
+                                        <Label
+                                            className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                                            htmlFor="edit-search-ranking"
+                                        >
+                                            <button
+                                                className="mr-2 flex items-center justify-center"
+                                                id="edit-search-ranking"
+                                                onClick={() => {
+                                                    setIsSearchRankingEditModalOpen(
+                                                        true
+                                                    )
+                                                    analytic.track(
+                                                        'Edit Search Ranking'
+                                                    )
+                                                }}
+                                            >
+                                                <MdEdit className="w-4 h-4 text-white" />
+                                            </button>
+                                            <div className="flex items-center">
+                                                <span>
+                                                    Search Ranking:{' '}
+                                                    {node.search_ranking}
+                                                </span>
+                                            </div>
+                                        </Label>
+                                        <SearchRankingEditModal
+                                            nodeId={nodeId}
+                                            defaultSearchRanking={
+                                                node.search_ranking ?? 5
+                                            }
+                                            open={isSearchRankingEditModalOpen}
+                                            onClose={() =>
+                                                setIsSearchRankingEditModalOpen(
+                                                    false
+                                                )
+                                            }
+                                        />
+                                    </>
+                                )}
+
+                                {/* Preempted Comfy Node Names management section */}
+                                <>
+                                    <Label
+                                        className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                                        htmlFor="edit-preempted-comfy-node-names"
+                                    >
+                                        <button
+                                            className="mr-2 flex items-center justify-center"
+                                            id="edit-preempted-comfy-node-names"
+                                            onClick={() => {
+                                                setIsPreemptedComfyNodeNamesEditModalOpen(
+                                                    true
+                                                )
+                                                analytic.track(
+                                                    'Edit Preempted Comfy Node Names'
+                                                )
+                                            }}
+                                        >
+                                            <MdEdit className="w-4 h-4 text-white" />
+                                        </button>
+                                        <div className="flex items-center">
+                                            <span>
+                                                Preempted Names:{' '}
+                                                <pre className="whitespace-pre-wrap text-xs">
+                                                    {node.preempted_comfy_node_names &&
+                                                    node
+                                                        .preempted_comfy_node_names
+                                                        .length > 0
+                                                        ? node.preempted_comfy_node_names.join(
+                                                              '\n'
+                                                          )
+                                                        : 'None'}
+                                                </pre>
+                                            </span>
+                                        </div>
+                                    </Label>
+                                    <PreemptedComfyNodeNamesEditModal
+                                        nodeId={nodeId}
+                                        defaultPreemptedComfyNodeNames={
+                                            node.preempted_comfy_node_names ||
+                                            []
+                                        }
+                                        open={
+                                            isPreemptedComfyNodeNamesEditModalOpen
+                                        }
+                                        onClose={() =>
+                                            setIsPreemptedComfyNodeNamesEditModalOpen(
+                                                false
+                                            )
+                                        }
+                                    />
+                                </>
+                            </>
                         )}
                     </div>
                 </div>
@@ -424,23 +546,23 @@ const NodeDetails = () => {
                     onCloseEditModal={onCloseEditModal}
                     nodeData={node}
                     openEditModal={isEditModalOpen}
-                    publisherId={publisherId as string}
+                    publisherId={publisherId}
                 />
 
                 <NodeDeleteModal
                     openDeleteModal={isDeleteModalOpen}
                     onClose={() => setIsDeleteModalOpen(false)}
-                    nodeId={nodeId as string}
-                    publisherId={publisherId as string}
+                    nodeId={nodeId}
+                    publisherId={publisherId}
                 />
 
                 {isDrawerOpen && selectedVersion && nodeId && (
                     <NodeVDrawer
                         toggleDrawer={toggleDrawer}
                         isDrawerOpen={isDrawerOpen}
-                        nodeId={nodeId as string}
-                        publisherId={publisherId as string}
-                        versionNumber={selectedVersion.version as string}
+                        nodeId={nodeId}
+                        publisherId={publisherId}
+                        versionNumber={selectedVersion.version ?? ''}
                         canEdit={canEdit}
                         onUpdate={() => {
                             refetchVersions()

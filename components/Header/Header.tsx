@@ -6,8 +6,11 @@ import {
     NavbarToggle,
 } from 'flowbite-react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
+import { getFromUrlSearchParam } from '../common/HOC/getFromUrlSearchParam'
 import ProfileDropdown from './ProfileDropdown'
 
 interface HeaderProps {
@@ -24,6 +27,11 @@ const DiscordIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 )
 
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
+    const router = useRouter()
+    const handleLogIn = () =>
+        router.push(`/auth/login?${getFromUrlSearchParam()}`)
+    const handleSignUp = () =>
+        router.push(`/auth/signup?${getFromUrlSearchParam()}`)
     return (
         <Navbar
             fluid
@@ -34,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 paddingRight: 0,
             }}
         >
-            <Navbar.Brand href="/">
+            <Link href="/">
                 <div className="flex gap-1">
                     <Image
                         alt="Comfy Logo"
@@ -47,28 +55,19 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         Comfy Registry
                     </span>
                 </div>
-            </Navbar.Brand>
+            </Link>
             <div className="flex items-center gap-2 bg-gray-900 md:order-2">
                 {isLoggedIn ? (
                     <ProfileDropdown />
                 ) : (
                     <>
-                        <Button
-                            href={`/auth/login?fromUrl=${window.location.pathname}`}
-                            color="light"
-                            className="bg-gray-800 border-none outline-none"
-                        >
+                        <Button onClick={handleLogIn} color="dark">
                             <span className="text-white text-xs md:text-base">
                                 Log in
                             </span>
                         </Button>
 
-                        <Button
-                            href={`/auth/signup?fromUrl=${
-                                window.location.pathname
-                            }`}
-                            color="blue"
-                        >
+                        <Button onClick={handleSignUp} color="blue">
                             <span className="text-xs md:text-base">
                                 Sign up
                             </span>
@@ -90,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
 
                 <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />
             </div>
-            <NavbarCollapse></NavbarCollapse>
+            <NavbarCollapse />
         </Navbar>
     )
 }
