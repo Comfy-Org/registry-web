@@ -52,6 +52,8 @@ export default function Autocomplete({
         500
     )
 
+    const [hasUserInteracted, setHasUserInteracted] = useState(false)
+
     useEffect(() => {
         setQuery(instantSearchUiState.query)
         setPage(0)
@@ -66,6 +68,10 @@ export default function Autocomplete({
                     ...source,
                     onSelect({ item }) {
                         setInstantSearchUiState({ query: item.label })
+                    },
+                    getItems(params) {
+                        if (!hasUserInteracted) return []
+                        return source.getItems(params)
                     },
                 }
             },
@@ -89,10 +95,10 @@ export default function Autocomplete({
                         })
                     },
                     getItems(params) {
+                        if (!hasUserInteracted) return []
                         if (!params.state.query) {
                             return []
                         }
-
                         return source.getItems(params)
                     },
                     templates: {
@@ -101,7 +107,6 @@ export default function Autocomplete({
                             if (items.length === 0) {
                                 return <Fragment />
                             }
-
                             return (
                                 <Fragment>
                                     <span className="aa-SourceHeaderTitle">
@@ -115,9 +120,8 @@ export default function Autocomplete({
                 }
             },
         })
-
         return [recentSearches, querySuggestions]
-    }, [searchClient])
+    }, [searchClient, hasUserInteracted])
 
     useEffect(() => {
         if (!autocompleteContainer.current) {
@@ -143,6 +147,9 @@ export default function Autocomplete({
                     debouncedSetInstantSearchUiState({ query: state.query })
                 }
             },
+            onInput({ event }) {
+                if (!hasUserInteracted) setHasUserInteracted(true)
+            },
             renderer: { createElement, Fragment, render: () => {} },
             render({ children }, root) {
                 if (!panelRootRef.current || rootRef.current !== root) {
@@ -150,13 +157,12 @@ export default function Autocomplete({
                     panelRootRef.current?.unmount()
                     panelRootRef.current = createRoot(root)
                 }
-
                 panelRootRef.current.render(children)
             },
         })
 
         return () => autocompleteInstance.destroy()
-    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins, query])
+    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins, query, hasUserInteracted])
 
     return <div className={className} ref={autocompleteContainer} />
 }
