@@ -53,7 +53,7 @@ const persistEffect = () => {
             shouldDehydrateQuery: ({ queryKey, state }) => {
                 // Don't persist pending queries as they can't be properly restored
                 if (state.status === 'pending') return false
-                
+
                 // Persist all queries in localStorage, share across tabs
                 return true
             },
