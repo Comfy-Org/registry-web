@@ -7,7 +7,9 @@ import { parseJsonSafe } from '@/components/parseJsonSafe'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
+import MailtoNodeVersionModal from 'components/MailtoNodeVersionModal'
 import {
+    Breadcrumb,
     Button,
     Checkbox,
     Label,
@@ -22,7 +24,7 @@ import pMap from 'p-map'
 import { omit } from 'rambda'
 import React, { useRef, useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
-import { HiBan, HiCheck, HiReply } from 'react-icons/hi'
+import { HiBan, HiCheck, HiHome, HiReply } from 'react-icons/hi'
 import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import {
@@ -48,6 +50,9 @@ function NodeVersionList({}) {
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
 
+    // Contact button, send issues or email to node version publisher
+    const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
+
     // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
         if (router.query.page) {
@@ -62,7 +67,7 @@ function NodeVersionList({}) {
         deleted: NodeVersionStatus.NodeVersionStatusDeleted,
         pending: NodeVersionStatus.NodeVersionStatusPending,
         active: NodeVersionStatus.NodeVersionStatusActive,
-    } // satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
+    } satisfies Record<string, NodeVersionStatus> // 'satisfies' requires latest typescript
     const flagColors = {
         all: 'success',
         flagged: 'warning',
@@ -109,6 +114,7 @@ function NodeVersionList({}) {
         useState(false)
 
     const queryForNodeId = router.query.nodeId as string
+    const queryForStatusReason = router.query.statusReason as string
 
     const getAllNodeVersionsQuery = useListAllNodeVersions(
         {
@@ -116,9 +122,10 @@ function NodeVersionList({}) {
             pageSize: 8,
             statuses: selectedStatus,
             include_status_reason: true,
+            status_reason: queryForStatusReason || '',
 
             // failed to filter, TODO: fix this in the backend
-            // nodeId: queryForNodeId ?? undefined,
+            // nodeId: queryForNodeId || undefined,
         },
         { query: { enabled: !queryForNodeId } }
     )
@@ -155,17 +162,6 @@ function NodeVersionList({}) {
             toast.error('Error getting node versions')
         }
     }, [getAllNodeVersionsQuery])
-
-    if (
-        getAllNodeVersionsQuery.isLoading ||
-        getSpecificNodeVersionQuery.isLoading
-    ) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <Spinner />
-            </div>
-        )
-    }
 
     async function onReview({
         nodeVersion: nv,
@@ -360,6 +356,13 @@ function NodeVersionList({}) {
         message?: string | null,
         batchId?: string
     ) => {
+        if (nv.status !== NodeVersionStatus.NodeVersionStatusFlagged) {
+            toast.error(
+                `Node version ${nv.node_id}@${nv.version} is not flagged, skip`
+            )
+            return
+        }
+
         message ||= prompt('Approve Reason: ', 'Approved by admin')
         if (!message) return toast.error('Please provide a reason')
 
@@ -376,6 +379,15 @@ function NodeVersionList({}) {
         message?: string | null,
         batchId?: string
     ) => {
+        if (
+            nv.status !== NodeVersionStatus.NodeVersionStatusFlagged &&
+            nv.status !== NodeVersionStatus.NodeVersionStatusActive
+        ) {
+            toast.error(
+                `Node version ${nv.node_id}@${nv.version} is not flagged or active, skip`
+            )
+            return
+        }
         message ||= prompt('Reject Reason: ', 'Rejected by admin')
         if (!message) return toast.error('Please provide a reason')
 
@@ -671,8 +683,34 @@ function NodeVersionList({}) {
             </div>
         )
     }
+
+    if (
+        getAllNodeVersionsQuery.isLoading ||
+        getSpecificNodeVersionQuery.isLoading
+    ) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Spinner />
+            </div>
+        )
+    }
+
     return (
         <div>
+            <Breadcrumb className="py-4 px-4">
+                <Breadcrumb.Item
+                    href="/admin"
+                    icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/admin')
+                    }}
+                >
+                    Admin Dashboard
+                </Breadcrumb.Item>
+                <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
+            </Breadcrumb>
+
             <BatchOperationBar />
 
             {/* Batch operation modal */}
@@ -795,6 +833,32 @@ function NodeVersionList({}) {
                     />
 
                     <Button color="blue">Search</Button>
+                </form>
+                <form
+                    className="flex gap-2 items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        const inputElement = document.getElementById(
+                            'filter-status-reason'
+                        ) as HTMLInputElement
+                        const statusReason = inputElement.value.trim()
+                        const searchParams = new URLSearchParams({
+                            ...(omit(['statusReason'])(router.query) as object),
+                            ...(statusReason ? { statusReason } : {}),
+                        })
+                            .toString()
+                            .replace(/^(?!$)/, '?')
+                        router.push(
+                            router.pathname + searchParams + location.hash
+                        )
+                    }}
+                >
+                    <TextInput
+                        id="filter-status-reason"
+                        placeholder="Filter by status reason"
+                        defaultValue={queryForStatusReason || ''}
+                    />
+                    <Button color="blue">Search by Reason</Button>
                 </form>
                 <div className="flex gap-2">
                     <Button
@@ -1007,36 +1071,69 @@ function NodeVersionList({}) {
                             </div>
                         </div>
                         <NodeStatusReason {...nv} />
+                        <div className="flex gap-2 justify-between">
+                            <div className="flex gap-2">
+                                {/* show approve only flagged/banned node versions */}
+                                {(nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusPending ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusFlagged ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusBanned) && (
+                                    <Button
+                                        color="blue"
+                                        className="flex"
+                                        onClick={() => onApprove(nv)}
+                                    >
+                                        Approve
+                                    </Button>
+                                )}
+                                {/* show reject only flagged/active node versions */}
+                                {(nv.status ===
+                                    NodeVersionStatus.NodeVersionStatusPending ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusActive ||
+                                    nv.status ===
+                                        NodeVersionStatus.NodeVersionStatusFlagged) && (
+                                    <Button
+                                        color="failure"
+                                        onClick={() => onReject(nv)}
+                                    >
+                                        Reject
+                                    </Button>
+                                )}
 
-                        <div className="flex gap-2">
-                            <Button
-                                color="blue"
-                                className="flex"
-                                onClick={() => onApprove(nv)}
-                            >
-                                Approve
-                            </Button>
-                            <Button
-                                color="failure"
-                                onClick={() => onReject(nv)}
-                            >
-                                Reject
-                            </Button>
+                                {checkIsUndoable(nv) && (
+                                    <Button
+                                        color="gray"
+                                        onClick={() => onUndo(nv)}
+                                    >
+                                        Undo
+                                    </Button>
+                                )}
 
-                            {checkIsUndoable(nv) && (
-                                <Button color="gray" onClick={() => onUndo(nv)}>
-                                    Undo
-                                </Button>
-                            )}
-
-                            {checkHasBatchId(nv) && (
+                                {checkHasBatchId(nv) && (
+                                    <Button
+                                        color="warning"
+                                        onClick={() => undoBatch(nv)}
+                                    >
+                                        Undo Batch
+                                    </Button>
+                                )}
+                            </div>
+                            <div className="flex gap-2">
                                 <Button
-                                    color="warning"
-                                    onClick={() => undoBatch(nv)}
+                                    color="gray"
+                                    onClick={() => setMailtoNv(nv)}
                                 >
-                                    Undo Batch
+                                    Contact Publisher
                                 </Button>
-                            )}
+                                <MailtoNodeVersionModal
+                                    nodeVersion={mailtoNv ?? undefined}
+                                    open={!!mailtoNv}
+                                    onClose={() => setMailtoNv(null)}
+                                />
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -1049,12 +1146,6 @@ function NodeVersionList({}) {
             </div>
         </div>
     )
-}
-
-const getNodeString = (url?: string): string => {
-    if (!url) return ''
-    const match = url.match(/comfy-registry\/(.+?)\/\d+\.\d+\.\d+\/node\.zip/)
-    return match ? match[1] : ''
 }
 
 export default withAdmin(NodeVersionList)
