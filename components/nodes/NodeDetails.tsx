@@ -82,8 +82,6 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const router = useRouter()
-    const { nodeId, publisherId: _publisherId } = router.query
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
