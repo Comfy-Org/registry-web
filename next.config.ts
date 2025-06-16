@@ -1,5 +1,7 @@
 import mdx from '@next/mdx'
 import { NextConfig } from 'next'
+import { i18n } from './next-i18next.config.js'
+
 const withMDX = mdx({
     extension: /\.mdx?$/,
     options: {
@@ -12,6 +14,7 @@ const withMDX = mdx({
 
 const conf: NextConfig = {
     reactStrictMode: true,
+    i18n,
 
     // Append the default value with md extensions
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
