@@ -362,14 +362,15 @@ const NodeDetails = () => {
                                             </p>
                                             <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                                                 {version.changelog}
-                                                <span
+                                                <div
                                                     className="text-sm font-normal text-blue-500 cursor-pointer"
                                                     onClick={() =>
                                                         selectVersion(version)
                                                     }
+                                                    tabIndex={0}
                                                 >
-                                                    <a>More</a>
-                                                </span>
+                                                    More
+                                                </div>
                                             </p>
                                         </div>
                                     ))}
@@ -383,19 +384,19 @@ const NodeDetails = () => {
                         {node.repository && (
                             <Button
                                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
-                                onClick={() => {
+                                onClick={(e) => {
                                     analytic.track('View Repository')
+                                    e.preventDefault()
+                                    window.open(
+                                        node.repository,
+                                        '_blank',
+                                        'noopener noreferrer'
+                                    )
                                 }}
+                                href={node.repository || ''}
                             >
-                                <a
-                                    href={node.repository || ''}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center"
-                                >
-                                    <MdOpenInNew className="w-5 h-5 mr-2" />
-                                    View Repository
-                                </a>
+                                <MdOpenInNew className="w-5 h-5 mr-2" />
+                                View Repository
                             </Button>
                         )}
 
