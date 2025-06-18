@@ -12,11 +12,11 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
-import { useClaimNodeMutation } from 'src/api/customHooks'
 import {
     useGetNode,
     useGetPublisher,
     useGetUser,
+    useClaimMyNode,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
@@ -25,7 +25,7 @@ function ClaimMyNodePage() {
     const { publisherId, nodeId } = router.query
     const [isVerifying, setIsVerifying] = useState(false)
     const [isVerified, setIsVerified] = useState(false)
-    const [githubUserId, setGithubUserId] = useState<string | null>(null)
+    const [githubToken, setGithubToken] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
     
     // Get the node, publisher, and current user
@@ -37,21 +37,23 @@ function ClaimMyNodePage() {
     })
     const { data: user, isLoading: userLoading } = useGetUser()
     
-    // Mutation for claiming the node
-    const { mutate: claimNode, isLoading: isClaimingNode } = useClaimNodeMutation({
-        onSuccess: () => {
-            toast.success('Node claimed successfully!')
-            analytic.track('Node Claimed', {
-                nodeId,
-                publisherId,
-            })
-            // Redirect to the node details page
-            router.push(`/publishers/${publisherId}/nodes/${nodeId}`)
-        },
-        onError: (error: any) => {
-            toast.error(error?.message || 'Failed to claim node. Please try again.')
-            setError('Unable to claim the node. Please try again or contact support.')
-        },
+    // Mutation for claiming the node using the generated API hook
+    const { mutate: claimNode, isLoading: isClaimingNode } = useClaimMyNode({
+        mutation: {
+            onSuccess: () => {
+                toast.success('Node claimed successfully!')
+                analytic.track('Node Claimed', {
+                    nodeId,
+                    publisherId,
+                })
+                // Redirect to the node details page
+                router.push(`/publishers/${publisherId}/nodes/${nodeId}`)
+            },
+            onError: (error: any) => {
+                toast.error(error?.message || 'Failed to claim node. Please try again.')
+                setError('Unable to claim the node. Please verify your GitHub repository ownership and try again.')
+            },
+        }
     })
     
     const isLoading = nodeLoading || publisherLoading || userLoading
@@ -67,7 +69,7 @@ function ClaimMyNodePage() {
         }
         
         // Check if we have a nodeId in the query params
-        const nodeIdParam = router.query.nodeId as string
+        const nodeIdParam = router.query.nodeId as string || nodeId as string
         if (!nodeIdParam) {
             setError('Node ID is required for claiming.')
             return
@@ -88,49 +90,66 @@ function ClaimMyNodePage() {
             return
         }
         
-        // Start the GitHub OAuth flow
-        const initiateGitHubOAuth = async () => {
-            try {
-                setIsVerifying(true)
-                
-                // In a real implementation, we would call a backend API to handle GitHub OAuth
-                // and verify repository ownership
-                
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 2000))
-                
-                // Mock successful verification
-                setIsVerified(true)
-                setGithubUserId('mock-github-user-id')
-                setIsVerifying(false)
-                
-                analytic.track('GitHub Verification Success', {
-                    nodeId: nodeIdParam,
-                    publisherId,
-                })
-            } catch (err) {
-                console.error('GitHub OAuth error:', err)
-                setIsVerifying(false)
-                setError('Failed to verify GitHub account. Please try again.')
-                
-                analytic.track('GitHub Verification Failed', {
-                    nodeId: nodeIdParam,
-                    publisherId,
-                    error: err,
-                })
-            }
-        }
+        // Check for GitHub token in the URL (OAuth callback)
+        const urlParams = new URLSearchParams(window.location.search)
+        const token = urlParams.get('token')
         
-        initiateGitHubOAuth()
+        if (token) {
+            // If token is in URL, we've completed OAuth flow
+            setGithubToken(token)
+            setIsVerified(true)
+            
+            // Clean up URL without reloading the page
+            const newUrl = window.location.pathname
+            window.history.replaceState({}, document.title, newUrl)
+            
+            analytic.track('GitHub Verification Success', {
+                nodeId: nodeIdParam,
+                publisherId,
+            })
+        }
     }, [node, publisher, user, nodeId, publisherId, router.query])
     
+    const initiateGitHubOAuth = () => {
+        if (!node || !publisherId || !nodeId) return
+        
+        setIsVerifying(true)
+        
+        // Extract repo information
+        const repoUrl = node.repository
+        const repoMatch = repoUrl!.match(/github\.com\/([^\/]+)\/([^\/]+)/)
+        if (!repoMatch) {
+            setError('Invalid GitHub repository URL format.')
+            setIsVerifying(false)
+            return
+        }
+        
+        const [, owner, repo] = repoMatch
+        
+        // Construct the GitHub OAuth URL
+        // This would typically redirect to your backend auth endpoint
+        // The backend would then redirect to GitHub's OAuth flow
+        // After GitHub auth, the user would be redirected back to this page with a token
+        const redirectUri = encodeURIComponent(window.location.href)
+        const githubOAuthUrl = `/api/auth/github?redirectUri=${redirectUri}&owner=${owner}&repo=${repo}&nodeId=${nodeId}&publisherId=${publisherId}`
+        
+        // Redirect to GitHub OAuth
+        window.location.href = githubOAuthUrl
+        
+        analytic.track('GitHub OAuth Initiated', {
+            nodeId,
+            publisherId,
+            repository: repoUrl,
+        })
+    }
+    
     const handleClaimNode = () => {
-        if (!isVerified || !githubUserId) {
+        if (!isVerified || !githubToken) {
             toast.error('GitHub verification is required before claiming the node.')
             return
         }
         
-        const nodeIdParam = router.query.nodeId as string
+        const nodeIdParam = router.query.nodeId as string || nodeId as string
         if (!nodeIdParam) {
             toast.error('Node ID is required for claiming.')
             return
@@ -138,9 +157,11 @@ function ClaimMyNodePage() {
         
         // Call the mutation function with the required parameters
         claimNode({
-            nodeId: nodeIdParam,
             publisherId: publisherId as string,
-            githubUserId: githubUserId,
+            nodeId: nodeIdParam,
+            data: {
+                GH_TOKEN: githubToken
+            }
         })
     }
     
@@ -260,7 +281,7 @@ function ClaimMyNodePage() {
                         </div>
                         <div className="flex items-start">
                             <span className="text-gray-400 w-24">Node ID:</span>
-                            <span className="text-white">{router.query.nodeId}</span>
+                            <span className="text-white">{router.query.nodeId || nodeId}</span>
                         </div>
                         <div className="flex items-start">
                             <span className="text-gray-400 w-24">Publisher:</span>
@@ -316,10 +337,10 @@ function ClaimMyNodePage() {
                             </h3>
                             <p className="text-gray-400">
                                 {isVerifying
-                                    ? 'Verifying your GitHub account and repository permissions...'
+                                    ? 'Connecting to GitHub to verify your repository permissions...'
                                     : isVerified
                                     ? 'Successfully verified your GitHub account and repository permissions.'
-                                    : 'Waiting to verify your GitHub account and repository permissions.'}
+                                    : 'To claim this node, we need to verify your ownership of the GitHub repository.'}
                             </p>
                         </div>
                     </div>
@@ -374,23 +395,7 @@ function ClaimMyNodePage() {
                     <div className="flex justify-end">
                         <Button
                             color="blue"
-                            onClick={() => {
-                                // Retry verification if it failed
-                                setIsVerifying(true)
-                                
-                                // In a real implementation, this would restart the GitHub OAuth flow
-                                analytic.track('Retry GitHub Verification', {
-                                    nodeId: router.query.nodeId,
-                                    publisherId,
-                                })
-                                
-                                // Simulate verification process
-                                setTimeout(() => {
-                                    setIsVerified(true)
-                                    setGithubUserId('mock-github-user-id')
-                                    setIsVerifying(false)
-                                }, 2000)
-                            }}
+                            onClick={initiateGitHubOAuth}
                         >
                             <svg
                                 className="w-4 h-4 mr-2"
