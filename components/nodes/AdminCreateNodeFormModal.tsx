@@ -234,5 +234,5 @@ export function AdminCreateNodeFormModal({
                 </form>
             </Modal.Body>
         </Modal>
-    )
+    );
 }

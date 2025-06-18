@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 paddingRight: 0,
             }}
         >
-            <Link href="/">
+            <Link href="/" legacyBehavior>
                 <div className="flex gap-1">
                     <Image
                         alt="Comfy Logo"
@@ -91,7 +91,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             </div>
             <NavbarCollapse />
         </Navbar>
-    )
+    );
 }
 
 export default Header

@@ -277,7 +277,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                             target="_blank"
                             className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
                             title={`View all node versions for ${nv.node_id}`}
-                        >
+                            legacyBehavior>
                             <MdOpenInNew className="w-6 h-6" />
                         </Link>
                     </summary>
@@ -321,7 +321,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             href={`/admin/nodeversions?nodeId=${nv.node_id}&version=${nv.version}`}
                                             target="_blank"
                                             className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
-                                        >
+                                            legacyBehavior>
                                             <MdOpenInNew className="w-4 h-4" />
                                         </Link>
                                     </div>
@@ -368,7 +368,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                     </div>
                 </details>
             )}
-
             {!!problemsSummary?.length && (
                 <>
                     <h4>{'Problems Summary: '}</h4>
@@ -388,11 +387,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     ) : (
                                         <span className="text-red-500">❓</span>
                                     )}
-                                    <Link
-                                        href={e.url}
-                                        target="_blank"
-                                        className="button flex-0"
-                                    >
+                                    <Link href={e.url} target="_blank" className="button flex-0" legacyBehavior>
                                         <FaGithub className="w-5 h-5 ml-4" />
                                     </Link>
                                     <code className="text-gray-400 whitespace-nowrap flex-1">
@@ -413,7 +408,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                     </ol>
                 </>
             )}
-
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
                     <summary>{'Status Reason: '}</summary>
@@ -428,7 +422,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                 </details>
             )}
         </div>
-    )
+    );
 }
 
 export function PrettieredJSON5({ children: raw }: { children: string }) {

@@ -710,9 +710,7 @@ function NodeVersionList({}) {
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
             </Breadcrumb>
-
             <BatchOperationBar />
-
             {/* Batch operation modal */}
             <Modal
                 show={isBatchModalOpen}
@@ -790,7 +788,6 @@ function NodeVersionList({}) {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
             <div className="flex flex-col gap-4 mb-6">
                 <h1 className="text-2xl font-bold text-gray-200">
                     Node Versions
@@ -913,7 +910,6 @@ function NodeVersionList({}) {
                     />
                 </div>
             </div>
-
             {versions
                 .map((nv) => ({ ...nv, key: `${nv.node_id}@${nv.version}` }))
                 .map(({ key, ...nv }, index) => (
@@ -1028,10 +1024,7 @@ function NodeVersionList({}) {
                                 />
                             </div>
                             <div className="flex gap-2 items-center">
-                                <Link
-                                    target="_blank"
-                                    href={`/nodes/${nv.node_id}`}
-                                >
+                                <Link target="_blank" href={`/nodes/${nv.node_id}`} legacyBehavior>
                                     <MdOpenInNew className="w-6 h-6" />
                                 </Link>
                                 {!!nv.downloadUrl && (
@@ -1039,7 +1032,7 @@ function NodeVersionList({}) {
                                         target="_blank"
                                         href={nv.downloadUrl}
                                         title="Download Archive"
-                                    >
+                                        legacyBehavior>
                                         <MdFolderZip />
                                     </Link>
                                 )}
@@ -1062,7 +1055,7 @@ function NodeVersionList({}) {
                                                 )
                                             })
                                     }}
-                                >
+                                    legacyBehavior>
                                     <FaGithub
                                         className="w-6 h-6"
                                         title="Github"
@@ -1145,7 +1138,7 @@ function NodeVersionList({}) {
                 />
             </div>
         </div>
-    )
+    );
 }
 
 export default withAdmin(NodeVersionList)

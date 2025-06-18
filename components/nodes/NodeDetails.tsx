@@ -575,7 +575,7 @@ const NodeDetails = () => {
                 )}
             </div>
         </>
-    )
+    );
 }
 
 export default NodeDetails

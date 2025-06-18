@@ -145,7 +145,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 </div>
             </a>
         </Link>
-    )
+    );
 }
 
 export default Hit

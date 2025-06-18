@@ -68,7 +68,7 @@ const AuthUI: React.FC<{}> = ({}) => {
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
                     <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
-                        <Link className="flex justify-center" href={'/'}>
+                        <Link className="flex justify-center" href={'/'} legacyBehavior>
                             <Image
                                 alt="Comfy Logo"
                                 src="https://storage.googleapis.com/comfy-assets/logo.png"
@@ -168,7 +168,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                 </div>
             </div>
         </section>
-    )
+    );
 }
 
 export default AuthUI

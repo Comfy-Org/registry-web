@@ -75,7 +75,6 @@ function PreemptedComfyNodeNamesAdminPage() {
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 Preempted Comfy Node Names Management
             </h1>
-
             {/* Search form */}
             <form
                 className="flex gap-2 items-center mb-6"
@@ -92,7 +91,6 @@ function PreemptedComfyNodeNamesAdminPage() {
                     Search
                 </Button>
             </form>
-
             {/* Nodes table */}
             <div className="bg-gray-800 rounded-lg p-4 mb-6">
                 <h2 className="text-lg font-semibold text-white mb-4">
@@ -122,7 +120,7 @@ function PreemptedComfyNodeNamesAdminPage() {
                                 <Link
                                     href={`/nodes/${node.id}`}
                                     className="text-blue-400 hover:underline"
-                                >
+                                    legacyBehavior>
                                     {node.id}
                                 </Link>
                             </div>
@@ -175,7 +173,6 @@ function PreemptedComfyNodeNamesAdminPage() {
                     />
                 </div>
             </div>
-
             {/* Edit Modal */}
             {selectedNode && (
                 <PreemptedComfyNodeNamesEditModal
@@ -188,7 +185,7 @@ function PreemptedComfyNodeNamesAdminPage() {
                 />
             )}
         </div>
-    )
+    );
 }
 
 export default withAdmin(PreemptedComfyNodeNamesAdminPage)

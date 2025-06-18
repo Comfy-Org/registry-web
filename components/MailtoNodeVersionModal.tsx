@@ -53,7 +53,7 @@ export default function MailtoNodeVersionModal({
                                     className="text-blue-600 hover:underline space-x-2"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                >
+                                    legacyBehavior>
                                     <FaGithub className="inline mr-2" />
                                     Open Issue on GitHub
                                     {isNodeLoading && (
@@ -80,7 +80,7 @@ export default function MailtoNodeVersionModal({
                 <Button onClick={onClose}>Close</Button>
             </Modal.Footer>
         </Modal>
-    )
+    );
 }
 function ListPublisherEmails({ publisher }: { publisher: Publisher }) {
     return (
@@ -94,11 +94,11 @@ function ListPublisherEmails({ publisher }: { publisher: Publisher }) {
                         <Link
                             href={`mailto:${email}`}
                             className="text-blue-600 hover:underline"
-                        >
+                            legacyBehavior>
                             {email}
                         </Link>
                     </li>
                 ))}
         </ul>
-    )
+    );
 }
