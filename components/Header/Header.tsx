@@ -42,19 +42,17 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 paddingRight: 0,
             }}
         >
-            <Link href="/">
-                <div className="flex gap-1">
-                    <Image
-                        alt="Comfy Logo"
-                        src="https://storage.googleapis.com/comfy-assets/logo.png"
-                        width={36}
-                        height={36}
-                        className="w-6 h-6 mr-3 sm:w-9 sm:h-9"
-                    />
-                    <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
-                        Comfy Registry
-                    </span>
-                </div>
+            <Link href="/" className="flex gap-1">
+                <Image
+                    alt="Comfy Logo"
+                    src="https://storage.googleapis.com/comfy-assets/logo.png"
+                    width={36}
+                    height={36}
+                    className="w-6 h-6 mr-3 sm:w-9 sm:h-9"
+                />
+                <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
+                    Comfy Registry
+                </span>
             </Link>
             <div className="flex items-center gap-2 bg-gray-900 md:order-2">
                 {isLoggedIn ? (
