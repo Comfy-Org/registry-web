@@ -686,9 +686,7 @@ function NodeVersionList({}) {
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
             </Breadcrumb>
-
             <BatchOperationBar />
-
             {/* Batch operation modal */}
             <Modal
                 show={isBatchModalOpen}
@@ -766,7 +764,6 @@ function NodeVersionList({}) {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
             <div className="flex flex-col gap-4 mb-6">
                 <h1 className="text-2xl font-bold text-gray-200">
                     Node Versions
@@ -889,7 +886,6 @@ function NodeVersionList({}) {
                     />
                 </div>
             </div>
-
             {versions
                 .map((nv) => ({ ...nv, key: `${nv.node_id}@${nv.version}` }))
                 .map(({ key, ...nv }, index) => (

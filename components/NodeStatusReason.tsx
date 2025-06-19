@@ -368,7 +368,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                     </div>
                 </details>
             )}
-
             {!!problemsSummary?.length && (
                 <>
                     <h4>{'Problems Summary: '}</h4>
@@ -413,7 +412,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                     </ol>
                 </>
             )}
-
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
                     <summary>{'Status Reason: '}</summary>
