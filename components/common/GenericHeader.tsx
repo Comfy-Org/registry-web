@@ -27,7 +27,7 @@ const GenericHeader: React.FC<Props> = ({
             <p className="pt-2 pb-4 font-light text-gray-500 text-lg dark:text-gray-400">
                 {subTitle}
             </p>
-            <Link legacyBehavior href={buttonLink}>
+            <Link href={buttonLink}>
                 <Button color={buttonColor} className="flex items-center">
                     {showIcon && (
                         <svg
