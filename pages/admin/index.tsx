@@ -1,4 +1,5 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
+import Breadcrumb from '@/components/common/Breadcrumb'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 
@@ -7,6 +8,15 @@ function AdminDashboard() {
 
     return (
         <div className="p-4">
+            <Breadcrumb
+                items={[
+                    {
+                        label: 'Admin',
+                        href: '/admin',
+                        active: true
+                    }
+                ]}
+            />
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 Admin Dashboard
             </h1>

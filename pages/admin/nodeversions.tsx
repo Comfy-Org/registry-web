@@ -1,5 +1,6 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import Breadcrumb from '@/components/common/Breadcrumb'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
 import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
@@ -691,6 +692,19 @@ function NodeVersionList({}) {
     }
     return (
         <div>
+            <Breadcrumb
+                items={[
+                    {
+                        label: 'Admin',
+                        href: '/admin',
+                    },
+                    {
+                        label: 'Node Versions',
+                        href: '/admin/nodeversions',
+                        active: true
+                    }
+                ]}
+            />
             <BatchOperationBar />
 
             {/* Batch operation modal */}
