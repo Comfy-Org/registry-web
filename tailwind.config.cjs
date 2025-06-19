@@ -1,13 +1,3 @@
-// Remove deprecated color names from Tailwind colors
-const {
-    lightBlue,
-    warmGray,
-    trueGray,
-    coolGray,
-    blueGray,
-    ...safeColors
-} = require('tailwindcss/colors')
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     // important: true,
@@ -33,9 +23,9 @@ module.exports = {
             black: '#000000',
             'grey-regular': '#2D353F',
             'bright-charcoal': '#A4C4D2',
-            ...safeColors,
             primary: '#1A56DB',
             'gray-300': '#D1D5DB',
+            // don't import tailwindcss/colors as it's default in Tailwind CSS v3
         },
         fontFamily: {
             sans: ['"Inter"', 'sans-serif'],
