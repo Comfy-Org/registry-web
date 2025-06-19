@@ -29,8 +29,8 @@ type HitProps = {
 const Hit: React.FC<HitProps> = ({ hit }) => {
     const matchedNodes = (
         hit._highlightResult?.comfy_nodes as
-        | HitAttributeHighlightResult[]
-        | undefined
+            | HitAttributeHighlightResult[]
+            | undefined
     )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
         <Link
