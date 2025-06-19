@@ -29,7 +29,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
           <li key={index} className="inline-flex items-center">
             <HiChevronRight className="w-4 h-4 text-gray-400" />
             {item.active ? (
-              <span className="ml-1 text-sm font-medium text-blue-500 md:ml-2">
+              <span className="ml-1 text-sm font-medium text-blue-500 md:ml-2" aria-current="page">
                 {item.label}
               </span>
             ) : (
