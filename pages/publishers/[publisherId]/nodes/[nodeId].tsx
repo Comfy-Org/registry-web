@@ -1,4 +1,3 @@
-import React from 'react'
 import NodeDetails from '@/components/nodes/NodeDetails'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'

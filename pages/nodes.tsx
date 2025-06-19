@@ -1,8 +1,8 @@
 import withAuth from '@/components/common/HOC/withAuth'
-import PublisherListNodes from '../components/publisher/PublisherListNodes'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
+import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function PublisherNodeList() {
     const router = useRouter()

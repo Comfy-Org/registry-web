@@ -1,9 +1,8 @@
-import React from 'react'
-import CreatePublisherForm from '../../components/publisher/CreatePublisherForm'
 import withAuth from '@/components/common/HOC/withAuth'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
+import CreatePublisherForm from '../../components/publisher/CreatePublisherForm'
 
 const createpublisher = () => {
     const router = useRouter()
