@@ -705,10 +705,13 @@ function NodeVersionList({}) {
                         e.preventDefault()
                         router.push('/admin')
                     }}
+                    className="dark"
                 >
                     Admin Dashboard
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    Review Node Versions
+                </Breadcrumb.Item>
             </Breadcrumb>
             <BatchOperationBar />
             {/* Batch operation modal */}
