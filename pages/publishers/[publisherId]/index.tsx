@@ -1,7 +1,8 @@
 import withAuth from '@/components/common/HOC/withAuth'
 import PublisherDetail from '@/components/publisher/PublisherDetail'
-import { Spinner } from 'flowbite-react'
+import { Breadcrumb, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
+import { HiHome } from 'react-icons/hi'
 import { useGetPublisher } from 'src/api/generated'
 
 function PublisherDetails() {
@@ -22,10 +23,27 @@ function PublisherDetails() {
     }
 
     return (
-        <>
+        <div className="p-4">
+            <Breadcrumb className="py-4">
+                <Breadcrumb.Item
+                    href="/"
+                    icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/')
+                    }}
+                    className="dark"
+                >
+                    Home
+                </Breadcrumb.Item>
+                <Breadcrumb.Item className="text-blue-500">
+                    {data.name}
+                </Breadcrumb.Item>
+            </Breadcrumb>
+
             <PublisherDetail publisher={data} />
-        </>
+        </div>
     )
 }
 
-export default PublisherDetails
+export default withAuth(PublisherDetails)

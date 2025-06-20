@@ -19,7 +19,7 @@ export function useLogout() {
     }
     useEffect(() => {
         if (error)
-            toast.error(`Logout error:${String(error?.message || error)}`)
+            toast.error(`Logout error: ${String(error?.message || error)}`)
     }, [error])
     return [logout, loading, error] as const
 }
