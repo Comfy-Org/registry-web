@@ -6,7 +6,6 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { getAuth } from 'firebase/auth'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
-import { appWithTranslation } from 'next-i18next'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
@@ -71,6 +70,7 @@ const persistEffect = () => {
 
 function MyApp({ Component, pageProps }: AppProps) {
     useEffect(persistEffect, [])
+
     return (
         <QueryClientProvider client={queryClient}>
             <FlowBiteThemeProvider>
@@ -82,4 +82,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     )
 }
 
-export default appWithTranslation(MyApp)
+export default MyApp
