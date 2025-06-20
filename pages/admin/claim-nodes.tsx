@@ -1,6 +1,7 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import UnclaimedNodeCard from '@/components/nodes/UnclaimedNodeCard'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { Breadcrumb, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -10,7 +11,6 @@ import {
     useListNodesForPublisherV2,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
-import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAdmin(ClaimNodesPage)
 function ClaimNodesPage() {
@@ -70,10 +70,11 @@ function ClaimNodesPage() {
                             e.preventDefault()
                             router.push('/admin')
                         }}
+                        className="dark"
                     >
                         {t('Admin Dashboard')}
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item>{t('Unclaimed Nodes')}</Breadcrumb.Item>
+                    <Breadcrumb.Item className="dark">{t('Unclaimed Nodes')}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div className="flex justify-between items-center">

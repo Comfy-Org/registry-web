@@ -20,6 +20,7 @@ function AddUnclaimedNodePage() {
                         e.preventDefault()
                         router.push('/admin')
                     }}
+                    className="dark"
                 >
                     {t('Admin Dashboard')}
                 </Breadcrumb.Item>
@@ -29,10 +30,11 @@ function AddUnclaimedNodePage() {
                         e.preventDefault()
                         router.push('/admin/claim-nodes')
                     }}
+                    className="dark"
                 >
                     {t('Unclaimed Nodes')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>{t('Add Unclaimed Node')}</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">{t('Add Unclaimed Node')}</Breadcrumb.Item>
             </Breadcrumb>
 
             <AdminCreateNodeFormModal
