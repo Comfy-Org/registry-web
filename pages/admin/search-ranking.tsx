@@ -2,14 +2,17 @@ import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { formatDownloadCount } from '@/components/nodes/NodeDetails'
 import SearchRankingEditModal from '@/components/nodes/SearchRankingEditModal'
-import { Button, Spinner, TextInput } from 'flowbite-react'
+import { Breadcrumb, Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { HiHome } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
 import { Node, useSearchNodes } from 'src/api/generated'
 import { useRouterQuery } from 'src/hooks/useRouterQuery'
 
 function SearchRankingAdminPage() {
+    const router = useRouter()
     const [selectedNode, setSelectedNode] = useState<Node | null>(null)
 
     // Use the custom hook for query parameters
@@ -72,10 +75,26 @@ function SearchRankingAdminPage() {
 
     return (
         <div className="p-4">
+            <Breadcrumb className="py-4">
+                <Breadcrumb.Item
+                    href="/admin"
+                    icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/admin')
+                    }}
+                    className="dark"
+                >
+                    Admin Dashboard
+                </Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    Search Ranking Management
+                </Breadcrumb.Item>
+            </Breadcrumb>
+
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 Search Ranking Management
             </h1>
-
             {/* Search form */}
             <form
                 className="flex gap-2 items-center mb-6"
@@ -92,7 +111,6 @@ function SearchRankingAdminPage() {
                     Search
                 </Button>
             </form>
-
             {/* Nodes table */}
             <div className="bg-gray-800 rounded-lg p-4 mb-6">
                 <h2 className="text-lg font-semibold text-white mb-4">
@@ -166,7 +184,6 @@ function SearchRankingAdminPage() {
                     />
                 </div>
             </div>
-
             {/* Edit Modal */}
             {selectedNode && (
                 <SearchRankingEditModal
