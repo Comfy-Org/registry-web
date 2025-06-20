@@ -6,14 +6,12 @@ const withMDX = mdx({
     options: {
         remarkPlugins: [],
         rehypePlugins: [],
-        // If you use `MDXProvider`, uncomment the following line.
         providerImportSource: '@mdx-js/react',
     },
 })
 
 const conf: NextConfig = {
     reactStrictMode: true,
-    // i18n: i18nConfig.i18n,
     i18n: {
         locales: ['en', 'zh', 'ja'],
         defaultLocale: 'en',
