@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
 import {
@@ -12,6 +13,7 @@ import { toast } from 'react-toastify'
 import EditPublisherModal from './EditPublisherModal'
 
 const Nodes: React.FC = () => {
+    const { t } = useNextTranslation()
     const { data, isLoading, isError, refetch } = useListPublishersForUser()
     const updatePublisherMutation = useUpdatePublisher()
     const [selectedPublisher, setSelectedPublisher] =
@@ -58,9 +60,9 @@ const Nodes: React.FC = () => {
         <section className="h-full mt-8 bg-gray-900 lg:mt-20">
             <div>
                 <GenericHeader
-                    title="Your nodes"
-                    subTitle="View and edit your nodes and publishers."
-                    buttonText="New Publisher"
+                    title={t('Your nodes')}
+                    subTitle={t('View and edit your nodes and publishers.')}
+                    buttonText={t('New Publisher')}
                     showIcon={true}
                     buttonLink="/publishers/create"
                 />

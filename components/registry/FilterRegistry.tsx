@@ -1,6 +1,9 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import React from 'react'
 
 const FilterRegistry: React.FC = () => {
+    const { t } = useNextTranslation()
+
     return (
         <div className="items-center justify-between block my-8 lg:flex">
             <div className="flex text-white">
@@ -21,7 +24,7 @@ const FilterRegistry: React.FC = () => {
                         d="M8 20V10m0 10-3-3m3 3 3-3m5-13v10m0-10 3 3m-3-3-3 3"
                     />
                 </svg>
-                Sort by popularity
+                {t('Sort by popularity')}
             </div>
             <div className="relative w-full lg:w-1/3 xs:mt-3">
                 <input
