@@ -187,8 +187,9 @@ export function NodeClaimModal({
             })
         } catch (error) {
             setVerificationResult({
-                error:
-                    `Failed to verify repository: ${error instanceof Error ? error.message : String(error)}`,
+                error: `Failed to verify repository: ${
+                    error instanceof Error ? error.message : String(error)
+                }`,
             })
         } finally {
             setIsVerifying(false)
