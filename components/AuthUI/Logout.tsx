@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { getAuth } from 'firebase/auth'
 import { Button } from 'flowbite-react'
@@ -8,6 +9,7 @@ import app from '../../src/firebase'
 
 export function useLogout() {
     const auth = getAuth(app)
+    const { t } = useNextTranslation()
     const qc = useQueryClient()
     const [signOut, loading, error] = useSignOut(auth)
     const logout = async () => {
@@ -19,7 +21,7 @@ export function useLogout() {
     }
     useEffect(() => {
         if (error)
-            toast.error(`Logout error:${String(error?.message || error)}`)
+            toast.error(`${t('Logout')} ${t('Error')}:${String(error?.message || error)}`)
     }, [error])
     return [logout, loading, error] as const
 }

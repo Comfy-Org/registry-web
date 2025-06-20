@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -19,6 +20,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
     nodeId,
     publisherId,
 }) => {
+    const { t } = useNextTranslation()
     const mutation = useDeleteNode({})
     const router = useRouter()
     const handleSubmit = async () => {
@@ -74,16 +76,15 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                     }}
                 >
                     <p className="text-white">
-                        Are you sure you want to delete this node? This action
-                        cannot be undone.
+                        {t('Are you sure you want to delete this node? This action cannot be undone.')}
                     </p>
                     <div>
                         <Label className="text-white">
-                            Type{' '}
+                            {t('Type')}{' '}
                             <code className="text-red-300 inline">
                                 {validateText}
                             </code>{' '}
-                            to confirm:
+                            {t('to confirm')}:
                         </Label>
                         <TextInput
                             className="input"
@@ -99,7 +100,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                             className="w-full text-white bg-gray-800"
                             onClick={onClose}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button
                             color="red"
@@ -107,7 +108,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                             type="submit"
                             disabled={validateText !== confirmationText}
                         >
-                            Delete
+                            {t('Delete')}
                         </Button>
                     </div>
                 </form>

@@ -1,5 +1,6 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
@@ -7,6 +8,7 @@ import { HiHome } from 'react-icons/hi'
 export default withAdmin(AddUnclaimedNodePage)
 
 function AddUnclaimedNodePage() {
+    const { t } = useNextTranslation()
     const router = useRouter()
     return (
         <div className="p-4">
@@ -19,7 +21,7 @@ function AddUnclaimedNodePage() {
                         router.push('/admin')
                     }}
                 >
-                    Admin Dashboard
+                    {t('Admin Dashboard')}
                 </Breadcrumb.Item>
                 <Breadcrumb.Item
                     href="/admin/claim-nodes"
@@ -28,9 +30,9 @@ function AddUnclaimedNodePage() {
                         router.push('/admin/claim-nodes')
                     }}
                 >
-                    Unclaimed Nodes
+                    {t('Unclaimed Nodes')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Add Unclaimed Node</Breadcrumb.Item>
+                <Breadcrumb.Item>{t('Add Unclaimed Node')}</Breadcrumb.Item>
             </Breadcrumb>
 
             <AdminCreateNodeFormModal

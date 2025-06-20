@@ -10,9 +10,11 @@ import {
     useListNodesForPublisherV2,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAdmin(ClaimNodesPage)
 function ClaimNodesPage() {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const queryClient = useQueryClient()
     const pageSize = 36
@@ -48,11 +50,10 @@ function ClaimNodesPage() {
         return (
             <div className="p-4 text-white">
                 <h1 className="text-2xl font-bold text-gray-200 mb-6">
-                    Error Loading Unclaimed Nodes
+                    {t('Error Loading Unclaimed Nodes')}
                 </h1>
                 <p className="text-red-400">
-                    There was an error loading the nodes. Please try again
-                    later.
+                    {t('There was an error loading the nodes. Please try again later.')}
                 </p>
             </div>
         )
@@ -70,14 +71,14 @@ function ClaimNodesPage() {
                             router.push('/admin')
                         }}
                     >
-                        Admin Dashboard
+                        {t('Admin Dashboard')}
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item>Unclaimed Nodes</Breadcrumb.Item>
+                    <Breadcrumb.Item>{t('Unclaimed Nodes')}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-gray-200">
-                        Unclaimed Nodes
+                        {t('Unclaimed Nodes')}
                     </h1>
                     <div>
                         <Button
@@ -88,20 +89,19 @@ function ClaimNodesPage() {
                             className="mr-2"
                         >
                             <HiPlus className="mr-2 h-5 w-5" />
-                            Add New Unclaimed Node
+                            {t('Add New Unclaimed Node')}
                         </Button>
                     </div>
                 </div>
             </div>
 
             <div className="text-gray-200 mb-4">
-                These nodes are not claimed by any publisher. They can be
-                claimed by publishers or edited by administrators.
+                {t('These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.')}
             </div>
 
             {data?.nodes?.length === 0 ? (
                 <div className="bg-gray-800 p-4 rounded text-gray-200">
-                    No unclaimed nodes found.
+                    {t('No unclaimed nodes found.')}
                 </div>
             ) : (
                 <>
