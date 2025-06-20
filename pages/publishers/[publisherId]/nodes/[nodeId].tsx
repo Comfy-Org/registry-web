@@ -8,7 +8,7 @@ const NodeView = () => {
     const router = useRouter()
     const { publisherId, nodeId } = router.query
     const { data: publisher } = useGetPublisher(publisherId as string)
-    
+
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
@@ -37,7 +37,7 @@ const NodeView = () => {
                     {nodeId as string}
                 </Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <NodeDetails />
         </div>
     )

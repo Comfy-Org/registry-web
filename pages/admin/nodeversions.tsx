@@ -709,7 +709,9 @@ function NodeVersionList({}) {
                 >
                     Admin Dashboard
                 </Breadcrumb.Item>
-                <Breadcrumb.Item className="dark">Review Node Versions</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    Review Node Versions
+                </Breadcrumb.Item>
             </Breadcrumb>
             <BatchOperationBar />
             {/* Batch operation modal */}

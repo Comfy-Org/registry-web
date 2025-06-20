@@ -6,7 +6,7 @@ import CreatePublisherForm from '../../components/publisher/CreatePublisherForm'
 
 const CreatePublisher = () => {
     const router = useRouter()
-    
+
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
@@ -22,7 +22,7 @@ const CreatePublisher = () => {
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>Create Publisher</Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <CreatePublisherForm />
         </div>
     )

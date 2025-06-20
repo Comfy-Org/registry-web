@@ -6,11 +6,7 @@ function NodeList() {
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
-                <Breadcrumb.Item
-                    href="#"
-                    icon={HiHome}
-                    className="dark"
-                >
+                <Breadcrumb.Item href="#" icon={HiHome} className="dark">
                     Home
                 </Breadcrumb.Item>
             </Breadcrumb>

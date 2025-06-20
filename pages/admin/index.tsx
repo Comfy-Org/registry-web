@@ -26,7 +26,7 @@ function AdminDashboard() {
                 Admin Dashboard
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Link 
+                <Link
                     href="/admin/search-ranking"
                     className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg w-full h-48 flex flex-col items-center justify-center p-6 transition-colors"
                 >

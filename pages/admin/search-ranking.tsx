@@ -91,7 +91,7 @@ function SearchRankingAdminPage() {
                     Search Ranking Management
                 </Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 Search Ranking Management
             </h1>

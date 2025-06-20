@@ -6,7 +6,7 @@ import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function PublisherNodeList() {
     const router = useRouter()
-    
+
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
@@ -23,7 +23,7 @@ function PublisherNodeList() {
                 </Breadcrumb.Item>
                 <Breadcrumb.Item className="dark">Your Nodes</Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <PublisherListNodes />
         </div>
     )
