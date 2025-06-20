@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
 import CreatePublisherForm from '../../components/publisher/CreatePublisherForm'
 
-const createpublisher = () => {
+const CreatePublisher = () => {
     const router = useRouter()
     
     return (
@@ -28,4 +28,4 @@ const createpublisher = () => {
     )
 }
 
-export default withAuth(createpublisher)
+export default withAuth(CreatePublisher)
