@@ -17,10 +17,11 @@ function PublisherNodeList() {
                         e.preventDefault()
                         router.push('/')
                     }}
+                    className="dark"
                 >
                     Home
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Your Nodes</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">Your Nodes</Breadcrumb.Item>
             </Breadcrumb>
             
             <PublisherListNodes />

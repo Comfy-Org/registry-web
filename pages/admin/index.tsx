@@ -17,7 +17,7 @@ function AdminDashboard() {
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
-                <Breadcrumb.Item href="#" icon={HiHome}>
+                <Breadcrumb.Item href="#" icon={HiHome} className="dark">
                     Admin Dashboard
                 </Breadcrumb.Item>
             </Breadcrumb>

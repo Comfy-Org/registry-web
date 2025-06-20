@@ -17,13 +17,14 @@ const NodeView = () => {
                         e.preventDefault()
                         router.push('/')
                     }}
+                    className="dark"
                 >
                     Home
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
                     Nodes
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>
+                <Breadcrumb.Item className="text-blue-500">
                     {nodeId as string}
                 </Breadcrumb.Item>
             </Breadcrumb>

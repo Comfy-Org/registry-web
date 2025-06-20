@@ -83,10 +83,13 @@ function PreemptedComfyNodeNamesAdminPage() {
                         e.preventDefault()
                         router.push('/admin')
                     }}
+                    className="dark"
                 >
                     Admin Dashboard
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Preempted Comfy Node Names</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    Preempted Comfy Node Names
+                </Breadcrumb.Item>
             </Breadcrumb>
 
             <h1 className="text-2xl font-bold text-gray-200 mb-6">

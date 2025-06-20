@@ -32,10 +32,11 @@ function PublisherDetails() {
                         e.preventDefault()
                         router.push('/')
                     }}
+                    className="dark"
                 >
                     Home
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>
+                <Breadcrumb.Item className="text-blue-500">
                     {data.name}
                 </Breadcrumb.Item>
             </Breadcrumb>

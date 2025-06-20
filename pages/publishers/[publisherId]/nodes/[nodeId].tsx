@@ -19,6 +19,7 @@ const NodeView = () => {
                         e.preventDefault()
                         router.push('/')
                     }}
+                    className="dark"
                 >
                     Home
                 </Breadcrumb.Item>
@@ -28,10 +29,11 @@ const NodeView = () => {
                         e.preventDefault()
                         router.push(`/publishers/${publisherId}`)
                     }}
+                    className="dark"
                 >
                     {publisher?.name || publisherId}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>
+                <Breadcrumb.Item className="text-blue-500">
                     {nodeId as string}
                 </Breadcrumb.Item>
             </Breadcrumb>
