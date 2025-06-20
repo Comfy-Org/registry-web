@@ -69,10 +69,13 @@ function ClaimNodesPage() {
                             e.preventDefault()
                             router.push('/admin')
                         }}
+                        className="dark"
                     >
                         Admin Dashboard
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item>Unclaimed Nodes</Breadcrumb.Item>
+                    <Breadcrumb.Item className="dark">
+                        Unclaimed Nodes
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div className="flex justify-between items-center">
