@@ -22,12 +22,10 @@ const i18n = i18next
         defaultNS: 'common',
         fallbackNS: 'common',
         debug: process.env.NODE_ENV === 'development',
+
         // not needed for react as it escapes by default
         interpolation: { escapeValue: false, },
-        missingKeyNoValueFallbackToKey: true, // use key as fallback if no value is found
-        parseMissingKeyHandler(key, defaultValue, options) {
 
-        },
         // use ssr-side detection in middleware
         detection: {
             order: ['htmlTag'],
