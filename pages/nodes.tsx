@@ -20,7 +20,7 @@ function PublisherNodeList() {
                 >
                     Home
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Nodes</Breadcrumb.Item>
+                <Breadcrumb.Item>Your Nodes</Breadcrumb.Item>
             </Breadcrumb>
             
             <PublisherListNodes />

@@ -39,7 +39,7 @@ function PublisherDetails() {
                     {data.name}
                 </Breadcrumb.Item>
             </Breadcrumb>
-            
+
             <PublisherDetail publisher={data} />
         </div>
     )

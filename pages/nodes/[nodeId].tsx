@@ -20,13 +20,7 @@ const NodeView = () => {
                 >
                     Home
                 </Breadcrumb.Item>
-                <Breadcrumb.Item
-                    href="/nodes"
-                    onClick={(e) => {
-                        e.preventDefault()
-                        router.push('/nodes')
-                    }}
-                >
+                <Breadcrumb.Item>
                     Nodes
                 </Breadcrumb.Item>
                 <Breadcrumb.Item>
