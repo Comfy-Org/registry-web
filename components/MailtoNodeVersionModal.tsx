@@ -4,6 +4,7 @@ import {
     useGetNode,
     useGetPublisher,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, Spinner } from 'flowbite-react'
 import Link from 'next/link'
 import { FaGithub } from 'react-icons/fa'
@@ -17,6 +18,7 @@ export default function MailtoNodeVersionModal({
     open: boolean
     onClose: () => void
 }) {
+    const { t } = useNextTranslation()
     // 1. repo+"/issues/new" for github issues
     // 2. mailto:email for email
     const { data: node, isLoading: isNodeLoading } = useGetNode(
@@ -38,7 +40,7 @@ export default function MailtoNodeVersionModal({
     return (
         <Modal show={open} onClose={onClose} dismissible>
             <Modal.Header>
-                Contact Publisher: {publisher?.name || publisher?.id}
+                {t('Contact Publisher: {{name}}', { name: publisher?.name || publisher?.id })}
             </Modal.Header>
             <Modal.Body>
                 <div className="space-y-4">
@@ -46,7 +48,7 @@ export default function MailtoNodeVersionModal({
                         {!!node?.repository && (
                             <li>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                    You can contact the publisher via GitHub:
+                                    {t('You can contact the publisher via GitHub:')}
                                 </p>
                                 <Link
                                     href={newIssueLink}
@@ -55,7 +57,7 @@ export default function MailtoNodeVersionModal({
                                     rel="noopener noreferrer"
                                 >
                                     <FaGithub className="inline mr-2" />
-                                    Open Issue on GitHub
+                                    {t('Open Issue on GitHub')}
                                     {isNodeLoading && (
                                         <Spinner className="w-4 h-4" />
                                     )}
@@ -65,7 +67,7 @@ export default function MailtoNodeVersionModal({
                         {publisher?.members?.length && (
                             <li>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                    You can contact the publisher via email:
+                                    {t('You can contact the publisher via email:')}
                                 </p>
                                 <ListPublisherEmails {...{ publisher }} />
                                 {publisherLoading && (
@@ -77,7 +79,7 @@ export default function MailtoNodeVersionModal({
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={onClose}>Close</Button>
+                <Button onClick={onClose}>{t('Close')}</Button>
             </Modal.Footer>
         </Modal>
     )

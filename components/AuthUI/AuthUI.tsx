@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import Image from 'next/image'
@@ -14,6 +15,7 @@ import analytic from 'src/analytic/analytic'
 import app from '../../src/firebase'
 
 const AuthUI: React.FC<{}> = ({}) => {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const auth = getAuth(app)
     const [
@@ -44,7 +46,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                 googleSignInError.code ===
                 'auth/account-exists-with-different-credential'
             ) {
-                toast.error('Account already exists with different credential')
+                toast.error(t('Account already exists with different credential'))
             } else {
                 toast.error(googleSignInError?.message)
                 console.log(googleSignInError)
@@ -55,7 +57,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                 githubSignInError.code ===
                 'auth/account-exists-with-different-credential'
             ) {
-                toast.error('Account already exists with different credential')
+                toast.error(t('Account already exists with different credential'))
             } else {
                 toast.error(githubSignInError?.message)
                 console.log(githubSignInError)
@@ -79,7 +81,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                         </Link>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
-                            Sign In
+                            {t('Sign In')}
                         </h1>
 
                         <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
@@ -130,7 +132,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                     </defs>
                                 </svg>
                                 <span className="text-gray-900">
-                                    Continue with Google
+                                    {t('Continue with Google')}
                                 </span>
                             </Button>
                         </div>
@@ -161,7 +163,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 />
                             </svg>
                             <span className="text-gray-900">
-                                Continue with GitHub
+                                {t('Continue with GitHub')}
                             </span>
                         </Button>
                     </Card>

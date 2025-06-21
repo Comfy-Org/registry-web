@@ -1,4 +1,5 @@
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
@@ -25,6 +26,7 @@ export function NodeClaimModal({
     node,
     onSuccess,
 }: NodeClaimModalProps) {
+    const { t } = useNextTranslation()
     const [selectedPublisher, setSelectedPublisher] =
         useState<Publisher | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -65,14 +67,19 @@ export function NodeClaimModal({
         mutation: {
             onSuccess: () => {
                 toast.success(
-                    `Node ${node.name} successfully claimed by ${selectedPublisher?.name}`
+                    t('Node {{name}} successfully claimed by {{publisherName}}', {
+                        name: node.name,
+                        publisherName: selectedPublisher?.name
+                    })
                 )
                 onSuccess?.()
                 onClose()
             },
             onError: (error) => {
                 toast.error(
-                    `Failed to update node: ${String(error?.message || error) || 'Unknown error'}`
+                    t('Failed to update node: {{error}}', {
+                        error: String(error?.message || error) || t('Unknown error')
+                    })
                 )
             },
         },
@@ -81,11 +88,11 @@ export function NodeClaimModal({
     // Verify repository to check publisher ID
     const verifyRepository = async () => {
         if (!selectedPublisher) {
-            toast.error('Please select a publisher first')
+            toast.error(t('Please select a publisher first'))
             return
         }
         if (!node.repository) {
-            toast.error('No repository URL available for this node')
+            toast.error(t('No repository URL available for this node'))
             return
         }
 
@@ -235,12 +242,12 @@ export function NodeClaimModal({
                 <div className="space-y-6">
                     <div className="mb-4">
                         <Label htmlFor="publisher" className="text-white mb-2">
-                            Select Publisher:
+                            {t('Select Publisher')}:
                         </Label>
                         <div className="relative">
                             <TextInput
                                 id="publisher-search"
-                                placeholder="Search publishers..."
+                                placeholder={t('Search publishers...')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -257,7 +264,7 @@ export function NodeClaimModal({
                             </div>
                         ) : filteredPublishers.length === 0 ? (
                             <div className="p-4 text-gray-300 text-center">
-                                No publishers found
+                                {t('No publishers found')}
                             </div>
                         ) : (
                             <ul className="divide-y divide-gray-600">
@@ -297,7 +304,7 @@ export function NodeClaimModal({
                     {selectedPublisher && (
                         <div className="p-4 bg-gray-700 rounded-lg">
                             <div className="text-white font-medium mb-2">
-                                Selected Publisher:
+                                {t('Selected Publisher')}:
                             </div>
                             <div className="text-gray-300">
                                 <div>{selectedPublisher.name}</div>
@@ -314,7 +321,7 @@ export function NodeClaimModal({
                         <div className="p-4 bg-gray-700 rounded-lg">
                             <div className="flex justify-between items-center mb-2">
                                 <div className="text-white font-medium">
-                                    Repository:
+                                    {t('Repository')}:
                                 </div>
                                 <a
                                     href={node.repository}
@@ -322,7 +329,7 @@ export function NodeClaimModal({
                                     rel="noopener noreferrer"
                                     className="text-blue-400 hover:underline flex items-center"
                                 >
-                                    View <HiExternalLink className="ml-1" />
+                                    {t('View')} <HiExternalLink className="ml-1" />
                                 </a>
                             </div>
                             <div className="text-gray-300 text-sm mb-2 break-all">
@@ -336,10 +343,10 @@ export function NodeClaimModal({
                                 {isVerifying ? (
                                     <>
                                         <Spinner size="sm" className="mr-2" />
-                                        Verifying...
+                                        {t('Verifying...')}
                                     </>
                                 ) : (
-                                    'Verify Publisher ID'
+                                    t('Verify Publisher ID')
                                 )}
                             </Button>
 
@@ -359,16 +366,12 @@ export function NodeClaimModal({
                     )}
 
                     <div className="p-2 bg-yellow-900 bg-opacity-50 text-yellow-200 rounded text-sm mb-2">
-                        <strong>Note:</strong> Claiming a node requires backend
-                        API support for updating <code>publisherId</code> via{' '}
-                        <code>updateNode(...)</code>. This feature is a work in
-                        progress (WIP) and may not function until the backend is
-                        updated.
+                        <strong>{t('Note')}:</strong> {t('Claiming a node requires backend API support for updating publisherId via updateNode(...). This feature is a work in progress (WIP) and may not function until the backend is updated.')}
                     </div>
 
                     <div className="flex justify-end space-x-3">
                         <Button color="gray" onClick={onClose}>
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button
                             color="blue"
@@ -383,10 +386,10 @@ export function NodeClaimModal({
                             {updateNodeMutation.isPending ? (
                                 <>
                                     <Spinner size="sm" className="mr-2" />
-                                    Claiming... (WIP)
+                                    {t('Claiming... (WIP)')}
                                 </>
                             ) : (
-                                'Claim Node (WIP)'
+                                t('Claim Node (WIP)')
                             )}
                         </Button>
                     </div>

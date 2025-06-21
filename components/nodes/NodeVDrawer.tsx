@@ -1,13 +1,13 @@
+import { Button, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
 import {
     NodeVersion,
     useGetNodeVersion,
     useUpdateNodeVersion,
 } from 'src/api/generated'
-import { formatRelativeDate } from './NodeDetails'
-import { toast } from 'react-toastify'
-import { Button, Spinner } from 'flowbite-react'
-import analytic from 'src/analytic/analytic'
+import { FormatRelativeDate } from './NodeDetails'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
 type NodeVDrawerProps = {
     isDrawerOpen: boolean
@@ -132,7 +132,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
                     {version?.createdAt && (
                         <p className="text-gray-400">
-                            Released {formatRelativeDate(version.createdAt)}
+                            Released <FormatRelativeDate date={version.createdAt } />
                         </p>
                     )}
 

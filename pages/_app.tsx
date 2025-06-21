@@ -68,8 +68,9 @@ const persistEffect = () => {
     return unsubscribe
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
     useEffect(persistEffect, [])
+
     return (
         <QueryClientProvider client={queryClient}>
             <FlowBiteThemeProvider>
@@ -80,3 +81,5 @@ export default function App({ Component, pageProps }: AppProps) {
         </QueryClientProvider>
     )
 }
+
+export default MyApp

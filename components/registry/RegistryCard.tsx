@@ -1,6 +1,8 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import Image from 'next/image'
 import React from 'react'
 import { NodeVersion } from 'src/api/generated'
+
 interface RegistryCard {
     name?: string
     latest_version?: NodeVersion
@@ -24,6 +26,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
     rating,
     downloads,
 }) => {
+    const { t } = useNextTranslation()
     return (
         <a href={`nodes/${id}`}>
             <div className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4">
@@ -44,7 +47,11 @@ const RegistryCard: React.FC<RegistryCard> = ({
 
                     {latest_version && (
                         <p className="mb-1 text-xs tracking-tight text-white">
-                            <span>v{latest_version.version}</span>
+                            <span>
+                                {t('v{{version}}', {
+                                    version: latest_version.version,
+                                })}
+                            </span>
                         </p>
                     )}
                     <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">

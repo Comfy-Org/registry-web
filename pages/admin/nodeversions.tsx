@@ -4,6 +4,7 @@ import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeForm
 import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
 import { parseJsonSafe } from '@/components/parseJsonSafe'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
@@ -38,6 +39,7 @@ import {
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
 function NodeVersionList({}) {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const [page, setPage] = React.useState<number>(1)
     const [selectedVersions, setSelectedVersions] = useState<{
@@ -1060,7 +1062,7 @@ function NodeVersionList({}) {
                                         className="flex"
                                         onClick={() => onApprove(nv)}
                                     >
-                                        Approve
+                                        {t('Approve')}
                                     </Button>
                                 )}
                                 {/* show reject only flagged/active node versions */}
@@ -1074,7 +1076,7 @@ function NodeVersionList({}) {
                                         color="failure"
                                         onClick={() => onReject(nv)}
                                     >
-                                        Reject
+                                        {t('Reject')}
                                     </Button>
                                 )}
 
@@ -1083,7 +1085,7 @@ function NodeVersionList({}) {
                                         color="gray"
                                         onClick={() => onUndo(nv)}
                                     >
-                                        Undo
+                                        {t('Undo')}
                                     </Button>
                                 )}
 
@@ -1092,7 +1094,7 @@ function NodeVersionList({}) {
                                         color="warning"
                                         onClick={() => undoBatch(nv)}
                                     >
-                                        Undo Batch
+                                        {t('Undo Batch')}
                                     </Button>
                                 )}
                             </div>
@@ -1101,7 +1103,7 @@ function NodeVersionList({}) {
                                     color="gray"
                                     onClick={() => setMailtoNv(nv)}
                                 >
-                                    Contact Publisher
+                                    {t('Contact Publisher')}
                                 </Button>
                                 <MailtoNodeVersionModal
                                     nodeVersion={mailtoNv ?? undefined}
