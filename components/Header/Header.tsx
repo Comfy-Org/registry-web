@@ -1,10 +1,4 @@
-import {
-    Badge,
-    Button,
-    Navbar,
-    NavbarCollapse,
-    NavbarToggle,
-} from 'flowbite-react'
+import { Badge, Button, Navbar } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -59,35 +53,36 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <ProfileDropdown />
                 ) : (
                     <>
-                        <Button onClick={handleLogIn} color="dark">
+                        <Button onClick={handleLogIn} color="dark" size="xs">
                             <span className="text-white text-xs md:text-base">
                                 Log in
                             </span>
                         </Button>
 
-                        <Button onClick={handleSignUp} color="blue">
+                        <Button onClick={handleSignUp} color="blue" size="xs">
                             <span className="text-xs md:text-base">
                                 Sign up
                             </span>
                         </Button>
                     </>
                 )}
-                <Badge
-                    icon={DiscordIcon}
-                    color="gray"
-                    className="p-3"
-                    href="/discord"
-                ></Badge>
                 <Button
                     href="https://docs.comfy.org/registry/overview"
                     color="blue"
+                    size="xs"
                 >
-                    Documentation
+                    <span className="text-white text-xs md:text-base">
+                        Documentation
+                    </span>
                 </Button>
 
-                <NavbarToggle theme={{ icon: 'h-5 w-5 shrink-0' }} />
+                <Badge
+                    icon={DiscordIcon}
+                    color="gray"
+                    href="/discord"
+                    size="xs"
+                />
             </div>
-            <NavbarCollapse />
         </Navbar>
     )
 }
