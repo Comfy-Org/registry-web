@@ -27,7 +27,7 @@ import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
 
-export function formatRelativeDate(dateString: string) {
+export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
     const date = new Date(dateString)
     const now = new Date()
@@ -304,7 +304,9 @@ const NodeDetails = () => {
                             <div className="mt-5 mb-10">
                                 {isUnclaimed ? (
                                     <p className="text-base font-normal text-gray-200">
-                                        {t('This node can only be installed via git')}
+                                        {t(
+                                            'This node can only be installed via git'
+                                        )}
                                         {node.repository && (
                                             <CopyableCodeBlock
                                                 code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
@@ -339,9 +341,11 @@ const NodeDetails = () => {
                                                 {t('Version')} {version.version}
                                             </h3>
                                             <p className="mt-3 text-sm font-normal text-gray-400 ">
-                                                {formatRelativeDate(
-                                                    version.createdAt || ''
-                                                )}
+                                                <FormatRelativeDate
+                                                    date={
+                                                        version.createdAt || ''
+                                                    }
+                                                />
                                             </p>
                                             <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                                                 {version.changelog}
@@ -429,7 +433,9 @@ const NodeDetails = () => {
                                     />
                                 </svg>
                                 <span>{t('Edit details')}</span>
-                                {warningForAdminEdit && <>&nbsp;{t('(admin)')}</>}
+                                {warningForAdminEdit && (
+                                    <>&nbsp;{t('(admin)')}</>
+                                )}
                             </Button>
                         )}
 
@@ -440,7 +446,9 @@ const NodeDetails = () => {
                             >
                                 <HiTrash className="w-5 h-5 mr-2" />
                                 <span>{t('Delete')}</span>
-                                {warningForAdminEdit && <>&nbsp;{t('(admin)')}</>}
+                                {warningForAdminEdit && (
+                                    <>&nbsp;{t('(admin)')}</>
+                                )}
                             </Button>
                         )}
 
