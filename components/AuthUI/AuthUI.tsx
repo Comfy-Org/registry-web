@@ -47,7 +47,6 @@ const AuthUI: React.FC<{}> = ({}) => {
                 toast.error('Account already exists with different credential')
             } else {
                 toast.error(googleSignInError?.message)
-                console.log(googleSignInError)
             }
         }
         if (githubSignInError) {
@@ -58,7 +57,6 @@ const AuthUI: React.FC<{}> = ({}) => {
                 toast.error('Account already exists with different credential')
             } else {
                 toast.error(githubSignInError?.message)
-                console.log(githubSignInError)
             }
         }
     }, [googleSignInError, githubSignInError])

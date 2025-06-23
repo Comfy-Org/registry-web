@@ -62,12 +62,6 @@ export function parseIssueList(statusReasonJson: any) {
             }
         })
     )
-    issueListParseResult?.error &&
-        console.warn(
-            'Error parsing issue list',
-            issueListParseResult?.error,
-            statusReasonJson
-        )
     const issueList = issueListParseResult?.data
     return issueList
 }

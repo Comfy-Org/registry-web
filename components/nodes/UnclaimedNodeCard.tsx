@@ -20,7 +20,7 @@ export default function UnclaimedNodeCard({
 
     const publisherId = node.publisher?.id
     if (!publisherId) {
-        console.error('Publisher ID is missing for node:', node)
+        // Publisher ID is missing for node
         return null
     }
 

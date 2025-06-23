@@ -10,7 +10,7 @@ const CopyableCodeBlock = ({ code }) => {
             setIsCopied(true)
             setTimeout(() => setIsCopied(false), 2000) // Reset copied state after 2 seconds
         } catch (err) {
-            console.error('Failed to copy!', err)
+            // Clipboard copy failed
         }
     }
 

@@ -172,7 +172,6 @@ function NodeVersionList({}) {
                 by: previousBy,
             },
         ]
-        // console.log('History', statusHistory)
 
         // updated status reason, with history and optionally batchId
         const reason = zStatusReason.parse({
@@ -194,7 +193,6 @@ function NodeVersionList({}) {
                     })
                 },
                 onError: (error) => {
-                    console.error('Error reviewing node version', error)
                     toast.error(
                         `Error reviewing node version ${nv.node_id!}@${nv.version!}`
                     )
@@ -255,10 +253,6 @@ function NodeVersionList({}) {
                     })
                 },
                 onError: (error) => {
-                    console.error(
-                        'Error approving node version in batch',
-                        error
-                    )
                     toast.error(
                         `Error approving node version ${nv.node_id!}@${nv.version!} in batch`
                     )
@@ -318,10 +312,6 @@ function NodeVersionList({}) {
                     })
                 },
                 onError: (error) => {
-                    console.error(
-                        'Error rejecting node version in batch',
-                        error
-                    )
                     toast.error(
                         `Error rejecting node version ${nv.node_id!}@${nv.version!} in batch`
                     )
@@ -484,7 +474,6 @@ function NodeVersionList({}) {
                     )
                 },
                 onError: (error) => {
-                    console.error('Error undoing node version', error)
                     toast.error(
                         `Error undoing node version ${nv.node_id!}@${nv.version!}`
                     )
@@ -1031,7 +1020,6 @@ function NodeVersionList({}) {
                                                 )
                                             })
                                             .catch((e) => {
-                                                console.error(e)
                                                 toast.error(
                                                     `Error getting node ${nv.node_id} repository`
                                                 )

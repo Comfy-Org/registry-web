@@ -27,28 +27,18 @@ class MixpanelAnalytics {
     public track(event: string, properties?: object): void {
         if (this.isProduction) {
             mixpanel.track(event, properties)
-        } else {
-            console.log(
-                `Mixpanel Track - Event: ${event}, Properties: ${JSON.stringify(properties)}`
-            )
         }
     }
 
     public identify(distinctId: string): void {
         if (this.isProduction) {
             mixpanel.identify(distinctId)
-        } else {
-            console.log(`Mixpanel Identify - Distinct ID: ${distinctId}`)
         }
     }
 
     public setProfile(updates: UserProfile): void {
         if (this.isProduction) {
             mixpanel.people.set(updates)
-        } else {
-            console.log(
-                `Mixpanel Set Profile - Updates: ${JSON.stringify(updates)}`
-            )
         }
     }
 }

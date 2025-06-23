@@ -52,12 +52,11 @@ export function formatRelativeDate(dateString: string) {
 
 const downloadFile = async (url: string, filename: string) => {
     try {
-        console.log('downloading file from:', url)
         const response = await fetch(url)
         const blob = await response.blob()
         download(blob, filename, 'application/gzip')
     } catch (error) {
-        console.error('Error downloading file:', error)
+        // Error handling for download failure
     }
 }
 
