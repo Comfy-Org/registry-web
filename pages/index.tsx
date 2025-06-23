@@ -5,7 +5,7 @@ import Registry from '../components/registry/Registry'
 
 function NodeList() {
     const { t } = useNextTranslation()
-    
+
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">

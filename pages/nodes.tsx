@@ -23,7 +23,9 @@ function PublisherNodeList() {
                 >
                     {t('Home')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item className="dark">{t('Your Nodes')}</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    {t('Your Nodes')}
+                </Breadcrumb.Item>
             </Breadcrumb>
 
             <PublisherListNodes />
