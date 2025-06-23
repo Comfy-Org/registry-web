@@ -19,7 +19,10 @@ function AdminDashboard() {
     return (
         <div className="p-4">
             <Breadcrumb className="py-4">
-                <Breadcrumb.Item href="#" icon={HiHome} className="dark">
+                <Breadcrumb.Item href="/" icon={HiHome} className="dark">
+                    {t('Home')}
+                </Breadcrumb.Item>
+                <Breadcrumb.Item href="#" className="dark">
                     {t('Admin Dashboard')}
                 </Breadcrumb.Item>
             </Breadcrumb>

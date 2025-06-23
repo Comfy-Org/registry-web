@@ -14,8 +14,18 @@ function AddUnclaimedNodePage() {
         <div className="p-4">
             <Breadcrumb className="py-4">
                 <Breadcrumb.Item
-                    href="/admin"
+                    href="/"
                     icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/')
+                    }}
+                    className="dark"
+                >
+                    {t('Home')}
+                </Breadcrumb.Item>
+                <Breadcrumb.Item
+                    href="/admin"
                     onClick={(e) => {
                         e.preventDefault()
                         router.push('/admin')
