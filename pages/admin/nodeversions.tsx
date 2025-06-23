@@ -752,16 +752,19 @@ function NodeVersionList({}) {
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 flex flex-wrap gap-2 items-center">
-                            {t('You are about to {{action}} {{count}} node versions', {
-                                action: {
-                                    approve: t('approve'),
-                                    reject: t('reject'),
-                                    undo: t('undo'),
-                                }[batchAction],
-                                count: Object.keys(selectedVersions).filter(
-                                    (key) => selectedVersions[key]
-                                ).length
-                            })}
+                            {t(
+                                'You are about to {{action}} {{count}} node versions',
+                                {
+                                    action: {
+                                        approve: t('approve'),
+                                        reject: t('reject'),
+                                        undo: t('undo'),
+                                    }[batchAction],
+                                    count: Object.keys(selectedVersions).filter(
+                                        (key) => selectedVersions[key]
+                                    ).length,
+                                }
+                            )}
 
                             <Tooltip
                                 content={
