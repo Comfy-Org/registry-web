@@ -1,4 +1,4 @@
-import { promises as fs, existsSync } from 'fs'
+import * as fs from 'fs/promises'
 import { glob } from 'glob'
 import path from 'path'
 
@@ -87,10 +87,8 @@ async function extractKeysFromFile(filePath: string): Promise<ExtractedKey[]> {
 
 async function readJsonFile(filePath: string): Promise<Record<string, string>> {
     try {
-        if (existsSync(filePath)) {
-            const content = await fs.readFile(filePath, 'utf-8')
-            return JSON.parse(content)
-        }
+        const content = await fs.readFile(filePath, 'utf-8')
+        return JSON.parse(content)
     } catch (error) {
         console.warn(`Could not read ${filePath}:`, error)
     }
@@ -102,9 +100,7 @@ async function writeJsonFile(
     data: Record<string, string>
 ): Promise<void> {
     const dir = path.dirname(filePath)
-    if (!existsSync(dir)) {
-        await fs.mkdir(dir, { recursive: true })
-    }
+    await fs.mkdir(dir, { recursive: true })
 
     // Sort keys alphabetically
     const sorted = Object.keys(data)
@@ -221,9 +217,7 @@ async function main() {
 
         // Write results
         const outputDir = path.dirname(OUTPUT_FILE)
-        if (!existsSync(outputDir)) {
-            await fs.mkdir(outputDir, { recursive: true })
-        }
+        await fs.mkdir(outputDir, { recursive: true })
         await fs.writeFile(OUTPUT_FILE, JSON.stringify(output, null, 2))
         console.log(`Results written to ${OUTPUT_FILE}`)
 
