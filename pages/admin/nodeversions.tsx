@@ -354,7 +354,12 @@ function NodeVersionList({}) {
             message,
             batchId, // Pass batchId to onReview if provided
         })
-        toast.success(t('{{id}}@{{version}} Approved', { id: nv.node_id, version: nv.version }))
+        toast.success(
+            t('{{id}}@{{version}} Approved', {
+                id: nv.node_id,
+                version: nv.version,
+            })
+        )
     }
     const onReject = async (
         nv: NodeVersion,
@@ -379,7 +384,12 @@ function NodeVersionList({}) {
             message,
             batchId, // Pass batchId to onReview if provided
         })
-        toast.success(t('{{id}}@{{version}} Rejected', { id: nv.node_id, version: nv.version }))
+        toast.success(
+            t('{{id}}@{{version}} Rejected', {
+                id: nv.node_id,
+                version: nv.version,
+            })
+        )
     }
     const checkIsUndoable = (nv: NodeVersion) =>
         !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
@@ -398,7 +408,12 @@ function NodeVersionList({}) {
             parseJsonSafe(nv.status_reason).data
         ).data
         if (!statusReason?.batchId) {
-            toast.error(t('No batch ID found for {{id}}@{{version}}', { id: nv.node_id, version: nv.version }))
+            toast.error(
+                t('No batch ID found for {{id}}@{{version}}', {
+                    id: nv.node_id,
+                    version: nv.version,
+                })
+            )
             return
         }
 
@@ -454,13 +469,18 @@ function NodeVersionList({}) {
         ).data?.statusHistory
         if (!statusHistory?.length)
             return toast.error(
-                t('No status history found for {{id}}@{{version}}', { id: nv.node_id, version: nv.version })
+                t('No status history found for {{id}}@{{version}}', {
+                    id: nv.node_id,
+                    version: nv.version,
+                })
             )
 
         const prevStatus = statusHistory[statusHistory.length - 1].status
         const by = user?.email // the user who clicked undo
         if (!by) {
-            toast.error(t('Unable to get user email, please reload and try again'))
+            toast.error(
+                t('Unable to get user email, please reload and try again')
+            )
             return
         }
 
@@ -483,10 +503,10 @@ function NodeVersionList({}) {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/versions'] })
                     toast.success(
-                        t('{{id}}@{{version}} Undone, back to {{status}}', { 
-                          id: nv.node_id, 
-                          version: nv.version,
-                          status: NodeVersionStatusToReadable(prevStatus)
+                        t('{{id}}@{{version}} Undone, back to {{status}}', {
+                            id: nv.node_id,
+                            version: nv.version,
+                            status: NodeVersionStatusToReadable(prevStatus),
                         })
                     )
                 },
@@ -567,7 +587,11 @@ function NodeVersionList({}) {
                 }
                 const actionHandler = batchActions[batchAction]
                 if (!actionHandler) {
-                    toast.error(t('Invalid batch action: {{action}}', { action: batchAction }))
+                    toast.error(
+                        t('Invalid batch action: {{action}}', {
+                            action: batchAction,
+                        })
+                    )
                     return
                 }
                 if (actionHandler) {
@@ -713,13 +737,15 @@ function NodeVersionList({}) {
                 onClose={() => setIsBatchModalOpen(false)}
             >
                 <Modal.Header>
-                    {t(`Batch ${
-                        {
-                            approve: 'Approve',
-                            reject: 'Reject',
-                            undo: 'Undo',
-                        }[batchAction]
-                    } Node Versions`)}
+                    {t(
+                        `Batch ${
+                            {
+                                approve: 'Approve',
+                                reject: 'Reject',
+                                undo: 'Undo',
+                            }[batchAction]
+                        } Node Versions`
+                    )}
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
@@ -766,7 +792,9 @@ function NodeVersionList({}) {
                             <TextInput
                                 id="reason"
                                 placeholder={
-                                    defaultBatchReasons[batchAction] ? t(defaultBatchReasons[batchAction]) : ''
+                                    defaultBatchReasons[batchAction]
+                                        ? t(defaultBatchReasons[batchAction])
+                                        : ''
                                 }
                                 value={batchReason}
                                 onChange={(e) => setBatchReason(e.target.value)}
@@ -775,7 +803,9 @@ function NodeVersionList({}) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={executeBatchOperation}>{t('Confirm')}</Button>
+                    <Button onClick={executeBatchOperation}>
+                        {t('Confirm')}
+                    </Button>
                     <Button
                         color="gray"
                         onClick={() => setIsBatchModalOpen(false)}
@@ -898,7 +928,9 @@ function NodeVersionList({}) {
                                 setSelectedStatus([status as NodeVersionStatus])
                             }
                         >
-                            {t(`${flag.charAt(0).toUpperCase() + flag.slice(1)} Nodes`)}
+                            {t(
+                                `${flag.charAt(0).toUpperCase() + flag.slice(1)} Nodes`
+                            )}
                         </Button>
                     ))}
 
@@ -1052,7 +1084,10 @@ function NodeVersionList({}) {
                                             .catch((e) => {
                                                 console.error(e)
                                                 toast.error(
-                                                    t('Error getting node {{id}} repository', { id: nv.node_id })
+                                                    t(
+                                                        'Error getting node {{id}} repository',
+                                                        { id: nv.node_id }
+                                                    )
                                                 )
                                             })
                                     }}
