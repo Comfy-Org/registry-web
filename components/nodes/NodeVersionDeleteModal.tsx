@@ -69,7 +69,9 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                 </Modal.Header>
                 <div className="space-y-6">
                     <p className="text-white">
-                        {t('Are you sure you want to delete this version? This action cannot be undone.')}
+                        {t(
+                            'Are you sure you want to delete this version? This action cannot be undone.'
+                        )}
                     </p>
                     <div className="flex">
                         <Button

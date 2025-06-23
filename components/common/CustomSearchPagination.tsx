@@ -28,8 +28,8 @@ export default function CustomSearchPagination(props: UsePaginationProps) {
                 totalPages={nbPages}
                 onPageChange={handlePageChange}
                 showIcons={true}
-                previousLabel={t("Previous")}
-                nextLabel={t("Next")}
+                previousLabel={t('Previous')}
+                nextLabel={t('Next')}
                 layout="pagination"
             />
         </div>

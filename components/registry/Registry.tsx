@@ -25,7 +25,9 @@ const Registry: React.FC<RegistryProps> = ({}) => {
         <div className="relative mt-8 bg-gray-900 lg:mt-20 mb-8">
             <GenericHeader
                 title={t('Welcome to the Registry')}
-                subTitle={t('View nodes or sign in to create and publish your own')}
+                subTitle={t(
+                    'View nodes or sign in to create and publish your own'
+                )}
                 buttonText={t('Get Started')}
                 buttonLink="/nodes"
             />

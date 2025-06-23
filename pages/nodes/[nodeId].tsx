@@ -24,7 +24,9 @@ const NodeView = () => {
                     >
                         {t('Home')}
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item className="dark">{t('Nodes')}</Breadcrumb.Item>
+                    <Breadcrumb.Item className="dark">
+                        {t('Nodes')}
+                    </Breadcrumb.Item>
                     <Breadcrumb.Item className="dark text-blue-500">
                         {nodeId as string}
                     </Breadcrumb.Item>

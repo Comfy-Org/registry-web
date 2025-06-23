@@ -34,7 +34,9 @@ function AddUnclaimedNodePage() {
                 >
                     {t('Unclaimed Nodes')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item className="dark">{t('Add Unclaimed Node')}</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    {t('Add Unclaimed Node')}
+                </Breadcrumb.Item>
             </Breadcrumb>
 
             <AdminCreateNodeFormModal

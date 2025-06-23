@@ -132,7 +132,8 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
                     {version?.createdAt && (
                         <p className="text-gray-400">
-                            Released <FormatRelativeDate date={version.createdAt } />
+                            Released{' '}
+                            <FormatRelativeDate date={version.createdAt} />
                         </p>
                     )}
 

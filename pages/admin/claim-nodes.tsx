@@ -53,7 +53,9 @@ function ClaimNodesPage() {
                     {t('Error Loading Unclaimed Nodes')}
                 </h1>
                 <p className="text-red-400">
-                    {t('There was an error loading the nodes. Please try again later.')}
+                    {t(
+                        'There was an error loading the nodes. Please try again later.'
+                    )}
                 </p>
             </div>
         )
@@ -74,7 +76,9 @@ function ClaimNodesPage() {
                     >
                         {t('Admin Dashboard')}
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item className="dark">{t('Unclaimed Nodes')}</Breadcrumb.Item>
+                    <Breadcrumb.Item className="dark">
+                        {t('Unclaimed Nodes')}
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div className="flex justify-between items-center">
@@ -97,7 +101,9 @@ function ClaimNodesPage() {
             </div>
 
             <div className="text-gray-200 mb-4">
-                {t('These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.')}
+                {t(
+                    'These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.'
+                )}
             </div>
 
             {data?.nodes?.length === 0 ? (

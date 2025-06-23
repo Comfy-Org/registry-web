@@ -57,7 +57,9 @@ export function AdminCreateNodeFormModal({
             onError: (error) => {
                 if (error instanceof AxiosError) {
                     toast.error(
-                        t('Failed to create node. {{message}}', { message: error.response?.data?.message })
+                        t('Failed to create node. {{message}}', {
+                            message: error.response?.data?.message,
+                        })
                     )
                 } else {
                     toast.error(t('Failed to create node'))

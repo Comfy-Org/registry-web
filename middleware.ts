@@ -1,5 +1,9 @@
 import { LANGUAGE_STORAGE_KEY } from '@/src/constants'
-import { detectLanguageFromHeader, isRedirectExcludedUrl, SUPPORTED_LANGUAGES } from '@/src/hooks/i18n/serverUtils'
+import {
+    detectLanguageFromHeader,
+    isRedirectExcludedUrl,
+    SUPPORTED_LANGUAGES,
+} from '@/src/hooks/i18n/serverUtils'
 import { NextRequest, NextResponse } from 'next/server'
 
 /**

@@ -1,10 +1,10 @@
-import { LANGUAGE_STORAGE_KEY } from '@/src/constants';
-import i18next from 'i18next';
-import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector';
-import i18nextResourcesToBackend from 'i18next-resources-to-backend';
-import { useRouter } from 'next/router';
-import { initReactI18next, useTranslation } from 'react-i18next';
-import reactUseCookie from 'react-use-cookie';
+import { LANGUAGE_STORAGE_KEY } from '@/src/constants'
+import i18next from 'i18next'
+import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
+import i18nextResourcesToBackend from 'i18next-resources-to-backend'
+import { useRouter } from 'next/router'
+import { initReactI18next, useTranslation } from 'react-i18next'
+import reactUseCookie from 'react-use-cookie'
 
 export const languageNames: Record<string, string> = {
     en: 'English',
@@ -14,7 +14,12 @@ export const languageNames: Record<string, string> = {
 
 const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
-    .use(i18nextResourcesToBackend((language, namespace) => import(`@/public/locales/${language}/${namespace}.json`)))
+    .use(
+        i18nextResourcesToBackend(
+            (language, namespace) =>
+                import(`@/public/locales/${language}/${namespace}.json`)
+        )
+    )
     .use(initReactI18next)
     .init({
         fallbackLng: 'en',
@@ -24,14 +29,14 @@ const i18n = i18next
         debug: process.env.NODE_ENV === 'development',
 
         // not needed for react as it escapes by default
-        interpolation: { escapeValue: false, },
+        interpolation: { escapeValue: false },
 
         // use ssr-side detection in middleware
         detection: {
             order: ['htmlTag'],
             caches: [],
         },
-    });
+    })
 
 /**
  * Custom hook for translations in the Comfy Registry
@@ -41,12 +46,15 @@ const i18n = i18next
 export function useNextTranslation(namespace = 'common') {
     // language is defined by the Next.js router locale
     const router = useRouter()
-    const locale = router.locale || router.defaultLocale || 'en';
+    const locale = router.locale || router.defaultLocale || 'en'
 
     // Use a cookie to store the user's language preference
-    const [cookieLocale, setCookieLocale] = reactUseCookie(LANGUAGE_STORAGE_KEY, '');
+    const [cookieLocale, setCookieLocale] = reactUseCookie(
+        LANGUAGE_STORAGE_KEY,
+        ''
+    )
 
-    const { t, i18n, ready } = useTranslation(namespace, { lng: locale, });
+    const { t, i18n, ready } = useTranslation(namespace, { lng: locale })
 
     return {
         t,
@@ -55,9 +63,9 @@ export function useNextTranslation(namespace = 'common') {
         currentLanguage: locale,
         changeLanguage: (locale: string) => {
             // change display language directly with i18n
-            i18n.changeLanguage(locale);
+            i18n.changeLanguage(locale)
             // Also update cookie for server-side detection
-            setCookieLocale(locale);
+            setCookieLocale(locale)
             // Update the URL with the new locale, preserving the current path and query
             // This will trigger a re-render with the new locale
             router.replace(
@@ -68,7 +76,7 @@ export function useNextTranslation(namespace = 'common') {
                 },
                 router.asPath,
                 { shallow: true, locale }
-            );
+            )
         },
     }
 }

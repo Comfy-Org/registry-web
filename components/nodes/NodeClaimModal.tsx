@@ -67,10 +67,13 @@ export function NodeClaimModal({
         mutation: {
             onSuccess: () => {
                 toast.success(
-                    t('Node {{name}} successfully claimed by {{publisherName}}', {
-                        name: node.name,
-                        publisherName: selectedPublisher?.name
-                    })
+                    t(
+                        'Node {{name}} successfully claimed by {{publisherName}}',
+                        {
+                            name: node.name,
+                            publisherName: selectedPublisher?.name,
+                        }
+                    )
                 )
                 onSuccess?.()
                 onClose()
@@ -78,7 +81,9 @@ export function NodeClaimModal({
             onError: (error) => {
                 toast.error(
                     t('Failed to update node: {{error}}', {
-                        error: String(error?.message || error) || t('Unknown error')
+                        error:
+                            String(error?.message || error) ||
+                            t('Unknown error'),
                     })
                 )
             },
@@ -329,7 +334,8 @@ export function NodeClaimModal({
                                     rel="noopener noreferrer"
                                     className="text-blue-400 hover:underline flex items-center"
                                 >
-                                    {t('View')} <HiExternalLink className="ml-1" />
+                                    {t('View')}{' '}
+                                    <HiExternalLink className="ml-1" />
                                 </a>
                             </div>
                             <div className="text-gray-300 text-sm mb-2 break-all">
@@ -366,7 +372,10 @@ export function NodeClaimModal({
                     )}
 
                     <div className="p-2 bg-yellow-900 bg-opacity-50 text-yellow-200 rounded text-sm mb-2">
-                        <strong>{t('Note')}:</strong> {t('Claiming a node requires backend API support for updating publisherId via updateNode(...). This feature is a work in progress (WIP) and may not function until the backend is updated.')}
+                        <strong>{t('Note')}:</strong>{' '}
+                        {t(
+                            'Claiming a node requires backend API support for updating publisherId via updateNode(...). This feature is a work in progress (WIP) and may not function until the backend is updated.'
+                        )}
                     </div>
 
                     <div className="flex justify-end space-x-3">

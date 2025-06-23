@@ -278,7 +278,9 @@ export function NodeStatusReason(nv: NodeVersion) {
                             href={`/admin/nodeversions?nodeId=${nv.node_id}`}
                             target="_blank"
                             className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
-                            title={t('View all node versions for {{nodeId}}', { nodeId: nv.node_id })}
+                            title={t('View all node versions for {{nodeId}}', {
+                                nodeId: nv.node_id,
+                            })}
                         >
                             <MdOpenInNew className="w-6 h-6" />
                         </Link>

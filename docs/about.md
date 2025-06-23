@@ -41,6 +41,3 @@ Get started publishing your first node by following the tutorial.
 ### How do I deprecate a node version?
 
 <!-- Answer needed -->
-
-
-

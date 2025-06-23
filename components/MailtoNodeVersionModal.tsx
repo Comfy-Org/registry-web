@@ -40,7 +40,9 @@ export default function MailtoNodeVersionModal({
     return (
         <Modal show={open} onClose={onClose} dismissible>
             <Modal.Header>
-                {t('Contact Publisher: {{name}}', { name: publisher?.name || publisher?.id })}
+                {t('Contact Publisher: {{name}}', {
+                    name: publisher?.name || publisher?.id,
+                })}
             </Modal.Header>
             <Modal.Body>
                 <div className="space-y-4">
@@ -48,7 +50,9 @@ export default function MailtoNodeVersionModal({
                         {!!node?.repository && (
                             <li>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                    {t('You can contact the publisher via GitHub:')}
+                                    {t(
+                                        'You can contact the publisher via GitHub:'
+                                    )}
                                 </p>
                                 <Link
                                     href={newIssueLink}
@@ -67,7 +71,9 @@ export default function MailtoNodeVersionModal({
                         {publisher?.members?.length && (
                             <li>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                    {t('You can contact the publisher via email:')}
+                                    {t(
+                                        'You can contact the publisher via email:'
+                                    )}
                                 </p>
                                 <ListPublisherEmails {...{ publisher }} />
                                 {publisherLoading && (

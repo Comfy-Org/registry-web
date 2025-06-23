@@ -9,7 +9,11 @@ interface LanguageSwitcherProps {
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     const { t, changeLanguage, currentLanguage } = useNextTranslation()
     return (
-        <Dropdown label={languageNames[currentLanguage] || 'Language'} color="gray" className={className}>
+        <Dropdown
+            label={languageNames[currentLanguage] || 'Language'}
+            color="gray"
+            className={className}
+        >
             {Object.entries(languageNames).map(([langCode, langName]) => (
                 <Dropdown.Item
                     key={langCode}

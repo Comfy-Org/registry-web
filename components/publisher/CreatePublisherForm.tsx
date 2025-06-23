@@ -60,7 +60,9 @@ const CreatePublisherForm = () => {
                             {t('Create a Publisher')}
                         </h1>
                         <p className="flex justify-center text-sm font-medium text-gray-400 ">
-                            {t('Register a publisher to begin distributing custom nodes on Comfy.')}
+                            {t(
+                                'Register a publisher to begin distributing custom nodes on Comfy.'
+                            )}
                         </p>
 
                         <form
@@ -132,7 +134,9 @@ const CreatePublisherForm = () => {
                                     color="light"
                                     className=" bg-gray-900"
                                 >
-                                    <span className="text-white">{t('Cancel')}</span>
+                                    <span className="text-white">
+                                        {t('Cancel')}
+                                    </span>
                                 </Button>
                                 <Button
                                     type="submit"

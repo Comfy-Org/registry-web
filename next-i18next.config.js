@@ -1,4 +1,4 @@
-import {resolve}   from 'path';
+import { resolve } from 'path'
 /**
  * @type {import('next-i18next').UserConfig}
  */

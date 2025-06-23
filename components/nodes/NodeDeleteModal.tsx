@@ -76,7 +76,9 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                     }}
                 >
                     <p className="text-white">
-                        {t('Are you sure you want to delete this node? This action cannot be undone.')}
+                        {t(
+                            'Are you sure you want to delete this node? This action cannot be undone.'
+                        )}
                     </p>
                     <div>
                         <Label className="text-white">
