@@ -108,7 +108,9 @@ function NodeVersionList({}) {
         })
             .toString()
             .replace(/^(?!$)/, '?')
-        const hash = router.asPath.split('#')[1] ? '#' + router.asPath.split('#')[1] : ''
+        const hash = router.asPath.split('#')[1]
+            ? '#' + router.asPath.split('#')[1]
+            : ''
         router.push(`${router.pathname}${search}${hash}`)
     }
 
@@ -838,10 +840,10 @@ function NodeVersionList({}) {
                         })
                             .toString()
                             .replace(/^(?!$)/, '?')
-                        const hash = router.asPath.split('#')[1] ? '#' + router.asPath.split('#')[1] : ''
-                        router.push(
-                            router.pathname + searchParams + hash
-                        )
+                        const hash = router.asPath.split('#')[1]
+                            ? '#' + router.asPath.split('#')[1]
+                            : ''
+                        router.push(router.pathname + searchParams + hash)
                     }}
                 >
                     <TextInput
@@ -872,10 +874,10 @@ function NodeVersionList({}) {
                         })
                             .toString()
                             .replace(/^(?!$)/, '?')
-                        const hash = router.asPath.split('#')[1] ? '#' + router.asPath.split('#')[1] : ''
-                        router.push(
-                            router.pathname + searchParams + hash
-                        )
+                        const hash = router.asPath.split('#')[1]
+                            ? '#' + router.asPath.split('#')[1]
+                            : ''
+                        router.push(router.pathname + searchParams + hash)
                     }}
                 >
                     <TextInput

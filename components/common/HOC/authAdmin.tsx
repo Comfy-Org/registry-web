@@ -30,8 +30,7 @@ const withAdmin = (WrappedComponent) => {
 
         const { data: user, isLoading } = useGetUser({})
         useEffect(() => {
-            if (!isLoading && !user)
-                router.push(`/auth/login?${fromUrlParam}`)
+            if (!isLoading && !user) router.push(`/auth/login?${fromUrlParam}`)
         }, [router, user, isLoading, fromUrlParam])
 
         if (isLoading)

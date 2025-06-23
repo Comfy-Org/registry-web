@@ -14,8 +14,7 @@ const withAuth = (WrappedComponent) => {
         const fromUrlParam = useFromUrlParam()
 
         useEffect(() => {
-            if (!loading && !user)
-                router.push(`/auth/login?${fromUrlParam}`)
+            if (!loading && !user) router.push(`/auth/login?${fromUrlParam}`)
         }, [router, user, loading, fromUrlParam])
 
         if (loading)

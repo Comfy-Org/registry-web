@@ -32,10 +32,8 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
     const router = useRouter()
     const { t } = useNextTranslation()
     const fromUrlParam = useFromUrlParam()
-    const handleLogIn = () =>
-        router.push(`/auth/login?${fromUrlParam}`)
-    const handleSignUp = () =>
-        router.push(`/auth/signup?${fromUrlParam}`)
+    const handleLogIn = () => router.push(`/auth/login?${fromUrlParam}`)
+    const handleSignUp = () => router.push(`/auth/signup?${fromUrlParam}`)
     return (
         <Navbar
             fluid
