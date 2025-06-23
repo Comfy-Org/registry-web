@@ -6,6 +6,7 @@
  * @author: snomiao <snomiao@gmail.com>
  */
 import withAuth from '@/components/common/HOC/withAuth'
+import { GithubUserSpan, NodeSpan, PublisherSpan } from '@/components/common/Spans'
 import { Alert, Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -514,11 +515,13 @@ function ClaimMyNodePage() {
                             <div className="flex flex-col space-y-2">
                                 <div className="flex items-start">
                                     <span className="text-gray-400 w-24">
-                                        Node ID:
+                                        Node:
                                     </span>
-                                    <span className="text-white">
-                                        {router.query.nodeId || nodeId}
-                                    </span>
+                                    <NodeSpan 
+                                        nodeId={router.query.nodeId as string || nodeId as string} 
+                                        nodeName={node?.name}
+                                        className="text-white"
+                                    />
                                 </div>
                                 <div className="flex items-start">
                                     <span className="text-gray-400 w-24">
@@ -532,16 +535,17 @@ function ClaimMyNodePage() {
                                     <span className="text-gray-400 w-24">
                                         Publisher:
                                     </span>
-                                    <span className="text-gray-400 font-bold underline underline-offset-2 decoration-dashed">
+                                    <span className="text-gray-400 font-bold">
                                         Unclaimed
                                     </span>
                                     <span className="mx-1 text-gray-500">
                                         &rarr;
                                     </span>
-                                    <span className="text-white font-bold underline underline-offset-2 decoration-dashed">
-                                        {publisherToClaim?.name} (@
-                                        {publisherToClaim?.id})
-                                    </span>
+                                    <PublisherSpan
+                                        publisherId={publisherId as string}
+                                        publisherName={publisherToClaim?.name}
+                                        className="text-white font-bold"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -672,12 +676,26 @@ function ClaimMyNodePage() {
                             </div>
                             <p className="text-gray-300 mb-4">
                                 Your GitHub account (
-                                <strong>@{githubUsername}</strong>) has been
+                                <GithubUserSpan 
+                                    username={githubUsername} 
+                                    userId={githubUserId} 
+                                    className="text-white"
+                                />
+                                ) has been
                                 verified with admin permissions to the
                                 repository. You can now claim node{' '}
-                                <strong>{node?.name}</strong> (ID:{' '}
-                                <strong>{nodeId}</strong>) as publisher:{' '}
-                                <strong>@{publisherToClaim?.id}</strong>.
+                                <NodeSpan 
+                                    nodeId={nodeId as string} 
+                                    nodeName={node?.name}
+                                    className="text-white"
+                                />{' '}
+                                as publisher:{' '}
+                                <PublisherSpan 
+                                    publisherId={publisherId as string}
+                                    publisherName={publisherToClaim?.name}
+                                    className="text-white"
+                                />
+                                .
                             </p>
                             <div className="flex justify-end">
                                 <Button
@@ -731,8 +749,15 @@ function ClaimMyNodePage() {
                             </div>
                             <p className="text-gray-300 mb-4">
                                 Congratulations! You have successfully claimed
-                                the node "{node?.name}" for publisher "
-                                {publisherToClaim?.name}". You can now manage
+                                the node <NodeSpan 
+                                    nodeId={nodeId as string}
+                                    nodeName={node?.name}
+                                    className="text-white"
+                                /> for publisher <PublisherSpan
+                                    publisherId={publisherId as string}
+                                    publisherName={publisherToClaim?.name}
+                                    className="text-white"
+                                />. You can now manage
                                 this node through your publisher account.
                             </p>
                             <div className="flex justify-end">
