@@ -108,7 +108,8 @@ function NodeVersionList({}) {
         })
             .toString()
             .replace(/^(?!$)/, '?')
-        router.push(router.pathname + search + location.hash)
+        const hash = router.asPath.split('#')[1] ? '#' + router.asPath.split('#')[1] : ''
+        router.push(`${router.pathname}${search}${hash}`)
     }
 
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
@@ -807,8 +808,9 @@ function NodeVersionList({}) {
                         })
                             .toString()
                             .replace(/^(?!$)/, '?')
+                        const hash = router.asPath.split('#')[1] ? '#' + router.asPath.split('#')[1] : ''
                         router.push(
-                            router.pathname + searchParams + location.hash
+                            router.pathname + searchParams + hash
                         )
                     }}
                 >
@@ -840,8 +842,9 @@ function NodeVersionList({}) {
                         })
                             .toString()
                             .replace(/^(?!$)/, '?')
+                        const hash = router.asPath.split('#')[1] ? '#' + router.asPath.split('#')[1] : ''
                         router.push(
-                            router.pathname + searchParams + location.hash
+                            router.pathname + searchParams + hash
                         )
                     }}
                 >

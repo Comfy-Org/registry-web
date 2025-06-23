@@ -13,6 +13,7 @@ import {
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import app from '../../src/firebase'
+import { useFromUrl } from '../common/HOC/useFromUrl'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const { t } = useNextTranslation()
@@ -34,10 +35,10 @@ const AuthUI: React.FC<{}> = ({}) => {
     // redirect back when user is logged in
     const [firebaseUser, _loadingFirebaseUser] = useAuthState(auth)
     const loggedIn = Boolean(firebaseUser)
+    const fromUrl = useFromUrl()
     React.useEffect(() => {
-        const fromUrl = new URLSearchParams(location.search).get('fromUrl')
         if (loggedIn) router.push(fromUrl ?? '/nodes')
-    }, [loggedIn, router])
+    }, [loggedIn, router, fromUrl])
 
     // handle errors
     React.useEffect(() => {

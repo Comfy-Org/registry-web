@@ -4,18 +4,19 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import app from 'src/firebase'
-import { getFromUrlSearchParam } from './getFromUrlSearchParam'
+import { useFromUrlParam } from './useFromUrl'
 
 const withAuth = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
         const auth = getAuth(app)
         const [user, loading, error] = useAuthState(auth)
+        const fromUrlParam = useFromUrlParam()
 
         useEffect(() => {
             if (!loading && !user)
-                router.push(`/auth/login?${getFromUrlSearchParam()}`)
-        }, [router, user, loading])
+                router.push(`/auth/login?${fromUrlParam}`)
+        }, [router, user, loading, fromUrlParam])
 
         if (loading)
             return (

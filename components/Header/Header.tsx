@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
-import { getFromUrlSearchParam } from '../common/HOC/getFromUrlSearchParam'
+import { useFromUrlParam } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
 import ProfileDropdown from './ProfileDropdown'
 
@@ -31,10 +31,11 @@ const DiscordIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
     const router = useRouter()
     const { t } = useNextTranslation()
+    const fromUrlParam = useFromUrlParam()
     const handleLogIn = () =>
-        router.push(`/auth/login?${getFromUrlSearchParam()}`)
+        router.push(`/auth/login?${fromUrlParam}`)
     const handleSignUp = () =>
-        router.push(`/auth/signup?${getFromUrlSearchParam()}`)
+        router.push(`/auth/signup?${fromUrlParam}`)
     return (
         <Navbar
             fluid
