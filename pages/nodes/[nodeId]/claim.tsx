@@ -7,6 +7,8 @@ import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import { useGetNode, useListPublishersForUser } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import CreatePublisherModal from '@/components/publisher/CreatePublisherModal'
+import Link from 'next/link'
 
 export default withAuth(ClaimNodePage)
 
@@ -16,12 +18,13 @@ function ClaimNodePage() {
     const [selectedPublisherId, setSelectedPublisherId] = useState<
         string | null
     >(null)
+    const [openCreatePublisherModal, setOpenCreatePublisherModal] = useState(false)
 
     // Get the node details
     const { data: node, isLoading: nodeLoading } = useGetNode(nodeId as string)
 
     // Get user's publishers
-    const { data: publishers, isLoading: publishersLoading } =
+    const { data: publishers, isLoading: publishersLoading, refetch: refetchPublishers } =
         useListPublishersForUser()
 
     const isLoading = nodeLoading || publishersLoading
@@ -48,6 +51,19 @@ function ClaimNodePage() {
         router.push(
             `/publishers/${selectedPublisherId}/claim-my-node?nodeId=${nodeId}`
         )
+    }
+
+    const handleOpenCreatePublisherModal = () => {
+        setOpenCreatePublisherModal(true)
+    }
+
+    const handleCloseCreatePublisherModal = () => {
+        setOpenCreatePublisherModal(false)
+    }
+
+    const handleCreatePublisherSuccess = async () => {
+        handleCloseCreatePublisherModal()
+        await refetchPublishers()
     }
 
     if (isLoading) {
@@ -142,8 +158,12 @@ function ClaimNodePage() {
                 </h2>
                 <p className="text-gray-300 mb-6">
                     Choose which publisher account you want to use to claim this
-                    node. You must be the owner of the GitHub repository to
-                    claim this node.
+                    node. You must be the owner of the GitHub repository 
+                    {node?.repository ? (
+                        <> at <Link href={node.repository} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">{node.repository}</Link></>
+                    ) : (
+                        " to claim this node."
+                    )}
                 </p>
 
                 {publishers && publishers.length > 0 ? (
@@ -184,16 +204,23 @@ function ClaimNodePage() {
                         <p className="text-white mb-4">
                             You don&#39;t have any publishers yet. Create a
                             publisher first to claim nodes.
-                        </p>
-                        <Button
+                        </p>                        <Button
                             color="blue"
-                            onClick={() => router.push('/publishers/create')}
+                            onClick={handleOpenCreatePublisherModal}
                         >
                             Create Publisher
                         </Button>
                     </div>
                 )}
+                
             </div>
+
+            {/* CreatePublisherModal */}
+            <CreatePublisherModal
+                openModal={openCreatePublisherModal}
+                onCloseModal={handleCloseCreatePublisherModal}
+                onSuccess={handleCreatePublisherSuccess}
+            />
         </div>
     )
 }

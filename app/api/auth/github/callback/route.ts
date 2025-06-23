@@ -78,7 +78,9 @@ export const GET = async (request: NextRequest) => {
         error: 'User does not have access to repository',
       });
       
-      return NextResponse.redirect(`${redirectUri}?error=repository_access_denied`);
+      // Check if redirectUri already contains search parameters
+      const separator = redirectUri.includes('?') ? '&' : '?';
+      return NextResponse.redirect(`${redirectUri}${separator}error=repository_access_denied`);
     }
 
     // Repository verification successful
@@ -88,9 +90,10 @@ export const GET = async (request: NextRequest) => {
     });
 
     // Redirect back to the application with the token
-    return NextResponse.redirect(`${redirectUri}?token=${encodeURIComponent(accessToken)}`);
+    // Check if redirectUri already contains search parameters
+    const separator = redirectUri.includes('?') ? '&' : '?';
+    return NextResponse.redirect(`${redirectUri}${separator}token=${encodeURIComponent(accessToken)}`);
   } catch (error) {
-    console.error('GitHub OAuth callback error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

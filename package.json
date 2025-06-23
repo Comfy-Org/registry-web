@@ -51,6 +51,7 @@
     "mixpanel-browser": "^2.65.0",
     "next": "^15.3.3",
     "nextjs-cors": "^2.2.0",
+    "octokit": "^5.0.3",
     "p-map": "^7.0.3",
     "pi": "^2.0.5",
     "prop-types": "^15.8.1",

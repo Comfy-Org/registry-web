@@ -15,6 +15,7 @@ export const GET = async (request: NextRequest) => {
     const repo = url.searchParams.get('repo');
     const nodeId = url.searchParams.get('nodeId');
     const publisherId = url.searchParams.get('publisherId');
+    const customScope = url.searchParams.get('scope');
 
     if (!redirectUri || !owner || !repo || !nodeId || !publisherId) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
@@ -22,7 +23,7 @@ export const GET = async (request: NextRequest) => {
 
     // GitHub OAuth application credentials
     const clientId = process.env.GITHUB_CLIENT_ID;
-    
+
     if (!clientId) {
       return NextResponse.json({ error: 'GitHub OAuth not configured' }, { status: 500 });
     }
@@ -34,9 +35,8 @@ export const GET = async (request: NextRequest) => {
       repository: `https://github.com/${owner}/${repo}`,
     });
 
-    // Scope needed to verify repository ownership
-    const scope = 'repo';
-    
+    // Use custom scope if provided, otherwise use empty string
+
     // State parameter helps prevent CSRF attacks and can store information about the request
     const state = Buffer.from(
       JSON.stringify({
@@ -47,11 +47,18 @@ export const GET = async (request: NextRequest) => {
         timestamp: Date.now(),
       })
     ).toString('base64');
-
-    // Redirect to GitHub OAuth
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-      `${process.env.NEXT_PUBLIC_API_URL || ''}/api/auth/github/callback`
-    )}&scope=${scope}&state=${state}`;
+    const host = "3000.stukivx.snomiao.dev"
+    // const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
+    const origin = `https://${host}`;
+    // Redirect to GitHub OAuthj
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: `${origin}/api/auth/github/callback`,
+      scope: customScope || '',
+      state: state,
+      allow_signup: 'false',
+    });
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?${params.toString()}`;
 
     return NextResponse.redirect(githubAuthUrl);
   } catch (error) {
