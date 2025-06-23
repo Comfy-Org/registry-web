@@ -751,15 +751,18 @@ function NodeVersionList({}) {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
-                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 flex flex-wrap gap-2">
-                            {t('You are about to')}{' '}
-                            {
-                                {
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 flex flex-wrap gap-2 items-center">
+                            {t('You are about to {{action}} {{count}} node versions', {
+                                action: {
                                     approve: t('approve'),
                                     reject: t('reject'),
                                     undo: t('undo'),
-                                }[batchAction]
-                            }{' '}
+                                }[batchAction],
+                                count: Object.keys(selectedVersions).filter(
+                                    (key) => selectedVersions[key]
+                                ).length
+                            })}
+
                             <Tooltip
                                 content={
                                     <ol className="list-decimal list-inside">
@@ -774,14 +777,9 @@ function NodeVersionList({}) {
                                 }
                                 placement="top"
                             >
-                                <span className="inline-block underline cursor-pointer">
-                                    {
-                                        Object.keys(selectedVersions).filter(
-                                            (key) => selectedVersions[key]
-                                        ).length
-                                    }{' '}
-                                    {t('node versions')}
-                                </span>
+                                <Button color="gray" size="xs" pill outline>
+                                    {t('Details')}
+                                </Button>
                             </Tooltip>
                         </p>
                         <div>
