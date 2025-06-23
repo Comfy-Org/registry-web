@@ -685,10 +685,10 @@ function NodeVersionList({}) {
                     }}
                     className="dark"
                 >
-                    Admin Dashboard
+                    {t('Admin Dashboard')}
                 </Breadcrumb.Item>
                 <Breadcrumb.Item className="dark">
-                    Review Node Versions
+                    {t('Review Node Versions')}
                 </Breadcrumb.Item>
             </Breadcrumb>
             <BatchOperationBar />
