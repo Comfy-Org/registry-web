@@ -132,33 +132,41 @@ async function getAvailableLanguages(): Promise<string[]> {
     }
 }
 
-async function translateKeyToLanguage(key: string, lang: string, existingTranslations: Record<string, string>): Promise<string> {
+async function translateKeyToLanguage(
+    key: string,
+    lang: string,
+    existingTranslations: Record<string, string>
+): Promise<string> {
     try {
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: 'gpt-4',
-            messages: [
-                {
-                    role: 'system',
-                    content: `You are a translation assistant. Translate the following key into ${lang}. Use the provided translations for consistency.`
+        const response = await axios.post(
+            'https://api.openai.com/v1/chat/completions',
+            {
+                model: 'gpt-4',
+                messages: [
+                    {
+                        role: 'system',
+                        content: `You are a translation assistant. Translate the following key into ${lang}. Use the provided translations for consistency.`,
+                    },
+                    {
+                        role: 'user',
+                        content: `Existing translations: ${JSON.stringify(existingTranslations)}\nKey to translate: ${key}`,
+                    },
+                ],
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ` + process.env.OPENAI_API_KEY,
+                    'Content-Type': 'application/json',
                 },
-                {
-                    role: 'user',
-                    content: `Existing translations: ${JSON.stringify(existingTranslations)}\nKey to translate: ${key}`
-                }
-            ]
-        }, {
-            headers: {
-                'Authorization': `Bearer ` + process.env.OPENAI_API_KEY,
-                'Content-Type': 'application/json'
             }
-        });
+        )
 
-        const translatedText = response.data.choices[0].message.content;
-        return translatedText.trim();
+        const translatedText = response.data.choices[0].message.content
+        return translatedText.trim()
     } catch (error) {
         throw new Error(
             `Error translating key "${key}" to ${lang}: ${error instanceof Error ? error.message : String(error)}`
-        );
+        )
     }
 }
 
@@ -189,32 +197,42 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
 
     // Update other language files only if OPENAI_API_KEY is set
     if (!process.env.OPENAI_API_KEY) {
-        console.warn('OPENAI_API_KEY is not set. Skipping updates for other languages.');
-        return;
+        console.warn(
+            'OPENAI_API_KEY is not set. Skipping updates for other languages.'
+        )
+        return
     }
 
-    const availableLanguages = await getAvailableLanguages();
+    const availableLanguages = await getAvailableLanguages()
     for (const lang of availableLanguages) {
-        const langFile = path.join(LOCALES_DIR, `${lang}/common.json`);
-        const existingLangTranslations = await readJsonFile(langFile);
+        const langFile = path.join(LOCALES_DIR, `${lang}/common.json`)
+        const existingLangTranslations = await readJsonFile(langFile)
 
         // Find new and unused keys for the current language
-        const newKeysLang = uniqueKeys.filter((key) => !existingLangTranslations[key]);
+        const newKeysLang = uniqueKeys.filter(
+            (key) => !existingLangTranslations[key]
+        )
         const unusedKeysLang = Object.keys(existingLangTranslations).filter(
             (key) => !uniqueKeys.includes(key)
-        );
+        )
 
         // Update translations for the current language
-        const updatedLangTranslations = { ...existingLangTranslations };
+        const updatedLangTranslations = { ...existingLangTranslations }
         for (const key of newKeysLang) {
-            updatedLangTranslations[key] = await translateKeyToLanguage(key, lang, existingLangTranslations);
+            updatedLangTranslations[key] = await translateKeyToLanguage(
+                key,
+                lang,
+                existingLangTranslations
+            )
         }
         unusedKeysLang.forEach((key) => {
-            delete updatedLangTranslations[key];
-        });
+            delete updatedLangTranslations[key]
+        })
 
-        await writeJsonFile(langFile, updatedLangTranslations);
-        console.log(`Updated ${lang}: +${newKeysLang.length} -${unusedKeysLang.length}`);
+        await writeJsonFile(langFile, updatedLangTranslations)
+        console.log(
+            `Updated ${lang}: +${newKeysLang.length} -${unusedKeysLang.length}`
+        )
     }
 }
 
