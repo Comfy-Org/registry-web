@@ -19,15 +19,3 @@ export function useFromUrlParam(): string {
     const router = useRouter()
     return `fromUrl=${encodeURIComponent(router.asPath)}`
 }
-
-/**
- * Gets the hash portion from the current URL
- * @returns The hash string including # prefix or empty string if no hash
- */
-export function useRouterHash(): string {
-    const router = useRouter()
-
-    if (typeof window === 'undefined') return ''
-    const hash = router.asPath.split('#')[1]
-    return hash ? '#' + hash : ''
-}
