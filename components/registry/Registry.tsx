@@ -24,7 +24,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
     return (
         <div className="relative mt-8 bg-gray-900 lg:mt-20 mb-8">
             <GenericHeader
-                title={t('Welcome to the Registry')}
+                title={t('Welcome to ComfyUI Registry')}
                 subTitle={t(
                     'View nodes or sign in to create and publish your own'
                 )}

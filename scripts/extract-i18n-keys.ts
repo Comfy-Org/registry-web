@@ -1,3 +1,4 @@
+import axios from 'axios'
 import * as fs from 'fs/promises'
 import { glob } from 'glob'
 import path from 'path'
@@ -19,7 +20,7 @@ const LOCALES_DIR = path.join(ROOT_DIR, 'public/locales')
 const EN_LOCALE_FILE = path.join(LOCALES_DIR, 'en/common.json')
 
 // Regex to match t('key') patterns
-const TRANSLATION_KEY_REGEX = /\bt\(\s*(['"`])([^'"`\n\r\\${}]+?)\1/g
+const TRANSLATION_KEY_REGEX = /\bt\(\s*(['"`])([\s\S]+?)\1/g
 
 // Validate translation keys
 function isValidKey(key: string): boolean {
@@ -131,47 +132,89 @@ async function getAvailableLanguages(): Promise<string[]> {
     }
 }
 
+async function translateKeyToLanguage(key: string, lang: string, existingTranslations: Record<string, string>): Promise<string> {
+    try {
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: 'gpt-4',
+            messages: [
+                {
+                    role: 'system',
+                    content: `You are a translation assistant. Translate the following key into ${lang}. Use the provided translations for consistency.`
+                },
+                {
+                    role: 'user',
+                    content: `Existing translations: ${JSON.stringify(existingTranslations)}\nKey to translate: ${key}`
+                }
+            ]
+        }, {
+            headers: {
+                'Authorization': `Bearer ` + process.env.OPENAI_API_KEY,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const translatedText = response.data.choices[0].message.content;
+        return translatedText.trim();
+    } catch (error) {
+        throw new Error(
+            `Error translating key "${key}" to ${lang}: ${error instanceof Error ? error.message : String(error)}`
+        );
+    }
+}
+
 async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
     // Read existing English translations
     const existingEnTranslations = await readJsonFile(EN_LOCALE_FILE)
 
-    // Find new and unused keys
-    const newKeys = uniqueKeys.filter((key) => !existingEnTranslations[key])
-    const unusedKeys = Object.keys(existingEnTranslations).filter(
+    // Find new and unused keys for English
+    const newKeysEn = uniqueKeys.filter((key) => !existingEnTranslations[key])
+    const unusedKeysEn = Object.keys(existingEnTranslations).filter(
         (key) => !uniqueKeys.includes(key)
     )
 
     // Update English translations
     const updatedEnTranslations = { ...existingEnTranslations }
-    newKeys.forEach((key) => {
+    newKeysEn.forEach((key) => {
         updatedEnTranslations[key] = key
     })
-    unusedKeys.forEach((key) => {
+    unusedKeysEn.forEach((key) => {
         delete updatedEnTranslations[key]
     })
 
     await writeJsonFile(EN_LOCALE_FILE, updatedEnTranslations)
 
     console.log(`\nlocales/en/common.json Updated:`)
-    console.log(`+ ${newKeys.length} new keys`)
-    console.log(`- ${unusedKeys.length} unused keys\n`)
+    console.log(`+ ${newKeysEn.length} new keys`)
+    console.log(`- ${unusedKeysEn.length} unused keys\n`)
 
-    // Update other language files
-    const availableLanguages = await getAvailableLanguages()
+    // Update other language files only if OPENAI_API_KEY is set
+    if (!process.env.OPENAI_API_KEY) {
+        console.warn('OPENAI_API_KEY is not set. Skipping updates for other languages.');
+        return;
+    }
+
+    const availableLanguages = await getAvailableLanguages();
     for (const lang of availableLanguages) {
-        const langFile = path.join(LOCALES_DIR, `${lang}/common.json`)
-        const existingLangTranslations = await readJsonFile(langFile)
+        const langFile = path.join(LOCALES_DIR, `${lang}/common.json`);
+        const existingLangTranslations = await readJsonFile(langFile);
 
-        // Add new keys (use English as fallback), remove unused keys
-        newKeys.forEach((key) => {
-            existingLangTranslations[key] = updatedEnTranslations[key]
-        })
-        unusedKeys.forEach((key) => {
-            delete existingLangTranslations[key]
-        })
+        // Find new and unused keys for the current language
+        const newKeysLang = uniqueKeys.filter((key) => !existingLangTranslations[key]);
+        const unusedKeysLang = Object.keys(existingLangTranslations).filter(
+            (key) => !uniqueKeys.includes(key)
+        );
 
-        await writeJsonFile(langFile, existingLangTranslations)
-        console.log(`Updated ${lang}: +${newKeys.length} -${unusedKeys.length}`)
+        // Update translations for the current language
+        const updatedLangTranslations = { ...existingLangTranslations };
+        for (const key of newKeysLang) {
+            updatedLangTranslations[key] = await translateKeyToLanguage(key, lang, existingLangTranslations);
+        }
+        unusedKeysLang.forEach((key) => {
+            delete updatedLangTranslations[key];
+        });
+
+        await writeJsonFile(langFile, updatedLangTranslations);
+        console.log(`Updated ${lang}: +${newKeysLang.length} -${unusedKeysLang.length}`);
     }
 }
 
