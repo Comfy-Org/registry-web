@@ -37,18 +37,18 @@ export function FormatRelativeDate({ date: dateString }: { date: string }) {
 
     if (daysAgo < 7) {
         if (daysAgo === 0) {
-            return t('Today')
+            return <>{t('Today')}</>
         } else if (daysAgo === 1) {
-            return t('Yesterday')
+            return <>{t('Yesterday')}</>
         } else {
-            return t('{{days}} days ago', { days: daysAgo })
+            return <>{t('{{days}} days ago', { days: daysAgo })}</>
         }
     } else {
         // Formatting to YYYY-MM-DD
         const year = date.getFullYear()
         const month = (date.getMonth() + 1).toString().padStart(2, '0')
         const day = date.getDate().toString().padStart(2, '0')
-        return `${year}-${month}-${day}`
+        return <>{`${year}-${month}-${day}`}</>
     }
 }
 
