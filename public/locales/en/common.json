@@ -1,5 +1,7 @@
 {
   "(admin)": "(admin)",
+  "+ Create new key": "+ Create new key",
+  "API Keys": "API Keys",
   "Account already exists with different credential": "Account already exists with different credential",
   "Active": "Active",
   "Add": "Add",
@@ -132,6 +134,7 @@
   "Search by Reason": "Search by Reason",
   "Search nodes by name or ID": "Search nodes by name or ID",
   "Search publishers...": "Search publishers...",
+  "Secret Key": "Secret Key",
   "Select All": "Select All",
   "Select Publisher": "Select Publisher",
   "Selected Publisher": "Selected Publisher",
