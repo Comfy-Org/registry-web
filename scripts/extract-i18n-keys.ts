@@ -121,22 +121,26 @@ async function translateKeyToLanguage(key: string, lang: string, existingTransla
       messages: [
         {
           role: 'system',
-          content: `You are a translation assistant. Translate the following key into ${lang}. Use the provided translations for consistency. No explaination needed, just return the translation.`,
+          content: `You are a translation assistant. Translate the following key into specified language. Use the provided translations for consistency. No explaination needed, just return the translation.`,
         },
         {
-          role: 'user',
-          content: `Existing translations: ${JSON.stringify(existingTranslations)}`
-        }
-        ,
-        // example
+          role: 'system',
+          content: `For translation consistency, Existing translations: ${JSON.stringify(existingTranslations)}`
+        },
+        // Example
         {
           role: 'user',
-          content: `Key to translate: "${key}" `
+          content: `Translate to zh: "Welcome to our website"`,
         },
         {
           role: 'assistant',
-          content: `Translate the key "${key}" into ${lang}.`
-        }
+          content: `欢迎来到我们的网站`,
+        },
+        // real
+        {
+          role: 'user',
+          content: `Translate to ${lang}: "${key}"`
+        },
       ]
     }, {
       headers: {
