@@ -704,6 +704,11 @@ function NodeVersionList({}) {
         )
     }
 
+    const translatedActionNames = {
+        approve: t('approve'),
+        reject: t('reject'),
+        undo: t('undo'),
+    }
     return (
         <div>
             <Breadcrumb className="py-4 px-4">
@@ -739,15 +744,9 @@ function NodeVersionList({}) {
                 onClose={() => setIsBatchModalOpen(false)}
             >
                 <Modal.Header>
-                    {t(
-                        `Batch ${
-                            {
-                                approve: 'Approve',
-                                reject: 'Reject',
-                                undo: 'Undo',
-                            }[batchAction]
-                        } Node Versions`
-                    )}
+                    {t(`Batch {{action}} Node Versions`, {
+                        action: translatedActionNames[batchAction],
+                    })}
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
@@ -755,11 +754,7 @@ function NodeVersionList({}) {
                             {t(
                                 'You are about to {{action}} {{count}} node versions',
                                 {
-                                    action: {
-                                        approve: t('approve'),
-                                        reject: t('reject'),
-                                        undo: t('undo'),
-                                    }[batchAction],
+                                    action: translatedActionNames[batchAction],
                                     count: Object.keys(selectedVersions).filter(
                                         (key) => selectedVersions[key]
                                     ).length,
@@ -931,9 +926,11 @@ function NodeVersionList({}) {
                                 setSelectedStatus([status as NodeVersionStatus])
                             }
                         >
-                            {t(
-                                `${flag.charAt(0).toUpperCase() + flag.slice(1)} Nodes`
-                            )}
+                            {t(`{{flag}} Nodes`, {
+                                flag:
+                                    flag.charAt(0).toUpperCase() +
+                                    flag.slice(1),
+                            })}
                         </Button>
                     ))}
 
