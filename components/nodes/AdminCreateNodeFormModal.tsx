@@ -66,7 +66,7 @@ export function AdminCreateNodeFormModal({
                 }
             },
             onSuccess: () => {
-                toast.success(t('Node create successfully'))
+                toast.success(t('Node created successfully'))
                 // onClose?.()
             },
         },
