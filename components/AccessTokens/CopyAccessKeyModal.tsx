@@ -108,7 +108,9 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                             size="sm"
                             onClick={onCloseModal}
                         >
-                            <span className="text-xs text-white">{t('Done')}</span>
+                            <span className="text-xs text-white">
+                                {t('Done')}
+                            </span>
                         </Button>
                     </div>
                 </form>

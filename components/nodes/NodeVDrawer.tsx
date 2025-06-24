@@ -66,7 +66,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             },
             {
                 onError: (error) => {
-                    toast.error(t('Could not update version. Please try again.'))
+                    toast.error(
+                        t('Could not update version. Please try again.')
+                    )
                 },
                 onSuccess: (version) => {
                     toast.success(t('Version updated successfully'))
@@ -134,7 +136,8 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
                     {version?.createdAt && (
                         <p className="text-gray-400">
-                            {t('Released')} <FormatRelativeDate date={version.createdAt} />
+                            {t('Released')}{' '}
+                            <FormatRelativeDate date={version.createdAt} />
                         </p>
                     )}
 
@@ -151,7 +154,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                                 }}
                             >
                                 <a href={version.downloadUrl}>
-                                    {t('Download Version {{version}}', { version: version.version })}
+                                    {t('Download Version {{version}}', {
+                                        version: version.version,
+                                    })}
                                 </a>
                             </Button>
                         )}
@@ -190,9 +195,13 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         </label>
 
                         <div className="ml-2 text-white">
-                            <p className="font-semibold">{t('Deprecate version')}</p>
+                            <p className="font-semibold">
+                                {t('Deprecate version')}
+                            </p>
                             <p className="text-xs text-gray-400">
-                                {t('Users will see a warning prompting them to use another version.')}
+                                {t(
+                                    'Users will see a warning prompting them to use another version.'
+                                )}
                             </p>
                         </div>
                     </div>

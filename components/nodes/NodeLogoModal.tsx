@@ -4,7 +4,7 @@ import { customThemeTModal } from 'utils/comfyTheme'
 
 export function NodeLogoModal({ openLogoModal, onCloseModal }) {
     const { t } = useNextTranslation()
-    
+
     return (
         <>
             <Modal
@@ -49,7 +49,9 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                                         {t('or drag and drop')}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        {t('SVG, PNG, JPG or GIF (MAX. 800x400px)')}
+                                        {t(
+                                            'SVG, PNG, JPG or GIF (MAX. 800x400px)'
+                                        )}
                                     </p>
                                     <Button color="blue" className="mt-2">
                                         <svg
