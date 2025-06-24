@@ -50,7 +50,8 @@ export const GET = async (request: NextRequest) => {
     const host = "3000.stukivx.snomiao.dev"
     // const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
     const origin = `https://${host}`;
-    // Redirect to GitHub OAuthj
+    
+    // Redirect to GitHub OAuth
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: `${origin}/api/auth/github/callback`,
