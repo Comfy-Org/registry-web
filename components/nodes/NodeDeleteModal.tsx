@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -19,11 +20,12 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
     nodeId,
     publisherId,
 }) => {
+    const { t } = useNextTranslation()
     const mutation = useDeleteNode({})
     const router = useRouter()
     const handleSubmit = async () => {
         if (!publisherId) {
-            toast.error('Cannot delete node.')
+            toast.error(t('Cannot delete node.'))
             return
         }
         return mutation.mutate(
@@ -35,14 +37,16 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                 onError: (error) => {
                     if (error instanceof AxiosError) {
                         toast.error(
-                            `Failed to delete node. ${error.response?.data?.message}`
+                            t(`Failed to delete node. {{message}}`, {
+                                message: error.response?.data?.message,
+                            })
                         )
                     } else {
-                        toast.error('Failed to delete node')
+                        toast.error(t('Failed to delete node'))
                     }
                 },
                 onSuccess: () => {
-                    toast.success('Node deleted successfully')
+                    toast.success(t('Node deleted successfully'))
                     onClose()
                     router.push('/nodes')
                 },
@@ -64,7 +68,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
                 <Modal.Header className="!bg-gray-800">
-                    <p className="text-white">Delete Node</p>
+                    <p className="text-white">{t('Delete Node')}</p>
                 </Modal.Header>
                 <form
                     className="space-y-6 p-2"
@@ -74,16 +78,17 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                     }}
                 >
                     <p className="text-white">
-                        Are you sure you want to delete this node? This action
-                        cannot be undone.
+                        {t(
+                            'Are you sure you want to delete this node? This action cannot be undone.'
+                        )}
                     </p>
                     <div>
                         <Label className="text-white">
-                            Type{' '}
+                            {t('Type')}{' '}
                             <code className="text-red-300 inline">
                                 {validateText}
                             </code>{' '}
-                            to confirm:
+                            {t('to confirm')}:
                         </Label>
                         <TextInput
                             className="input"
@@ -99,7 +104,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                             className="w-full text-white bg-gray-800"
                             onClick={onClose}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button
                             color="red"
@@ -107,7 +112,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                             type="submit"
                             disabled={validateText !== confirmationText}
                         >
-                            Delete
+                            {t('Delete')}
                         </Button>
                     </div>
                 </form>

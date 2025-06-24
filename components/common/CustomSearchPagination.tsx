@@ -1,5 +1,6 @@
-import React from 'react'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Pagination as FlowbitePagination } from 'flowbite-react'
+import React from 'react'
 import { usePagination, UsePaginationProps } from 'react-instantsearch'
 import { CustomThemePagination } from 'utils/comfyTheme'
 
@@ -13,6 +14,7 @@ export default function CustomSearchPagination(props: UsePaginationProps) {
         refine,
         createURL,
     } = usePagination(props)
+    const { t } = useNextTranslation()
 
     const handlePageChange = (page: number) => {
         refine(page - 1) // Flowbite uses 1-based indexing, InstantSearch uses 0-based
@@ -26,8 +28,8 @@ export default function CustomSearchPagination(props: UsePaginationProps) {
                 totalPages={nbPages}
                 onPageChange={handlePageChange}
                 showIcons={true}
-                previousLabel="Previous"
-                nextLabel="Next"
+                previousLabel={t('Previous')}
+                nextLabel={t('Next')}
                 layout="pagination"
             />
         </div>

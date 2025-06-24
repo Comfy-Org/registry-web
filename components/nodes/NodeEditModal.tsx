@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
@@ -24,6 +25,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
     onCloseEditModal,
     nodeData,
 }) => {
+    const { t } = useNextTranslation()
     const updateNodeMutation = useUpdateNode({})
     const [nodeName, setNodeName] = useState('')
     // const [openLogoModal, setOpenLogoModal] = useState(false)
@@ -91,13 +93,12 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             >
                 <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
                     <Modal.Header className="!bg-gray-800 px-8">
-                        <p className="text-white">Edit Node</p>
+                        <p className="text-white">
+                            {t('Edit')} {t('Node')}
+                        </p>
                     </Modal.Header>
                     <div className="flex justify-evenly">
                         <div className="relative max-w-sm transition-all duration-300 cursor-pointer ">
-                            {/* <p className="mb-2 text-sm text-white">
-                                Upload Logo
-                            </p> */}
                             <Image
                                 src={nodesLogo}
                                 alt="icon"
@@ -105,35 +106,13 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                 height={200}
                                 className=""
                             />
-                            {/* <div className="absolute right-[-5px] px-4 text-lg text-white top-[180px]">
-                                <div
-                                    className="p-2 bg-gray-500 rounded-full"
-                                    onClick={handleOpenLogoModal}
-                                >
-                                    <svg
-                                        className="w-[16px] h-[16px] text-white "
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </div>
-                            </div> */}
                         </div>
                         <div className="space-y-6 min-w-[350px]">
                             <div>
                                 <div className="block mb-2">
                                     <Label
                                         htmlFor="name"
-                                        value="Node name"
+                                        value={t('Node name')}
                                         className="text-white"
                                     />
                                 </div>
@@ -141,7 +120,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                     //@ts-ignore
                                     theme={customThemeTextInput}
                                     id="name"
-                                    placeholder="Node name"
+                                    placeholder={t('Node name')}
                                     onChange={(e) =>
                                         setNodeName(e.target.value)
                                     }
@@ -153,7 +132,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                 <div className="block mb-2">
                                     <Label
                                         htmlFor="comment"
-                                        value="Description"
+                                        value={t('Description')}
                                         className="text-white"
                                     />
                                 </div>
@@ -161,7 +140,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                     id="comment"
                                     theme={CustomThemeTextArea}
                                     value={description}
-                                    placeholder="Description"
+                                    placeholder={t('Description')}
                                     onChange={(e) =>
                                         setDescription(e.target.value)
                                     }
@@ -173,14 +152,14 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                 <div className="block mb-2">
                                     <Label
                                         htmlFor="license"
-                                        value="License"
+                                        value={t('License')}
                                         className="text-white"
                                     />
                                 </div>
                                 <TextInput
                                     id="license"
                                     theme={customThemeTextInput}
-                                    placeholder="Path To License File"
+                                    placeholder={t('Path To License File')}
                                     value={license}
                                     onChange={(e) => setLicense(e.target.value)}
                                     required
@@ -190,14 +169,14 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                 <div className="block mb-2">
                                     <Label
                                         htmlFor="name"
-                                        value="Github Repository link"
+                                        value={t('Github Repository link')}
                                         className="text-white"
                                     />
                                 </div>
                                 <TextInput
                                     id="name"
                                     theme={customThemeTextInput}
-                                    placeholder="Github Repository link"
+                                    placeholder={t('Github Repository link')}
                                     value={githubLink}
                                     onChange={(e) =>
                                         setGithubLink(e.target.value)
@@ -211,14 +190,14 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                         className="w-full text-white bg-gray-800"
                                         onClick={onCloseEditModal}
                                     >
-                                        Cancel
+                                        {t('Cancel')}
                                     </Button>
                                     <Button
                                         color="blue"
                                         className="w-full ml-5"
                                         onClick={handleUpdateNode}
                                     >
-                                        Save Changes
+                                        {t('Save Changes')}
                                     </Button>
                                 </div>
                             </div>

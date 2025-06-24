@@ -1,9 +1,10 @@
-import React from 'react'
-import { Button, Modal } from 'flowbite-react'
-import { customThemeTModal } from 'utils/comfyTheme'
-import { useDeleteNodeVersion } from 'src/api/generated'
-import { toast } from 'react-toastify'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { AxiosError } from 'axios'
+import { Button, Modal } from 'flowbite-react'
+import React from 'react'
+import { toast } from 'react-toastify'
+import { useDeleteNodeVersion } from 'src/api/generated'
+import { customThemeTModal } from 'utils/comfyTheme'
 
 type NodeVersionDeleteModalProps = {
     openDeleteModal: boolean
@@ -20,11 +21,12 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
     versionId,
     publisherId,
 }) => {
+    const { t } = useNextTranslation()
     const deleteVersionMutation = useDeleteNodeVersion({})
 
     const handleDeleteVersion = () => {
         if (!publisherId) {
-            toast.error('Cannot delete version.')
+            toast.error(t('Cannot delete version.'))
             return
         }
         deleteVersionMutation.mutate(
@@ -37,14 +39,14 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                 onError: (error) => {
                     if (error instanceof AxiosError) {
                         toast.error(
-                            `Failed to delete version. ${error.response?.data?.message}`
+                            `${t('Failed to delete version')}. ${error.response?.data?.message}`
                         )
                     } else {
-                        toast.error('Failed to delete version')
+                        toast.error(t('Failed to delete version'))
                     }
                 },
                 onSuccess: () => {
-                    toast.success('Version deleted successfully')
+                    toast.success(t('Version deleted successfully'))
                     onCloseDeleteModal()
                 },
             }
@@ -67,8 +69,9 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                 </Modal.Header>
                 <div className="space-y-6">
                     <p className="text-white">
-                        Are you sure you want to delete this version? This
-                        action cannot be undone.
+                        {t(
+                            'Are you sure you want to delete this version? This action cannot be undone.'
+                        )}
                     </p>
                     <div className="flex">
                         <Button
@@ -76,14 +79,14 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                             className="w-full text-white bg-gray-800"
                             onClick={onCloseDeleteModal}
                         >
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button
                             color="red"
                             className="w-full ml-5"
                             onClick={handleDeleteVersion}
                         >
-                            Delete
+                            {t('Delete')}
                         </Button>
                     </div>
                 </div>

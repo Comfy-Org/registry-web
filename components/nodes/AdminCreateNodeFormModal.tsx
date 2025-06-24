@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
@@ -50,19 +51,22 @@ export function AdminCreateNodeFormModal({
     open: boolean
     onClose?: () => void
 }) {
+    const { t } = useNextTranslation()
     const mutation = useAdminCreateNode({
         mutation: {
             onError: (error) => {
                 if (error instanceof AxiosError) {
                     toast.error(
-                        `Failed to create node. ${error.response?.data?.message}`
+                        t('Failed to create node. {{message}}', {
+                            message: error.response?.data?.message,
+                        })
                     )
                 } else {
-                    toast.error('Failed to create node')
+                    toast.error(t('Failed to create node'))
                 }
             },
             onSuccess: () => {
-                toast.success('Node create successfully')
+                toast.success(t('Node created successfully'))
                 // onClose?.()
             },
         },
@@ -117,21 +121,21 @@ export function AdminCreateNodeFormModal({
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
                 <Modal.Header className="!bg-gray-800">
-                    <p className="text-white">Create Unclaimed Node</p>
+                    <p className="text-white">{t('Create Unclaimed Node')}</p>
                 </Modal.Header>
                 <form
                     className="space-y-6 p-2 [&_label]:text-white"
                     onSubmit={onSubmit}
                 >
-                    <p className="text-white">Add unclaimed node</p>
+                    <p className="text-white">{t('Add unclaimed node')}</p>
 
                     <div>
-                        <Label htmlFor="id">ID</Label>
+                        <Label htmlFor="id">{t('ID')}</Label>
                         <TextInput id="id" {...register('id')} />
                         <span className="text-warning">
                             {duplicatedNode?.id?.replace(
                                 /^(?!$)/,
-                                'Duplicated node: '
+                                t('Duplicated node: ')
                             )}
                         </span>
                         <span className="text-error">{errors.id?.message}</span>
@@ -157,7 +161,7 @@ export function AdminCreateNodeFormModal({
                     </div> */}
 
                     <div>
-                        <Label htmlFor="name">Name</Label>
+                        <Label htmlFor="name">{t('Name')}</Label>
                         <TextInput id="name" {...register('name')} />
                         <span className="text-warning">
                             {similarNodes?.nodes
@@ -165,7 +169,7 @@ export function AdminCreateNodeFormModal({
                                 .join('\n')
                                 .replace(
                                     /^(?!$)/,
-                                    'Warning: found some similar nodes: \n'
+                                    t('Warning: found some similar nodes: \n')
                                 )}
                         </span>
                         <span className="text-error">
@@ -174,7 +178,7 @@ export function AdminCreateNodeFormModal({
                     </div>
 
                     <div>
-                        <Label htmlFor="description">Description</Label>
+                        <Label htmlFor="description">{t('Description')}</Label>
                         <Textarea
                             id="description"
                             {...register('description')}
@@ -186,7 +190,7 @@ export function AdminCreateNodeFormModal({
                     </div>
 
                     <div>
-                        <Label htmlFor="category">Category</Label>
+                        <Label htmlFor="category">{t('Category')}</Label>
                         <TextInput id="category" {...register('category')} />
                         <span className="text-error">
                             {errors.category?.message}
@@ -194,7 +198,7 @@ export function AdminCreateNodeFormModal({
                     </div>
 
                     <div>
-                        <Label htmlFor="author">Author</Label>
+                        <Label htmlFor="author">{t('Author')}</Label>
                         <TextInput id="author" {...register('author')} />
                         <span className="text-error">
                             {errors.author?.message}
@@ -202,7 +206,7 @@ export function AdminCreateNodeFormModal({
                     </div>
 
                     <div>
-                        <Label htmlFor="repository">Repository</Label>
+                        <Label htmlFor="repository">{t('Repository')}</Label>
                         <TextInput
                             id="repository"
                             {...register('repository')}
@@ -213,7 +217,7 @@ export function AdminCreateNodeFormModal({
                     </div>
 
                     <div>
-                        <Label htmlFor="license">License</Label>
+                        <Label htmlFor="license">{t('License')}</Label>
                         <TextInput id="license" {...register('license')} />
                         <span className="text-error">
                             {errors.license?.message}
@@ -228,7 +232,7 @@ export function AdminCreateNodeFormModal({
                             disabled={mutation.isPending}
                         >
                             <HiPlus className="mr-2 h-5 w-5" />
-                            Add
+                            {t('Add')}
                         </Button>
                     </div>
                 </form>

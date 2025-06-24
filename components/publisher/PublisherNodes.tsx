@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Pagination } from 'flowbite-react'
 import Link from 'next/link'
 import * as React from 'react'
@@ -20,6 +21,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
     onEditPublisher,
     include_banned = false,
 }) => {
+    const { t } = useNextTranslation()
     const [page, setPage] = React.useState(1)
     const { data, isError, isLoading } = useListNodesForPublisherV2(
         publisher.id as string,
@@ -73,8 +75,8 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
                     totalPages={data.totalPages}
                     onPageChange={(page) => setPage(page)}
                     showIcons={true}
-                    previousLabel="Previous"
-                    nextLabel="Next"
+                    previousLabel={t('Previous')}
+                    nextLabel={t('Next')}
                     layout="pagination"
                 />
             )}

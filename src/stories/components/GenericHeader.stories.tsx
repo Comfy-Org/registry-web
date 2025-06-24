@@ -15,7 +15,7 @@ type Story = StoryObj<typeof GenericHeader>
 
 export const Default: Story = {
     args: {
-        title: 'Welcome to the Registry',
+        title: 'Welcome to ComfyUI Registry',
         subTitle: 'View nodes or sign in to create and publish your own',
         buttonText: 'Get Started',
         buttonLink: '/nodes',
