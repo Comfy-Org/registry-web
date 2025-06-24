@@ -480,7 +480,7 @@ const NodeDetails = () => {
                                             </button>
                                             <div className="flex items-center">
                                                 <span>
-                                                    Search Ranking:{' '}
+                                                    {t('Search Ranking')}:{' '}
                                                     {node.search_ranking}
                                                 </span>
                                             </div>
@@ -522,7 +522,7 @@ const NodeDetails = () => {
                                         </button>
                                         <div className="flex items-center">
                                             <span>
-                                                Preempted Names:{' '}
+                                                {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
                                                     node
@@ -531,7 +531,7 @@ const NodeDetails = () => {
                                                         ? node.preempted_comfy_node_names.join(
                                                               '\n'
                                                           )
-                                                        : 'None'}
+                                                        : t('None')}
                                                 </pre>
                                             </span>
                                         </div>
