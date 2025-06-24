@@ -112,7 +112,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                     className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
                     onClick={() => router.push(`/nodes`)}
                 >
-                    <span>{t("Back to your nodes")}</span>
+                    <span>{t('Back to your nodes')}</span>
                 </span>
             </div>
 
