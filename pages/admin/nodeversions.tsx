@@ -77,6 +77,14 @@ function NodeVersionList({}) {
         banned: 'failure',
         active: 'info',
     }
+    const flagNames = {
+        all: t('All'),
+        flagged: t('Flagged'),
+        pending: t('Pending'),
+        deleted: t('Deleted'),
+        banned: t('Banned'),
+        active: t('Active'),
+    }
     const allFlags = [...Object.values(flags)].sort()
 
     const defaultSelectedStatus = [
@@ -926,10 +934,8 @@ function NodeVersionList({}) {
                                 setSelectedStatus([status as NodeVersionStatus])
                             }
                         >
-                            {t(`{{flag}} Nodes`, {
-                                flag:
-                                    flag.charAt(0).toUpperCase() +
-                                    flag.slice(1),
+                            {t(`{{nodeStatus}} Nodes`, {
+                                nodeStatus: flagNames[flag] || flag,
                             })}
                         </Button>
                     ))}
