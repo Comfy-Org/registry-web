@@ -143,7 +143,7 @@
   "Sort by popularity": "按热度排序",
   "There was an error loading the nodes. Please try again later.": "加载节点时出现错误。请稍后再试。",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "这些节点没有被任何发布者认领。它们可以被发布者认领或由管理员编辑。",
-  "This node can only be installed via git": "\"此节点只能通过 git 安装\"",
+  "This node can only be installed via git": "此节点只能通过 git 安装",
   "Today": "今天",
   "Total": "总计",
   "Total Results": "总结果",
@@ -183,8 +183,8 @@
   "versions selected": "已选择的版本",
   "v{{version}}": "v{{version}}",
   "{{days}} days ago": "“{{days}} 天前”",
-  "{{id}}@{{version}} Approved": "\"{{id}}@{{version}} 已批准\"",
-  "{{id}}@{{version}} Rejected": "\"{{id}}@{{version}} 已被拒绝\"",
+  "{{id}}@{{version}} Approved": "{{id}}@{{version}} 已批准",
+  "{{id}}@{{version}} Rejected": "{{id}}@{{version}} 已被拒绝",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} 撤销，回到 {{status}}",
   "{{nodeStatus}} Nodes": "{{nodeStatus}} 节点"
 }

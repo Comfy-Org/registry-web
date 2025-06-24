@@ -31,7 +31,7 @@ const FilterRegistry: React.FC = () => {
                     type="search"
                     id="search-dropdown"
                     className="block p-2.5 w-full z-20 text-sm  rounded-e-lg  focus:ring-gray-700  bg-gray-700   border-gray-600 placeholder-gray-400 text-gray-400 focus:border-gray-500"
-                    placeholder="Search by nodes or publisher"
+                    placeholder={t('Search by nodes or publisher')}
                     required
                 />
                 <button
@@ -53,7 +53,7 @@ const FilterRegistry: React.FC = () => {
                             d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                         />
                     </svg>
-                    <span className="sr-only">Search</span>
+                    <span className="sr-only">{t('Search')}</span>
                 </button>
             </div>
         </div>

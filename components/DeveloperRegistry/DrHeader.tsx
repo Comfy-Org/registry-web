@@ -1,11 +1,12 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
-import React from 'react'
 
 const DrHeader = () => {
+    const { t } = useNextTranslation()
     return (
         <section className="block lg:items-center lg:flex lg:justify-start ">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-                Publishers
+                {t('Publishers')}
             </h1>
 
             <Button
@@ -29,7 +30,7 @@ const DrHeader = () => {
                         d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                     />
                 </svg>
-                <span className="ml-2">Add</span>
+                <span className="ml-2">{t('Add')}</span>
             </Button>
         </section>
     )

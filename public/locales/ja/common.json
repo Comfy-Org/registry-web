@@ -12,7 +12,7 @@
   "All": "すべて",
   "All Nodes": "すべてのノード",
   "Approve": "承認",
-  "Approve Reason:": "\"承認理由：\"",
+  "Approve Reason:": "承認理由：",
   "Approved by admin": "（管理者）によって承認済み",
   "Are you sure you want to delete this node? This action cannot be undone.": "このノードを削除してもよろしいですか？この操作は取り消すことができません。",
   "Are you sure you want to delete this version? This action cannot be undone.": "このバージョンを削除してもよろしいですか？この操作は元に戻せません。",
@@ -121,7 +121,7 @@
   "Reason (optional)": "理由（任意）",
   "Register a publisher to begin distributing custom nodes on Comfy.": "Comfyでカスタムノードを配布するためにパブリッシャーを登録してください。",
   "Reject": "拒否",
-  "Reject Reason:": "\"拒否の理由:\"",
+  "Reject Reason:": "拒否の理由:",
   "Rejected by admin": "（管理者により）拒否されました",
   "Repository": "リポジトリ",
   "Review Node Versions": "ノードバージョンのレビュー",
@@ -183,8 +183,8 @@
   "versions selected": "選択されたバージョン",
   "v{{version}}": "v{{version}}",
   "{{days}} days ago": "{{days}}日前",
-  "{{id}}@{{version}} Approved": "\"{{id}}@{{version}} 承認済み\"",
-  "{{id}}@{{version}} Rejected": "\"{{id}}@{{version}}が拒否されました\"",
-  "{{id}}@{{version}} Undone, back to {{status}}": "\"{{id}}@{{version}} 元に戻され、{{status}}に戻る\"",
-  "{{nodeStatus}} Nodes": "\"{{nodeStatus}} ノード\""
+  "{{id}}@{{version}} Approved": "{{id}}@{{version}} 承認済み",
+  "{{id}}@{{version}} Rejected": "{{id}}@{{version}}が拒否されました",
+  "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} 元に戻され、{{status}}に戻る",
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} ノード"
 }

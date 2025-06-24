@@ -29,13 +29,14 @@ export function useLogout() {
 }
 
 const Logout = () => {
+    const { t } = useNextTranslation()
     const [onLogout, loading, error] = useLogout()
     return (
         <div className="flex items-center justify-center min-h-screen ">
             <section className="p-4">
                 <div className="text-center">
-                    <Button onClick={onLogout}>Logout</Button>
-                    {loading && <p>Logging out...</p>}
+                    <Button onClick={onLogout}>{t('Logout')}</Button>
+                    {loading && <p>{t('Logging out...')}</p>}
                 </div>
             </section>
         </div>

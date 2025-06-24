@@ -25,7 +25,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
     const router = useRouter()
     const handleSubmit = async () => {
         if (!publisherId) {
-            toast.error('Cannot delete node.')
+            toast.error(t('Cannot delete node.'))
             return
         }
         return mutation.mutate(
@@ -37,14 +37,14 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                 onError: (error) => {
                     if (error instanceof AxiosError) {
                         toast.error(
-                            `Failed to delete node. ${error.response?.data?.message}`
+                            t(`Failed to delete node. {{message}}`, { message: error.response?.data?.message })
                         )
                     } else {
-                        toast.error('Failed to delete node')
+                        toast.error(t('Failed to delete node'))
                     }
                 },
                 onSuccess: () => {
-                    toast.success('Node deleted successfully')
+                    toast.success(t('Node deleted successfully'))
                     onClose()
                     router.push('/nodes')
                 },
@@ -66,7 +66,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
                 <Modal.Header className="!bg-gray-800">
-                    <p className="text-white">Delete Node</p>
+                    <p className="text-white">{t('Delete Node')}</p>
                 </Modal.Header>
                 <form
                     className="space-y-6 p-2"

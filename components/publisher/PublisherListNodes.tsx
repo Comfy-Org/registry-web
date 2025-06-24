@@ -36,12 +36,12 @@ const Nodes: React.FC = () => {
             },
             {
                 onError: (error) => {
-                    toast.error('Failed to update publisher')
+                    toast.error(t('Failed to update publisher'))
                 },
                 onSuccess: () => {
                     setSelectedPublisher(null)
                     refetch()
-                    toast.success('Publisher updated successfully')
+                    toast.success(t('Publisher updated successfully'))
                 },
             }
         )

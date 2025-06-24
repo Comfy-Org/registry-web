@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
@@ -28,6 +29,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
     onUpdate,
     canEdit = false,
 }) => {
+    const { t } = useNextTranslation()
     const {
         data: version,
         isLoading,
@@ -40,11 +42,11 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
     const handleToggleDeprecate = () => {
         if (!version || !version.id) {
-            toast.error('Version not found')
+            toast.error(t('Version not found'))
             return
         }
         if (!publisherId) {
-            toast.error('Cannot Update')
+            toast.error(t('Cannot Update'))
             return
         }
         analytic.track('Deprecate Node Version', {
@@ -64,10 +66,10 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             },
             {
                 onError: (error) => {
-                    toast.error('Could not update version. Please try again.')
+                    toast.error(t('Could not update version. Please try again.'))
                 },
                 onSuccess: (version) => {
-                    toast.success('Version updated successfully')
+                    toast.success(t('Version updated successfully'))
                     onUpdate(version)
                     refetch()
                 },
@@ -132,8 +134,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
                     {version?.createdAt && (
                         <p className="text-gray-400">
-                            Released{' '}
-                            <FormatRelativeDate date={version.createdAt} />
+                            {t('Released')} <FormatRelativeDate date={version.createdAt} />
                         </p>
                     )}
 
@@ -150,7 +151,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                                 }}
                             >
                                 <a href={version.downloadUrl}>
-                                    Download Version {version.version}
+                                    {t('Download Version {{version}}', { version: version.version })}
                                 </a>
                             </Button>
                         )}
@@ -159,7 +160,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                                 className="flex-shrink-0 px-4 text-white bg-red-600 rounded whitespace-nowrap text-[16px] mt-5"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
-                                Delete Version
+                                {t('Delete Version')}
                             </Button>
                         )}
                     </div>
@@ -168,7 +169,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     <div className="space-y-4">
                         {version && (
                             <div>
-                                <h2 className="font-bold">Updates</h2>
+                                <h2 className="font-bold">{t('Updates')}</h2>
                                 <p>{version.changelog}</p>
                             </div>
                         )}
@@ -189,10 +190,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                         </label>
 
                         <div className="ml-2 text-white">
-                            <p className="font-semibold ">Deprecate version</p>
+                            <p className="font-semibold">{t('Deprecate version')}</p>
                             <p className="text-xs text-gray-400">
-                                Users will see a warning prompting them to use
-                                another version.
+                                {t('Users will see a warning prompting them to use another version.')}
                             </p>
                         </div>
                     </div>

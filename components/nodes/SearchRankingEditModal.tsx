@@ -11,6 +11,7 @@ import {
     useGetNode,
     useUpdateNode,
 } from 'src/api/generated'
+import { useNextTranslation } from 'src/hooks/i18n'
 
 export default function SearchRankingEditModal({
     open,
@@ -25,6 +26,7 @@ export default function SearchRankingEditModal({
     nodeId: string
     defaultSearchRanking: number
 }) {
+    const { t } = useNextTranslation()
     const [searchRanking, setSearchRanking] =
         useState<number>(defaultSearchRanking)
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -36,12 +38,12 @@ export default function SearchRankingEditModal({
     const updateNodeMutation = useUpdateNode({
         mutation: {
             onSuccess: () => {
-                toast.success('Search ranking updated successfully')
+                toast.success(t('Search ranking updated successfully'))
             },
             onError: (error: AxiosError<Error>) => {
                 toast.error(
                     error.response?.data?.message ||
-                        'Failed to update search ranking'
+                        t('Failed to update search ranking')
                 )
             },
         },
@@ -57,7 +59,7 @@ export default function SearchRankingEditModal({
     const onSubmit: FormEventHandler = async (e) => {
         e.preventDefault()
         if (!publisherId) {
-            toast.error('Publisher ID is required to update search ranking')
+            toast.error(t('Publisher ID is required to update search ranking'))
             return null
         }
         setIsSubmitting(true)
@@ -133,18 +135,17 @@ export default function SearchRankingEditModal({
             size="md"
         >
             <form onSubmit={onSubmit}>
-                <Modal.Header>Edit Search Ranking</Modal.Header>
+                <Modal.Header>{t('Edit Search Ranking')}</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-sm text-gray-300">
-                            Search Ranking: integer from 1 to 10. Lower number
-                            means higher search ranking, all else equal.
+                            {t('Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal.')}
                         </p>
                         <div>
                             <div className="mb-2 block">
                                 <Label
                                     htmlFor="search-ranking"
-                                    value="Search Ranking"
+                                    value={t('Search Ranking')}
                                     className="text-white"
                                 />
                             </div>
@@ -174,14 +175,14 @@ export default function SearchRankingEditModal({
                 <Modal.Footer>
                     <div className="flex justify-end gap-2 w-full">
                         <Button color="gray" onClick={onClose}>
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button
                             color="blue"
                             isProcessing={isSubmitting}
                             type="submit"
                         >
-                            Update
+                            {t('Update')}
                         </Button>
                     </div>
                 </Modal.Footer>

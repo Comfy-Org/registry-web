@@ -11,6 +11,7 @@ import {
     useGetNode,
     useUpdateNode,
 } from 'src/api/generated'
+import { useNextTranslation } from 'src/hooks/i18n'
 
 export default function PreemptedComfyNodeNamesEditModal({
     open,
@@ -25,6 +26,7 @@ export default function PreemptedComfyNodeNamesEditModal({
     nodeId: string
     defaultPreemptedComfyNodeNames: string[]
 }) {
+    const { t } = useNextTranslation()
     const [preemptedComfyNodeNames, setPreemptedComfyNodeNames] = useState<
         string[]
     >(defaultPreemptedComfyNodeNames || [])
@@ -38,12 +40,12 @@ export default function PreemptedComfyNodeNamesEditModal({
     const updateNodeMutation = useUpdateNode({
         mutation: {
             onSuccess: () => {
-                toast.success('Preempted comfy node names updated successfully')
+                toast.success(t('Preempted comfy node names updated successfully'))
             },
             onError: (error: AxiosError<Error>) => {
                 toast.error(
                     error.response?.data?.message ||
-                        'Failed to update preempted comfy node names'
+                        t('Failed to update preempted comfy node names')
                 )
             },
         },
@@ -60,7 +62,7 @@ export default function PreemptedComfyNodeNamesEditModal({
         e.preventDefault()
         if (!publisherId) {
             toast.error(
-                'Publisher ID is required to update preempted comfy node names'
+                t('Publisher ID is required to update preempted comfy node names')
             )
             return null
         }
@@ -125,7 +127,7 @@ export default function PreemptedComfyNodeNamesEditModal({
 
         // Check if name already exists in the list
         if (preemptedComfyNodeNames.includes(newName.trim())) {
-            toast.info('This name is already in the list')
+            toast.info(t('This name is already in the list'))
             return
         }
 
@@ -166,27 +168,24 @@ export default function PreemptedComfyNodeNamesEditModal({
             size="md"
         >
             <form onSubmit={onSubmit}>
-                <Modal.Header>Edit Preempted Comfy Node Names</Modal.Header>
+                <Modal.Header>{t('Edit Preempted Comfy Node Names')}</Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-sm text-gray-300">
-                            Preempted Comfy Node Names: List of names that
-                            should be treated as the same comfy-node. This helps
-                            maintain consistent search results across
-                            differently named nodes.
+                            {t('Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.')}
                         </p>
                         <div>
                             <div className="mb-2 block">
                                 <Label
                                     htmlFor="preempted-comfy-node-names"
-                                    value="Current Preempted Comfy Node Names"
+                                    value={t('Current Preempted Comfy Node Names')}
                                     className="text-white"
                                 />
                             </div>
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {preemptedComfyNodeNames.length === 0 ? (
                                     <p className="text-gray-400">
-                                        No preempted comfy node names added yet
+                                        {t('No preempted comfy node names added yet')}
                                     </p>
                                 ) : (
                                     preemptedComfyNodeNames.map(
@@ -218,7 +217,7 @@ export default function PreemptedComfyNodeNamesEditModal({
                                     type="text"
                                     value={newName}
                                     onChange={(e) => setNewName(e.target.value)}
-                                    placeholder="Add new name"
+                                    placeholder={t('Add new name')}
                                     className="flex-grow p-2.5 bg-gray-700 border border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 rounded-lg"
                                 />
                                 <Button
@@ -226,7 +225,7 @@ export default function PreemptedComfyNodeNamesEditModal({
                                     color="blue"
                                     onClick={handleAddName}
                                 >
-                                    Add
+                                    {t('Add')}
                                 </Button>
                             </div>
                         </div>
@@ -235,14 +234,14 @@ export default function PreemptedComfyNodeNamesEditModal({
                 <Modal.Footer>
                     <div className="flex justify-end gap-2 w-full">
                         <Button color="gray" onClick={onClose}>
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button
                             color="blue"
                             isProcessing={isSubmitting}
                             type="submit"
                         >
-                            Update
+                            {t('Update')}
                         </Button>
                     </div>
                 </Modal.Footer>

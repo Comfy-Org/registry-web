@@ -1,7 +1,9 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useState } from 'react'
 import { IoIosInformationCircle } from 'react-icons/io'
 
 const CopyableCodeBlock = ({ code }) => {
+    const { t } = useNextTranslation()
     const [isCopied, setIsCopied] = useState(false)
 
     const handleCopy = async () => {
@@ -24,7 +26,7 @@ const CopyableCodeBlock = ({ code }) => {
                 >
                     <IoIosInformationCircle
                         className="h-5 w-5"
-                        title="Install Comfy CLI with: npm install -g comfy-cli"
+                        title={t('Install Comfy CLI with: npm install -g comfy-cli')}
                     />
                 </a>
                 <pre className="text-xs pr-[5em]">{code}</pre>
@@ -34,7 +36,7 @@ const CopyableCodeBlock = ({ code }) => {
                         isCopied ? 'bg-green-500' : 'bg-blue-500'
                     } hover:bg-blue-700 transition duration-300 ease`}
                 >
-                    {isCopied ? 'Copied!' : 'Copy'}
+                    {isCopied ? t('Copied!') : t('Copy')}
                 </button>
             </div>
         </div>
