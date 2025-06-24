@@ -40,7 +40,9 @@ export default function PreemptedComfyNodeNamesEditModal({
     const updateNodeMutation = useUpdateNode({
         mutation: {
             onSuccess: () => {
-                toast.success(t('Preempted comfy node names updated successfully'))
+                toast.success(
+                    t('Preempted comfy node names updated successfully')
+                )
             },
             onError: (error: AxiosError<Error>) => {
                 toast.error(
@@ -62,7 +64,9 @@ export default function PreemptedComfyNodeNamesEditModal({
         e.preventDefault()
         if (!publisherId) {
             toast.error(
-                t('Publisher ID is required to update preempted comfy node names')
+                t(
+                    'Publisher ID is required to update preempted comfy node names'
+                )
             )
             return null
         }
@@ -168,24 +172,32 @@ export default function PreemptedComfyNodeNamesEditModal({
             size="md"
         >
             <form onSubmit={onSubmit}>
-                <Modal.Header>{t('Edit Preempted Comfy Node Names')}</Modal.Header>
+                <Modal.Header>
+                    {t('Edit Preempted Comfy Node Names')}
+                </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-sm text-gray-300">
-                            {t('Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.')}
+                            {t(
+                                'Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.'
+                            )}
                         </p>
                         <div>
                             <div className="mb-2 block">
                                 <Label
                                     htmlFor="preempted-comfy-node-names"
-                                    value={t('Current Preempted Comfy Node Names')}
+                                    value={t(
+                                        'Current Preempted Comfy Node Names'
+                                    )}
                                     className="text-white"
                                 />
                             </div>
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {preemptedComfyNodeNames.length === 0 ? (
                                     <p className="text-gray-400">
-                                        {t('No preempted comfy node names added yet')}
+                                        {t(
+                                            'No preempted comfy node names added yet'
+                                        )}
                                     </p>
                                 ) : (
                                     preemptedComfyNodeNames.map(

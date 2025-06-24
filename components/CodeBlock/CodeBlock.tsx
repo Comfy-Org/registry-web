@@ -26,7 +26,9 @@ const CopyableCodeBlock = ({ code }) => {
                 >
                     <IoIosInformationCircle
                         className="h-5 w-5"
-                        title={t('Install Comfy CLI with: npm install -g comfy-cli')}
+                        title={t(
+                            'Install Comfy CLI with: npm install -g comfy-cli'
+                        )}
                     />
                 </a>
                 <pre className="text-xs pr-[5em]">{code}</pre>

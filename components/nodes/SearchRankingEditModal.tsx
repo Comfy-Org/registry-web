@@ -139,7 +139,9 @@ export default function SearchRankingEditModal({
                 <Modal.Body>
                     <div className="space-y-6">
                         <p className="text-sm text-gray-300">
-                            {t('Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal.')}
+                            {t(
+                                'Search Ranking: integer from 1 to 10. Lower number means higher search ranking, all else equal.'
+                            )}
                         </p>
                         <div>
                             <div className="mb-2 block">

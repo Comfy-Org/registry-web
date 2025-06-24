@@ -23,7 +23,9 @@ export function EditSecretKeyModal({ openModal, onCloseModal }) {
                         <div>
                             <label className="block mb-1 text-xs font-bold text-white">
                                 {t('Name')}{' '}
-                                <span className="text-gray-400">{t('Optional')}</span>
+                                <span className="text-gray-400">
+                                    {t('Optional')}
+                                </span>
                             </label>
                             <TextInput
                                 id="name"
@@ -42,7 +44,9 @@ export function EditSecretKeyModal({ openModal, onCloseModal }) {
                         <div>
                             <label className="block mb-1 text-xs font-bold text-white">
                                 {t('Description')}{' '}
-                                <span className="text-gray-400">{t('Optional')}</span>
+                                <span className="text-gray-400">
+                                    {t('Optional')}
+                                </span>
                             </label>
                             <TextInput
                                 sizing="sm"

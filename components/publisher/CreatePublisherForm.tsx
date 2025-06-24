@@ -34,7 +34,9 @@ const CreatePublisherForm = () => {
             },
             {
                 onError: (error) => {
-                    toast.error(t('Could not create publisher. Please try again.'))
+                    toast.error(
+                        t('Could not create publisher. Please try again.')
+                    )
                 },
                 onSuccess: () => {
                     router.push(`/publishers/${username}`)

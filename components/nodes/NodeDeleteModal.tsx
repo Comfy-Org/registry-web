@@ -37,7 +37,9 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                 onError: (error) => {
                     if (error instanceof AxiosError) {
                         toast.error(
-                            t(`Failed to delete node. {{message}}`, { message: error.response?.data?.message })
+                            t(`Failed to delete node. {{message}}`, {
+                                message: error.response?.data?.message,
+                            })
                         )
                     } else {
                         toast.error(t('Failed to delete node'))
