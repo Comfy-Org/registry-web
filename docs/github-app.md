@@ -27,7 +27,7 @@ GITHUB_CLIENT_ID="your_client_id_here"
 GITHUB_CLIENT_SECRET="your_client_secret_here"
 ```
 
-**For production deployment**, make sure to also add these environment variables to your Vercel project settings.
+**For production deployment**, make sure to also add these environment variables to your [Vercel]( https://vercel.com/comfyui/registry-web/settings/environment-variables ) project settings. 
 
 ## Development Setup
 
