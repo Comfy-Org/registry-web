@@ -182,6 +182,7 @@
   "undo": "元に戻す",
   "versions selected": "選択されたバージョン",
   "v{{version}}": "v{{version}}",
+  "{{count}} nodes": "\"{{count}} ノード\"",
   "{{days}} days ago": "{{days}}日前",
   "{{id}}@{{version}} Approved": "\"{{id}}@{{version}} 承認済み\"",
   "{{id}}@{{version}} Rejected": "\"{{id}}@{{version}}が拒否されました\"",

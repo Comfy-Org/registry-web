@@ -175,7 +175,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                             />
                         </svg>
                         <span className="ml-2">
-                            {t(`{{count}} nodes`, {count: nodeList?.total})}
+                            {t(`{{count}} nodes`, { count: nodeList?.total })}
                         </span>
                     </p>
                     {oneMemberOfPublisher && (
