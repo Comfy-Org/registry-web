@@ -32,7 +32,7 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8">
                 <div className="space-y-6">
                     <h3 className="text-2xl font-medium text-white">
-                        {t('Edit')} {t('Publisher')}
+                        {t('Edit Publisher')}
                     </h3>
                     <form className="mt-4 space-y-4 lg:space-y-6">
                         <div>
