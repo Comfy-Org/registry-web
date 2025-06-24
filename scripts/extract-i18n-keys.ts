@@ -13,7 +13,7 @@ interface ExtractedKey {
 }
 
 // Configuration
-const ROOT_DIR = path.resolve(__dirname, '..')
+const ROOT_DIR = path.relative(process.cwd(), path.resolve(__dirname, '..'))
 const OUTPUT_FILE = path.join(ROOT_DIR, '.cache/extracted-i18n-keys.json')
 const LOCALES_DIR = path.join(ROOT_DIR, 'public/locales')
 const EN_LOCALE_FILE = path.join(LOCALES_DIR, 'en/common.json')
@@ -189,7 +189,7 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
 
     await writeJsonFile(EN_LOCALE_FILE, updatedEnTranslations)
 
-    console.log(`\nlocales/en/common.json Updated:`)
+    console.log(`\n${EN_LOCALE_FILE}:`)
     console.log(`+ ${newKeysEn.length} new keys`)
     console.log(`- ${unusedKeysEn.length} unused keys\n`)
 
@@ -230,9 +230,9 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
         })
 
         await writeJsonFile(langFile, updatedLangTranslations)
-        console.log(
-            `Updated ${lang}: +${newKeysLang.length} -${unusedKeysLang.length}`
-        )
+        console.log(`${langFile}:`)
+        console.log(`+ ${newKeysLang.length} new keys`)
+        console.log(`- ${unusedKeysLang.length} unused keys`)
     }
 }
 
