@@ -19,6 +19,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
             show={openModal}
             onClose={onCloseModal}
             size="xl"
+            //@ts-ignore
             theme={customThemeTModal}
         >
             <Modal.Header className="border-b border-gray-700">
