@@ -1,9 +1,10 @@
-import React from 'react'
 import { Button, FileInput, Label, Modal } from 'flowbite-react'
-import { HiOutlineExclamationCircle } from 'react-icons/hi'
+import { useNextTranslation } from 'src/hooks/i18n'
 import { customThemeTModal } from 'utils/comfyTheme'
 
 export function NodeLogoModal({ openLogoModal, onCloseModal }) {
+    const { t } = useNextTranslation()
+
     return (
         <>
             <Modal
@@ -16,7 +17,7 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                 dismissible
             >
                 <Modal.Header className="!bg-gray-800 px-8 py-8">
-                    <p className="text-white">Upload Logo</p>
+                    <p className="text-white">{t('Upload Logo')}</p>
                 </Modal.Header>
                 <Modal.Body className="!bg-gray-800 p-20 md:px-9 md:py-1">
                     <div className="text-center">
@@ -43,12 +44,14 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                                     </svg>
                                     <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
                                         <span className="font-semibold">
-                                            Click to upload
+                                            {t('Click to upload')}
                                         </span>{' '}
-                                        or drag and drop
+                                        {t('or drag and drop')}
                                     </p>
                                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                        {t(
+                                            'SVG, PNG, JPG or GIF (MAX. 800x400px)'
+                                        )}
                                     </p>
                                     <Button color="blue" className="mt-2">
                                         <svg
@@ -67,7 +70,7 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                                                 d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
                                             />
                                         </svg>
-                                        Browse File
+                                        {t('Browse File')}
                                     </Button>
                                 </div>
                                 <FileInput
@@ -83,7 +86,7 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                                 onClick={onCloseModal}
                                 className="w-1/3 text-white bg-gray-800 "
                             >
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                         </div>
                     </div>

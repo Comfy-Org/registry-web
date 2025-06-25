@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { isAxiosError } from 'axios'
 import { Button, Card, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { customThemeTextInput } from 'utils/comfyTheme'
-import { useCreatePublisher, useValidatePublisher } from 'src/api/generated'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { isAxiosError } from 'axios'
+import { useCreatePublisher, useValidatePublisher } from 'src/api/generated'
+import { customThemeTextInput } from 'utils/comfyTheme'
 
 type CreatePublisherFormProps = {
     onSuccess?: () => void
@@ -12,6 +13,7 @@ type CreatePublisherFormProps = {
 }
 
 const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, onCancel }) => {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const [username, setUsername] = useState('')
 
@@ -37,7 +39,9 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
             },
             {
                 onError: (error) => {
-                    toast.error('Could not create publisher. Please try again.')
+                    toast.error(
+                        t('Could not create publisher. Please try again.')
+                    )
                 },
                 onSuccess: () => {
                     toast.success('Publisher created successfully!')
@@ -65,11 +69,12 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
                 <div className="w-full mx-auto shadow sm:max-w-lg">
                     <Card className="p-2 bg-gray-800 border border-gray-700 md:p-6 rounded-2xl">
                         <h1 className="flex text-2xl font-bold text-white ">
-                            Create a Publisher
+                            {t('Create a Publisher')}
                         </h1>
-                        <p className="flex text-sm font-medium text-gray-400 ">
-                            Register a publisher to begin distributing custom
-                            nodes on Comfy.
+                        <p className="flex justify-center text-sm font-medium text-gray-400 ">
+                            {t(
+                                'Register a publisher to begin distributing custom nodes on Comfy.'
+                            )}
                         </p>
 
                         <form
@@ -78,11 +83,11 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
                         >
                             <div>
                                 <label className="block mb-1 text-xs font-bold text-white">
-                                    Username
+                                    {t('Username')}
                                 </label>
                                 <TextInput
                                     id="name"
-                                    placeholder="E.g. janedoe55"
+                                    placeholder={t('E.g. janedoe55')}
                                     required
                                     theme={customThemeTextInput}
                                     type="text"
@@ -100,7 +105,7 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
                                     helperText={
                                         <>
                                             {isLoadingValidation && (
-                                                <>Checking username...</>
+                                                <>{t('Checking username...')}</>
                                             )}
                                             {!isLoadingValidation &&
                                                 publisherValidationError && (
@@ -117,14 +122,14 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
                             </div>
                             <div>
                                 <label className="block mb-1 text-xs font-bold text-white">
-                                    Display Name
+                                    {t('Display Name')}
                                 </label>
                                 <TextInput
                                     sizing="sm"
                                     theme={customThemeTextInput}
                                     id="displayName"
                                     className="border-gray-700 "
-                                    placeholder="E.g. Jane Doe "
+                                    placeholder={t('E.g. Jane Doe')}
                                     required
                                     type="text"
                                     value={displayName}
@@ -141,7 +146,9 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
                                     color="light"
                                     className=" bg-gray-900"
                                 >
-                                    <span className="text-white">Cancel</span>
+                                    <span className="text-white">
+                                        {t('Cancel')}
+                                    </span>
                                 </Button>
                                 <Button
                                     type="submit"
@@ -153,7 +160,7 @@ const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, on
                                         !!publisherValidationError
                                     }
                                 >
-                                    Create
+                                    {t('Create')}
                                 </Button>
                             </div>
                         </form>
