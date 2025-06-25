@@ -26,7 +26,10 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
                 Create Publisher
             </Modal.Header>
             <Modal.Body>
-                <CreatePublisherForm onSuccess={onSuccess} onCancel={onCloseModal} />
+                <CreatePublisherForm
+                    onSuccess={onSuccess}
+                    onCancel={onCloseModal}
+                />
             </Modal.Body>
         </Modal>
     )

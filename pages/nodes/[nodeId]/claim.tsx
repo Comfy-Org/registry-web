@@ -18,14 +18,18 @@ function ClaimNodePage() {
     const [selectedPublisherId, setSelectedPublisherId] = useState<
         string | null
     >(null)
-    const [openCreatePublisherModal, setOpenCreatePublisherModal] = useState(false)
+    const [openCreatePublisherModal, setOpenCreatePublisherModal] =
+        useState(false)
 
     // Get the node details
     const { data: node, isLoading: nodeLoading } = useGetNode(nodeId as string)
 
     // Get user's publishers
-    const { data: publishers, isLoading: publishersLoading, refetch: refetchPublishers } =
-        useListPublishersForUser()
+    const {
+        data: publishers,
+        isLoading: publishersLoading,
+        refetch: refetchPublishers,
+    } = useListPublishersForUser()
 
     const isLoading = nodeLoading || publishersLoading
 
@@ -158,11 +162,22 @@ function ClaimNodePage() {
                 </h2>
                 <p className="text-gray-300 mb-6">
                     Choose which publisher account you want to use to claim this
-                    node. You must be the owner of the GitHub repository 
+                    node. You must be the owner of the GitHub repository
                     {node?.repository ? (
-                        <> at <Link href={node.repository} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">{node.repository}</Link></>
+                        <>
+                            {' '}
+                            at{' '}
+                            <Link
+                                href={node.repository}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-400 hover:underline"
+                            >
+                                {node.repository}
+                            </Link>
+                        </>
                     ) : (
-                        " to claim this node."
+                        ' to claim this node.'
                     )}
                 </p>
 
@@ -204,7 +219,8 @@ function ClaimNodePage() {
                         <p className="text-white mb-4">
                             You don&#39;t have any publishers yet. Create a
                             publisher first to claim nodes.
-                        </p>                        <Button
+                        </p>{' '}
+                        <Button
                             color="blue"
                             onClick={handleOpenCreatePublisherModal}
                         >
@@ -212,7 +228,6 @@ function ClaimNodePage() {
                         </Button>
                     </div>
                 )}
-                
             </div>
 
             {/* CreatePublisherModal */}

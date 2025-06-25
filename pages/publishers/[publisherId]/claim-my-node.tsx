@@ -6,7 +6,11 @@
  * @author: snomiao <snomiao@gmail.com>
  */
 import withAuth from '@/components/common/HOC/withAuth'
-import { GithubUserSpan, NodeSpan, PublisherSpan } from '@/components/common/Spans'
+import {
+    GithubUserSpan,
+    NodeSpan,
+    PublisherSpan,
+} from '@/components/common/Spans'
 import { Alert, Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -517,8 +521,11 @@ function ClaimMyNodePage() {
                                     <span className="text-gray-400 w-24">
                                         Node:
                                     </span>
-                                    <NodeSpan 
-                                        nodeId={router.query.nodeId as string || nodeId as string} 
+                                    <NodeSpan
+                                        nodeId={
+                                            (router.query.nodeId as string) ||
+                                            (nodeId as string)
+                                        }
                                         nodeName={node?.name}
                                         className="text-white"
                                     />
@@ -676,21 +683,20 @@ function ClaimMyNodePage() {
                             </div>
                             <p className="text-gray-300 mb-4">
                                 Your GitHub account (
-                                <GithubUserSpan 
-                                    username={githubUsername} 
-                                    userId={githubUserId} 
+                                <GithubUserSpan
+                                    username={githubUsername}
+                                    userId={githubUserId}
                                     className="text-white"
                                 />
-                                ) has been
-                                verified with admin permissions to the
-                                repository. You can now claim node{' '}
-                                <NodeSpan 
-                                    nodeId={nodeId as string} 
+                                ) has been verified with admin permissions to
+                                the repository. You can now claim node{' '}
+                                <NodeSpan
+                                    nodeId={nodeId as string}
                                     nodeName={node?.name}
                                     className="text-white"
                                 />{' '}
                                 as publisher:{' '}
-                                <PublisherSpan 
+                                <PublisherSpan
                                     publisherId={publisherId as string}
                                     publisherName={publisherToClaim?.name}
                                     className="text-white"
@@ -749,16 +755,20 @@ function ClaimMyNodePage() {
                             </div>
                             <p className="text-gray-300 mb-4">
                                 Congratulations! You have successfully claimed
-                                the node <NodeSpan 
+                                the node{' '}
+                                <NodeSpan
                                     nodeId={nodeId as string}
                                     nodeName={node?.name}
                                     className="text-white"
-                                /> for publisher <PublisherSpan
+                                />{' '}
+                                for publisher{' '}
+                                <PublisherSpan
                                     publisherId={publisherId as string}
                                     publisherName={publisherToClaim?.name}
                                     className="text-white"
-                                />. You can now manage
-                                this node through your publisher account.
+                                />
+                                . You can now manage this node through your
+                                publisher account.
                             </p>
                             <div className="flex justify-end">
                                 <Button

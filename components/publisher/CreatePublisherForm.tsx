@@ -12,7 +12,10 @@ type CreatePublisherFormProps = {
     onCancel?: () => void
 }
 
-const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({ onSuccess, onCancel }) => {
+const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
+    onSuccess,
+    onCancel,
+}) => {
     const { t } = useNextTranslation()
     const router = useRouter()
     const [username, setUsername] = useState('')
