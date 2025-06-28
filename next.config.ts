@@ -1,5 +1,7 @@
 import mdx from '@next/mdx'
 import { NextConfig } from 'next'
+import { SUPPORTED_LANGUAGES } from './src/constants'
+
 
 const withMDX = mdx({
     extension: /\.mdx?$/,
@@ -13,7 +15,7 @@ const withMDX = mdx({
 const conf: NextConfig = {
     reactStrictMode: true,
     i18n: {
-        locales: ['en', 'zh', 'ja', 'fr', 'es', 'ko'],
+        locales: SUPPORTED_LANGUAGES,
         defaultLocale: 'en',
     },
 

@@ -1,8 +1,5 @@
 import { parse } from 'accept-language-parser'
-
-// Define our supported languages
-export const SUPPORTED_LANGUAGES = ['en', 'zh', 'ja', 'fr', 'es', 'ko']
-export const DEFAULT_LANGUAGE = 'en'
+import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../../constants'
 
 /**
  * Detects the preferred language from the Accept-Language HTTP header
