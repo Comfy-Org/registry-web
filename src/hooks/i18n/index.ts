@@ -6,15 +6,6 @@ import { useRouter } from 'next/router'
 import { initReactI18next, useTranslation } from 'react-i18next'
 import reactUseCookie from 'react-use-cookie'
 
-export const languageNames: Record<string, string> = {
-    en: 'English',
-    zh: '中文',
-    ja: '日本語',
-    fr: 'Français',
-    es: 'Español',
-    kr: '한국어',
-}
-
 const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
     .use(
