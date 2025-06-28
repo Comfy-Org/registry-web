@@ -10,6 +10,9 @@ export const languageNames: Record<string, string> = {
     en: 'English',
     zh: '中文',
     ja: '日本語',
+    fr: 'Français',
+    es: 'Español',
+    kr: '한국어',
 }
 
 const i18n = i18next

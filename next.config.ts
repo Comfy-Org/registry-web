@@ -13,7 +13,7 @@ const withMDX = mdx({
 const conf: NextConfig = {
     reactStrictMode: true,
     i18n: {
-        locales: ['en', 'zh', 'ja'],
+        locales: ['en', 'zh', 'ja', 'fr', 'es', 'kr'],
         defaultLocale: 'en',
     },
 
