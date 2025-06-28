@@ -125,7 +125,9 @@ async function translateKeyToLanguage(
 ): Promise<string> {
     try {
         // Read Chinese translations for reference (human-reviewed)
-        const chineseTranslations = await readJsonFile(path.join(LOCALES_DIR, 'zh/common.json'))
+        const chineseTranslations = await readJsonFile(
+            path.join(LOCALES_DIR, 'zh/common.json')
+        )
 
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
@@ -169,12 +171,13 @@ async function translateKeyToLanguage(
         )
 
         const translatedText = response.data.choices[0].message.content
-        return translatedText
-            // trim space
-            .trim()
-            // trim paired quotes
-            .replace(/^['"`]|['"`]$/g, '')
-
+        return (
+            translatedText
+                // trim space
+                .trim()
+                // trim paired quotes
+                .replace(/^['"`]|['"`]$/g, '')
+        )
     } catch (error) {
         throw new Error(
             `Error translating key "${key}" to ${lang}: ${error instanceof Error ? error.message : String(error)}`
