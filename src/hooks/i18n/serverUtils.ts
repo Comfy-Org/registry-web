@@ -1,7 +1,7 @@
 import { parse } from 'accept-language-parser'
 
 // Define our supported languages
-export const SUPPORTED_LANGUAGES = ['en', 'zh', 'ja', 'fr', 'es', 'kr']
+export const SUPPORTED_LANGUAGES = ['en', 'zh', 'ja', 'fr', 'es', 'ko']
 export const DEFAULT_LANGUAGE = 'en'
 
 /**
