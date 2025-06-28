@@ -6,8 +6,8 @@ on:
     # schedule:
     #     # Every day at midnight UTC, update the API type definitions from staging backend
     #     - cron: '0 0 * * *'
-        # disabled this because it seems not possible push to main
-        # ref - [[Feature Request] Allow github actions to bypass branch protection rules in certain specific circumstances · community · Discussion #13836]( https://github.com/orgs/community/discussions/13836 )
+    # disabled this because it seems not possible push to main
+    # ref - [[Feature Request] Allow github actions to bypass branch protection rules in certain specific circumstances · community · Discussion #13836]( https://github.com/orgs/community/discussions/13836 )
     workflow_dispatch:
 
 permissions:
