@@ -76,7 +76,9 @@ function ClaimNodePage() {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Head>
-                    <title>{t('Loading Publisher Selection')} | Comfy Registry</title>
+                    <title>
+                        {t('Loading Publisher Selection')} | Comfy Registry
+                    </title>
                 </Head>
                 <Spinner size="xl" />
             </div>
@@ -90,7 +92,9 @@ function ClaimNodePage() {
                     <title>{t('Already Claimed')} | Comfy Registry</title>
                     <meta
                         name="description"
-                        content={t('This node is already claimed by a publisher.')}
+                        content={t(
+                            'This node is already claimed by a publisher.'
+                        )}
                     />
                 </Head>
                 <div className="bg-red-800 p-4 rounded-lg">
@@ -98,7 +102,9 @@ function ClaimNodePage() {
                         {t('This node is already claimed')}
                     </h2>
                     <p className="mt-2">
-                        {t('This node is already owned by a publisher and cannot be claimed.')}
+                        {t(
+                            'This node is already owned by a publisher and cannot be claimed.'
+                        )}
                     </p>
                     <Button
                         color="light"
@@ -117,13 +123,17 @@ function ClaimNodePage() {
             <Head>
                 <title>
                     {node?.name
-                        ? t('Select Publisher for {{nodeName}}', { nodeName: node.name })
+                        ? t('Select Publisher for {{nodeName}}', {
+                              nodeName: node.name,
+                          })
                         : t('Select Publisher')}{' '}
                     | Comfy Registry
                 </title>
                 <meta
                     name="description"
-                    content={t('Choose which publisher account to use when claiming this node.')}
+                    content={t(
+                        'Choose which publisher account to use when claiming this node.'
+                    )}
                 />
             </Head>
 
@@ -162,7 +172,9 @@ function ClaimNodePage() {
                     {t('Select a Publisher')}
                 </h2>
                 <p className="text-gray-300 mb-6">
-                    {t('Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository')}
+                    {t(
+                        'Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository'
+                    )}
                     {node?.repository ? (
                         <>
                             {' '}
@@ -217,7 +229,9 @@ function ClaimNodePage() {
                 ) : (
                     <div className="bg-gray-700 p-4 rounded-lg">
                         <p className="text-white mb-4">
-                            {t("You don't have any publishers yet. Create a publisher first to claim nodes.")}
+                            {t(
+                                "You don't have any publishers yet. Create a publisher first to claim nodes."
+                            )}
                         </p>{' '}
                         <Button
                             color="blue"

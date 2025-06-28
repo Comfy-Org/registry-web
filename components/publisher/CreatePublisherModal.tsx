@@ -16,7 +16,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
     onSuccess,
 }) => {
     const { t } = useNextTranslation()
-    
+
     return (
         <Modal
             show={openModal}

@@ -194,7 +194,9 @@ export function NodeClaimModal({
                     : `❌ Found publisher ID in repository pyproject.toml: @${result.publisherId}, but it does not match the selected publisher @${selectedPublisher?.id}`,
                 error: matchesSelected
                     ? undefined
-                    : t('Publisher ID in repository does not match selected publisher'),
+                    : t(
+                          'Publisher ID in repository does not match selected publisher'
+                      ),
                 verified: !!matchesSelected,
             })
         } catch (error) {
@@ -226,7 +228,9 @@ export function NodeClaimModal({
             })
         } catch (error) {
             // Error is handled in the mutation's onError
-            toast.error(t('An unexpected error occurred while claiming the node.'))
+            toast.error(
+                t('An unexpected error occurred while claiming the node.')
+            )
         }
     }
 
@@ -241,7 +245,9 @@ export function NodeClaimModal({
             dismissible
         >
             <Modal.Header className="!bg-gray-800">
-                <div className="text-white">{t('Claim Node')}: {node.name}</div>
+                <div className="text-white">
+                    {t('Claim Node')}: {node.name}
+                </div>
             </Modal.Header>
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
                 <div className="space-y-6">
