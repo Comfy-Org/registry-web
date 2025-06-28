@@ -14,6 +14,7 @@ import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import app from '../../src/firebase'
 import { useFromUrl } from '../common/HOC/useFromUrl'
+import LanguageSwitcher from '../common/LanguageSwitcher'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const { t } = useNextTranslation()
@@ -71,7 +72,12 @@ const AuthUI: React.FC<{}> = ({}) => {
     }, [t, googleSignInError, githubSignInError])
 
     return (
-        <section>
+        <section className="">
+            {/* Language Switcher in top-right corner of the page */}
+            <div className="absolute top-8 right-8 z-10">
+                <LanguageSwitcher />
+            </div>
+            
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
                     <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
