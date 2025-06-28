@@ -72,7 +72,7 @@ const AuthUI: React.FC<{}> = ({}) => {
     }, [t, googleSignInError, githubSignInError])
 
     return (
-        <section className="">
+        <section>
             {/* Language Switcher in top-right corner of the page */}
             <div className="absolute top-8 right-8 z-10">
                 <LanguageSwitcher />
