@@ -2,6 +2,7 @@ import { Button, Modal } from 'flowbite-react'
 import React from 'react'
 import CreatePublisherForm from './CreatePublisherForm'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from 'src/hooks/i18n'
 
 type CreatePublisherModalProps = {
     openModal: boolean
@@ -14,6 +15,8 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
     onCloseModal,
     onSuccess,
 }) => {
+    const { t } = useNextTranslation()
+    
     return (
         <Modal
             show={openModal}
@@ -23,7 +26,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
             theme={customThemeTModal}
         >
             <Modal.Header className="border-b border-gray-700">
-                Create Publisher
+                {t('Create Publisher')}
             </Modal.Header>
             <Modal.Body>
                 <CreatePublisherForm

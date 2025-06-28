@@ -1,4 +1,5 @@
 import withAuth from '@/components/common/HOC/withAuth'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -13,6 +14,7 @@ import Link from 'next/link'
 export default withAuth(ClaimNodePage)
 
 function ClaimNodePage() {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const { nodeId } = router.query
     const [selectedPublisherId, setSelectedPublisherId] = useState<
@@ -42,7 +44,7 @@ function ClaimNodePage() {
 
     const handleProceedClaim = () => {
         if (!selectedPublisherId) {
-            toast.error('Please select a publisher to claim this node')
+            toast.error(t('Please select a publisher to claim this node'))
             return
         }
 
@@ -74,7 +76,7 @@ function ClaimNodePage() {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Head>
-                    <title>Loading Publisher Selection | Comfy Registry</title>
+                    <title>{t('Loading Publisher Selection')} | Comfy Registry</title>
                 </Head>
                 <Spinner size="xl" />
             </div>
@@ -85,26 +87,25 @@ function ClaimNodePage() {
         return (
             <div className="container p-6 mx-auto h-[90vh] text-white">
                 <Head>
-                    <title>Already Claimed | Comfy Registry</title>
+                    <title>{t('Already Claimed')} | Comfy Registry</title>
                     <meta
                         name="description"
-                        content="This node is already claimed by a publisher."
+                        content={t('This node is already claimed by a publisher.')}
                     />
                 </Head>
                 <div className="bg-red-800 p-4 rounded-lg">
                     <h2 className="text-xl font-bold">
-                        This node is already claimed
+                        {t('This node is already claimed')}
                     </h2>
                     <p className="mt-2">
-                        This node is already owned by a publisher and cannot be
-                        claimed.
+                        {t('This node is already owned by a publisher and cannot be claimed.')}
                     </p>
                     <Button
                         color="light"
                         className="mt-4"
                         onClick={() => router.push(`/nodes/${nodeId}`)}
                     >
-                        Back to Node Details
+                        {t('Back to Node Details')}
                     </Button>
                 </div>
             </div>
@@ -116,13 +117,13 @@ function ClaimNodePage() {
             <Head>
                 <title>
                     {node?.name
-                        ? `Select Publisher for ${node.name}`
-                        : 'Select Publisher'}{' '}
+                        ? t('Select Publisher for {{nodeName}}', { nodeName: node.name })
+                        : t('Select Publisher')}{' '}
                     | Comfy Registry
                 </title>
                 <meta
                     name="description"
-                    content="Choose which publisher account to use when claiming this node."
+                    content={t('Choose which publisher account to use when claiming this node.')}
                 />
             </Head>
 
@@ -148,25 +149,24 @@ function ClaimNodePage() {
                     className="text-gray-400 pl-1 text-base bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
                     onClick={() => router.push(`/nodes/${nodeId}`)}
                 >
-                    <span>Back to node details</span>
+                    <span>{t('Back to node details')}</span>
                 </span>
             </div>
 
             <h1 className="mb-4 text-3xl font-bold text-white">
-                Claim Node: {node?.name}
+                {t('Claim Node: {{nodeName}}', { nodeName: node?.name })}
             </h1>
 
             <div className="bg-gray-800 p-6 rounded-lg mb-6">
                 <h2 className="text-xl font-bold text-white mb-4">
-                    Select a Publisher
+                    {t('Select a Publisher')}
                 </h2>
                 <p className="text-gray-300 mb-6">
-                    Choose which publisher account you want to use to claim this
-                    node. You must be the owner of the GitHub repository
+                    {t('Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository')}
                     {node?.repository ? (
                         <>
                             {' '}
-                            at{' '}
+                            {t('at')}{' '}
                             <Link
                                 href={node.repository}
                                 target="_blank"
@@ -177,7 +177,7 @@ function ClaimNodePage() {
                             </Link>
                         </>
                     ) : (
-                        ' to claim this node.'
+                        ` ${t('to claim this node.')}`
                     )}
                 </p>
 
@@ -210,21 +210,20 @@ function ClaimNodePage() {
                                 onClick={handleProceedClaim}
                                 disabled={!selectedPublisherId}
                             >
-                                Continue to GitHub Verification
+                                {t('Continue to GitHub Verification')}
                             </Button>
                         </div>
                     </div>
                 ) : (
                     <div className="bg-gray-700 p-4 rounded-lg">
                         <p className="text-white mb-4">
-                            You don&#39;t have any publishers yet. Create a
-                            publisher first to claim nodes.
+                            {t("You don't have any publishers yet. Create a publisher first to claim nodes.")}
                         </p>{' '}
                         <Button
                             color="blue"
                             onClick={handleOpenCreatePublisherModal}
                         >
-                            Create Publisher
+                            {t('Create Publisher')}
                         </Button>
                     </div>
                 )}

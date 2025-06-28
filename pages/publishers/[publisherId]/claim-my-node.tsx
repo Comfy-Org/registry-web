@@ -11,6 +11,7 @@ import {
     NodeSpan,
     PublisherSpan,
 } from '@/components/common/Spans'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Alert, Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -35,6 +36,7 @@ type ClaimStage =
     | 'completed'
 
 function ClaimMyNodePage() {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const { publisherId, nodeId } = router.query
     const [currentStage, setCurrentStage] =
@@ -63,7 +65,7 @@ function ClaimMyNodePage() {
     const { mutate: claimNode, isPending: isClaimingNode } = useClaimMyNode({
         mutation: {
             onSuccess: () => {
-                toast.success('Node claimed successfully!')
+                toast.success(t('Node claimed successfully!'))
                 analytic.track('Node Claimed', {
                     nodeId,
                     publisherId,
@@ -73,10 +75,10 @@ function ClaimMyNodePage() {
             },
             onError: (error: any) => {
                 toast.error(
-                    error?.message || 'Failed to claim node. Please try again.'
+                    error?.message || t('Failed to claim node. Please try again.')
                 )
                 setError(
-                    'Unable to claim the node. Please verify your GitHub repository ownership and try again.'
+                    t('Unable to claim the node. Please verify your GitHub repository ownership and try again.')
                 )
             },
         },
@@ -166,7 +168,7 @@ function ClaimMyNodePage() {
         // Check if the node is available for claiming
         if (node.publisher?.id !== UNCLAIMED_ADMIN_PUBLISHER_ID) {
             setError(
-                'This node is already claimed and cannot be claimed again.'
+                t('This node is already claimed and cannot be claimed again.')
             )
             return
         }
@@ -175,14 +177,14 @@ function ClaimMyNodePage() {
         const nodeIdParam =
             (router.query.nodeId as string) || (nodeId as string)
         if (!nodeIdParam) {
-            setError('Node ID is required for claiming.')
+            setError(t('Node ID is required for claiming.'))
             return
         }
 
         // Get repository info from the node
         const repoUrl = node.repository
         if (!repoUrl) {
-            setError('This node does not have a repository URL.')
+            setError(t('This node does not have a repository URL.'))
             return
         }
 
@@ -190,7 +192,7 @@ function ClaimMyNodePage() {
         // For example: https://github.com/owner/repo
         const repoMatch = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/)
         if (!repoMatch) {
-            setError('Invalid GitHub repository URL format.')
+            setError(t('Invalid GitHub repository URL format.'))
             return
         }
 
@@ -301,7 +303,7 @@ function ClaimMyNodePage() {
     const handleClaimNode = () => {
         if (!isVerified || !githubToken) {
             toast.error(
-                'GitHub verification is required before claiming the node.'
+                t('GitHub verification is required before claiming the node.')
             )
             return
         }
@@ -309,7 +311,7 @@ function ClaimMyNodePage() {
         const nodeIdParam =
             (router.query.nodeId as string) || (nodeId as string)
         if (!nodeIdParam) {
-            toast.error('Node ID is required for claiming.')
+            toast.error(t('Node ID is required for claiming.'))
             return
         }
 
@@ -348,12 +350,12 @@ function ClaimMyNodePage() {
         <div className="container p-6 mx-auto">
             <Head>
                 <title>
-                    {node ? `Claim Node: ${node.name}` : 'Claim Node'} | Comfy
+                    {node ? t('Claim Node: {{nodeName}}', { nodeName: node.name }) : t('Claim Node')} | Comfy
                     Registry
                 </title>
                 <meta
                     name="description"
-                    content="Verify your GitHub repository ownership to claim this node for your publisher account."
+                    content={t('Verify your GitHub repository ownership to claim this node for your publisher account.')}
                 />
             </Head>
 
@@ -379,22 +381,22 @@ function ClaimMyNodePage() {
                     />
                 </svg>
                 <span className="text-gray-400 pl-1 text-base">
-                    Back to node details
+                    {t('Back to node details')}
                 </span>
             </div>
 
             <h1 className="mb-4 text-3xl font-bold text-white">
-                Claim Node: {node?.name}
+                {t('Claim Node: {{nodeName}}', { nodeName: node?.name })}
             </h1>
 
             {/* Display any critical errors that prevent claiming */}
             {error && (
                 <Alert color="failure" className="mb-6">
-                    <h3 className="text-lg font-medium">Error</h3>
+                    <h3 className="text-lg font-medium">{t('Error')}</h3>
                     <p>{error}</p>
                     <div className="mt-4">
                         <Button color="light" size="sm" onClick={resetProcess}>
-                            Try Again
+                            {t('Try Again')}
                         </Button>
                     </div>
                 </Alert>
@@ -405,7 +407,7 @@ function ClaimMyNodePage() {
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-2">
                         <h3 className="text-lg font-medium text-white">
-                            Claim Process
+                            {t('Claim Process')}
                         </h3>
                     </div>
                     <div className="relative">
@@ -492,13 +494,13 @@ function ClaimMyNodePage() {
                                         }`}
                                     >
                                         {stage === 'info_confirmation' &&
-                                            'Info'}
+                                            t('Info')}
                                         {stage === 'github_login' &&
-                                            'GitHub Login'}
+                                            t('GitHub Login')}
                                         {stage === 'verifying_admin' &&
-                                            'Verify Admin'}
-                                        {stage === 'claim_node' && 'Claim Node'}
-                                        {stage === 'completed' && 'Complete'}
+                                            t('Verify Admin')}
+                                        {stage === 'claim_node' && t('Claim Node')}
+                                        {stage === 'completed' && t('Complete')}
                                     </div>
                                 </div>
                             ))}
@@ -510,16 +512,16 @@ function ClaimMyNodePage() {
                 {currentStage === 'info_confirmation' && (
                     <div>
                         <h2 className="text-xl font-bold text-white mb-4">
-                            Step 1: Confirm Node Information
+                            {t('Step 1: Confirm Node Information')}
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6">
                             <h3 className="text-lg font-medium text-white mb-2">
-                                Node Information
+                                {t('Node Information')}
                             </h3>
                             <div className="flex flex-col space-y-2">
                                 <div className="flex items-start">
                                     <span className="text-gray-400 w-24">
-                                        Node:
+                                        {t('Node')}:
                                     </span>
                                     <NodeSpan
                                         nodeId={
@@ -532,7 +534,7 @@ function ClaimMyNodePage() {
                                 </div>
                                 <div className="flex items-start">
                                     <span className="text-gray-400 w-24">
-                                        Repository:
+                                        {t('Repository')}:
                                     </span>
                                     <span className="text-white break-all">
                                         {node?.repository}
@@ -540,10 +542,10 @@ function ClaimMyNodePage() {
                                 </div>
                                 <div className="flex items-start">
                                     <span className="text-gray-400 w-24">
-                                        Publisher:
+                                        {t('Publisher')}:
                                     </span>
                                     <span className="text-gray-400 font-bold">
-                                        Unclaimed
+                                        {t('Unclaimed')}
                                     </span>
                                     <span className="mx-1 text-gray-500">
                                         &rarr;
@@ -559,10 +561,9 @@ function ClaimMyNodePage() {
 
                         <div className="mb-6">
                             <p className="text-gray-300 mb-4">
-                                To claim this node, you must verify that you are
-                                an admin of the GitHub repository associated
-                                with it. Please confirm the information above is
-                                correct before proceeding.
+                                {t(
+                                    'To claim this node, you must verify that you are an admin of the GitHub repository associated with it. Please confirm the information above is correct before proceeding.'
+                                )}
                             </p>
                         </div>
 
@@ -581,7 +582,7 @@ function ClaimMyNodePage() {
                                         clipRule="evenodd"
                                     />
                                 </svg>
-                                Continue with GitHub
+                                {t('Continue with GitHub')}
                             </Button>
                         </div>
                     </div>
@@ -591,17 +592,16 @@ function ClaimMyNodePage() {
                 {currentStage === 'github_login' && (
                     <div>
                         <h2 className="text-xl font-bold text-white mb-4">
-                            Step 2: GitHub Authentication
+                            {t('Step 2: GitHub Authentication')}
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6 flex items-center justify-center">
                             <div className="text-center py-8">
                                 <Spinner size="xl" className="mb-4" />
                                 <p className="text-white">
-                                    Redirecting to GitHub for authentication...
+                                    {t('Redirecting to GitHub for authentication...')}
                                 </p>
                                 <p className="text-gray-400 text-sm mt-2">
-                                    Please wait or follow the GitHub prompts if
-                                    they appear.
+                                    {t('Please wait or follow the GitHub prompts if they appear.')}
                                 </p>
                             </div>
                         </div>
@@ -612,7 +612,7 @@ function ClaimMyNodePage() {
                 {currentStage === 'verifying_admin' && (
                     <div>
                         <h2 className="text-xl font-bold text-white mb-4">
-                            Step 3: Verifying Repository Admin Access
+                            {t('Step 3: Verifying Repository Admin Access')}
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6 flex items-center justify-center">
                             <div className="text-center py-8">
@@ -620,11 +620,10 @@ function ClaimMyNodePage() {
                                     <>
                                         <Spinner size="xl" className="mb-4" />
                                         <p className="text-white">
-                                            Verifying your admin access to the
-                                            repository...
+                                            {t('Verifying your admin access to the repository...')}
                                         </p>
                                         <p className="text-gray-400 text-sm mt-2">
-                                            This should only take a moment.
+                                            {t('This should only take a moment.')}
                                         </p>
                                     </>
                                 ) : (
@@ -645,7 +644,7 @@ function ClaimMyNodePage() {
                                             />
                                         </svg>
                                         <p className="text-white">
-                                            Processing verification result...
+                                            {t('Processing verification result...')}
                                         </p>
                                     </>
                                 )}
@@ -658,7 +657,7 @@ function ClaimMyNodePage() {
                 {currentStage === 'claim_node' && (
                     <div>
                         <h2 className="text-xl font-bold text-white mb-4">
-                            Step 4: Claim Your Node
+                            {t('Step 4: Claim Your Node')}
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6">
                             <div className="flex items-center mb-4">
@@ -678,30 +677,11 @@ function ClaimMyNodePage() {
                                     />
                                 </svg>
                                 <h3 className="text-lg font-medium text-white">
-                                    Verification Successful
+                                    {t('Verification Successful')}
                                 </h3>
                             </div>
                             <p className="text-gray-300 mb-4">
-                                Your GitHub account (
-                                <GithubUserSpan
-                                    username={githubUsername}
-                                    userId={githubUserId}
-                                    className="text-white"
-                                />
-                                ) has been verified with admin permissions to
-                                the repository. You can now claim node{' '}
-                                <NodeSpan
-                                    nodeId={nodeId as string}
-                                    nodeName={node?.name}
-                                    className="text-white"
-                                />{' '}
-                                as publisher:{' '}
-                                <PublisherSpan
-                                    publisherId={publisherId as string}
-                                    publisherName={publisherToClaim?.name}
-                                    className="text-white"
-                                />
-                                .
+                                {t('Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.', { username: githubUsername, nodeName: node?.name, publisherName: publisherToClaim?.name })}
                             </p>
                             <div className="flex justify-end">
                                 <Button
@@ -715,10 +695,10 @@ function ClaimMyNodePage() {
                                                 className="mr-2"
                                                 size="sm"
                                             />
-                                            Claiming Node...
+                                            {t('Claiming Node...')}
                                         </>
                                     ) : (
-                                        'Claim Node'
+                                        t('Claim Node')
                                     )}
                                 </Button>
                             </div>
@@ -730,7 +710,7 @@ function ClaimMyNodePage() {
                 {currentStage === 'completed' && (
                     <div>
                         <h2 className="text-xl font-bold text-white mb-4">
-                            Step 5: Claim Successful
+                            {t('Step 5: Claim Successful')}
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6">
                             <div className="flex items-center mb-4">
@@ -750,32 +730,18 @@ function ClaimMyNodePage() {
                                     />
                                 </svg>
                                 <h3 className="text-lg font-medium text-white">
-                                    Node Claimed Successfully
+                                    {t('Node Claimed Successfully')}
                                 </h3>
                             </div>
                             <p className="text-gray-300 mb-4">
-                                Congratulations! You have successfully claimed
-                                the node{' '}
-                                <NodeSpan
-                                    nodeId={nodeId as string}
-                                    nodeName={node?.name}
-                                    className="text-white"
-                                />{' '}
-                                for publisher{' '}
-                                <PublisherSpan
-                                    publisherId={publisherId as string}
-                                    publisherName={publisherToClaim?.name}
-                                    className="text-white"
-                                />
-                                . You can now manage this node through your
-                                publisher account.
+                                {t('Congratulations! You have successfully claimed the node {{nodeName}} for publisher {{publisherName}}. You can now manage this node through your publisher account.', { nodeName: node?.name, publisherName: publisherToClaim?.name })}
                             </p>
                             <div className="flex justify-end">
                                 <Button
                                     color="blue"
                                     onClick={handleGoToNodePage}
                                 >
-                                    Go to Node Page
+                                    {t('Go to Node Page')}
                                 </Button>
                             </div>
                         </div>
