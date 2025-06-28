@@ -5,7 +5,7 @@ import PreemptedComfyNodeNamesEditModal from '@/components/nodes/PreemptedComfyN
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb, Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
-import router from 'next/router'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { HiHome } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
@@ -14,6 +14,7 @@ import { useRouterQuery } from 'src/hooks/useRouterQuery'
 
 function PreemptedComfyNodeNamesAdminPage() {
     const { t } = useNextTranslation()
+    const router = useRouter()
     const [selectedNode, setSelectedNode] = useState<Node | null>(null)
 
     // Use the custom hook for query parameters
