@@ -160,7 +160,12 @@ async function translateKeyToLanguage(
         )
 
         const translatedText = response.data.choices[0].message.content
-        return translatedText.trim()
+        return translatedText
+        // trim space
+        .trim()
+        // trim paired quotes
+        .replace(/^['"`]|['"`]$/g, '')
+        
     } catch (error) {
         throw new Error(
             `Error translating key "${key}" to ${lang}: ${error instanceof Error ? error.message : String(error)}`
