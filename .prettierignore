@@ -1,5 +1,6 @@
 package-lock.json
 pnpm-lock.yaml
+.github/workflows
 package.json
 NativeApp/dist/bundles/*
 NativeApp/build-*
