@@ -1,8 +1,7 @@
-import { LANGUAGE_STORAGE_KEY } from '@/src/constants'
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 import {
     detectLanguageFromHeader,
     isRedirectExcludedUrl,
-    SUPPORTED_LANGUAGES,
 } from '@/src/hooks/i18n/serverUtils'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -24,7 +23,7 @@ export function middleware(request: NextRequest) {
     const cookieLanguage = request.cookies.get(LANGUAGE_STORAGE_KEY)?.value
 
     // Check if user's preferred language is already set in cookies
-    if (cookieLanguage && SUPPORTED_LANGUAGES.includes(cookieLanguage)) {
+    if (cookieLanguage && SUPPORTED_LANGUAGES.includes(cookieLanguage as any)) {
         // User has a valid language preference, no need to redirect
         return NextResponse.next()
     }

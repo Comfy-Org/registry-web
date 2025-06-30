@@ -1,16 +1,10 @@
-import { LANGUAGE_STORAGE_KEY } from '@/src/constants'
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
 import { initReactI18next, useTranslation } from 'react-i18next'
 import reactUseCookie from 'react-use-cookie'
-
-export const languageNames: Record<string, string> = {
-    en: 'English',
-    zh: '中文',
-    ja: '日本語',
-}
 
 const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
@@ -23,7 +17,7 @@ const i18n = i18next
     .use(initReactI18next)
     .init({
         fallbackLng: 'en',
-        supportedLngs: Object.keys(languageNames),
+        supportedLngs: SUPPORTED_LANGUAGES,
         defaultNS: 'common',
         fallbackNS: 'common',
         debug: process.env.NODE_ENV === 'development',
