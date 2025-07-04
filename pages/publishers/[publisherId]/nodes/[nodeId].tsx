@@ -1,4 +1,5 @@
 import NodeDetails from '@/components/nodes/NodeDetails'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
@@ -8,6 +9,7 @@ const NodeView = () => {
     const router = useRouter()
     const { publisherId, nodeId } = router.query
     const { data: publisher } = useGetPublisher(publisherId as string)
+    const { t } = useNextTranslation()
 
     return (
         <div className="p-4">
@@ -21,7 +23,7 @@ const NodeView = () => {
                     }}
                     className="dark"
                 >
-                    Home
+                    {t('Home')}
                 </Breadcrumb.Item>
                 <Breadcrumb.Item
                     href={`/publishers/${publisherId}`}

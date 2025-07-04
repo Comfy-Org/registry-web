@@ -1,10 +1,12 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Badge, Button, Navbar } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
-import { getFromUrlSearchParam } from '../common/HOC/getFromUrlSearchParam'
+import { useFromUrlParam } from '../common/HOC/useFromUrl'
+import LanguageSwitcher from '../common/LanguageSwitcher'
 import ProfileDropdown from './ProfileDropdown'
 
 interface HeaderProps {
@@ -22,10 +24,10 @@ const DiscordIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
     const router = useRouter()
-    const handleLogIn = () =>
-        router.push(`/auth/login?${getFromUrlSearchParam()}`)
-    const handleSignUp = () =>
-        router.push(`/auth/signup?${getFromUrlSearchParam()}`)
+    const { t } = useNextTranslation()
+    const fromUrlParam = useFromUrlParam()
+    const handleLogIn = () => router.push(`/auth/login?${fromUrlParam}`)
+    const handleSignUp = () => router.push(`/auth/signup?${fromUrlParam}`)
     return (
         <Navbar
             fluid
@@ -45,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     className="w-6 h-6 mr-3 sm:w-9 sm:h-9"
                 />
                 <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
-                    Comfy Registry
+                    {t('Comfy Registry')}
                 </span>
             </Link>
             <div className="flex items-center gap-2 bg-gray-900 md:order-2">
@@ -55,24 +57,29 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <>
                         <Button onClick={handleLogIn} color="dark" size="xs">
                             <span className="text-white text-xs md:text-base">
-                                Log in
+                                {t('Login')}
                             </span>
                         </Button>
 
                         <Button onClick={handleSignUp} color="blue" size="xs">
                             <span className="text-xs md:text-base">
-                                Sign up
+                                {t('Signup')}
                             </span>
                         </Button>
                     </>
                 )}
+                <LanguageSwitcher className="mx-2" />
                 <Button
-                    href="https://docs.comfy.org/registry/overview"
+                    href={
+                        router.locale && router.locale.startsWith('zh')
+                            ? 'https://docs.comfy.org/zh-CN'
+                            : 'https://docs.comfy.org/registry/overview'
+                    }
                     color="blue"
                     size="xs"
                 >
                     <span className="text-white text-xs md:text-base">
-                        Documentation
+                        {t('Documentation')}
                     </span>
                 </Button>
 

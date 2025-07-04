@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -21,6 +22,7 @@ type PublisherDetailProps = {
     publisher: Publisher
 }
 const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const updatePublisherMutation = useUpdatePublisher()
     const deleteTokenMutation = useDeletePersonalAccessToken()
@@ -110,7 +112,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                     className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
                     onClick={() => router.push(`/nodes`)}
                 >
-                    <span>Back to your nodes</span>
+                    <span>{t('Back to your nodes')}</span>
                 </span>
             </div>
 
@@ -143,7 +145,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                                     d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                                 />
                             </svg>
-                            <span className="text-[10px]">Edit details</span>
+                            <span className="text-[10px]">
+                                {t('Edit details')}
+                            </span>
                         </Button>
                     )}
                 </div>
@@ -171,7 +175,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                             />
                         </svg>
                         <span className="ml-2">
-                            {nodeList?.total ? `${nodeList?.total} nodes` : ''}
+                            {t(`{{count}} nodes`, { count: nodeList?.total })}
                         </span>
                     </p>
                     {oneMemberOfPublisher && (

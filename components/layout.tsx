@@ -8,11 +8,13 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import analytic from 'src/analytic/analytic'
 import app from 'src/firebase'
+import { useNextTranslation } from '../src/hooks/i18n'
 import Header from './Header/Header'
 import Container from './common/Container'
 
 export default function Layout({ children }: React.PropsWithChildren) {
     const router = useRouter()
+    const { t } = useNextTranslation()
     const isLoginPage = router.pathname === '/auth/login'
     const isSignupPage = router.pathname === '/auth/signup'
     const isReservedPath = /^\/(auth|api|_error|_app|_document)/.test(
@@ -34,10 +36,10 @@ export default function Layout({ children }: React.PropsWithChildren) {
     return (
         <>
             <Head>
-                <title>ComfyUI Registry</title>
+                <title>{t('ComfyUI Registry')}</title>
                 <meta
                     name="description"
-                    content="Discover and install ComfyUI custom nodes."
+                    content={t('Discover and install ComfyUI custom nodes.')}
                 />
                 <link rel="icon" href="/favicon.ico" />
                 <ThemeModeScript />
@@ -46,7 +48,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
                 {!(isLoginPage || isSignupPage || isReservedPath) && (
                     <Header
                         isLoggedIn={loading || !!user}
-                        title={'Your Nodes'}
+                        title={t('Your Nodes')}
                     />
                 )}
                 <main>{children}</main>
