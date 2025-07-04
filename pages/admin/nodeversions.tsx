@@ -125,7 +125,9 @@ function NodeVersionList({}) {
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
         useState(false)
 
-    const queryForNodeId = router.query.nodeId as string
+    const queryForNodeId = Array.isArray(router.query.nodeId)
+        ? router.query.nodeId[0]
+        : router.query.nodeId;
     const queryForStatusReason = router.query.statusReason as string
 
     const getAllNodeVersionsQuery = useListAllNodeVersions({
