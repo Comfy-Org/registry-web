@@ -15,7 +15,7 @@ body {
 }
 
 .ais-Hits-item {
-    @apply bg-gray-800 px-2 py-3 rounded-lg shadow-md;
+    @apply bg-gray-800 p-4 rounded-lg shadow-md;
 }
 
 .ais-Hits-item:hover,
