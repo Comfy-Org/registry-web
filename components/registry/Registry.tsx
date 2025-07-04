@@ -32,7 +32,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                 buttonLink="/nodes"
             />
 
-            <div className="md:w-full w-full mt-4">
+            <div className="w-full mt-4">
                 <InstantSearch
                     searchClient={searchClient}
                     indexName={INSTANT_SEARCH_INDEX_NAME}
