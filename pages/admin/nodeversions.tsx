@@ -127,7 +127,7 @@ function NodeVersionList({}) {
 
     const queryForNodeId = Array.isArray(router.query.nodeId)
         ? router.query.nodeId[0]
-        : router.query.nodeId;
+        : router.query.nodeId
     const queryForStatusReason = router.query.statusReason as string
 
     const getAllNodeVersionsQuery = useListAllNodeVersions({
