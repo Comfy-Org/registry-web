@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Common Commands
 
 ### Development
+
 - `bun install` - Install dependencies
 - `bun dev` - Start Next.js development server on port 3000
 - `bun build` - Build the production application
@@ -12,16 +13,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `bun test` - Run tests with coverage using Vitest
 
 ### Code Quality
+
 - `bun run lint` - Run ESLint
 - `bun run fix` - Run ESLint with --fix
 - `bun run format` - Check Prettier formatting
 - `bun run fmt` - Fix formatting with Prettier
 
 ### API & Code Generation
+
 - `bun run orval` - Generate React Query hooks from OpenAPI spec
 - `bun scripts/scan-i18n.ts` - Extract and update translation keys
 
 ### Storybook
+
 - `bun run storybook` - Run Storybook development server on port 6006
 - `bun run build-storybook` - Build Storybook for production
 - `bun run chromatic` - Run Chromatic visual testing (requires CHROMATIC_PROJECT_TOKEN)
@@ -29,6 +33,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Architecture Overview
 
 ### Tech Stack
+
 - **Frontend**: Next.js 15 with React 18.2, TypeScript, Tailwind CSS
 - **UI Components**: Flowbite React components
 - **State Management**: TanStack Query (React Query) for server state
@@ -40,6 +45,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Component Development**: Storybook with Chromatic visual testing
 
 ### Project Structure
+
 - `pages/` - Next.js pages (App Router not used)
 - `components/` - Reusable React components organized by feature
 - `src/api/` - Auto-generated API client and custom Axios instance
@@ -49,6 +55,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `utils/` - Utility functions and theme configuration
 
 ### Key Features
+
 - **Node Registry**: Browse, search, and manage ComfyUI custom nodes
 - **Publisher Management**: Create and manage node publishers
 - **Admin Panel**: Admin-only features for node management
@@ -60,47 +67,55 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Guidelines
 
 ### API Integration
+
 - API client is auto-generated from OpenAPI spec at `${NEXT_PUBLIC_BACKEND_URL}/openapi`
 - Use `bun run orval` to regenerate API client when backend changes
 - All API calls use React Query hooks from `src/api/generated.ts`
 - Custom Axios instance in `src/api/mutator/axios-instance.ts` handles authentication
 
 ### Internationalization
+
 - All user-facing text must use the `t()` function from `useNextTranslation` hook
 - Use English text as translation keys for readability
 - Run `bun scripts/scan-i18n.ts` to extract new translation keys
 - New languages require updating `SUPPORTED_LANGUAGES` in `src/constants.ts`
 
 ### Component Development
+
 - Use Flowbite React components for UI consistency
 - Custom theme configuration in `utils/comfyTheme.tsx`
 - Storybook stories required for all shared components
 - Follow existing patterns in component organization
 
 ### Authentication
+
 - Firebase Auth integration via `src/firebase.ts`
 - Use `withAuth` HOC for protected routes
 - `authAdmin` HOC for admin-only components
 - Access tokens managed through dedicated components
 
 ### Search Implementation
+
 - Algolia InstantSearch with custom configuration
 - Search index: `nodes_index`
 - Query suggestions: `nodes_index_query_suggestions`
 - Autocomplete plugin with recent searches
 
 ### Testing
+
 - Vitest for unit tests with browser testing via Playwright
 - Storybook stories serve as component documentation and testing
 - Chromatic for visual regression testing
 - Run `bun test` for full test suite
 
 ## Environment Variables
+
 - `NEXT_PUBLIC_BACKEND_URL` - Backend API URL (required for orval)
 - `CHROMATIC_PROJECT_TOKEN` - For Chromatic visual testing
 - `OPENAI_API_KEY` - For automatic translation generation
 
 ## Common Issues
+
 - After backend API changes, regenerate client with `bun run orval`
 - For i18n issues, check translation keys exist in all locale files
 - Storybook build issues often require clearing .storybook cache
