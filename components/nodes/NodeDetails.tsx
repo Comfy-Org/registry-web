@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
@@ -26,7 +27,8 @@ import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
 
-export function formatRelativeDate(dateString: string) {
+export function FormatRelativeDate({ date: dateString }: { date: string }) {
+    const { t } = useNextTranslation()
     const date = new Date(dateString)
     const now = new Date()
     const oneDay = 24 * 60 * 60 * 1000 // milliseconds in one day
@@ -35,18 +37,18 @@ export function formatRelativeDate(dateString: string) {
 
     if (daysAgo < 7) {
         if (daysAgo === 0) {
-            return 'Today'
+            return <>{t('Today')}</>
         } else if (daysAgo === 1) {
-            return 'Yesterday'
+            return <>{t('Yesterday')}</>
         } else {
-            return `${daysAgo} days ago`
+            return <>{t('{{days}} days ago', { days: daysAgo })}</>
         }
     } else {
         // Formatting to YYYY-MM-DD
         const year = date.getFullYear()
         const month = (date.getMonth() + 1).toString().padStart(2, '0')
         const day = date.getDate().toString().padStart(2, '0')
-        return `${year}-${month}-${day}`
+        return <>{`${year}-${month}-${day}`}</>
     }
 }
 
@@ -83,6 +85,7 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
+    const { t } = useNextTranslation()
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
@@ -173,7 +176,7 @@ const NodeDetails = () => {
                     <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
                         <div className="max-w-screen-sm mx-auto text-center">
                             <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
-                                Node not found
+                                {t('Node not found')}
                             </h1>
                         </div>
                     </div>
@@ -218,7 +221,7 @@ const NodeDetails = () => {
                                                 {!!node.publisher?.id && ` | `}
                                                 {`v${node.latest_version?.version}`}
                                                 <span className="pl-3 text-gray-400">
-                                                    {' Most recent version'}
+                                                    {t('Most recent version')}
                                                 </span>
                                             </span>
                                         )}
@@ -293,7 +296,7 @@ const NodeDetails = () => {
                                             {formatDownloadCount(
                                                 node.downloads || 0
                                             )}{' '}
-                                            downloads
+                                            {t('downloads')}
                                         </span>
                                     </p>
                                 )}
@@ -301,7 +304,9 @@ const NodeDetails = () => {
                             <div className="mt-5 mb-10">
                                 {isUnclaimed ? (
                                     <p className="text-base font-normal text-gray-200">
-                                        This node can only be installed via git
+                                        {t(
+                                            'This node can only be installed via git'
+                                        )}
                                         {node.repository && (
                                             <CopyableCodeBlock
                                                 code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
@@ -316,7 +321,7 @@ const NodeDetails = () => {
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">
-                                    Description
+                                    {t('Description')}
                                 </h2>
                                 <p className="text-base font-normal text-gray-200">
                                     {node.description}
@@ -324,7 +329,7 @@ const NodeDetails = () => {
                             </div>
                             <div className="mt-10" hidden={isUnclaimed}>
                                 <h2 className="mb-2 text-lg font-semibold">
-                                    Version history
+                                    {t('Version history')}
                                 </h2>
                                 <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
                                     {nodeVersions?.map((version, index) => (
@@ -333,12 +338,14 @@ const NodeDetails = () => {
                                             key={index}
                                         >
                                             <h3 className="text-base font-semibold text-gray-200">
-                                                Version {version.version}
+                                                {t('Version')} {version.version}
                                             </h3>
                                             <p className="mt-3 text-sm font-normal text-gray-400 ">
-                                                {formatRelativeDate(
-                                                    version.createdAt || ''
-                                                )}
+                                                <FormatRelativeDate
+                                                    date={
+                                                        version.createdAt || ''
+                                                    }
+                                                />
                                             </p>
                                             <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                                                 {version.changelog}
@@ -349,7 +356,7 @@ const NodeDetails = () => {
                                                     }
                                                     tabIndex={0}
                                                 >
-                                                    More
+                                                    {t('More')}
                                                 </div>
                                             </p>
                                         </div>
@@ -376,7 +383,7 @@ const NodeDetails = () => {
                                 href={node.repository || ''}
                             >
                                 <MdOpenInNew className="w-5 h-5 mr-2" />
-                                View Repository
+                                {t('View Repository')}
                             </Button>
                         )}
 
@@ -399,7 +406,7 @@ const NodeDetails = () => {
                                     )
                                 }}
                             >
-                                <a>Download Latest</a>
+                                <a>{t('Download Latest')}</a>
                             </Button>
                         )}
 
@@ -425,8 +432,10 @@ const NodeDetails = () => {
                                         d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                                     />
                                 </svg>
-                                <span>Edit details</span>
-                                {warningForAdminEdit && <>&nbsp;(admin)</>}
+                                <span>{t('Edit details')}</span>
+                                {warningForAdminEdit && (
+                                    <>&nbsp;{t('(admin)')}</>
+                                )}
                             </Button>
                         )}
 
@@ -436,8 +445,10 @@ const NodeDetails = () => {
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
                                 <HiTrash className="w-5 h-5 mr-2" />
-                                <span>Delete</span>
-                                {warningForAdminEdit && <>&nbsp;(admin)</>}
+                                <span>{t('Delete')}</span>
+                                {warningForAdminEdit && (
+                                    <>&nbsp;{t('(admin)')}</>
+                                )}
                             </Button>
                         )}
 
@@ -469,7 +480,7 @@ const NodeDetails = () => {
                                             </button>
                                             <div className="flex items-center">
                                                 <span>
-                                                    Search Ranking:{' '}
+                                                    {t('Search Ranking')}:{' '}
                                                     {node.search_ranking}
                                                 </span>
                                             </div>
@@ -511,7 +522,7 @@ const NodeDetails = () => {
                                         </button>
                                         <div className="flex items-center">
                                             <span>
-                                                Preempted Names:{' '}
+                                                {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
                                                     node
@@ -520,7 +531,7 @@ const NodeDetails = () => {
                                                         ? node.preempted_comfy_node_names.join(
                                                               '\n'
                                                           )
-                                                        : 'None'}
+                                                        : t('None')}
                                                 </pre>
                                             </span>
                                         </div>

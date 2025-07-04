@@ -9,7 +9,7 @@ const RegistryStory: React.FC = () => {
     return (
         <div className="relative mt-8 bg-gray-900 lg:mt-20">
             <GenericHeader
-                title="Welcome to the Registry"
+                title="Welcome to ComfyUI Registry"
                 subTitle="View nodes or sign in to create and publish your own"
                 buttonText="Get Started"
                 buttonLink="/nodes"

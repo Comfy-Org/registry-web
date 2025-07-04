@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useGetUser } from 'src/api/generated'
-import { getFromUrlSearchParam } from './getFromUrlSearchParam'
+import { useFromUrlParam } from './useFromUrl'
 
 /**
  * Admin dashboard HOC
@@ -18,20 +18,20 @@ const withAdmin = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
         const auth = getAuth()
+        const fromUrlParam = useFromUrlParam()
 
         // if firebaseUser is signed out, redirect to login page
         const [firebaseUser, firebaseUserLoading] = useAuthState(auth)
         useEffect(() => {
             if (!firebaseUserLoading && !firebaseUser) {
-                router.push(`/auth/login?${getFromUrlSearchParam()}`)
+                router.push(`/auth/login?${fromUrlParam}`)
             }
-        }, [router, firebaseUser, firebaseUserLoading])
+        }, [router, firebaseUser, firebaseUserLoading, fromUrlParam])
 
         const { data: user, isLoading } = useGetUser({})
         useEffect(() => {
-            if (!isLoading && !user)
-                router.push(`/auth/login?${getFromUrlSearchParam()}`)
-        }, [router, user, isLoading])
+            if (!isLoading && !user) router.push(`/auth/login?${fromUrlParam}`)
+        }, [router, user, isLoading, fromUrlParam])
 
         if (isLoading)
             return (

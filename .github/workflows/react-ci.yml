@@ -24,6 +24,10 @@ jobs:
               run: bun install
             - name: Run Next.js Lint
               run: bun run lint
+            - name: Scan i18n Keys
+              run: bun scripts/scan-i18n.ts
+              env:
+                  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
             - name: Check Formatting with Prettier
               run: bunx prettier --write .
             - name: Sort package.json

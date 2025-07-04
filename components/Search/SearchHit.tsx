@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { ShortNumber } from '@lytieuphong/short-number'
 import { Tooltip } from 'flowbite-react'
 import type {
@@ -27,6 +28,7 @@ type HitProps = {
 }
 
 const Hit: React.FC<HitProps> = ({ hit }) => {
+    const { t } = useNextTranslation()
     const matchedNodes = (
         hit._highlightResult?.comfy_nodes as
             | HitAttributeHighlightResult[]
@@ -106,7 +108,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                                 {' | '}
                                 <HiDownload
                                     className="inline h-3 w-3"
-                                    title="Installs"
+                                    title={t('Installs')}
                                 />{' '}
                                 {ShortNumber(hit.total_install)}
                             </span>
