@@ -136,9 +136,7 @@ function NodeVersionCompatibilityAdmin() {
             <Table.Cell>
               {editingId === nv.id ? (
                 <TextInput
-                  value={
-                    editValues.supported_comfyui_frontend_version
-                  }
+                  value={editValues.supported_comfyui_frontend_version}
                   onChange={(e) =>
                     setEditValues((v) => ({
                       ...v,
@@ -170,7 +168,7 @@ function NodeVersionCompatibilityAdmin() {
             <Table.Cell>
               {editingId === nv.id ? (
                 <TextInput
-                  value={editValues.supported_os}
+                  value={editValues.supported_os?.join(',')}
                   onChange={(e) =>
                     setEditValues((v) => ({
                       ...v,
@@ -188,7 +186,7 @@ function NodeVersionCompatibilityAdmin() {
             <Table.Cell>
               {editingId === nv.id ? (
                 <TextInput
-                  value={editValues.supported_accelerators}
+                  value={editValues.supported_accelerators?.join(',')}
                   onChange={(e) =>
                     setEditValues((v) => ({
                       ...v,
