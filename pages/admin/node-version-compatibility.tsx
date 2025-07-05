@@ -71,7 +71,7 @@ function NodeVersionCompatibilityAdmin() {
         </Table.Head>
         <Table.Body>
           <Suspense fallback={<Spinner />}>
-            <DataTable t={t} />
+            <DataTable />
           </Suspense>
         </Table.Body>
       </Table>
