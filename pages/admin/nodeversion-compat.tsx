@@ -1,49 +1,14 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useRouter } from 'next/router'
-import { useListAllNodeVersions, useAdminUpdateNodeVersion } from 'src/api/generated'
+import { useListAllNodeVersions, useAdminUpdateNodeVersion, AdminUpdateNodeVersionBody, NodeVersion } from 'src/api/generated'
 import { Button, Table, TextInput, Label, Spinner } from 'flowbite-react'
 import { toast } from 'react-toastify'
+import withAdmin from '@/components/common/HOC/authAdmin'
 
 // This page allows admins to update node version compatibility fields
-export default function NodeVersionCompatibilityAdmin() {
-  const router = useRouter()
-  const [editingId, setEditingId] = React.useState<string | null>(null)
-  const [editValues, setEditValues] = React.useState<any>({})
-  const { data, isLoading, isError } = useListAllNodeVersions({ page: 1, pageSize: 20 })
-  const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
+export default withAdmin(NodeVersionCompatibilityAdmin)
 
-  if (isLoading) return <Spinner />
-  if (isError) return <div>Error loading node versions</div>
-
-  const handleEdit = (nv: any) => {
-    setEditingId(nv.id)
-    setEditValues({
-      supported_comfyui_frontend_version: nv.supported_comfyui_frontend_version || '',
-      supported_comfyui_version: nv.supported_comfyui_version || '',
-      supported_os: nv.supported_os || '',
-      supported_accelerators: nv.supported_accelerators || '',
-    })
-  }
-
-  const handleSave = async (nv: any) => {
-    try {
-      await adminUpdateNodeVersion.mutateAsync({ 
-        nodeId: nv.node_id.toString(),
-        versionNumber: nv.version.toString(),
-        data: {
-          supported_comfyui_frontend_version: editValues.supported_comfyui_frontend_version,
-          supported_comfyui_version: editValues.supported_comfyui_version,
-          supported_os: editValues.supported_os,
-          supported_accelerators: editValues.supported_accelerators,
-        },
-      })
-      toast.success('Updated node version compatibility')
-      setEditingId(null)
-    } catch (e) {
-      toast.error('Failed to update node version')
-    }
-  }
-
+function NodeVersionCompatibilityAdmin() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Node Version Compatibility Admin</h1>
@@ -58,64 +23,113 @@ export default function NodeVersionCompatibilityAdmin() {
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body>
-          {data?.versions?.map((nv: any) => (
-            <Table.Row key={nv.id}>
-              <Table.Cell>{nv.node_id}</Table.Cell>
-              <Table.Cell>{nv.version}</Table.Cell>
-              <Table.Cell>
-                {editingId === nv.id ? (
-                  <TextInput
-                    value={editValues.supported_comfyui_frontend_version}
-                    onChange={e => setEditValues(v => ({ ...v, supported_comfyui_frontend_version: e.target.value }))}
-                  />
-                ) : (
-                  nv.supported_comfyui_frontend_version || '-'
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                {editingId === nv.id ? (
-                  <TextInput
-                    value={editValues.supported_comfyui_version}
-                    onChange={e => setEditValues(v => ({ ...v, supported_comfyui_version: e.target.value }))}
-                  />
-                ) : (
-                  nv.supported_comfyui_version || '-'
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                {editingId === nv.id ? (
-                  <TextInput
-                    value={editValues.supported_os}
-                    onChange={e => setEditValues(v => ({ ...v, supported_os: e.target.value }))}
-                  />
-                ) : (
-                  nv.supported_os || '-'
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                {editingId === nv.id ? (
-                  <TextInput
-                    value={editValues.supported_accelerators}
-                    onChange={e => setEditValues(v => ({ ...v, supported_accelerators: e.target.value }))}
-                  />
-                ) : (
-                  nv.supported_accelerators || '-'
-                )}
-              </Table.Cell>
-              <Table.Cell>
-                {editingId === nv.id ? (
-                  <>
-                    <Button size="xs" onClick={() => handleSave(nv)} color="success">Save</Button>
-                    <Button size="xs" onClick={() => setEditingId(null)} color="gray">Cancel</Button>
-                  </>
-                ) : (
-                  <Button size="xs" onClick={() => handleEdit(nv)} color="primary">Edit</Button>
-                )}
-              </Table.Cell>
-            </Table.Row>
-          ))}
+          <Suspense fallback={<Spinner />}>
+            <DataTable />
+          </Suspense>
         </Table.Body>
       </Table>
     </div>
   )
+
+  function DataTable() {
+    const [editingId, setEditingId] = React.useState<string | null>(null)
+    const [editValues, setEditValues] = React.useState<AdminUpdateNodeVersionBody>({})
+    const { data, isLoading, isError } = useListAllNodeVersions({ page: 1, pageSize: 24 })
+    const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
+
+    if (isLoading) return <Spinner />
+    if (isError) return <div>Error loading node versions</div>
+
+    const handleEdit = (nv: NodeVersion) => {
+      setEditingId(nv.id || DIEToast('Node Version ID is required'))
+      setEditValues({
+        supported_comfyui_frontend_version: nv.supported_comfyui_frontend_version || '',
+        supported_comfyui_version: nv.supported_comfyui_version || '',
+        supported_os: nv.supported_os || [],
+        supported_accelerators: nv.supported_accelerators || [],
+      })
+    }
+
+    const handleSave = async (nv: NodeVersion) => {
+      try {
+        await adminUpdateNodeVersion.mutateAsync({
+          nodeId: nv.node_id || DIEToast('Node ID is required'),
+          versionNumber: nv.version || DIEToast('Node Version Number is required'),
+          data: {
+            supported_comfyui_frontend_version: editValues.supported_comfyui_frontend_version,
+            supported_comfyui_version: editValues.supported_comfyui_version,
+            supported_os: editValues.supported_os,
+            supported_accelerators: editValues.supported_accelerators,
+          },
+        })
+        toast.success('Updated node version compatibility')
+        setEditingId(null)
+      } catch (e) {
+        toast.error('Failed to update node version')
+      }
+    }
+
+    return <>{data?.versions?.map((nv) => (
+      <Table.Row key={nv.id}>
+        <Table.Cell>{nv.node_id}</Table.Cell>
+        <Table.Cell>{nv.version}</Table.Cell>
+        <Table.Cell>
+          {editingId === nv.id ? (
+            <TextInput
+              value={editValues.supported_comfyui_frontend_version}
+              onChange={e => setEditValues(v => ({ ...v, supported_comfyui_frontend_version: e.target.value }))}
+            />
+          ) : (
+            nv.supported_comfyui_frontend_version || ''
+          )}
+        </Table.Cell>
+        <Table.Cell>
+          {editingId === nv.id ? (
+            <TextInput
+              value={editValues.supported_comfyui_version}
+              onChange={e => setEditValues(v => ({ ...v, supported_comfyui_version: e.target.value }))}
+            />
+          ) : (
+            nv.supported_comfyui_version || ''
+          )}
+        </Table.Cell>
+        <Table.Cell>
+          {editingId === nv.id ? (
+            <TextInput
+              value={editValues.supported_os}
+              onChange={e => setEditValues(v => ({ ...v, supported_os: e.target.value.split(',').map(e => e.trim()).filter(Boolean) }))}
+            />
+          ) : (
+            nv.supported_os || ''
+          )}
+        </Table.Cell>
+        <Table.Cell>
+          {editingId === nv.id ? (
+            <TextInput
+              value={editValues.supported_accelerators}
+              onChange={e => setEditValues(v => ({ ...v, supported_accelerators: e.target.value.split(',').map(e => e.trim()).filter(Boolean) }))}
+            />
+          ) : (
+            nv.supported_accelerators || ''
+          )}
+        </Table.Cell>
+        <Table.Cell>
+          {editingId === nv.id ? (
+            <>
+              <Button size="xs" onClick={() => handleSave(nv)} color="success">Save</Button>
+              <Button size="xs" onClick={() => setEditingId(null)} color="gray">Cancel</Button>
+            </>
+          ) : (
+            <Button size="xs" onClick={() => handleEdit(nv)} color="primary">Edit</Button>
+          )}
+        </Table.Cell>
+      </Table.Row>
+    ))}
+    </>
+  }
+}
+
+function DIEToast(message: string): never {
+  toast.error(message)
+  throw new Error(message)
 }
