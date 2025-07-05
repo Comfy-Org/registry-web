@@ -1,15 +1,48 @@
 import React, { Suspense } from 'react'
 import { useListAllNodeVersions, useAdminUpdateNodeVersion, AdminUpdateNodeVersionBody, NodeVersion } from 'src/api/generated'
-import { Button, Table, TextInput, Label, Spinner } from 'flowbite-react'
+import { Button, Table, TextInput, Label, Spinner, Breadcrumb } from 'flowbite-react'
 import { toast } from 'react-toastify'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import router from 'next/router'
+import { HiHome } from 'react-icons/hi'
 
 // This page allows admins to update node version compatibility fields
 export default withAdmin(NodeVersionCompatibilityAdmin)
 
 function NodeVersionCompatibilityAdmin() {
+  const { t } = useNextTranslation()
+  
   return (
     <div className="p-4">
+      <div className="py-4">
+        <Breadcrumb>
+          <Breadcrumb.Item
+            href="/"
+            icon={HiHome}
+            onClick={(e) => {
+              e.preventDefault()
+              router.push('/')
+            }}
+            className="dark"
+          >
+            {t('Home')}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item
+            href="/admin"
+            onClick={(e) => {
+              e.preventDefault()
+              router.push('/admin')
+            }}
+            className="dark"
+          >
+            {t('Admin Dashboard')}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item className="dark">
+            {t('Node Version Compatibility')}
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       
       <h1 className="text-2xl font-bold mb-4">Node Version Compatibility Admin</h1>
       <Table>
