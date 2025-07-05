@@ -9,6 +9,7 @@
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
     "dev": "next dev",
     "fix": "next lint --fix .",
+    "fmt": "prettier --write .",
     "format": "npx prettier --check .",
     "format-fix": "npx prettier --write .",
     "lint": "next lint",
