@@ -44,37 +44,37 @@ function NodeVersionCompatibilityAdmin() {
         </Breadcrumb>
       </div>
       
-      <h1 className="text-2xl font-bold mb-4">Node Version Compatibility Admin</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('Node Version Compatibility Admin')}</h1>
       <Table>
         <Table.Head>
-          <Table.HeadCell>Node</Table.HeadCell>
-          <Table.HeadCell>Version</Table.HeadCell>
-          <Table.HeadCell>ComfyUI Frontend</Table.HeadCell>
-          <Table.HeadCell>ComfyUI</Table.HeadCell>
-          <Table.HeadCell>OS</Table.HeadCell>
-          <Table.HeadCell>Accelerators</Table.HeadCell>
-          <Table.HeadCell>Actions</Table.HeadCell>
+          <Table.HeadCell>{t('Node')}</Table.HeadCell>
+          <Table.HeadCell>{t('Version')}</Table.HeadCell>
+          <Table.HeadCell>{t('ComfyUI Frontend')}</Table.HeadCell>
+          <Table.HeadCell>{t('ComfyUI')}</Table.HeadCell>
+          <Table.HeadCell>{t('OS')}</Table.HeadCell>
+          <Table.HeadCell>{t('Accelerators')}</Table.HeadCell>
+          <Table.HeadCell>{t('Actions')}</Table.HeadCell>
         </Table.Head>
         <Table.Body>
           <Suspense fallback={<Spinner />}>
-            <DataTable />
+            <DataTable t={t} />
           </Suspense>
         </Table.Body>
       </Table>
     </div>
   )
 
-  function DataTable() {
+  function DataTable({ t }: { t: (key: string) => string }) {
     const [editingId, setEditingId] = React.useState<string | null>(null)
     const [editValues, setEditValues] = React.useState<AdminUpdateNodeVersionBody>({})
     const { data, isLoading, isError } = useListAllNodeVersions({ page: 1, pageSize: 24 })
     const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
 
     if (isLoading) return <Spinner />
-    if (isError) return <div>Error loading node versions</div>
+    if (isError) return <div>{t('Error loading node versions')}</div>
 
     const handleEdit = (nv: NodeVersion) => {
-      setEditingId(nv.id || DIEToast('Node Version ID is required'))
+      setEditingId(nv.id || DIEToast(t('Node Version ID is required')))
       setEditValues({
         supported_comfyui_frontend_version: nv.supported_comfyui_frontend_version || '',
         supported_comfyui_version: nv.supported_comfyui_version || '',
@@ -86,8 +86,8 @@ function NodeVersionCompatibilityAdmin() {
     const handleSave = async (nv: NodeVersion) => {
       try {
         await adminUpdateNodeVersion.mutateAsync({
-          nodeId: nv.node_id || DIEToast('Node ID is required'),
-          versionNumber: nv.version || DIEToast('Node Version Number is required'),
+          nodeId: nv.node_id || DIEToast(t('Node ID is required')),
+          versionNumber: nv.version || DIEToast(t('Node Version Number is required')),
           data: {
             supported_comfyui_frontend_version: editValues.supported_comfyui_frontend_version,
             supported_comfyui_version: editValues.supported_comfyui_version,
@@ -95,10 +95,10 @@ function NodeVersionCompatibilityAdmin() {
             supported_accelerators: editValues.supported_accelerators,
           },
         })
-        toast.success('Updated node version compatibility')
+        toast.success(t('Updated node version compatibility'))
         setEditingId(null)
       } catch (e) {
-        toast.error('Failed to update node version')
+        toast.error(t('Failed to update node version'))
       }
     }
 
@@ -149,11 +149,11 @@ function NodeVersionCompatibilityAdmin() {
         <Table.Cell>
           {editingId === nv.id ? (
             <>
-              <Button size="xs" onClick={() => handleSave(nv)} color="success">Save</Button>
-              <Button size="xs" onClick={() => setEditingId(null)} color="gray">Cancel</Button>
+              <Button size="xs" onClick={() => handleSave(nv)} color="success">{t('Save')}</Button>
+              <Button size="xs" onClick={() => setEditingId(null)} color="gray">{t('Cancel')}</Button>
             </>
           ) : (
-            <Button size="xs" onClick={() => handleEdit(nv)} color="primary">Edit</Button>
+            <Button size="xs" onClick={() => handleEdit(nv)} color="primary">{t('Edit')}</Button>
           )}
         </Table.Cell>
       </Table.Row>
