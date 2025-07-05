@@ -7,7 +7,9 @@ The admin dashboard provides Comfy-Org members and Registry Admins with tools to
 ## Pages and Components
 
 ### Admin Index (`/admin`)
+
 The main dashboard page that provides navigation to all admin tools:
+
 - **Search Ranking Table** - Manage search result rankings
 - **Preempted Comfy Node Names Management** - Handle reserved node names
 - **Review Node Versions** - Review and moderate submitted node versions
@@ -15,17 +17,20 @@ The main dashboard page that provides navigation to all admin tools:
 - **Node Version Compatibility** - Manage compatibility metadata for node versions
 
 ### Node Version Compatibility (`/admin/node-version-compatibility`)
+
 A specialized admin page for managing node version compatibility metadata. This page allows admins to:
 
 #### Features
+
 - View all node versions in a paginated table
 - Edit compatibility fields for each node version:
-  - `supported_comfyui_frontend_version` - ComfyUI Frontend version constraints
-  - `supported_comfyui_version` - ComfyUI version constraints
-  - `supported_os` - Operating system compatibility
-  - `supported_accelerators` - Hardware accelerator support
+    - `supported_comfyui_frontend_version` - ComfyUI Frontend version constraints
+    - `supported_comfyui_version` - ComfyUI version constraints
+    - `supported_os` - Operating system compatibility
+    - `supported_accelerators` - Hardware accelerator support
 
 #### Workflow
+
 1. Admin identifies a compatibility issue from user reports (GitHub, Discord, Reddit, etc.)
 2. Navigates to `/admin/node-version-compatibility`
 3. Finds the specific node version in the table
@@ -34,14 +39,18 @@ A specialized admin page for managing node version compatibility metadata. This 
 6. Saves the changes
 
 #### Example Use Case
+
 If `comfyui-impact-pack` v1.0.2 is reported as incompatible with `ComfyUI_frontend` v0.0.4:
+
 1. Find the row for `comfyui-impact-pack` version `1.0.2`
 2. Click "Edit"
 3. Update `supported_comfyui_frontend_version` field to `<0.0.4`
 4. Save changes
 
 ### Style and Components
+
 The admin pages follow consistent styling patterns:
+
 - **Layout**: Uses Flowbite React components for consistent UI
 - **Navigation**: Breadcrumb navigation for context
 - **Tables**: Flowbite Table components with inline editing capabilities
@@ -51,6 +60,7 @@ The admin pages follow consistent styling patterns:
 - **Loading**: Spinner components during API calls
 
 ### Common Patterns
+
 - **withAdmin HOC**: All admin pages are wrapped with authentication
 - **React Query**: Uses tanstack/react-query for data fetching and mutations
 - **Inline Editing**: Click-to-edit pattern for table cells
@@ -58,4 +68,5 @@ The admin pages follow consistent styling patterns:
 - **Error Handling**: Graceful error states and user-friendly messages
 
 ### Authentication
+
 All admin pages require admin-level authentication through the `withAdmin` higher-order component.

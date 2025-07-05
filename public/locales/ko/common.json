@@ -131,6 +131,7 @@
   "No versions selected": "버전이 선택되지 않았습니다.",
   "Node": "노드",
   "Node ID": "노드 ID",
+  "Node Version Compatibility": "노드 버전 호환성",
   "Node Versions": "노드 버전",
   "Node created successfully": "노드가 성공적으로 생성되었습니다",
   "Node deleted successfully": "노드가 성공적으로 삭제되었습니다.",

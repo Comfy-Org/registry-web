@@ -131,6 +131,7 @@
   "No versions selected": "未选择版本",
   "Node": "节点",
   "Node ID": "节点ID",
+  "Node Version Compatibility": "节点版本兼容性",
   "Node Versions": "节点版本",
   "Node created successfully": "节点创建成功",
   "Node deleted successfully": "节点已成功删除",

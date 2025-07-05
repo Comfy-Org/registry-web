@@ -131,6 +131,7 @@
   "No versions selected": "Версии не выбраны",
   "Node": "Узел",
   "Node ID": "ID узла",
+  "Node Version Compatibility": "Совместимость версий узла",
   "Node Versions": "Версии узла",
   "Node created successfully": "Узел успешно создан",
   "Node deleted successfully": "Узел успешно удален",

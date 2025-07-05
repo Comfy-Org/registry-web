@@ -131,6 +131,7 @@
   "No versions selected": "バージョンが選択されていません",
   "Node": "ノード",
   "Node ID": "ノードID",
+  "Node Version Compatibility": "ノードバージョンの互換性",
   "Node Versions": "ノードバージョン",
   "Node created successfully": "ノードの作成に成功しました。",
   "Node deleted successfully": "ノードは正常に削除されました",
