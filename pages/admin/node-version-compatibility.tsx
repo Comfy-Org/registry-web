@@ -222,7 +222,7 @@ function DataTable({
         (v) => v || []
     )
     const editingNodeVersion =
-        versions.find((v) => v.node_id + '@' + v.version === editing) || null
+        versions.find((v) => `${v.node_id}@${v.version}` === editing) || null
 
     if (isLoading)
         return (
@@ -233,7 +233,7 @@ function DataTable({
     if (isError) return <div>{t('Error loading node versions')}</div>
 
     const handleEdit = (nv: NodeVersion) => {
-        setEditing(nv.node_id + '@' + nv.version)
+        setEditing(`${nv.node_id}@${nv.version}`)
     }
 
     const handleCloseModal = () => {
