@@ -7,12 +7,14 @@ The application implements a multi-layered caching strategy combining React Quer
 ## Cache Layers
 
 ### 1. In-Memory Cache (React Query)
+
 - **Primary cache**: Stores query results in memory
 - **Duration**: Configurable per query
 - **Invalidation**: Automatic on mutations, manual via `queryClient.invalidateQueries()`
 - **Garbage collection**: Unused queries cleaned up automatically
 
 ### 2. Persistent Cache (localStorage)
+
 - **Storage**: Browser's localStorage
 - **Key**: `comfy-registry-cache`
 - **Duration**: 24 hours maximum
@@ -20,6 +22,7 @@ The application implements a multi-layered caching strategy combining React Quer
 - **Hydration**: Automatic on app startup
 
 ### 3. Deployment-Based Cache Busting
+
 - **Buster**: Uses `NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA`
 - **Fallback**: `'v1'` for local development
 - **Effect**: Forces cache invalidation on new deployments
@@ -27,6 +30,7 @@ The application implements a multi-layered caching strategy combining React Quer
 ## Cache Configuration
 
 ### Persistence Setup (`pages/_app.tsx`)
+
 ```typescript
 const persistEffect = () => {
     const [unsubscribe] = persistQueryClient({
@@ -39,7 +43,7 @@ const persistEffect = () => {
             shouldDehydrateQuery: ({ queryKey, state }) => {
                 // Don't persist pending queries as they can't be properly restored
                 if (state.status === 'pending') return false
-                
+
                 // Persist all successful queries
                 return true
             },
@@ -52,6 +56,7 @@ const persistEffect = () => {
 ```
 
 ### Query Client Defaults
+
 ```typescript
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -70,24 +75,30 @@ const queryClient = new QueryClient({
 ## Cache Invalidation Strategies
 
 ### 1. Mutation-Based Invalidation
+
 ```typescript
 const updateNodeMutation = useUpdateNode({
     onSuccess: (updatedNode) => {
         // Invalidate specific node
         queryClient.invalidateQueries(['node', updatedNode.id])
-        
+
         // Invalidate node lists
         queryClient.invalidateQueries(['nodes'])
-        
+
         // Invalidate publisher nodes if applicable
         if (updatedNode.publisherId) {
-            queryClient.invalidateQueries(['publisher', updatedNode.publisherId, 'nodes'])
+            queryClient.invalidateQueries([
+                'publisher',
+                updatedNode.publisherId,
+                'nodes',
+            ])
         }
-    }
+    },
 })
 ```
 
 ### 2. Time-Based Invalidation
+
 ```typescript
 const { data: nodes } = useGetNodes({
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -96,6 +107,7 @@ const { data: nodes } = useGetNodes({
 ```
 
 ### 3. Manual Invalidation
+
 ```typescript
 // Invalidate all queries
 queryClient.invalidateQueries()
@@ -110,25 +122,24 @@ queryClient.invalidateQueries(['user'], { refetchActive: true })
 ## Cache Key Patterns
 
 ### Hierarchical Structure
+
 ```typescript
 // User data
-['user'] // Current user
-['user', userId] // Specific user
-
-// Nodes
-['nodes'] // All nodes list
-['nodes', { page, limit, search }] // Paginated nodes
-['node', nodeId] // Specific node
-['node', nodeId, 'versions'] // Node versions
-
-// Publishers
-['publishers'] // All publishers
-['publisher', publisherId] // Specific publisher
-['publisher', publisherId, 'nodes'] // Publisher's nodes
+;['user'][('user', userId)][ // Current user // Specific user
+    // Nodes
+    'nodes'
+][('nodes', { page, limit, search })][('node', nodeId)][ // All nodes list // Paginated nodes // Specific node
+    ('node', nodeId, 'versions')
+][ // Node versions
+    // Publishers
+    'publishers'
+][('publisher', publisherId)][('publisher', publisherId, 'nodes')] // All publishers // Specific publisher // Publisher's nodes
 ```
 
 ### Query Key Generation
+
 Auto-generated hooks use consistent key patterns:
+
 ```typescript
 // Generated query keys
 queryKey: ['user']
@@ -140,26 +151,29 @@ queryKey: ['publisher', publisherId, 'nodes', params]
 ## Performance Optimizations
 
 ### 1. Selective Persistence
+
 - **Include**: Successful queries only
 - **Exclude**: Pending/loading states
 - **Exclude**: Error states
 - **Exclude**: Mutations
 
 ### 2. Smart Dehydration
+
 ```typescript
 shouldDehydrateQuery: ({ queryKey, state }) => {
     // Don't persist pending queries
     if (state.status === 'pending') return false
-    
+
     // Persist successful queries
     if (state.status === 'success') return true
-    
+
     // Don't persist errors
     return false
 }
 ```
 
 ### 3. Memory Management
+
 - **Automatic cleanup**: Unused queries garbage collected
 - **Cache time limits**: Configurable per query
 - **Tab synchronization**: Shared localStorage across tabs
@@ -167,11 +181,13 @@ shouldDehydrateQuery: ({ queryKey, state }) => {
 ## Cache Monitoring
 
 ### Development Tools
+
 - **React Query Devtools**: Available in development mode
 - **Cache inspection**: View current cache state
 - **Query tracking**: Monitor query lifecycle
 
 ### Cache Metrics
+
 - **Hit rate**: Percentage of queries served from cache
 - **Miss rate**: Queries requiring network requests
 - **Invalidation frequency**: How often cache is invalidated
@@ -179,6 +195,7 @@ shouldDehydrateQuery: ({ queryKey, state }) => {
 ## Best Practices
 
 ### 1. Cache-First Strategy
+
 ```typescript
 const { data } = useGetNodes({
     staleTime: 5 * 60 * 1000, // Serve from cache for 5 minutes
@@ -187,19 +204,20 @@ const { data } = useGetNodes({
 ```
 
 ### 2. Optimistic Updates
+
 ```typescript
 const mutation = useMutation({
     mutationFn: updateNode,
     onMutate: async (newNode) => {
         // Cancel outgoing refetches
         await queryClient.cancelQueries(['node', newNode.id])
-        
+
         // Snapshot previous value
         const previousNode = queryClient.getQueryData(['node', newNode.id])
-        
+
         // Optimistically update
         queryClient.setQueryData(['node', newNode.id], newNode)
-        
+
         return { previousNode }
     },
     onError: (err, newNode, context) => {
@@ -209,21 +227,23 @@ const mutation = useMutation({
     onSettled: (data, error, variables) => {
         // Refetch after mutation
         queryClient.invalidateQueries(['node', variables.id])
-    }
+    },
 })
 ```
 
 ### 3. Prefetching
+
 ```typescript
 // Prefetch related data
 const prefetchNodeVersions = (nodeId: string) => {
-    queryClient.prefetchQuery(['node', nodeId, 'versions'], () => 
+    queryClient.prefetchQuery(['node', nodeId, 'versions'], () =>
         getNodeVersions(nodeId)
     )
 }
 ```
 
 ### 4. Background Updates
+
 ```typescript
 const { data } = useGetNodes({
     refetchOnWindowFocus: true,
@@ -235,12 +255,14 @@ const { data } = useGetNodes({
 ## Cache Debugging
 
 ### Common Issues
+
 1. **Stale data**: Check `staleTime` configuration
 2. **Over-fetching**: Verify cache keys and invalidation logic
 3. **Memory leaks**: Monitor cache size and cleanup
 4. **Cross-tab sync**: Ensure localStorage persistence is working
 
 ### Debugging Tools
+
 ```typescript
 // Check cache state
 console.log(queryClient.getQueryCache().getAll())
@@ -255,16 +277,19 @@ console.log(queryClient.getQueryCache().findAll())
 ## Environment Considerations
 
 ### Development
+
 - **Cache buster**: `'v1'` fallback
 - **Debug mode**: React Query devtools enabled
 - **Hot reloading**: Cache persists across HMR
 
 ### Production
+
 - **Cache buster**: Git commit SHA
 - **Persistence**: Full localStorage caching
 - **Performance**: Optimized cache strategies
 
 ### Testing
+
 - **Disabled persistence**: Testing uses separate query client
 - **No retry**: Mutations and queries don't retry in tests
 - **Isolated state**: Each test has clean cache state

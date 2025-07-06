@@ -80,7 +80,8 @@ function ClaimMyNodePage() {
                 })
 
                 // Invalidate node cache to refresh data with cache-busting
-                const nodeIdParam = (router.query.nodeId as string) || (nodeId as string)
+                const nodeIdParam =
+                    (router.query.nodeId as string) || (nodeId as string)
                 if (nodeIdParam) {
                     queryClient.invalidateQueries({
                         queryKey: getGetNodeQueryKey(nodeIdParam),
@@ -90,13 +91,17 @@ function ClaimMyNodePage() {
 
                     // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
                     queryClient.invalidateQueries({
-                        queryKey: getListNodesForPublisherV2QueryKey(UNCLAIMED_ADMIN_PUBLISHER_ID),
+                        queryKey: getListNodesForPublisherV2QueryKey(
+                            UNCLAIMED_ADMIN_PUBLISHER_ID
+                        ),
                         refetchType: 'all',
                     })
 
                     // Invalidate the new publisher's nodes list
                     queryClient.invalidateQueries({
-                        queryKey: getListNodesForPublisherV2QueryKey(publisherId as string),
+                        queryKey: getListNodesForPublisherV2QueryKey(
+                            publisherId as string
+                        ),
                         refetchType: 'all',
                     })
 
@@ -112,7 +117,10 @@ function ClaimMyNodePage() {
             },
             onError: (error: any) => {
                 // axios error handling
-                const errorMessage = error?.response?.data?.message || error?.message || t('Unknown error')
+                const errorMessage =
+                    error?.response?.data?.message ||
+                    error?.message ||
+                    t('Unknown error')
                 analytic.track('Node Claim Failed', {
                     nodeId,
                     publisherId,
@@ -120,7 +128,7 @@ function ClaimMyNodePage() {
                 })
                 toast.error(
                     t('Failed to claim node. {{error}}', {
-                        error: errorMessage
+                        error: errorMessage,
                     })
                 )
                 setError(
@@ -384,7 +392,7 @@ function ClaimMyNodePage() {
         if (publisherId === UNCLAIMED_ADMIN_PUBLISHER_ID) {
             return t('Unclaimed')
         }
-        return ("@" + publisherId)
+        return `@${publisherId}`
     }
 
     const resetProcess = () => {
@@ -464,13 +472,13 @@ function ClaimMyNodePage() {
                                         currentStage === 'info_confirmation'
                                             ? '0%'
                                             : currentStage === 'github_login'
-                                                ? '25%'
-                                                : currentStage ===
-                                                    'verifying_admin'
-                                                    ? '50%'
-                                                    : currentStage === 'claim_node'
-                                                        ? '75%'
-                                                        : '100%',
+                                              ? '25%'
+                                              : currentStage ===
+                                                  'verifying_admin'
+                                                ? '50%'
+                                                : currentStage === 'claim_node'
+                                                  ? '75%'
+                                                  : '100%',
                                 }}
                             ></div>
                             <div className={`h-full bg-gray-700 flex-1`}></div>
@@ -488,15 +496,16 @@ function ClaimMyNodePage() {
                                 <div key={stage} className="flex-1 text-center">
                                     <div
                                         className={`mx-auto rounded-full flex items-center justify-center w-8 h-8 mb-1
-                                        ${stage === currentStage
+                                        ${
+                                            stage === currentStage
                                                 ? 'bg-blue-600 text-white'
                                                 : [
-                                                    'info_confirmation',
-                                                    'github_login',
-                                                    'verifying_admin',
-                                                    'claim_node',
-                                                    'completed',
-                                                ].indexOf(currentStage) >
+                                                        'info_confirmation',
+                                                        'github_login',
+                                                        'verifying_admin',
+                                                        'claim_node',
+                                                        'completed',
+                                                    ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -506,34 +515,35 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                    ? 'bg-green-500 text-white'
-                                                    : 'bg-gray-700 text-gray-400'
-                                            }`}
+                                                  ? 'bg-green-500 text-white'
+                                                  : 'bg-gray-700 text-gray-400'
+                                        }`}
                                     >
                                         {index + 1}
                                     </div>
                                     <div
-                                        className={`text-xs mt-1 ${stage === currentStage
-                                            ? 'text-blue-500 font-medium'
-                                            : [
-                                                'info_confirmation',
-                                                'github_login',
-                                                'verifying_admin',
-                                                'claim_node',
-                                                'completed',
-                                            ].indexOf(currentStage) >
-                                                [
-                                                    'info_confirmation',
-                                                    'github_login',
-                                                    'verifying_admin',
-                                                    'claim_node',
-                                                    'completed',
-                                                ].indexOf(
-                                                    stage as ClaimStage
-                                                )
-                                                ? 'text-green-500'
-                                                : 'text-gray-500'
-                                            }`}
+                                        className={`text-xs mt-1 ${
+                                            stage === currentStage
+                                                ? 'text-blue-500 font-medium'
+                                                : [
+                                                        'info_confirmation',
+                                                        'github_login',
+                                                        'verifying_admin',
+                                                        'claim_node',
+                                                        'completed',
+                                                    ].indexOf(currentStage) >
+                                                    [
+                                                        'info_confirmation',
+                                                        'github_login',
+                                                        'verifying_admin',
+                                                        'claim_node',
+                                                        'completed',
+                                                    ].indexOf(
+                                                        stage as ClaimStage
+                                                    )
+                                                  ? 'text-green-500'
+                                                  : 'text-gray-500'
+                                        }`}
                                     >
                                         {stage === 'info_confirmation' &&
                                             t('Info')}

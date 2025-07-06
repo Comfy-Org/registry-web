@@ -83,29 +83,32 @@ export function AdminNodeClaimModal({
                 // Invalidate and refetch related queries to update the cache with cache-busting
                 queryClient.invalidateQueries({
                     queryKey: getGetNodeQueryKey(node.id!),
-                    
                 })
-                
+
                 // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
                 queryClient.invalidateQueries({
-                    queryKey: getListNodesForPublisherV2QueryKey(UNCLAIMED_ADMIN_PUBLISHER_ID),
+                    queryKey: getListNodesForPublisherV2QueryKey(
+                        UNCLAIMED_ADMIN_PUBLISHER_ID
+                    ),
                     refetchType: 'all',
                 })
-                
+
                 // Invalidate the new publisher's nodes list
                 if (selectedPublisher?.id) {
                     queryClient.invalidateQueries({
-                        queryKey: getListNodesForPublisherV2QueryKey(selectedPublisher.id),
+                        queryKey: getListNodesForPublisherV2QueryKey(
+                            selectedPublisher.id
+                        ),
                         refetchType: 'all',
                     })
                 }
-                
+
                 // Invalidate search results which might include this node
                 queryClient.invalidateQueries({
                     queryKey: getSearchNodesQueryKey().slice(0, 1),
                     refetchType: 'all',
                 })
-                
+
                 onSuccess?.()
                 onClose()
             },
@@ -276,9 +279,7 @@ export function AdminNodeClaimModal({
             dismissible
         >
             <Modal.Header className="!bg-gray-800">
-                <div className="text-white">
-                    {t('Edit unclaimed node')}
-                </div>
+                <div className="text-white">{t('Edit unclaimed node')}</div>
             </Modal.Header>
             <Modal.Body className="!bg-gray-800 p-2 md:px-4 rounded-none">
                 <div className="mb-4 p-3 bg-gray-700 rounded-lg">
@@ -297,8 +298,7 @@ export function AdminNodeClaimModal({
                             rel="noopener noreferrer"
                             className="text-blue-400 hover:underline flex items-center"
                         >
-                            {t('View')}{' '}
-                            <HiExternalLink className="ml-1" />
+                            {t('View')} <HiExternalLink className="ml-1" />
                         </a>
                     </div>
                 </div>

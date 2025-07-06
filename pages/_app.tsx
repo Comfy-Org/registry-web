@@ -38,9 +38,8 @@ const queryClient = new QueryClient({
                 return failureCount < 3
             },
             staleTime: 0, // set to 0 to always query fresh data when page refreshed, and render staled data while requesting (swr)
-            gcTime: 86400e3
+            gcTime: 86400e3,
         },
-        
     },
 })
 

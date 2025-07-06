@@ -7,6 +7,7 @@ The ComfyUI Registry Web application uses a modern API architecture built on top
 ## API Client Generation
 
 ### Generated Client (`src/api/generated.ts`)
+
 - **Auto-generated from OpenAPI spec** using Orval
 - Located at `${NEXT_PUBLIC_BACKEND_URL}/openapi`
 - Regenerated with `bun run orval` when backend changes
@@ -14,6 +15,7 @@ The ComfyUI Registry Web application uses a modern API architecture built on top
 - Includes React Query hooks for every endpoint
 
 ### Custom Axios Instance (`src/api/mutator/axios-instance.ts`)
+
 - **Base configuration**: Uses `NEXT_PUBLIC_BACKEND_URL` environment variable
 - **Parameter serialization**: Uses `qs` library with array format 'repeat'
 - **Authentication**: Interceptor in `_app.tsx` adds Firebase JWT tokens
@@ -22,20 +24,25 @@ The ComfyUI Registry Web application uses a modern API architecture built on top
 ## Key Components
 
 ### 1. API Models
+
 Auto-generated TypeScript interfaces including:
+
 - `APIKey`, `APIKeyWithPlaintext` - API key management
 - `ActionJobResult` - Job processing results
 - Node, Publisher, and User models
 - Request/Response types for all endpoints
 
 ### 2. React Query Hooks
+
 All API interactions use generated hooks:
+
 - `useGetUser()` - Current user data
 - `useGetNodes()` - Node listing with pagination
 - `useGetPublisher()` - Publisher details
 - Mutation hooks for create/update/delete operations
 
 ### 3. Authentication Integration
+
 - Firebase JWT tokens automatically attached to requests
 - Token caching in `sessionStorage` for offline scenarios
 - Automatic token refresh handled by Firebase SDK
@@ -43,17 +50,19 @@ All API interactions use generated hooks:
 ## Error Handling
 
 ### Retry Strategy
+
 ```typescript
 retry: (failureCount, error: any) => {
     // Don't retry on 404s
     if (error?.response?.status === 404) return false
-    
+
     // Retry up to 3 times for other errors
     return failureCount < 3
 }
 ```
 
 ### Status Code Handling
+
 - **404 errors**: No retry, immediate failure
 - **401/403 errors**: Handled by authentication system
 - **Other errors**: Retry up to 3 times with exponential backoff
@@ -61,11 +70,13 @@ retry: (failureCount, error: any) => {
 ## Usage Patterns
 
 ### 1. Data Fetching
+
 ```typescript
 const { data: user, isLoading, error } = useGetUser({})
 ```
 
 ### 2. Mutations
+
 ```typescript
 const createNodeMutation = useCreateNode({
     onSuccess: (data) => {
@@ -73,15 +84,16 @@ const createNodeMutation = useCreateNode({
     },
     onError: (error) => {
         // Handle error
-    }
+    },
 })
 ```
 
 ### 3. Pagination
+
 ```typescript
 const { data: nodes } = useGetNodes({
     page: currentPage,
-    limit: pageSize
+    limit: pageSize,
 })
 ```
 

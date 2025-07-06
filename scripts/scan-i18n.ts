@@ -83,7 +83,10 @@ async function readJsonFile(filePath: string): Promise<Record<string, string>> {
             // if it does, remove the conflict markers
             if (content.includes('<<<<<<<')) {
                 return JSON.parse(
-                    content.replaceAll(/^<<<<<<< .*$|^=======$|^>>>>>>> .*$/mg, '')
+                    content.replaceAll(
+                        /^<<<<<<< .*$|^=======$|^>>>>>>> .*$/gm,
+                        ''
+                    )
                 )
             }
         }
