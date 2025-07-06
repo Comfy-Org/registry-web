@@ -115,7 +115,7 @@ function ClaimMyNodePage() {
 
                 // Set stage to completed
                 setCurrentStage('completed')
-                
+
                 // Set claim completion time for timer
                 setClaimCompletedAt(new Date())
             },
@@ -763,12 +763,14 @@ function ClaimMyNodePage() {
                                     }
                                 )}
                             </p>
-                            
+
                             {/* Cache refresh timer section */}
                             {claimCompletedAt && (
-                                <CacheWaitingTimer completedAt={claimCompletedAt} />
+                                <CacheWaitingTimer
+                                    completedAt={claimCompletedAt}
+                                />
                             )}
-                            
+
                             <div className="flex justify-end">
                                 <Button
                                     color="blue"
@@ -796,9 +798,9 @@ interface CacheWaitingTimerProps {
     cacheRefreshDurationMinutes?: number
 }
 
-function CacheWaitingTimer({ 
-    completedAt, 
-    cacheRefreshDurationMinutes = 30 
+function CacheWaitingTimer({
+    completedAt,
+    cacheRefreshDurationMinutes = 30,
 }: CacheWaitingTimerProps) {
     const { t } = useNextTranslation()
     const [timeRemaining, setTimeRemaining] = useState<number>(0)
@@ -820,7 +822,7 @@ function CacheWaitingTimer({
     // Timer effect for countdown
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null
-        
+
         if (timeRemaining > 0) {
             interval = setInterval(() => {
                 setTimeRemaining((prev) => {
@@ -831,7 +833,7 @@ function CacheWaitingTimer({
                 })
             }, 1000)
         }
-        
+
         return () => {
             if (interval) {
                 clearInterval(interval)
@@ -853,17 +855,19 @@ function CacheWaitingTimer({
                     {formatTimeRemaining(timeRemaining)}
                 </div>
                 <p className="text-gray-300 text-sm">
-                    {timeRemaining > 0 
+                    {timeRemaining > 0
                         ? t('Cache refresh time remaining')
-                        : t('Cache refresh completed')
-                    }
+                        : t('Cache refresh completed')}
                 </p>
             </div>
             <p className="text-gray-300 text-sm">
-                {timeRemaining > 0 
-                    ? t('The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.')
-                    : t('The cache has been refreshed. The node ownership change should now be visible to the public.')
-                }
+                {timeRemaining > 0
+                    ? t(
+                          'The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.'
+                      )
+                    : t(
+                          'The cache has been refreshed. The node ownership change should now be visible to the public.'
+                      )}
             </p>
         </div>
     )
