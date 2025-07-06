@@ -75,7 +75,18 @@ async function extractKeysFromFile(filePath: string): Promise<ExtractedKey[]> {
 async function readJsonFile(filePath: string): Promise<Record<string, string>> {
     try {
         const content = await fs.readFile(filePath, 'utf-8')
-        return JSON.parse(content)
+        try {
+            // Try to parse JSON
+            return JSON.parse(content)
+        } catch (e) {
+            // check if the file contains a merge conflict marker
+            // if it does, remove the conflict markers
+            if (content.includes('<<<<<<<')) {
+                return JSON.parse(
+                    content.replaceAll(/^<<<<<<< .*$|^=======$|^>>>>>>> .*$/mg, '')
+                )
+            }
+        }
     } catch (error) {
         console.warn(`Could not read ${filePath}:`, error)
     }
