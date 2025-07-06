@@ -9,6 +9,7 @@ import {
     HiOutlineClipboardCheck,
     HiOutlineCollection,
     HiOutlineDuplicate,
+    HiOutlineSupport,
 } from 'react-icons/hi'
 
 export default withAdmin(AdminDashboard)
@@ -65,6 +66,15 @@ function AdminDashboard() {
                     <HiOutlineCollection className="h-20 w-20 mb-4" />
                     <span className="text-center">
                         {t('Manage Unclaimed Nodes')}
+                    </span>
+                </Link>
+                <Link
+                    href="/admin/node-version-compatibility"
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg w-full h-48 flex flex-col items-center justify-center p-6 transition-colors"
+                >
+                    <HiOutlineSupport className="h-20 w-20 mb-4" />
+                    <span className="text-center">
+                        {t('Node Version Compatibility')}
                     </span>
                 </Link>
                 {/* Add more admin links here as needed */}

@@ -132,7 +132,7 @@ async function translateKeyToLanguage(
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
-                model: 'gpt-4',
+                model: 'gpt-4o',
                 messages: [
                     {
                         role: 'system',
@@ -180,7 +180,7 @@ async function translateKeyToLanguage(
         )
     } catch (error) {
         throw new Error(
-            `Error translating key "${key}" to ${lang}: ${error instanceof Error ? error.message : String(error)}`
+            `Error translating key "${key}" to ${lang}: ${String(error)}`
         )
     }
 }

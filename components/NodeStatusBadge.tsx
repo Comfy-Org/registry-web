@@ -20,7 +20,9 @@ export function NodeStatusBadge({
             }
             className="text-[14px]"
         >
-            {NodeVersionStatusToReadable(status as NodeVersionStatus)}
+            {NodeVersionStatusToReadable({
+                status: status as NodeVersionStatus,
+            })}
             {count != null ? <span> x{count}</span> : null}
         </Badge>
     )

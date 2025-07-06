@@ -12,7 +12,7 @@ const NodeVersionStatusBadge: React.FC<{ status?: NodeVersionStatus }> = ({
 
     if (
         status === NodeVersionStatus.NodeVersionStatusPending ||
-        NodeVersionStatus.NodeVersionStatusFlagged
+        status === NodeVersionStatus.NodeVersionStatusFlagged
     ) {
         return <Badge color="warning">{t('Pending Security Review')}</Badge>
     }
