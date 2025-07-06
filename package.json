@@ -16,7 +16,8 @@
     "orval": "bunx orval@latest",
     "start": "next start",
     "storybook": "storybook dev -p 6006",
-    "test": "bun test --coverage"
+    "test": "bun test --coverage",
+    "i18n": "bun scripts/scan-i18n.ts"
   },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.19.2",
@@ -65,7 +66,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-firebase-hooks": "^5.1.1",
-    "react-hook-form": "^7.57.0",
+    "react-hook-form": "^7.60.0",
     "react-i18next": "15.1.4",
     "react-icons": "5.4.0",
     "react-instantsearch": "^7.15.8",

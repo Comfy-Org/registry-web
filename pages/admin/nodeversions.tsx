@@ -516,7 +516,7 @@ function NodeVersionList({}) {
                         t('{{id}}@{{version}} Undone, back to {{status}}', {
                             id: nv.node_id,
                             version: nv.version,
-                            status: NodeVersionStatusToReadable(prevStatus),
+                            status: NodeVersionStatusToReadable({ status: prevStatus }),
                         })
                     )
                 },
