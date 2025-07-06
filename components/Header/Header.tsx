@@ -41,10 +41,10 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             <Link href="/" className="flex gap-1">
                 <Image
                     alt="Comfy Logo"
-                    src="https://storage.googleapis.com/comfy-assets/logo.png"
+                    src="/images/logo_blue.png"
                     width={36}
                     height={36}
-                    className="w-6 h-6 mr-3 sm:w-9 sm:h-9"
+                    className="w-6 h-6 mr-3 sm:w-9 sm:h-9 rounded-lg"
                 />
                 <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
                     {t('Comfy Registry')}
