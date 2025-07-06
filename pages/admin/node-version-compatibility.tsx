@@ -4,6 +4,7 @@ import {
   useAdminUpdateNodeVersion,
   AdminUpdateNodeVersionBody,
   NodeVersion,
+  NodeVersionStatus,
 } from 'src/api/generated'
 import {
   Button,
@@ -12,6 +13,9 @@ import {
   Label,
   Spinner,
   Breadcrumb,
+  Textarea,
+  Select,
+  Dropdown,
 } from 'flowbite-react'
 import { toast } from 'react-toastify'
 import withAdmin from '@/components/common/HOC/authAdmin'
@@ -24,9 +28,11 @@ export default withAdmin(NodeVersionCompatibilityAdmin)
 
 function NodeVersionCompatibilityAdmin() {
   const { t } = useNextTranslation()
+  const [nodeId, setNodeId] = React.useState<string | undefined>(undefined)
+  const [statuses, setStatuses] = React.useState<NodeVersionStatus[]>([])
 
   return (
-    <div className="p-4">
+    <main className="p-4 dark">
       <div className="py-4">
         <Breadcrumb>
           <Breadcrumb.Item
@@ -56,9 +62,46 @@ function NodeVersionCompatibilityAdmin() {
         </Breadcrumb>
       </div>
 
-      <h1 className="text-2xl font-bold mb-4">
+      <h1 className="text-2xl font-bold mb-4 text-white">
         {t('Node Version Compatibility Admin')}
       </h1>
+
+      <div className="mb-4">
+        <Label htmlFor="nodeId" className="mr-2">
+          {t('Filter by Node ID')}
+        </Label>
+        <TextInput
+          id="nodeId"
+          value={nodeId || ''}
+          onChange={(e) => setNodeId(e.target.value)}
+          placeholder={t('Enter Node ID to filter')}
+          className="inline-block w-64"
+        />
+        <Label htmlFor="statuses" className="ml-4 mr-2">
+          {t('Filter by Statuses')}
+        </Label>
+        <Dropdown
+          label={t('Select Statuses')}
+          className="inline-block w-64"
+          // onChange={(value) => {
+          //   const selectedStatuses = value
+          //     ? (value as NodeVersionStatus[]).filter(
+          //         (status) => status !== 'all'
+          //       )
+          //     : []
+          //   setStatuses(selectedStatuses)
+          // }}
+          value={statuses.length > 0 ? statuses : undefined}
+        >
+          {Object.values(NodeVersionStatus).map((status) => (
+            <Dropdown.Item key={status} value={status}>
+              <Label>
+                {t(status)}
+              </Label>
+            </Dropdown.Item>
+          ))}
+        </Dropdown>
+      </div>
       <Table>
         <Table.Head>
           <Table.HeadCell>{t('Node')}</Table.HeadCell>
@@ -71,14 +114,14 @@ function NodeVersionCompatibilityAdmin() {
         </Table.Head>
         <Table.Body>
           <Suspense fallback={<Spinner />}>
-            <DataTable />
+            <DataTable nodeId={nodeId ?? undefined} statuses={statuses} />
           </Suspense>
         </Table.Body>
       </Table>
-    </div>
+    </main>
   )
 
-  function DataTable() {
+  function DataTable({ nodeId, statuses }: { nodeId?: string; statuses?: NodeVersionStatus[] }) {
     const { t } = useNextTranslation()
     const [editingId, setEditingId] = React.useState<string | null>(null)
     const [editValues, setEditValues] =
@@ -86,6 +129,8 @@ function NodeVersionCompatibilityAdmin() {
     const { data, isLoading, isError } = useListAllNodeVersions({
       page: 1,
       pageSize: 24,
+      statuses,
+      nodeId
     })
     const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
 
@@ -167,39 +212,39 @@ function NodeVersionCompatibilityAdmin() {
             </Table.Cell>
             <Table.Cell>
               {editingId === nv.id ? (
-                <TextInput
-                  value={editValues.supported_os?.join(',')}
+                <Textarea
+                  value={editValues.supported_os?.join('\n')}
                   onChange={(e) =>
                     setEditValues((v) => ({
                       ...v,
                       supported_os: e.target.value
-                        .split(',')
+                        .split('\n')
                         .map((e) => e.trim())
                         .filter(Boolean),
                     }))
                   }
                 />
               ) : (
-                nv.supported_os || ''
+                <code className='whitespace-pre'>{nv.supported_os?.join('\n') || ''}</code>
               )}
             </Table.Cell>
             <Table.Cell>
               {editingId === nv.id ? (
-                <TextInput
-                  value={editValues.supported_accelerators?.join(',')}
+                <Textarea
+                  value={editValues.supported_accelerators?.join('\n')}
                   onChange={(e) =>
                     setEditValues((v) => ({
                       ...v,
                       supported_accelerators:
                         e.target.value
-                          .split(',')
+                          .split('\n')
                           .map((e) => e.trim())
                           .filter(Boolean),
                     }))
                   }
                 />
               ) : (
-                nv.supported_accelerators || ''
+                <code className='whitespace-pre'>{nv.supported_accelerators || ''}</code>
               )}
             </Table.Cell>
             <Table.Cell>
