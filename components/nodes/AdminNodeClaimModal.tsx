@@ -1,5 +1,6 @@
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
@@ -9,6 +10,9 @@ import {
     Publisher,
     useListPublishers,
     useUpdateNode,
+    getGetNodeQueryKey,
+    getListNodesForPublisherV2QueryKey,
+    getSearchNodesQueryKey,
 } from 'src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { PublisherId } from '../Search/PublisherId'
@@ -27,6 +31,7 @@ export function AdminNodeClaimModal({
     onSuccess,
 }: NodeClaimModalProps) {
     const { t } = useNextTranslation()
+    const queryClient = useQueryClient()
     const [selectedPublisher, setSelectedPublisher] =
         useState<Publisher | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -75,6 +80,32 @@ export function AdminNodeClaimModal({
                         }
                     )
                 )
+                // Invalidate and refetch related queries to update the cache with cache-busting
+                queryClient.invalidateQueries({
+                    queryKey: getGetNodeQueryKey(node.id!),
+                    
+                })
+                
+                // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
+                queryClient.invalidateQueries({
+                    queryKey: getListNodesForPublisherV2QueryKey(UNCLAIMED_ADMIN_PUBLISHER_ID),
+                    refetchType: 'all',
+                })
+                
+                // Invalidate the new publisher's nodes list
+                if (selectedPublisher?.id) {
+                    queryClient.invalidateQueries({
+                        queryKey: getListNodesForPublisherV2QueryKey(selectedPublisher.id),
+                        refetchType: 'all',
+                    })
+                }
+                
+                // Invalidate search results which might include this node
+                queryClient.invalidateQueries({
+                    queryKey: getSearchNodesQueryKey().slice(0, 1),
+                    refetchType: 'all',
+                })
+                
                 onSuccess?.()
                 onClose()
             },
