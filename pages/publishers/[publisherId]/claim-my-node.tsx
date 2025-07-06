@@ -12,20 +12,27 @@ import {
     PublisherSpan,
 } from '@/components/common/Spans'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 import { Alert, Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Octokit } from 'octokit'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { FaGithub } from 'react-icons/fa'
+import { HiChevronLeft, HiCheckCircle, HiLocationMarker } from 'react-icons/hi'
 import analytic from 'src/analytic/analytic'
 import {
     useClaimMyNode,
     useGetNode,
     useGetPublisher,
     useGetUser,
+    getGetNodeQueryKey,
+    getListNodesForPublisherV2QueryKey,
+    getSearchNodesQueryKey,
 } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import { AxiosError } from 'axios'
 
 // Define the possible stages of the claim process
 type ClaimStage =
@@ -38,6 +45,7 @@ type ClaimStage =
 function ClaimMyNodePage() {
     const { t } = useNextTranslation()
     const router = useRouter()
+    const queryClient = useQueryClient()
     const { publisherId, nodeId } = router.query
     const [currentStage, setCurrentStage] =
         useState<ClaimStage>('info_confirmation')
@@ -70,13 +78,45 @@ function ClaimMyNodePage() {
                     nodeId,
                     publisherId,
                 })
+
+                // Invalidate node cache to refresh data
+                const nodeIdParam = (router.query.nodeId as string) || (nodeId as string)
+                if (nodeIdParam) {
+                    queryClient.invalidateQueries({
+                        queryKey: getGetNodeQueryKey(nodeIdParam),
+                    })
+
+                    // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
+                    queryClient.invalidateQueries({
+                        queryKey: getListNodesForPublisherV2QueryKey(UNCLAIMED_ADMIN_PUBLISHER_ID),
+                    })
+
+                    // Invalidate the new publisher's nodes list
+                    queryClient.invalidateQueries({
+                        queryKey: getListNodesForPublisherV2QueryKey(publisherId as string),
+                    })
+
+                    // Invalidate search results which might include this node
+                    queryClient.invalidateQueries({
+                        queryKey: getSearchNodesQueryKey().slice(0, 1),
+                    })
+                }
+
                 // Set stage to completed
                 setCurrentStage('completed')
             },
             onError: (error: any) => {
+                // axios error handling
+                const errorMessage = error?.response?.data?.message || error?.message || t('Unknown error')
+                analytic.track('Node Claim Failed', {
+                    nodeId,
+                    publisherId,
+                    errorMessage,
+                })
                 toast.error(
-                    error?.message ||
-                        t('Failed to claim node. Please try again.')
+                    t('Failed to claim node. {{error}}', {
+                        error: errorMessage
+                    })
                 )
                 setError(
                     t(
@@ -334,6 +374,14 @@ function ClaimMyNodePage() {
         router.push(`/publishers/${publisherId}/nodes/${nodeId}`)
     }
 
+    function renderPublisher(publisherId: string | undefined) {
+        if (!publisherId) return null
+        if (publisherId === UNCLAIMED_ADMIN_PUBLISHER_ID) {
+            return t('Unclaimed')
+        }
+        return ("@" + publisherId)
+    }
+
     const resetProcess = () => {
         setCurrentStage('info_confirmation')
         setError(null)
@@ -370,23 +418,7 @@ function ClaimMyNodePage() {
                 className="flex items-center cursor-pointer mb-8"
                 onClick={handleGoBack}
             >
-                <svg
-                    className="w-4 h-4 text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m15 19-7-7 7-7"
-                    />
-                </svg>
+                <HiChevronLeft className="w-4 h-4 text-gray-400" />
                 <span className="text-gray-400 pl-1 text-base">
                     {t('Back to node details')}
                 </span>
@@ -427,13 +459,13 @@ function ClaimMyNodePage() {
                                         currentStage === 'info_confirmation'
                                             ? '0%'
                                             : currentStage === 'github_login'
-                                              ? '25%'
-                                              : currentStage ===
-                                                  'verifying_admin'
-                                                ? '50%'
-                                                : currentStage === 'claim_node'
-                                                  ? '75%'
-                                                  : '100%',
+                                                ? '25%'
+                                                : currentStage ===
+                                                    'verifying_admin'
+                                                    ? '50%'
+                                                    : currentStage === 'claim_node'
+                                                        ? '75%'
+                                                        : '100%',
                                 }}
                             ></div>
                             <div className={`h-full bg-gray-700 flex-1`}></div>
@@ -451,16 +483,15 @@ function ClaimMyNodePage() {
                                 <div key={stage} className="flex-1 text-center">
                                     <div
                                         className={`mx-auto rounded-full flex items-center justify-center w-8 h-8 mb-1
-                                        ${
-                                            stage === currentStage
+                                        ${stage === currentStage
                                                 ? 'bg-blue-600 text-white'
                                                 : [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(currentStage) >
+                                                    'info_confirmation',
+                                                    'github_login',
+                                                    'verifying_admin',
+                                                    'claim_node',
+                                                    'completed',
+                                                ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -470,35 +501,34 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                  ? 'bg-green-500 text-white'
-                                                  : 'bg-gray-700 text-gray-400'
-                                        }`}
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-gray-700 text-gray-400'
+                                            }`}
                                     >
                                         {index + 1}
                                     </div>
                                     <div
-                                        className={`text-xs mt-1 ${
-                                            stage === currentStage
-                                                ? 'text-blue-500 font-medium'
-                                                : [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(currentStage) >
-                                                    [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(
-                                                        stage as ClaimStage
-                                                    )
-                                                  ? 'text-green-500'
-                                                  : 'text-gray-500'
-                                        }`}
+                                        className={`text-xs mt-1 ${stage === currentStage
+                                            ? 'text-blue-500 font-medium'
+                                            : [
+                                                'info_confirmation',
+                                                'github_login',
+                                                'verifying_admin',
+                                                'claim_node',
+                                                'completed',
+                                            ].indexOf(currentStage) >
+                                                [
+                                                    'info_confirmation',
+                                                    'github_login',
+                                                    'verifying_admin',
+                                                    'claim_node',
+                                                    'completed',
+                                                ].indexOf(
+                                                    stage as ClaimStage
+                                                )
+                                                ? 'text-green-500'
+                                                : 'text-gray-500'
+                                            }`}
                                     >
                                         {stage === 'info_confirmation' &&
                                             t('Info')}
@@ -528,7 +558,7 @@ function ClaimMyNodePage() {
                             </h3>
                             <div className="flex flex-col space-y-2">
                                 <div className="flex items-start">
-                                    <span className="text-gray-400 w-24">
+                                    <span className="text-gray-400 w-32 ">
                                         {t('Node')}:
                                     </span>
                                     <NodeSpan
@@ -541,7 +571,7 @@ function ClaimMyNodePage() {
                                     />
                                 </div>
                                 <div className="flex items-start">
-                                    <span className="text-gray-400 w-24">
+                                    <span className="text-gray-400 w-32 ">
                                         {t('Repository')}:
                                     </span>
                                     <span className="text-white break-all">
@@ -549,11 +579,11 @@ function ClaimMyNodePage() {
                                     </span>
                                 </div>
                                 <div className="flex items-start">
-                                    <span className="text-gray-400 w-24">
+                                    <span className="text-gray-400 w-32 ">
                                         {t('Publisher')}:
                                     </span>
                                     <span className="text-gray-400 font-bold">
-                                        {t('Unclaimed')}
+                                        {renderPublisher(node?.publisher?.id)}
                                     </span>
                                     <span className="mx-1 text-gray-500">
                                         &rarr;
@@ -577,19 +607,7 @@ function ClaimMyNodePage() {
 
                         <div className="flex justify-end">
                             <Button color="blue" onClick={initiateGitHubOAuth}>
-                                <svg
-                                    className="w-4 h-4 mr-2"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M10 .333A9.911 9.911 0 0 0 6.866 19.65c.5.092.678-.215.678-.477 0-.237-.01-1.017-.014-1.845-2.757.6-3.338-1.169-3.338-1.169a2.627 2.627 0 0 0-1.1-1.451c-.9-.615.07-.6.07-.6a2.084 2.084 0 0 1 1.518 1.021 2.11 2.11 0 0 0 2.884.823c.044-.503.268-.973.63-1.325-2.2-.25-4.516-1.1-4.516-4.9A3.832 3.832 0 0 1 4.7 7.068a3.56 3.56 0 0 1 .095-2.623s.832-.266 2.726 1.016a9.409 9.409 0 0 1 4.962 0c1.89-1.282 2.717-1.016 2.717-1.016.366.83.402 1.768.1 2.623a3.827 3.827 0 0 1 1.02 2.659c0 3.807-2.319 4.644-4.525 4.889a2.366 2.366 0 0 1 .673 1.834c0 1.326-.012 2.394-.012 2.72 0 .263.18.572.681.475A9.911 9.911 0 0 0 10 .333Z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
+                                <FaGithub className="w-4 h-4 mr-2" />
                                 {t('Continue with GitHub')}
                             </Button>
                         </div>
@@ -644,21 +662,7 @@ function ClaimMyNodePage() {
                                     </>
                                 ) : (
                                     <>
-                                        <svg
-                                            className="w-12 h-12 text-yellow-500 mx-auto mb-4"
-                                            aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                stroke="currentColor"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M12 13V9m0 8h.01M12 3c-1.857 0-3.637.75-4.95 2.08C5.737 6.412 5 8.21 5 10.083c0 1.499.5 2.956 1.414 4.128L12 21l5.586-6.789A7.177 7.177 0 0 0 19 10.083c0-1.872-.737-3.671-2.05-5.003A6.928 6.928 0 0 0 12 3Z"
-                                            />
-                                        </svg>
+                                        <HiLocationMarker className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
                                         <p className="text-white">
                                             {t(
                                                 'Processing verification result...'
@@ -679,21 +683,7 @@ function ClaimMyNodePage() {
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6">
                             <div className="flex items-center mb-4">
-                                <svg
-                                    className="w-5 h-5 text-green-500 mr-2"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M5 12l4.7 4.5 9.3-9"
-                                    />
-                                </svg>
+                                <HiCheckCircle className="w-5 h-5 text-green-500 mr-2" />
                                 <h3 className="text-lg font-medium text-white">
                                     {t('Verification Successful')}
                                 </h3>
@@ -739,21 +729,7 @@ function ClaimMyNodePage() {
                         </h2>
                         <div className="bg-gray-700 p-4 rounded-lg mb-6">
                             <div className="flex items-center mb-4">
-                                <svg
-                                    className="w-5 h-5 text-green-500 mr-2"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M5 12l4.7 4.5 9.3-9"
-                                    />
-                                </svg>
+                                <HiCheckCircle className="w-5 h-5 text-green-500 mr-2" />
                                 <h3 className="text-lg font-medium text-white">
                                     {t('Node Claimed Successfully')}
                                 </h3>
