@@ -87,7 +87,7 @@ function ClaimNodesPage() {
                         {t('Admin Dashboard')}
                     </Breadcrumb.Item>
                     <Breadcrumb.Item className="dark">
-                        {t('Unclaimed Nodes')}
+                        Unclaimed Nodes
                     </Breadcrumb.Item>
                 </Breadcrumb>
 
