@@ -1,40 +1,40 @@
 name: Next.js CI
 
 on:
-    push:
-        branches: [dev]
-    pull_request:
-        branches: [dev, staging, main]
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev, staging, main]
 
 jobs:
-    build:
-        permissions:
-            # Give the default GITHUB_TOKEN write permission to commit and push the prettier changed files back to the repository.
-            contents: write
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '20'
-            - name: Install bun
-              run: npm install -g bun
-            - name: Install Dependencies
-              run: bun install
-            - name: Run Next.js Lint
-              run: bun run lint
-            - name: Scan i18n Keys
-              run: bun scripts/scan-i18n.ts
-              env:
-                  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-            - name: Check Formatting with Prettier
-              run: bunx prettier --write .
-            - name: Sort package.json
-              run: bunx sort-package-json
-            - name: Build the Next.js Project
-              run: bun run build
-            # commit prettier fixed code
-            - uses: stefanzweifel/git-auto-commit-action@v5
-              with:
-                  commit_message: 'format: Apply prettier --fix changes'
+  build:
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the prettier changed files back to the repository.
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+      - name: Install bun
+        run: npm install -g bun
+      - name: Install Dependencies
+        run: bun install
+      - name: Run Next.js Lint
+        run: bun run lint
+      - name: Scan i18n Keys
+        run: bun scripts/scan-i18n.ts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Check Formatting with Prettier
+        run: bunx prettier --write .
+      - name: Sort package.json
+        run: bunx sort-package-json
+      - name: Build the Next.js Project
+        run: bun run build
+      # commit prettier fixed code
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'format: Apply prettier --fix changes'

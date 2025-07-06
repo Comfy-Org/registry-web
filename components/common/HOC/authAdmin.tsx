@@ -15,49 +15,49 @@ import { useFromUrlParam } from './useFromUrl'
  * this HOC component should be used in page level, since h-[50vh] in loading spinner settle
  */
 const withAdmin = (WrappedComponent) => {
-    const HOC = (props: JSX.IntrinsicAttributes) => {
-        const router = useRouter()
-        const auth = getAuth()
-        const fromUrlParam = useFromUrlParam()
+  const HOC = (props: JSX.IntrinsicAttributes) => {
+    const router = useRouter()
+    const auth = getAuth()
+    const fromUrlParam = useFromUrlParam()
 
-        // if firebaseUser is signed out, redirect to login page
-        const [firebaseUser, firebaseUserLoading] = useAuthState(auth)
-        useEffect(() => {
-            if (!firebaseUserLoading && !firebaseUser) {
-                router.push(`/auth/login?${fromUrlParam}`)
-            }
-        }, [router, firebaseUser, firebaseUserLoading, fromUrlParam])
+    // if firebaseUser is signed out, redirect to login page
+    const [firebaseUser, firebaseUserLoading] = useAuthState(auth)
+    useEffect(() => {
+      if (!firebaseUserLoading && !firebaseUser) {
+        router.push(`/auth/login?${fromUrlParam}`)
+      }
+    }, [router, firebaseUser, firebaseUserLoading, fromUrlParam])
 
-        const { data: user, isLoading } = useGetUser({})
-        useEffect(() => {
-            if (!isLoading && !user) router.push(`/auth/login?${fromUrlParam}`)
-        }, [router, user, isLoading, fromUrlParam])
+    const { data: user, isLoading } = useGetUser({})
+    useEffect(() => {
+      if (!isLoading && !user) router.push(`/auth/login?${fromUrlParam}`)
+    }, [router, user, isLoading, fromUrlParam])
 
-        if (isLoading)
-            return (
-                <div className="flex-grow flex justify-center items-center h-[50vh]">
-                    <Spinner />
-                </div>
-            )
+    if (isLoading)
+      return (
+        <div className="flex-grow flex justify-center items-center h-[50vh]">
+          <Spinner />
+        </div>
+      )
 
-        if (!user) return null // show nothing while redirecting to login page
+    if (!user) return null // show nothing while redirecting to login page
 
-        if (!user.isAdmin) {
-            return (
-                <div className="text-white dark:text-white">
-                    403 Forbidden: You have no permission to this page.
-                </div>
-            )
-        }
-
-        return <WrappedComponent {...props} />
+    if (!user.isAdmin) {
+      return (
+        <div className="text-white dark:text-white">
+          403 Forbidden: You have no permission to this page.
+        </div>
+      )
     }
 
-    if (WrappedComponent.getInitialProps) {
-        HOC.getInitialProps = WrappedComponent.getInitialProps
-    }
+    return <WrappedComponent {...props} />
+  }
 
-    return HOC
+  if (WrappedComponent.getInitialProps) {
+    HOC.getInitialProps = WrappedComponent.getInitialProps
+  }
+
+  return HOC
 }
 
 export default withAdmin

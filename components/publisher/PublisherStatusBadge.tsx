@@ -3,14 +3,14 @@ import { Badge } from 'flowbite-react'
 import { PublisherStatus } from 'src/api/generated'
 
 const PublisherStatusBadge: React.FC<{ status?: PublisherStatus }> = ({
-    status,
+  status,
 }) => {
-    const { t } = useNextTranslation()
-    if (status === PublisherStatus.PublisherStatusBanned) {
-        return <Badge color="failure">{t('Banned')}</Badge>
-    }
+  const { t } = useNextTranslation()
+  if (status === PublisherStatus.PublisherStatusBanned) {
+    return <Badge color="failure">{t('Banned')}</Badge>
+  }
 
-    return null
+  return null
 }
 
 export default PublisherStatusBadge
