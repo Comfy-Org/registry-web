@@ -80,7 +80,7 @@ async function readJsonFile(filePath: string): Promise<Record<string, string>> {
             return JSON.parse(content)
         } catch (e) {
             // check if the file contains a merge conflict marker
-            // if it does, remove the conflict markers
+            // if it does, remove the conflict markers to ACCEPT ALL BOTH sides of the conflicts
             if (content.includes('<<<<<<<')) {
                 return JSON.parse(
                     content.replaceAll(
@@ -89,6 +89,10 @@ async function readJsonFile(filePath: string): Promise<Record<string, string>> {
                     )
                 )
             }
+            // If parsing fails, log a warning and return an empty object
+            throw new Error(
+                `Invalid JSON in ${filePath}: ${e instanceof Error ? e.message : String(e)}`
+            )
         }
     } catch (error) {
         console.warn(`Could not read ${filePath}:`, error)
