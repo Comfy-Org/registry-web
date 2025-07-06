@@ -20,7 +20,7 @@ interface NodeClaimModalProps {
     onSuccess?: () => void
 }
 
-export function NodeClaimModal({
+export function AdminNodeClaimModal({
     isOpen,
     onClose,
     node,
@@ -249,7 +249,7 @@ export function NodeClaimModal({
                     {t('Claim Node')}: {node.name}
                 </div>
             </Modal.Header>
-            <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
+            <Modal.Body className="!bg-gray-800 p-2 md:px-4 rounded-none">
                 <div className="space-y-6">
                     <div className="mb-4">
                         <Label htmlFor="publisher" className="text-white mb-2">
