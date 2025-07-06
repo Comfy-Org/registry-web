@@ -83,10 +83,10 @@ const AuthUI: React.FC<{}> = ({}) => {
                         <Link className="flex justify-center" href={'/'}>
                             <Image
                                 alt="Comfy Logo"
-                                src="https://storage.googleapis.com/comfy-assets/logo.png"
-                                className="w-6 h-6 mr-3 sm:w-16 sm:h-16"
-                                width={80}
-                                height={80}
+                                src="/images/logo_blue.png"
+                                className="w-12 h-12 mr-3 sm:w-32 sm:h-32 rounded-lg"
+                                width={160}
+                                height={160}
                             />
                         </Link>
 
