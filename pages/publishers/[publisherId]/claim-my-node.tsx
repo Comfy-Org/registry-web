@@ -79,26 +79,31 @@ function ClaimMyNodePage() {
                     publisherId,
                 })
 
-                // Invalidate node cache to refresh data
+                // Invalidate node cache to refresh data with cache-busting
                 const nodeIdParam = (router.query.nodeId as string) || (nodeId as string)
                 if (nodeIdParam) {
                     queryClient.invalidateQueries({
                         queryKey: getGetNodeQueryKey(nodeIdParam),
+                        // Force immediate refetch with cache-busting
+                        refetchType: 'all',
                     })
 
                     // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
                     queryClient.invalidateQueries({
                         queryKey: getListNodesForPublisherV2QueryKey(UNCLAIMED_ADMIN_PUBLISHER_ID),
+                        refetchType: 'all',
                     })
 
                     // Invalidate the new publisher's nodes list
                     queryClient.invalidateQueries({
                         queryKey: getListNodesForPublisherV2QueryKey(publisherId as string),
+                        refetchType: 'all',
                     })
 
                     // Invalidate search results which might include this node
                     queryClient.invalidateQueries({
                         queryKey: getSearchNodesQueryKey().slice(0, 1),
+                        refetchType: 'all',
                     })
                 }
 
