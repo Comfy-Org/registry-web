@@ -117,7 +117,7 @@ function NodeVersionList({}) {
             .toString()
             .replace(/^(?!$)/, '?')
         const hash = router.asPath.split('#')[1]
-            ? '#' + router.asPath.split('#')[1]
+            ? `#${router.asPath.split('#')[1]}`
             : ''
         router.push(`${router.pathname}${search}${hash}`)
     }
@@ -518,7 +518,9 @@ function NodeVersionList({}) {
                         t('{{id}}@{{version}} Undone, back to {{status}}', {
                             id: nv.node_id,
                             version: nv.version,
-                            status: NodeVersionStatusToReadable(prevStatus),
+                            status: NodeVersionStatusToReadable({
+                                status: prevStatus,
+                            }),
                         })
                     )
                 },
@@ -847,7 +849,7 @@ function NodeVersionList({}) {
                             .toString()
                             .replace(/^(?!$)/, '?')
                         const hash = router.asPath.split('#')[1]
-                            ? '#' + router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
                             : ''
                         router.push(router.pathname + searchParams + hash)
                     }}
@@ -881,7 +883,7 @@ function NodeVersionList({}) {
                             .toString()
                             .replace(/^(?!$)/, '?')
                         const hash = router.asPath.split('#')[1]
-                            ? '#' + router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
                             : ''
                         router.push(router.pathname + searchParams + hash)
                     }}

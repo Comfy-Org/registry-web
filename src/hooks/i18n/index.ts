@@ -20,7 +20,6 @@ const i18n = i18next
         supportedLngs: SUPPORTED_LANGUAGES,
         defaultNS: 'common',
         fallbackNS: 'common',
-        debug: process.env.NODE_ENV === 'development',
 
         // not needed for react as it escapes by default
         interpolation: { escapeValue: false },
