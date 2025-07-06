@@ -84,10 +84,10 @@ const AuthUI: React.FC<{}> = ({}) => {
                             <Image
                                 alt="Comfy Logo"
                                 src="/images/logo_blue.png"
-                                className="w-12 h-12 mr-3 sm:w-32 sm:h-32 rounded-lg"
+                                className="w-24 h-24 mr-3 sm:w-64 sm:h-64 rounded-lg"
                                 width={160}
                                 height={160}
-                                sizes="(max-width: 640px) 48px, 128px"
+                                sizes="(max-width: 640px) 96px, 256px"
                             />
                         </Link>
 
