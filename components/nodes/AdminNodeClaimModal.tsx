@@ -246,10 +246,31 @@ export function AdminNodeClaimModal({
         >
             <Modal.Header className="!bg-gray-800">
                 <div className="text-white">
-                    {t('Claim Node')}: {node.name}
+                    {t('Edit unclaimed node')}
                 </div>
             </Modal.Header>
             <Modal.Body className="!bg-gray-800 p-2 md:px-4 rounded-none">
+                <div className="mb-4 p-3 bg-gray-700 rounded-lg">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="text-white font-medium">
+                                {t('Node')}: {node.name}
+                            </div>
+                            <div className="text-sm text-gray-400">
+                                {t('ID')}: {node.id}
+                            </div>
+                        </div>
+                        <a
+                            href={`/nodes/${node.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline flex items-center"
+                        >
+                            {t('View')}{' '}
+                            <HiExternalLink className="ml-1" />
+                        </a>
+                    </div>
+                </div>
                 <div className="space-y-6">
                     <div className="mb-4">
                         <Label htmlFor="publisher" className="text-white mb-2">
