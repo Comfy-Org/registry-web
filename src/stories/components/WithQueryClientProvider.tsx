@@ -3,13 +3,13 @@ import React from 'react'
 
 // Create a client with default settings for Storybook
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: false,
-            refetchOnWindowFocus: false,
-            staleTime: Infinity, // Prevent refetching during Storybook usage
-        },
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity, // Prevent refetching during Storybook usage
     },
+  },
 })
 
 /**
@@ -17,11 +17,9 @@ const queryClient = new QueryClient({
  * Use this for any component that uses React Query hooks
  */
 export const WithQueryClientProvider: React.FC<{
-    children: React.ReactNode
+  children: React.ReactNode
 }> = ({ children }) => {
-    return (
-        <QueryClientProvider client={queryClient}>
-            {children}
-        </QueryClientProvider>
-    )
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
 }

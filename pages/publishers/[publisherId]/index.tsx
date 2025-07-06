@@ -7,47 +7,47 @@ import { HiHome } from 'react-icons/hi'
 import { useGetPublisher } from 'src/api/generated'
 
 function PublisherDetails() {
-    const router = useRouter()
-    const { publisherId } = router.query
-    const { t } = useNextTranslation()
-    const { data, isError, isLoading } = useGetPublisher(publisherId as string)
+  const router = useRouter()
+  const { publisherId } = router.query
+  const { t } = useNextTranslation()
+  const { data, isError, isLoading } = useGetPublisher(publisherId as string)
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <Spinner className="" />
-            </div>
-        )
-    }
-
-    if (!data || isError) {
-        return <div>Not found</div>
-    }
-
+  if (isLoading) {
     return (
-        <div className="p-4">
-            <div className="py-4">
-                <Breadcrumb>
-                    <Breadcrumb.Item
-                        href="/"
-                        icon={HiHome}
-                        onClick={(e) => {
-                            e.preventDefault()
-                            router.push('/')
-                        }}
-                        className="dark"
-                    >
-                        {t('Home')}
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item className="text-blue-500">
-                        {data.name}
-                    </Breadcrumb.Item>
-                </Breadcrumb>
-            </div>
-
-            <PublisherDetail publisher={data} />
-        </div>
+      <div className="flex items-center justify-center h-screen">
+        <Spinner className="" />
+      </div>
     )
+  }
+
+  if (!data || isError) {
+    return <div>Not found</div>
+  }
+
+  return (
+    <div className="p-4">
+      <div className="py-4">
+        <Breadcrumb>
+          <Breadcrumb.Item
+            href="/"
+            icon={HiHome}
+            onClick={(e) => {
+              e.preventDefault()
+              router.push('/')
+            }}
+            className="dark"
+          >
+            {t('Home')}
+          </Breadcrumb.Item>
+          <Breadcrumb.Item className="text-blue-500">
+            {data.name}
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
+
+      <PublisherDetail publisher={data} />
+    </div>
+  )
 }
 
 export default withAuth(PublisherDetails)

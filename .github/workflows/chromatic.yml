@@ -1,76 +1,76 @@
 name: Chromatic Visual Testing
 
 on:
-    push:
-        branches: [main, dev]
-    pull_request:
-        branches: [main, dev]
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
 
 permissions:
-    issues: write # Required for Chromatic to comment on PRs
-    pull-requests: write # Required for Chromatic to comment on PRs
+  issues: write # Required for Chromatic to comment on PRs
+  pull-requests: write # Required for Chromatic to comment on PRs
 jobs:
-    chromatic-deployment:
-        name: Deploy Storybook to Chromatic
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout the repository
-            - name: Checkout repository
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0 # Required for Chromatic to retrieve git history
+  chromatic-deployment:
+    name: Deploy Storybook to Chromatic
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Required for Chromatic to retrieve git history
 
-            # Setup Node.js
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: '22'
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
 
-            # Install Bun
-            - name: Install Bun
-              run: npm install -g bun
+      # Install Bun
+      - name: Install Bun
+        run: npm install -g bun
 
-            # Install dependencies
-            - name: Install dependencies
-              run: bun install
+      # Install dependencies
+      - name: Install dependencies
+        run: bun install
 
-            # Build Storybook
-            - name: Build Storybook
-              run: bun run build-storybook
+      # Build Storybook
+      - name: Build Storybook
+        run: bun run build-storybook
 
-            # Publish to Chromatic
-            - name: Publish to Chromatic
-              id: chromatic
-              uses: chromaui/action@v1
-              with:
-                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-                  storybookBuildDir: storybook-static
-                  exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
-                  autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
+      # Publish to Chromatic
+      - name: Publish to Chromatic
+        id: chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
+          autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
 
-            # Comment on PR with Chromatic results
-            - name: Comment on PR
-              if: github.event_name == 'pull_request' && steps.chromatic.outputs.buildUrl
-              uses: actions/github-script@v6
-              with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  script: |
-                      const { issue: { number: issue_number }, repo: { owner, repo } } = context;
-                      const buildUrl = '${{ steps.chromatic.outputs.buildUrl }}';
-                      const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
+      # Comment on PR with Chromatic results
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && steps.chromatic.outputs.buildUrl
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo } } = context;
+            const buildUrl = '${{ steps.chromatic.outputs.buildUrl }}';
+            const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
 
-                      const message = `## 🎨 Chromatic Visual Testing Results
+            const message = `## 🎨 Chromatic Visual Testing Results
 
-                      | Resource | URL |
-                      | --- | --- |
-                      | 🔍 Build Results | [Chromatic Build](${buildUrl}) |
-                      | 📚 Storybook | [View Storybook](${storybookUrl}) |
+            | Resource | URL |
+            | --- | --- |
+            | 🔍 Build Results | [Chromatic Build](${buildUrl}) |
+            | 📚 Storybook | [View Storybook](${storybookUrl}) |
 
-                      Check the visual changes and approve or request changes as needed.`;
+            Check the visual changes and approve or request changes as needed.`;
 
-                      github.rest.issues.createComment({
-                        issue_number,
-                        owner,
-                        repo,
-                        body: message
-                      });
+            github.rest.issues.createComment({
+              issue_number,
+              owner,
+              repo,
+              body: message
+            });

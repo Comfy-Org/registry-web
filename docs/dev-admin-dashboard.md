@@ -24,10 +24,10 @@ A specialized admin page for managing node version compatibility metadata. This 
 
 - View all node versions in a paginated table
 - Edit compatibility fields for each node version:
-    - `supported_comfyui_frontend_version` - ComfyUI Frontend version constraints
-    - `supported_comfyui_version` - ComfyUI version constraints
-    - `supported_os` - Operating system compatibility
-    - `supported_accelerators` - Hardware accelerator support
+  - `supported_comfyui_frontend_version` - ComfyUI Frontend version constraints
+  - `supported_comfyui_version` - ComfyUI version constraints
+  - `supported_os` - Operating system compatibility
+  - `supported_accelerators` - Hardware accelerator support
 
 #### Workflow
 
