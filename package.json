@@ -12,12 +12,12 @@
     "fmt": "prettier --write .",
     "format": "npx prettier --check .",
     "format-fix": "npx prettier --write .",
+    "i18n": "bun scripts/scan-i18n.ts",
     "lint": "next lint",
     "orval": "bunx orval@latest",
     "start": "next start",
     "storybook": "storybook dev -p 6006",
-    "test": "bun test --coverage",
-    "i18n": "bun scripts/scan-i18n.ts"
+    "test": "bun test --coverage"
   },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.19.2",

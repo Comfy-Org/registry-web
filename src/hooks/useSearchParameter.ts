@@ -14,8 +14,8 @@ export function useSearchParameter<T>(
         undefined === router.query[key]
             ? toValue()
             : typeof router.query[key] === 'string'
-                ? toValue(router.query[key])
-                : toValue(...router.query[key])
+              ? toValue(router.query[key])
+              : toValue(...router.query[key])
 
     // Function to update the search parameter
     const setValue = useCallback(
@@ -35,7 +35,6 @@ export function useSearchParameter<T>(
                     hash: router.asPath.includes('#')
                         ? `#${router.asPath.split('#')[1]}`
                         : '',
-
                 },
                 undefined,
                 { shallow: false }

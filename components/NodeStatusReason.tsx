@@ -297,7 +297,8 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             : ''
                                     }`}
                                     title={`${nv.version} ${NodeVersionStatusToReadable(
-                                        { status: nv.status }                                    )} ${
+                                        { status: nv.status }
+                                    )} ${
                                         zStatusReason.safeParse(
                                             nv.status_reason
                                         ).data?.message ?? nv.status_reason
@@ -331,7 +332,8 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     <code
                                         className="text-gray-400 whitespace-nowrap flex-1"
                                         title={`${nv.version} ${NodeVersionStatusToReadable(
-                                            { status: nv.status }                                        )} ${
+                                            { status: nv.status }
+                                        )} ${
                                             zStatusReason.safeParse(
                                                 nv.status_reason
                                             ).data?.message ?? nv.status_reason

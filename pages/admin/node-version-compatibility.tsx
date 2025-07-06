@@ -83,12 +83,14 @@ function NodeVersionCompatibilityAdmin() {
                 {t('Node Version Compatibility Admin')}
             </h1>
 
-            <form className="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-4" onSubmit={
-                (e) => {
+            <form
+                className="mb-4 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                onSubmit={(e) => {
                     console.log('Form submitted')
                     e.preventDefault()
                     const formData = new FormData(e.target as HTMLFormElement)
-                    const nodeVersionFilter = formData.get('filter-node-version') || ''
+                    const nodeVersionFilter =
+                        formData.get('filter-node-version') || ''
                     const [nodeId, version] = nodeVersionFilter
                         .toString()
                         .split('@')
@@ -96,11 +98,13 @@ function NodeVersionCompatibilityAdmin() {
                     console.log([...formData.entries()])
                     setNodeId(nodeId)
                     setVersion(version)
-                    setStatuses(formData.getAll('status') as NodeVersionStatus[])
+                    setStatuses(
+                        formData.getAll('status') as NodeVersionStatus[]
+                    )
                     setPage(undefined) // Reset to first page on filter change
                     console.log('Form submitted OK')
-                }
-            }>
+                }}
+            >
                 <div className="flex items-center">
                     <Label htmlFor="filter-node-version" className="mr-2">
                         {t('Filter by Node Version')}
@@ -114,8 +118,9 @@ function NodeVersionCompatibilityAdmin() {
                             nodeId && version
                                 ? `${nodeId}@${version}`
                                 : nodeId
-                                    ? `${nodeId}`
-                                    : ''}
+                                  ? `${nodeId}`
+                                  : ''
+                        }
                     />
                 </div>
                 <div className="flex items-center">
@@ -124,7 +129,16 @@ function NodeVersionCompatibilityAdmin() {
                     </Label>
                     <Dropdown
                         label={
-                            statuses.length > 0 ? (statuses.map(status => NodeVersionStatusToReadable({ status })).join(', ')) : t('Select Statuses')}
+                            statuses.length > 0
+                                ? statuses
+                                      .map((status) =>
+                                          NodeVersionStatusToReadable({
+                                              status,
+                                          })
+                                      )
+                                      .join(', ')
+                                : t('Select Statuses')
+                        }
                         className="inline-block w-64"
                         value={statuses.length > 0 ? statuses : undefined}
                     >
@@ -144,7 +158,7 @@ function NodeVersionCompatibilityAdmin() {
                                     name="status"
                                     value={status}
                                     checked={statuses.includes(status)}
-                                    className='mr-2'
+                                    className="mr-2"
                                 />
                                 <Label htmlFor={`status-${status}`}>
                                     {NodeVersionStatusToReadable({ status })}
@@ -168,7 +182,11 @@ function NodeVersionCompatibilityAdmin() {
             </form>
 
             <Suspense fallback={<Spinner />}>
-                <DataTable nodeId={nodeId} version={version} statuses={statuses} />
+                <DataTable
+                    nodeId={nodeId}
+                    version={version}
+                    statuses={statuses}
+                />
             </Suspense>
         </div>
     )
@@ -179,8 +197,8 @@ function DataTable({
     version,
     statuses,
 }: {
-    nodeId?: string,
-    version?: string,
+    nodeId?: string
+    version?: string
     statuses?: NodeVersionStatus[]
 }) {
     const [page, setPage] = usePage()
@@ -193,10 +211,18 @@ function DataTable({
         nodeId,
         // version, // TODO: implement version filtering in backend
     })
-    const versions = data?.versions?.filter((v) => !version ? true : v.version === version) || []
+    const versions =
+        data?.versions?.filter((v) =>
+            !version ? true : v.version === version
+        ) || []
 
-    const [editing, setEditing] = useSearchParameter<string>('editing', (v) => v || '', (v) => v || [])
-    const editingNodeVersion = versions.find((v) => v.node_id + '@' + v.version === editing) || null
+    const [editing, setEditing] = useSearchParameter<string>(
+        'editing',
+        (v) => v || '',
+        (v) => v || []
+    )
+    const editingNodeVersion =
+        versions.find((v) => v.node_id + '@' + v.version === editing) || null
 
     if (isLoading)
         return (
@@ -243,8 +269,7 @@ function DataTable({
                                 {nv.node_id}@{nv.version}
                             </Table.Cell>
                             <Table.Cell>
-                                {nv.supported_comfyui_frontend_version ||
-                                    ''}
+                                {nv.supported_comfyui_frontend_version || ''}
                             </Table.Cell>
                             <Table.Cell>
                                 {nv.supported_comfyui_version || ''}
@@ -256,9 +281,8 @@ function DataTable({
                             </Table.Cell>
                             <Table.Cell>
                                 <code className="whitespace-pre overflow-auto">
-                                    {nv.supported_accelerators?.join(
-                                        '\n'
-                                    ) || ''}
+                                    {nv.supported_accelerators?.join('\n') ||
+                                        ''}
                                 </code>
                             </Table.Cell>
                             <Table.Cell>

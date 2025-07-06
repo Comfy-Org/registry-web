@@ -1,6 +1,8 @@
 import { NodeVersionStatus } from 'src/api/generated'
 
-export function NodeVersionStatusToReadable({ status }: { status?: NodeVersionStatus } = {}) {
+export function NodeVersionStatusToReadable({
+    status,
+}: { status?: NodeVersionStatus } = {}) {
     if (!status) {
         return 'Unknown'
     }
@@ -11,6 +13,6 @@ export function NodeVersionStatusToReadable({ status }: { status?: NodeVersionSt
         [NodeVersionStatus.NodeVersionStatusActive]: 'Active',
         [NodeVersionStatus.NodeVersionStatusDeleted]: 'Deleted',
     }
-    
+
     return mapStatusToReadable[status] || 'Unknown'
 }
