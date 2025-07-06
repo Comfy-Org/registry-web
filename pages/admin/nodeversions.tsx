@@ -117,7 +117,7 @@ function NodeVersionList({}) {
             .toString()
             .replace(/^(?!$)/, '?')
         const hash = router.asPath.split('#')[1]
-            ? '#' + router.asPath.split('#')[1]
+            ? `#${router.asPath.split('#')[1]}`
             : ''
         router.push(`${router.pathname}${search}${hash}`)
     }
@@ -125,7 +125,9 @@ function NodeVersionList({}) {
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
         useState(false)
 
-    const queryForNodeId = router.query.nodeId as string
+    const queryForNodeId = Array.isArray(router.query.nodeId)
+        ? router.query.nodeId[0]
+        : router.query.nodeId
     const queryForStatusReason = router.query.statusReason as string
 
     const getAllNodeVersionsQuery = useListAllNodeVersions({
@@ -516,7 +518,9 @@ function NodeVersionList({}) {
                         t('{{id}}@{{version}} Undone, back to {{status}}', {
                             id: nv.node_id,
                             version: nv.version,
-                            status: NodeVersionStatusToReadable(prevStatus),
+                            status: NodeVersionStatusToReadable({
+                                status: prevStatus,
+                            }),
                         })
                     )
                 },
@@ -845,7 +849,7 @@ function NodeVersionList({}) {
                             .toString()
                             .replace(/^(?!$)/, '?')
                         const hash = router.asPath.split('#')[1]
-                            ? '#' + router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
                             : ''
                         router.push(router.pathname + searchParams + hash)
                     }}
@@ -879,7 +883,7 @@ function NodeVersionList({}) {
                             .toString()
                             .replace(/^(?!$)/, '?')
                         const hash = router.asPath.split('#')[1]
-                            ? '#' + router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
                             : ''
                         router.push(router.pathname + searchParams + hash)
                     }}

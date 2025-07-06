@@ -1112,6 +1112,332 @@ export interface GitCommitSummary {
   timestamp?: string;
 }
 
+/**
+ * A GitHub enterprise
+ */
+export interface GithubEnterprise {
+  /** URL to the enterprise avatar */
+  avatar_url: string;
+  /** When the enterprise was created */
+  created_at: string;
+  /**
+   * The enterprise description
+   * @nullable
+   */
+  description?: string | null;
+  /** The HTML URL of the enterprise */
+  html_url: string;
+  /** The enterprise ID */
+  id: number;
+  /** The enterprise name */
+  name: string;
+  /** The enterprise node ID */
+  node_id: string;
+  /** The enterprise slug */
+  slug: string;
+  /** When the enterprise was last updated */
+  updated_at: string;
+  /**
+   * The enterprise website URL
+   * @nullable
+   */
+  website_url?: string | null;
+}
+
+/**
+ * The installation permissions
+ */
+export type GithubInstallationPermissions = { [key: string]: unknown };
+
+/**
+ * Repository selection for the installation
+ */
+export type GithubInstallationRepositorySelection = typeof GithubInstallationRepositorySelection[keyof typeof GithubInstallationRepositorySelection];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GithubInstallationRepositorySelection = {
+  selected: 'selected',
+  all: 'all',
+} as const;
+
+/**
+ * A GitHub App installation
+ */
+export interface GithubInstallation {
+  /** The API URL for access tokens */
+  access_tokens_url: string;
+  account: GithubUser;
+  /** The GitHub App ID */
+  app_id: number;
+  /** When the installation was created */
+  created_at: string;
+  /** The events the installation subscribes to */
+  events: string[];
+  /** The HTML URL of the installation */
+  html_url: string;
+  /** The installation ID */
+  id: number;
+  /** The installation permissions */
+  permissions: GithubInstallationPermissions;
+  /** The API URL for repositories */
+  repositories_url: string;
+  /** Repository selection for the installation */
+  repository_selection: GithubInstallationRepositorySelection;
+  /**
+   * The single file name if applicable
+   * @nullable
+   */
+  single_file_name?: string | null;
+  /** The target ID */
+  target_id: number;
+  /** The target type */
+  target_type: string;
+  /** When the installation was last updated */
+  updated_at: string;
+}
+
+/**
+ * A GitHub organization
+ */
+export interface GithubOrganization {
+  /** URL to the organization's avatar */
+  avatar_url: string;
+  /**
+   * The organization description
+   * @nullable
+   */
+  description?: string | null;
+  /** The API URL of the organization's events */
+  events_url: string;
+  /** The API URL of the organization's hooks */
+  hooks_url: string;
+  /** The organization ID */
+  id: number;
+  /** The API URL of the organization's issues */
+  issues_url: string;
+  /** The organization's login name */
+  login: string;
+  /** The API URL of the organization's members */
+  members_url: string;
+  /** The organization node ID */
+  node_id: string;
+  /** The API URL of the organization's public members */
+  public_members_url: string;
+  /** The API URL of the organization's repositories */
+  repos_url: string;
+  /** The API URL of the organization */
+  url: string;
+}
+
+/**
+ * The state of the asset
+ */
+export type GithubReleaseAssetState = typeof GithubReleaseAssetState[keyof typeof GithubReleaseAssetState];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GithubReleaseAssetState = {
+  uploaded: 'uploaded',
+  open: 'open',
+} as const;
+
+/**
+ * A GitHub release asset
+ */
+export interface GithubReleaseAsset {
+  /** The browser download URL */
+  browser_download_url: string;
+  /** The content type of the asset */
+  content_type: string;
+  /** When the asset was created */
+  created_at: string;
+  /** The number of downloads */
+  download_count: number;
+  /** The asset ID */
+  id: number;
+  /**
+   * The label of the asset
+   * @nullable
+   */
+  label?: string | null;
+  /** The name of the asset */
+  name: string;
+  /** The asset node ID */
+  node_id: string;
+  /** The size of the asset in bytes */
+  size: number;
+  /** The state of the asset */
+  state: GithubReleaseAssetState;
+  /** When the asset was last updated */
+  updated_at: string;
+  uploader: GithubUser;
+}
+
+/**
+ * The action performed on the release
+ */
+export type GithubReleaseWebhookAction = typeof GithubReleaseWebhookAction[keyof typeof GithubReleaseWebhookAction];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GithubReleaseWebhookAction = {
+  published: 'published',
+  unpublished: 'unpublished',
+  created: 'created',
+  edited: 'edited',
+  deleted: 'deleted',
+  prereleased: 'prereleased',
+  released: 'released',
+} as const;
+
+/**
+ * The release object
+ */
+export type GithubReleaseWebhookRelease = {
+  /** Array of release assets */
+  assets: GithubReleaseAsset[];
+  /** The URL to the release assets */
+  assets_url?: string;
+  author: GithubUser;
+  /**
+   * The release notes/body
+   * @nullable
+   */
+  body?: string | null;
+  /** When the release was created */
+  created_at: string;
+  /** Whether the release is a draft */
+  draft: boolean;
+  /** The HTML URL of the release */
+  html_url: string;
+  /** The ID of the release */
+  id: number;
+  /**
+   * The name of the release
+   * @nullable
+   */
+  name?: string | null;
+  /** The node ID of the release */
+  node_id: string;
+  /** Whether the release is a prerelease */
+  prerelease: boolean;
+  /**
+   * When the release was published
+   * @nullable
+   */
+  published_at?: string | null;
+  /** The tag name of the release */
+  tag_name: string;
+  /** URL to the tarball */
+  tarball_url: string;
+  /** The branch or commit the release was created from */
+  target_commitish: string;
+  /** The URL to upload release assets */
+  upload_url?: string;
+  /** The API URL of the release */
+  url: string;
+  /** URL to the zipball */
+  zipball_url: string;
+};
+
+/**
+ * GitHub release webhook payload based on official webhook documentation
+ */
+export interface GithubReleaseWebhook {
+  /** The action performed on the release */
+  action: GithubReleaseWebhookAction;
+  enterprise?: GithubEnterprise;
+  installation?: GithubInstallation;
+  organization?: GithubOrganization;
+  /** The release object */
+  release: GithubReleaseWebhookRelease;
+  repository: GithubRepository;
+  sender: GithubUser;
+}
+
+/**
+ * A GitHub repository
+ */
+export interface GithubRepository {
+  /** The clone URL of the repository */
+  clone_url: string;
+  /** When the repository was created */
+  created_at: string;
+  /** The default branch of the repository */
+  default_branch: string;
+  /**
+   * The repository description
+   * @nullable
+   */
+  description?: string | null;
+  /** Whether the repository is a fork */
+  fork: boolean;
+  /** The full name of the repository (owner/repo) */
+  full_name: string;
+  /** The git URL of the repository */
+  git_url: string;
+  /** The HTML URL of the repository */
+  html_url: string;
+  /** The repository ID */
+  id: number;
+  /** The name of the repository */
+  name: string;
+  /** The repository node ID */
+  node_id: string;
+  owner: GithubUser;
+  /** Whether the repository is private */
+  private: boolean;
+  /** When the repository was last pushed to */
+  pushed_at: string;
+  /** The SSH URL of the repository */
+  ssh_url: string;
+  /** When the repository was last updated */
+  updated_at: string;
+  /** The API URL of the repository */
+  url: string;
+}
+
+/**
+ * The type of user
+ */
+export type GithubUserType = typeof GithubUserType[keyof typeof GithubUserType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GithubUserType = {
+  Bot: 'Bot',
+  User: 'User',
+  Organization: 'Organization',
+} as const;
+
+/**
+ * A GitHub user
+ */
+export interface GithubUser {
+  /** URL to the user's avatar */
+  avatar_url: string;
+  /**
+   * The user's gravatar ID
+   * @nullable
+   */
+  gravatar_id?: string | null;
+  /** The HTML URL of the user */
+  html_url: string;
+  /** The user's ID */
+  id: number;
+  /** The user's login name */
+  login: string;
+  /** The user's node ID */
+  node_id: string;
+  /** Whether the user is a site admin */
+  site_admin: boolean;
+  /** The type of user */
+  type: GithubUserType;
+  /** The API URL of the user */
+  url: string;
+}
+
 export type IdeogramColorPaletteOneOf = {
   /** Name of the preset color palette */
   name: string;
@@ -2982,34 +3308,15 @@ export interface ModelResponseProperties {
   truncation?: ModelResponsePropertiesTruncation;
 }
 
-export interface MoonvalleyCreatePromptRequest {
+export type MoonvalleyImageToVideoRequestAllOfKeyframes = {[key: string]: {
   image_url?: string;
-  inference_params?: MoonvalleyInferenceParams;
-  prompt_text: string;
-  webhook_url?: string;
-}
+}};
 
-export interface MoonvalleyCreatePromptResponse {
-  approximate_wait_time?: number;
-  id?: string;
-  status?: string;
-}
+export type MoonvalleyImageToVideoRequestAllOf = {
+  keyframes?: MoonvalleyImageToVideoRequestAllOfKeyframes;
+};
 
-export type MoonvalleyCreateVideoToVideoRequestControlType = typeof MoonvalleyCreateVideoToVideoRequestControlType[keyof typeof MoonvalleyCreateVideoToVideoRequestControlType];
-
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export const MoonvalleyCreateVideoToVideoRequestControlType = {
-  motion_control: 'motion_control',
-} as const;
-
-export interface MoonvalleyCreateVideoToVideoRequest {
-  control_type: MoonvalleyCreateVideoToVideoRequestControlType;
-  inference_params?: MoonvalleyInferenceParams;
-  prompt_text: string;
-  video_url: string;
-  webhook_url?: string;
-}
+export type MoonvalleyImageToVideoRequest = MoonvalleyTextToVideoRequest & MoonvalleyImageToVideoRequestAllOf;
 
 export interface MoonvalleyInferenceParams {
   add_quality_guidance?: boolean;
@@ -3056,9 +3363,54 @@ export interface MoonvalleyPromptResponse {
   status?: string;
 }
 
-export interface MoonvalleyUploadResponse {
+export type MoonvalleyResizeVideoRequestAllOf = {
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  frame_position?: number[];
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  frame_resolution?: number[];
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  scale?: number[];
+};
+
+export type MoonvalleyResizeVideoRequest = MoonvalleyVideoToVideoRequest & MoonvalleyResizeVideoRequestAllOf;
+
+export interface MoonvalleyTextToImageRequest {
+  image_url?: string;
+  inference_params?: MoonvalleyInferenceParams;
+  prompt_text?: string;
+  webhook_url?: string;
+}
+
+export interface MoonvalleyTextToVideoRequest {
+  image_url?: string;
+  inference_params?: MoonvalleyInferenceParams;
+  prompt_text?: string;
+  webhook_url?: string;
+}
+
+export interface MoonvalleyUploadFileRequest {
+  file?: Blob;
+}
+
+export interface MoonvalleyUploadFileResponse {
   access_url?: string;
 }
+
+export type MoonvalleyVideoToVideoRequestAllOf = {
+  control_type: string;
+  video_url: string;
+};
+
+export type MoonvalleyVideoToVideoRequest = MoonvalleyTextToVideoRequest & MoonvalleyVideoToVideoRequestAllOf & Required<Pick<MoonvalleyTextToVideoRequest & MoonvalleyVideoToVideoRequestAllOf, 'prompt_text'>>;
 
 /**
  * Translations of node metadata in different languages.
@@ -3071,9 +3423,13 @@ export interface Node {
   banner_url?: string;
   /** The category of the node. */
   category?: string;
+  /** The date and time when the node was created */
+  created_at?: string;
   description?: string;
   /** The number of downloads of the node. */
   downloads?: number;
+  /** Number of stars on the GitHub repository. */
+  github_stars?: number;
   /** URL to the node's icon. */
   icon?: string;
   /** The unique identifier of the node. */
@@ -4538,6 +4894,47 @@ export interface RecraftUserControls {
   background_color?: RecraftImageColor;
   colors?: RecraftImageColor[];
   no_text?: boolean;
+}
+
+/**
+ * The attention level for this release
+ */
+export type ReleaseNoteAttention = typeof ReleaseNoteAttention[keyof typeof ReleaseNoteAttention];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReleaseNoteAttention = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+} as const;
+
+/**
+ * The project this release note belongs to
+ */
+export type ReleaseNoteProject = typeof ReleaseNoteProject[keyof typeof ReleaseNoteProject];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ReleaseNoteProject = {
+  comfyui: 'comfyui',
+  comfyui_frontend: 'comfyui_frontend',
+  desktop: 'desktop',
+} as const;
+
+export interface ReleaseNote {
+  /** The attention level for this release */
+  attention: ReleaseNoteAttention;
+  /** The content of the release note in markdown format */
+  content: string;
+  /** Unique identifier for the release note */
+  id: number;
+  /** The project this release note belongs to */
+  project: ReleaseNoteProject;
+  /** When the release note was published */
+  published_at: string;
+  /** The version of the release */
+  version: string;
 }
 
 /**
@@ -7573,6 +7970,14 @@ export type AdminUpdateNodeVersionBody = {
   status?: NodeVersionStatus;
   /** The reason for the status change. */
   status_reason?: string;
+  /** List of accelerators (e.g. CUDA, DirectML, ROCm) that this node supports */
+  supported_accelerators?: string[];
+  /** Supported versions of ComfyUI frontend */
+  supported_comfyui_frontend_version?: string;
+  /** Supported versions of ComfyUI */
+  supported_comfyui_version?: string;
+  /** List of operating systems that this node supports */
+  supported_os?: string[];
 };
 
 export type GetBranchParams = {
@@ -7847,6 +8252,10 @@ sort?: string[];
  */
 node_id?: string[];
 /**
+ * Comfy UI version
+ */
+comfyui_version?: string;
+/**
  * The platform requesting the nodes
  */
 form_factor?: string;
@@ -7916,6 +8325,13 @@ export type SearchNodes200 = {
   total?: number;
   /** Total number of pages available */
   totalPages?: number;
+};
+
+export type UpdateGithubStarsParams = {
+/**
+ * Maximum number of nodes to update in one batch
+ */
+max_batch?: number;
 };
 
 export type GetNodeParams = {
@@ -8121,10 +8537,6 @@ export type GetMinimaxVideoGenerationParams = {
  * The task ID to be queried
  */
 task_id: string;
-};
-
-export type MoonvalleyUploadFileBody = {
-  file?: Blob;
 };
 
 export type GetOpenAIResponseParams = {
@@ -8748,6 +9160,49 @@ export type CreatePersonalAccessToken201 = {
   token?: string;
 };
 
+export type GetReleaseNotesParams = {
+/**
+ * The project to get release notes for
+ */
+project: GetReleaseNotesProject;
+/**
+ * The current version to filter release notes
+ */
+current_version?: string;
+/**
+ * The locale for the release notes
+ */
+locale?: GetReleaseNotesLocale;
+/**
+ * The platform requesting the release notes
+ */
+form_factor?: string;
+};
+
+export type GetReleaseNotesProject = typeof GetReleaseNotesProject[keyof typeof GetReleaseNotesProject];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetReleaseNotesProject = {
+  comfyui: 'comfyui',
+  comfyui_frontend: 'comfyui_frontend',
+  desktop: 'desktop',
+} as const;
+
+export type GetReleaseNotesLocale = typeof GetReleaseNotesLocale[keyof typeof GetReleaseNotesLocale];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetReleaseNotesLocale = {
+  en: 'en',
+  es: 'es',
+  fr: 'fr',
+  ja: 'ja',
+  ko: 'ko',
+  ru: 'ru',
+  zh: 'zh',
+} as const;
+
 export type SecurityScanParams = {
 minAge?: string;
 minSecurityScanAge?: string;
@@ -9142,6 +9597,95 @@ export const useComfyNodesBackfill = <TError = ErrorResponse | void,
       return useMutation(mutationOptions , queryClient);
     }
     
+/**
+ * Returns the node that contains a ComfyUI node with the specified name
+ * @summary Retrieve a node by ComfyUI node name
+ */
+export const getNodeByComfyNodeName = (
+    comfyNodeName: string,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/comfy-nodes/${comfyNodeName}/node`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetNodeByComfyNodeNameQueryKey = (comfyNodeName: string,) => {
+    return [`/comfy-nodes/${comfyNodeName}/node`] as const;
+    }
+
+    
+export const getGetNodeByComfyNodeNameQueryOptions = <TData = Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError = ErrorResponse>(comfyNodeName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNodeByComfyNodeNameQueryKey(comfyNodeName);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNodeByComfyNodeName>>> = ({ signal }) => getNodeByComfyNodeName(comfyNodeName, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(comfyNodeName), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetNodeByComfyNodeNameQueryResult = NonNullable<Awaited<ReturnType<typeof getNodeByComfyNodeName>>>
+export type GetNodeByComfyNodeNameQueryError = ErrorResponse
+
+
+export function useGetNodeByComfyNodeName<TData = Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError = ErrorResponse>(
+ comfyNodeName: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNodeByComfyNodeName>>,
+          TError,
+          Awaited<ReturnType<typeof getNodeByComfyNodeName>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetNodeByComfyNodeName<TData = Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError = ErrorResponse>(
+ comfyNodeName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getNodeByComfyNodeName>>,
+          TError,
+          Awaited<ReturnType<typeof getNodeByComfyNodeName>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetNodeByComfyNodeName<TData = Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError = ErrorResponse>(
+ comfyNodeName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Retrieve a node by ComfyUI node name
+ */
+
+export function useGetNodeByComfyNodeName<TData = Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError = ErrorResponse>(
+ comfyNodeName: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNodeByComfyNodeName>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetNodeByComfyNodeNameQueryOptions(comfyNodeName,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
 /**
  * Search for customers by email, name, Stripe ID, or Metronome ID.
  * @summary Search for customers
@@ -10737,6 +11281,70 @@ export function useSearchNodes<TData = Awaited<ReturnType<typeof searchNodes>>, 
 
 
 
+/**
+ * @summary Update GitHub stars for nodes
+ */
+export const updateGithubStars = (
+    params?: UpdateGithubStarsParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/nodes/update-github-stars`, method: 'POST',
+        params, signal
+    },
+      options);
+    }
+  
+
+
+export const getUpdateGithubStarsMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGithubStars>>, TError,{params?: UpdateGithubStarsParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateGithubStars>>, TError,{params?: UpdateGithubStarsParams}, TContext> => {
+
+const mutationKey = ['updateGithubStars'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateGithubStars>>, {params?: UpdateGithubStarsParams}> = (props) => {
+          const {params} = props ?? {};
+
+          return  updateGithubStars(params,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateGithubStarsMutationResult = NonNullable<Awaited<ReturnType<typeof updateGithubStars>>>
+    
+    export type UpdateGithubStarsMutationError = ErrorResponse | void
+
+    /**
+ * @summary Update GitHub stars for nodes
+ */
+export const useUpdateGithubStars = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateGithubStars>>, TError,{params?: UpdateGithubStarsParams}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateGithubStars>>,
+        TError,
+        {params?: UpdateGithubStarsParams},
+        TContext
+      > => {
+
+      const mutationOptions = getUpdateGithubStarsMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Returns the details of a specific node.
  * @summary Retrieve a specific node by ID
@@ -14855,29 +15463,29 @@ export const useMinimaxVideoGeneration = <TError = ErrorResponse | void,
     }
     
 /**
- * @summary Create Text-to-Video or Image-to-Video Prompt
+ * @summary Create Image to Video Prompt
  */
-export const moonvalleyCreatePrompt = (
-    moonvalleyCreatePromptRequest: MoonvalleyCreatePromptRequest,
+export const moonvalleyImageToVideo = (
+    moonvalleyImageToVideoRequest: MoonvalleyImageToVideoRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
-      return customInstance<MoonvalleyCreatePromptResponse>(
-      {url: `/proxy/moonvalley/prompts`, method: 'POST',
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/image-to-video`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: moonvalleyCreatePromptRequest, signal
+      data: moonvalleyImageToVideoRequest, signal
     },
       options);
     }
   
 
 
-export const getMoonvalleyCreatePromptMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext> => {
+export const getMoonvalleyImageToVideoMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyImageToVideo>>, TError,{data: MoonvalleyImageToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyImageToVideo>>, TError,{data: MoonvalleyImageToVideoRequest}, TContext> => {
 
-const mutationKey = ['moonvalleyCreatePrompt'];
+const mutationKey = ['moonvalleyImageToVideo'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -14887,10 +15495,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, {data: MoonvalleyCreatePromptRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyImageToVideo>>, {data: MoonvalleyImageToVideoRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  moonvalleyCreatePrompt(data,requestOptions)
+          return  moonvalleyImageToVideo(data,requestOptions)
         }
 
         
@@ -14898,116 +15506,51 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type MoonvalleyCreatePromptMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>>
-    export type MoonvalleyCreatePromptMutationBody = MoonvalleyCreatePromptRequest
-    export type MoonvalleyCreatePromptMutationError = unknown
+    export type MoonvalleyImageToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyImageToVideo>>>
+    export type MoonvalleyImageToVideoMutationBody = MoonvalleyImageToVideoRequest
+    export type MoonvalleyImageToVideoMutationError = unknown
 
     /**
- * @summary Create Text-to-Video or Image-to-Video Prompt
+ * @summary Create Image to Video Prompt
  */
-export const useMoonvalleyCreatePrompt = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreatePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useMoonvalleyImageToVideo = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyImageToVideo>>, TError,{data: MoonvalleyImageToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyCreatePrompt>>,
+        Awaited<ReturnType<typeof moonvalleyImageToVideo>>,
         TError,
-        {data: MoonvalleyCreatePromptRequest},
+        {data: MoonvalleyImageToVideoRequest},
         TContext
       > => {
 
-      const mutationOptions = getMoonvalleyCreatePromptMutationOptions(options);
+      const mutationOptions = getMoonvalleyImageToVideoMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
     
 /**
- * @summary Create Text-to-Image Prompt
+ * @summary Create Video to Video Prompt
  */
-export const moonvalleyCreateTextToImagePrompt = (
-    moonvalleyCreatePromptRequest: MoonvalleyCreatePromptRequest,
+export const moonvalleyVideoToVideo = (
+    moonvalleyVideoToVideoRequest: MoonvalleyVideoToVideoRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
-      return customInstance<MoonvalleyCreatePromptResponse>(
-      {url: `/proxy/moonvalley/prompts/text-to-image`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: moonvalleyCreatePromptRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getMoonvalleyCreateTextToImagePromptMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext> => {
-
-const mutationKey = ['moonvalleyCreateTextToImagePrompt'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, {data: MoonvalleyCreatePromptRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  moonvalleyCreateTextToImagePrompt(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type MoonvalleyCreateTextToImagePromptMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>>
-    export type MoonvalleyCreateTextToImagePromptMutationBody = MoonvalleyCreatePromptRequest
-    export type MoonvalleyCreateTextToImagePromptMutationError = unknown
-
-    /**
- * @summary Create Text-to-Image Prompt
- */
-export const useMoonvalleyCreateTextToImagePrompt = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>, TError,{data: MoonvalleyCreatePromptRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyCreateTextToImagePrompt>>,
-        TError,
-        {data: MoonvalleyCreatePromptRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getMoonvalleyCreateTextToImagePromptMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
-/**
- * @summary Create Video-to-Video Prompt
- */
-export const moonvalleyCreateVideoToVideoPrompt = (
-    moonvalleyCreateVideoToVideoRequest: MoonvalleyCreateVideoToVideoRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<MoonvalleyCreatePromptResponse>(
+      return customInstance<MoonvalleyPromptResponse>(
       {url: `/proxy/moonvalley/prompts/video-to-video`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: moonvalleyCreateVideoToVideoRequest, signal
+      data: moonvalleyVideoToVideoRequest, signal
     },
       options);
     }
   
 
 
-export const getMoonvalleyCreateVideoToVideoPromptMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, TError,{data: MoonvalleyCreateVideoToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, TError,{data: MoonvalleyCreateVideoToVideoRequest}, TContext> => {
+export const getMoonvalleyVideoToVideoMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyVideoToVideo>>, TError,{data: MoonvalleyVideoToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyVideoToVideo>>, TError,{data: MoonvalleyVideoToVideoRequest}, TContext> => {
 
-const mutationKey = ['moonvalleyCreateVideoToVideoPrompt'];
+const mutationKey = ['moonvalleyVideoToVideo'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -15017,10 +15560,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, {data: MoonvalleyCreateVideoToVideoRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyVideoToVideo>>, {data: MoonvalleyVideoToVideoRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  moonvalleyCreateVideoToVideoPrompt(data,requestOptions)
+          return  moonvalleyVideoToVideo(data,requestOptions)
         }
 
         
@@ -15028,23 +15571,88 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type MoonvalleyCreateVideoToVideoPromptMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>>
-    export type MoonvalleyCreateVideoToVideoPromptMutationBody = MoonvalleyCreateVideoToVideoRequest
-    export type MoonvalleyCreateVideoToVideoPromptMutationError = unknown
+    export type MoonvalleyVideoToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyVideoToVideo>>>
+    export type MoonvalleyVideoToVideoMutationBody = MoonvalleyVideoToVideoRequest
+    export type MoonvalleyVideoToVideoMutationError = unknown
 
     /**
- * @summary Create Video-to-Video Prompt
+ * @summary Create Video to Video Prompt
  */
-export const useMoonvalleyCreateVideoToVideoPrompt = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>, TError,{data: MoonvalleyCreateVideoToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useMoonvalleyVideoToVideo = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyVideoToVideo>>, TError,{data: MoonvalleyVideoToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyCreateVideoToVideoPrompt>>,
+        Awaited<ReturnType<typeof moonvalleyVideoToVideo>>,
         TError,
-        {data: MoonvalleyCreateVideoToVideoRequest},
+        {data: MoonvalleyVideoToVideoRequest},
         TContext
       > => {
 
-      const mutationOptions = getMoonvalleyCreateVideoToVideoPromptMutationOptions(options);
+      const mutationOptions = getMoonvalleyVideoToVideoMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * @summary Resize a video
+ */
+export const moonvalleyVideoToVideoResize = (
+    moonvalleyResizeVideoRequest: MoonvalleyResizeVideoRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/video-to-video/resize`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyResizeVideoRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyVideoToVideoResizeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyVideoToVideoResize>>, TError,{data: MoonvalleyResizeVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyVideoToVideoResize>>, TError,{data: MoonvalleyResizeVideoRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyVideoToVideoResize'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyVideoToVideoResize>>, {data: MoonvalleyResizeVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyVideoToVideoResize(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyVideoToVideoResizeMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyVideoToVideoResize>>>
+    export type MoonvalleyVideoToVideoResizeMutationBody = MoonvalleyResizeVideoRequest
+    export type MoonvalleyVideoToVideoResizeMutationError = unknown
+
+    /**
+ * @summary Resize a video
+ */
+export const useMoonvalleyVideoToVideoResize = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyVideoToVideoResize>>, TError,{data: MoonvalleyResizeVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyVideoToVideoResize>>,
+        TError,
+        {data: MoonvalleyResizeVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyVideoToVideoResizeMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
@@ -15052,7 +15660,7 @@ export const useMoonvalleyCreateVideoToVideoPrompt = <TError = unknown,
 /**
  * @summary Get Prompt Details
  */
-export const moonvalley = (
+export const moonvalleyGetPrompt = (
     promptId: string,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
@@ -15065,67 +15673,67 @@ export const moonvalley = (
     }
   
 
-export const getMoonvalleyQueryKey = (promptId: string,) => {
+export const getMoonvalleyGetPromptQueryKey = (promptId: string,) => {
     return [`/proxy/moonvalley/prompts/${promptId}`] as const;
     }
 
     
-export const getMoonvalleyQueryOptions = <TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getMoonvalleyGetPromptQueryOptions = <TData = Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError = unknown>(promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getMoonvalleyQueryKey(promptId);
+  const queryKey =  queryOptions?.queryKey ?? getMoonvalleyGetPromptQueryKey(promptId);
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof moonvalley>>> = ({ signal }) => moonvalley(promptId, requestOptions, signal);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof moonvalleyGetPrompt>>> = ({ signal }) => moonvalleyGetPrompt(promptId, requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, enabled: !!(promptId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, enabled: !!(promptId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type MoonvalleyQueryResult = NonNullable<Awaited<ReturnType<typeof moonvalley>>>
-export type MoonvalleyQueryError = unknown
+export type MoonvalleyGetPromptQueryResult = NonNullable<Awaited<ReturnType<typeof moonvalleyGetPrompt>>>
+export type MoonvalleyGetPromptQueryError = unknown
 
 
-export function useMoonvalley<TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(
- promptId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>> & Pick<
+export function useMoonvalleyGetPrompt<TData = Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError = unknown>(
+ promptId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof moonvalley>>,
+          Awaited<ReturnType<typeof moonvalleyGetPrompt>>,
           TError,
-          Awaited<ReturnType<typeof moonvalley>>
+          Awaited<ReturnType<typeof moonvalleyGetPrompt>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useMoonvalley<TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(
- promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>> & Pick<
+export function useMoonvalleyGetPrompt<TData = Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError = unknown>(
+ promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof moonvalley>>,
+          Awaited<ReturnType<typeof moonvalleyGetPrompt>>,
           TError,
-          Awaited<ReturnType<typeof moonvalley>>
+          Awaited<ReturnType<typeof moonvalleyGetPrompt>>
         > , 'initialData'
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useMoonvalley<TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(
- promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export function useMoonvalleyGetPrompt<TData = Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError = unknown>(
+ promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 /**
  * @summary Get Prompt Details
  */
 
-export function useMoonvalley<TData = Awaited<ReturnType<typeof moonvalley>>, TError = unknown>(
- promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalley>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export function useMoonvalleyGetPrompt<TData = Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError = unknown>(
+ promptId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof moonvalleyGetPrompt>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getMoonvalleyQueryOptions(promptId,options)
+  const queryOptions = getMoonvalleyGetPromptQueryOptions(promptId,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -15138,33 +15746,29 @@ export function useMoonvalley<TData = Awaited<ReturnType<typeof moonvalley>>, TE
 
 
 /**
- * @summary Upload File
+ * @summary Create Text to Image Prompt
  */
-export const moonvalleyUploadFile = (
-    moonvalleyUploadFileBody: MoonvalleyUploadFileBody,
+export const moonvalleyTextToImage = (
+    moonvalleyTextToImageRequest: MoonvalleyTextToImageRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
-      const formData = new FormData();
-if(moonvalleyUploadFileBody.file !== undefined) {
- formData.append(`file`, moonvalleyUploadFileBody.file)
- }
-
-      return customInstance<MoonvalleyUploadResponse>(
-      {url: `/proxy/moonvalley/uploads`, method: 'POST',
-      headers: {'Content-Type': 'multipart/form-data', },
-       data: formData, signal
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/text-to-image`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyTextToImageRequest, signal
     },
       options);
     }
   
 
 
-export const getMoonvalleyUploadFileMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUploadFile>>, TError,{data: MoonvalleyUploadFileBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUploadFile>>, TError,{data: MoonvalleyUploadFileBody}, TContext> => {
+export const getMoonvalleyTextToImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext> => {
 
-const mutationKey = ['moonvalleyUploadFile'];
+const mutationKey = ['moonvalleyTextToImage'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -15174,10 +15778,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyUploadFile>>, {data: MoonvalleyUploadFileBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToImage>>, {data: MoonvalleyTextToImageRequest}> = (props) => {
           const {data} = props ?? {};
 
-          return  moonvalleyUploadFile(data,requestOptions)
+          return  moonvalleyTextToImage(data,requestOptions)
         }
 
         
@@ -15185,23 +15789,157 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type MoonvalleyUploadFileMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyUploadFile>>>
-    export type MoonvalleyUploadFileMutationBody = MoonvalleyUploadFileBody
-    export type MoonvalleyUploadFileMutationError = unknown
+    export type MoonvalleyTextToImageMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToImage>>>
+    export type MoonvalleyTextToImageMutationBody = MoonvalleyTextToImageRequest
+    export type MoonvalleyTextToImageMutationError = unknown
 
     /**
- * @summary Upload File
+ * @summary Create Text to Image Prompt
  */
-export const useMoonvalleyUploadFile = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUploadFile>>, TError,{data: MoonvalleyUploadFileBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useMoonvalleyTextToImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyUploadFile>>,
+        Awaited<ReturnType<typeof moonvalleyTextToImage>>,
         TError,
-        {data: MoonvalleyUploadFileBody},
+        {data: MoonvalleyTextToImageRequest},
         TContext
       > => {
 
-      const mutationOptions = getMoonvalleyUploadFileMutationOptions(options);
+      const mutationOptions = getMoonvalleyTextToImageMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * @summary Create Text to Video Prompt
+ */
+export const moonvalleyTextToVideo = (
+    moonvalleyTextToVideoRequest: MoonvalleyTextToVideoRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/text-to-video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyTextToVideoRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyTextToVideoMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyTextToVideo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, {data: MoonvalleyTextToVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyTextToVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyTextToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToVideo>>>
+    export type MoonvalleyTextToVideoMutationBody = MoonvalleyTextToVideoRequest
+    export type MoonvalleyTextToVideoMutationError = unknown
+
+    /**
+ * @summary Create Text to Video Prompt
+ */
+export const useMoonvalleyTextToVideo = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyTextToVideo>>,
+        TError,
+        {data: MoonvalleyTextToVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyTextToVideoMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * @summary Upload Files
+ */
+export const moonvalleyUpload = (
+    moonvalleyUploadFileRequest: MoonvalleyUploadFileRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      const formData = new FormData();
+if(moonvalleyUploadFileRequest.file !== undefined) {
+ formData.append(`file`, moonvalleyUploadFileRequest.file)
+ }
+
+      return customInstance<MoonvalleyUploadFileResponse>(
+      {url: `/proxy/moonvalley/uploads`, method: 'POST',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyUploadMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUpload>>, TError,{data: MoonvalleyUploadFileRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUpload>>, TError,{data: MoonvalleyUploadFileRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyUpload>>, {data: MoonvalleyUploadFileRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyUpload(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyUploadMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyUpload>>>
+    export type MoonvalleyUploadMutationBody = MoonvalleyUploadFileRequest
+    export type MoonvalleyUploadMutationError = unknown
+
+    /**
+ * @summary Upload Files
+ */
+export const useMoonvalleyUpload = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyUpload>>, TError,{data: MoonvalleyUploadFileRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyUpload>>,
+        TError,
+        {data: MoonvalleyUploadFileRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyUploadMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
@@ -20652,6 +21390,162 @@ export const useDeletePersonalAccessToken = <TError = ErrorResponse,
       > => {
 
       const mutationOptions = getDeletePersonalAccessTokenMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * Fetch release notes from Strapi with caching
+ * @summary Get release notes
+ */
+export const getReleaseNotes = (
+    params: GetReleaseNotesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ReleaseNote[]>(
+      {url: `/releases`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetReleaseNotesQueryKey = (params: GetReleaseNotesParams,) => {
+    return [`/releases`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetReleaseNotesQueryOptions = <TData = Awaited<ReturnType<typeof getReleaseNotes>>, TError = ErrorResponse>(params: GetReleaseNotesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReleaseNotes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReleaseNotesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReleaseNotes>>> = ({ signal }) => getReleaseNotes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReleaseNotes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetReleaseNotesQueryResult = NonNullable<Awaited<ReturnType<typeof getReleaseNotes>>>
+export type GetReleaseNotesQueryError = ErrorResponse
+
+
+export function useGetReleaseNotes<TData = Awaited<ReturnType<typeof getReleaseNotes>>, TError = ErrorResponse>(
+ params: GetReleaseNotesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReleaseNotes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getReleaseNotes>>,
+          TError,
+          Awaited<ReturnType<typeof getReleaseNotes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetReleaseNotes<TData = Awaited<ReturnType<typeof getReleaseNotes>>, TError = ErrorResponse>(
+ params: GetReleaseNotesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReleaseNotes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getReleaseNotes>>,
+          TError,
+          Awaited<ReturnType<typeof getReleaseNotes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetReleaseNotes<TData = Awaited<ReturnType<typeof getReleaseNotes>>, TError = ErrorResponse>(
+ params: GetReleaseNotesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReleaseNotes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get release notes
+ */
+
+export function useGetReleaseNotes<TData = Awaited<ReturnType<typeof getReleaseNotes>>, TError = ErrorResponse>(
+ params: GetReleaseNotesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReleaseNotes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetReleaseNotesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * Webhook endpoint to process Github release events and generate release notes
+ * @summary Process Github release webhook
+ */
+export const processReleaseWebhook = (
+    githubReleaseWebhook: GithubReleaseWebhook,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/releases`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: githubReleaseWebhook, signal
+    },
+      options);
+    }
+  
+
+
+export const getProcessReleaseWebhookMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processReleaseWebhook>>, TError,{data: GithubReleaseWebhook}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof processReleaseWebhook>>, TError,{data: GithubReleaseWebhook}, TContext> => {
+
+const mutationKey = ['processReleaseWebhook'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof processReleaseWebhook>>, {data: GithubReleaseWebhook}> = (props) => {
+          const {data} = props ?? {};
+
+          return  processReleaseWebhook(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ProcessReleaseWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof processReleaseWebhook>>>
+    export type ProcessReleaseWebhookMutationBody = GithubReleaseWebhook
+    export type ProcessReleaseWebhookMutationError = ErrorResponse
+
+    /**
+ * @summary Process Github release webhook
+ */
+export const useProcessReleaseWebhook = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof processReleaseWebhook>>, TError,{data: GithubReleaseWebhook}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof processReleaseWebhook>>,
+        TError,
+        {data: GithubReleaseWebhook},
+        TContext
+      > => {
+
+      const mutationOptions = getProcessReleaseWebhookMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }

@@ -1,7 +1,9 @@
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import axios from 'axios'
 import * as fs from 'fs/promises'
 import { glob } from 'glob'
 import path from 'path'
+import { update } from 'rambda'
 
 /**
  * Simplified i18n translation key extractor
@@ -122,10 +124,15 @@ async function translateKeyToLanguage(
     existingTranslations: Record<string, string>
 ): Promise<string> {
     try {
+        // Read Chinese translations for reference (human-reviewed)
+        const chineseTranslations = await readJsonFile(
+            path.join(LOCALES_DIR, 'zh/common.json')
+        )
+
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
-                model: 'gpt-4',
+                model: 'gpt-4o',
                 messages: [
                     {
                         role: 'system',
@@ -133,7 +140,11 @@ async function translateKeyToLanguage(
                     },
                     {
                         role: 'system',
-                        content: `For translation consistency, Existing translations: ${JSON.stringify(existingTranslations)}`,
+                        content: `For translation consistency, Here's Existing translations on this language: ${JSON.stringify(existingTranslations)}`,
+                    },
+                    {
+                        role: 'system',
+                        content: `For additional reference, here are human-reviewed Chinese translations: ${JSON.stringify(chineseTranslations)}`,
                     },
                     // Example
                     {
@@ -160,10 +171,16 @@ async function translateKeyToLanguage(
         )
 
         const translatedText = response.data.choices[0].message.content
-        return translatedText.trim()
+        return (
+            translatedText
+                // trim space
+                .trim()
+                // trim paired quotes
+                .replace(/^['"`]|['"`]$/g, '')
+        )
     } catch (error) {
         throw new Error(
-            `Error translating key "${key}" to ${lang}: ${error instanceof Error ? error.message : String(error)}`
+            `Error translating key "${key}" to ${lang}: ${String(error)}`
         )
     }
 }
@@ -201,7 +218,8 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
         return
     }
 
-    const availableLanguages = await getAvailableLanguages()
+    // const availableLanguages = await getAvailableLanguages()
+    const availableLanguages = SUPPORTED_LANGUAGES
     for (const lang of availableLanguages) {
         const langFile = path.join(LOCALES_DIR, `${lang}/common.json`)
         const existingLangTranslations = await readJsonFile(langFile)
@@ -216,18 +234,19 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
 
         // Update translations for the current language
         const updatedLangTranslations = { ...existingLangTranslations }
+        unusedKeysLang.forEach((key) => {
+            delete updatedLangTranslations[key]
+        })
         for (const key of newKeysLang) {
             const translation = await translateKeyToLanguage(
                 key,
                 lang,
-                existingLangTranslations
+                updatedLangTranslations
             )
             updatedLangTranslations[key] = translation
             console.log(`+ ${lang} ${key}: ${translation}`)
+            await writeJsonFile(langFile, updatedLangTranslations)
         }
-        unusedKeysLang.forEach((key) => {
-            delete updatedLangTranslations[key]
-        })
 
         await writeJsonFile(langFile, updatedLangTranslations)
         console.log(`${langFile}:`)

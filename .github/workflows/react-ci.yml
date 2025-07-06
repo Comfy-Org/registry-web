@@ -23,13 +23,13 @@ jobs:
             - name: Install Dependencies
               run: bun install
             - name: Run Next.js Lint
-              run: bun run lint
-            - name: Extract i18n Keys
-              run: bun scripts/extract-i18n-keys.ts
+              run: bun fix
+            - name: Run Format
+              run: bun fmt
+            - name: Scan i18n Keys
+              run: bun scripts/scan-i18n.ts
               env:
                   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-            - name: Check Formatting with Prettier
-              run: bunx prettier --write .
             - name: Sort package.json
               run: bunx sort-package-json
             - name: Build the Next.js Project
