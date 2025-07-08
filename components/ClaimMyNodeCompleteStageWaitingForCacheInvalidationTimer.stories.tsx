@@ -1,14 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer from './ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer'
 
-const meta: Meta<typeof ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer> = {
+const meta: Meta<
+    typeof ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer
+> = {
     title: 'Components/ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer',
     component: ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer,
     parameters: {
         layout: 'centered',
         docs: {
             description: {
-                component: 'A countdown timer component that displays the remaining time for cache refresh after node ownership changes. This component is deprecated and will be removed when backend cache invalidation is properly handled.',
+                component:
+                    'A countdown timer component that displays the remaining time for cache refresh after node ownership changes. This component is deprecated and will be removed when backend cache invalidation is properly handled.',
             },
         },
     },

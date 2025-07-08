@@ -1,7 +1,7 @@
 /**
  * CacheWaitingTimer Component
  * Displays a countdown timer for cache refresh after node ownership changes
- * 
+ *
  * @deprecated This component will be delete when the cache invalidation is handled correctly by the backend
  */
 import { useEffect, useState } from 'react'
@@ -77,11 +77,11 @@ export default function ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer
             <p className="text-gray-300 text-sm max-w-[35em]">
                 {timeRemaining > 0
                     ? t(
-                        'The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.'
-                    )
+                          'The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.'
+                      )
                     : t(
-                        'The cache has been refreshed. The node ownership change should now be visible to the public.'
-                    )}
+                          'The cache has been refreshed. The node ownership change should now be visible to the public.'
+                      )}
             </p>
         </div>
     )
