@@ -9,7 +9,7 @@ import { HiHome, HiPlus } from 'react-icons/hi'
 import {
     getListNodesForPublisherQueryKey,
     useListNodesForPublisherV2,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
 export default withAdmin(ClaimNodesPage)

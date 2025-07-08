@@ -11,7 +11,7 @@ import {
     useListNodesForPublisherV2,
     useListPersonalAccessTokens,
     useUpdatePublisher,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 import EditPublisherModal from '../publisher/EditPublisherModal'

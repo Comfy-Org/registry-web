@@ -3,7 +3,7 @@ import { AxiosError } from 'axios'
 import { Button, Modal } from 'flowbite-react'
 import React from 'react'
 import { toast } from 'react-toastify'
-import { useDeleteNodeVersion } from 'src/api/generated'
+import { useDeleteNodeVersion } from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 
 type NodeVersionDeleteModalProps = {

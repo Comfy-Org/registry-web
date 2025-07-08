@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { HiChevronDown } from 'react-icons/hi'
-import { useGetUser } from 'src/api/generated'
+import { useGetUser } from '@/src/api/generated'
 import app from '../../src/firebase'
 import { useLogout } from '../AuthUI/Logout'
 

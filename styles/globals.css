@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 body {
     background-color: rgb(17 24 39);
 }
@@ -8,14 +11,8 @@ body {
     color: white !important;
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
 .ais-Hits-list {
     @apply grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2;
-}
-
-.ais-Hits-item {
-    @apply bg-gray-800 p-4 rounded-lg shadow-md;
 }
 
 .ais-Hits-item:hover,

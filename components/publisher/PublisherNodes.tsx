@@ -2,7 +2,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import { Pagination } from 'flowbite-react'
 import Link from 'next/link'
 import * as React from 'react'
-import { Publisher, useListNodesForPublisherV2 } from 'src/api/generated'
+import { Publisher, useListNodesForPublisherV2 } from '@/src/api/generated'
 import { CustomThemePagination } from 'utils/comfyTheme'
 import NodesCard from '../nodes/NodesCard'
 

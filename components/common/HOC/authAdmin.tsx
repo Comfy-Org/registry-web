@@ -3,7 +3,7 @@ import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useGetUser } from 'src/api/generated'
+import { useGetUser } from '@/src/api/generated'
 import { useFromUrlParam } from './useFromUrl'
 
 /**

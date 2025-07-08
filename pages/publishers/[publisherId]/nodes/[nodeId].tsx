@@ -3,7 +3,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
-import { useGetPublisher } from 'src/api/generated'
+import { useGetPublisher } from '@/src/api/generated'
 
 const NodeView = () => {
     const router = useRouter()

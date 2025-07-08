@@ -19,7 +19,7 @@ import {
     NodeVersionStatus,
     useGetNode,
     useListNodeVersions,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import yaml from 'yaml'
 import { z } from 'zod'

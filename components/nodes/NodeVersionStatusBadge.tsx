@@ -1,6 +1,6 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { Badge } from 'flowbite-react'
-import { NodeVersionStatus } from 'src/api/generated'
+import { NodeVersionStatus } from '@/src/api/generated'
 
 const NodeVersionStatusBadge: React.FC<{ status?: NodeVersionStatus }> = ({
     status,

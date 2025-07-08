@@ -1,5 +1,5 @@
 import { Pagination as FlowbitePagination } from 'flowbite-react'
-import { CustomThemePagination } from 'utils/comfyTheme'
+import { CustomThemePagination } from '@/utils/comfyTheme'
 
 export function CustomPagination({ currentPage, onPageChange, totalPages }) {
     return (

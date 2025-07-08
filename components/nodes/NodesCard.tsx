@@ -2,7 +2,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { Node } from 'src/api/generated'
+import { Node } from '@/src/api/generated'
 interface NodesCard {
     node: Node
     buttonLink: string
