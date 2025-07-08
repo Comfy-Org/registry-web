@@ -477,13 +477,13 @@ function ClaimMyNodePage() {
                                         currentStage === 'info_confirmation'
                                             ? '0%'
                                             : currentStage === 'github_login'
-                                              ? '25%'
-                                              : currentStage ===
-                                                  'verifying_admin'
-                                                ? '50%'
-                                                : currentStage === 'claim_node'
-                                                  ? '75%'
-                                                  : '100%',
+                                                ? '25%'
+                                                : currentStage ===
+                                                    'verifying_admin'
+                                                    ? '50%'
+                                                    : currentStage === 'claim_node'
+                                                        ? '75%'
+                                                        : '100%',
                                 }}
                             ></div>
                             <div className={`h-full bg-gray-700 flex-1`}></div>
@@ -501,16 +501,15 @@ function ClaimMyNodePage() {
                                 <div key={stage} className="flex-1 text-center">
                                     <div
                                         className={`mx-auto rounded-full flex items-center justify-center w-8 h-8 mb-1
-                                        ${
-                                            stage === currentStage
+                                        ${stage === currentStage
                                                 ? 'bg-blue-600 text-white'
                                                 : [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(currentStage) >
+                                                    'info_confirmation',
+                                                    'github_login',
+                                                    'verifying_admin',
+                                                    'claim_node',
+                                                    'completed',
+                                                ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -520,23 +519,22 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                  ? 'bg-green-500 text-white'
-                                                  : 'bg-gray-700 text-gray-400'
-                                        }`}
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-gray-700 text-gray-400'
+                                            }`}
                                     >
                                         {index + 1}
                                     </div>
                                     <div
-                                        className={`text-xs mt-1 ${
-                                            stage === currentStage
+                                        className={`text-xs mt-1 ${stage === currentStage
                                                 ? 'text-blue-500 font-medium'
                                                 : [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(currentStage) >
+                                                    'info_confirmation',
+                                                    'github_login',
+                                                    'verifying_admin',
+                                                    'claim_node',
+                                                    'completed',
+                                                ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -546,9 +544,9 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                  ? 'text-green-500'
-                                                  : 'text-gray-500'
-                                        }`}
+                                                    ? 'text-green-500'
+                                                    : 'text-gray-500'
+                                            }`}
                                     >
                                         {stage === 'info_confirmation' &&
                                             t('Info')}
@@ -766,7 +764,7 @@ function ClaimMyNodePage() {
 
                             {/* Cache refresh timer section */}
                             {claimCompletedAt && (
-                                <CacheWaitingTimer
+                                <ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer
                                     completedAt={claimCompletedAt}
                                 />
                             )}
@@ -792,16 +790,16 @@ export default withAuth(ClaimMyNodePage)
 /**
  * CacheWaitingTimer Component
  * Displays a countdown timer for cache refresh after node ownership changes
+ * 
+ * @deprecated This component will be delete when the cache invalidation is handled correctly by the backend
  */
-interface CacheWaitingTimerProps {
-    completedAt: Date
-    cacheRefreshDurationMinutes?: number
-}
-
-function CacheWaitingTimer({
+function ClaimMyNodeCompleteStageWaitingForCacheInvalidationTimer({
     completedAt,
     cacheRefreshDurationMinutes = 30,
-}: CacheWaitingTimerProps) {
+}: {
+    completedAt: Date
+    cacheRefreshDurationMinutes?: number
+}) {
     const { t } = useNextTranslation()
     const [timeRemaining, setTimeRemaining] = useState<number>(0)
 
@@ -863,11 +861,11 @@ function CacheWaitingTimer({
             <p className="text-gray-300 text-sm">
                 {timeRemaining > 0
                     ? t(
-                          'The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.'
-                      )
+                        'The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.'
+                    )
                     : t(
-                          'The cache has been refreshed. The node ownership change should now be visible to the public.'
-                      )}
+                        'The cache has been refreshed. The node ownership change should now be visible to the public.'
+                    )}
             </p>
         </div>
     )
