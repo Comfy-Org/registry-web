@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { HiHome } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
-import { Node, useSearchNodes } from 'src/api/generated'
+import { Node, useSearchNodes } from '@/src/api/generated'
 import { useRouterQuery } from 'src/hooks/useRouterQuery'
 
 function SearchRankingAdminPage() {

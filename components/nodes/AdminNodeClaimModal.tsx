@@ -13,7 +13,7 @@ import {
     getGetNodeQueryKey,
     getListNodesForPublisherV2QueryKey,
     getSearchNodesQueryKey,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { PublisherId } from '../Search/PublisherId'
 

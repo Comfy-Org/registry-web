@@ -5,7 +5,7 @@ import {
     Publisher,
     useListPublishersForUser,
     useUpdatePublisher,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import GenericHeader from '../common/GenericHeader'
 import PublisherNodes from './PublisherNodes'
 

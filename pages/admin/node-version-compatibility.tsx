@@ -3,7 +3,7 @@ import {
     useListAllNodeVersions,
     NodeVersion,
     NodeVersionStatus,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import {
     Button,
     Table,

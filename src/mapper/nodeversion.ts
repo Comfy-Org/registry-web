@@ -1,4 +1,4 @@
-import { NodeVersionStatus } from 'src/api/generated'
+import { NodeVersionStatus } from '@/src/api/generated'
 
 export function NodeVersionStatusToReadable({
     status,

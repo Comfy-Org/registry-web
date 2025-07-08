@@ -36,7 +36,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
     )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
         <Link
-            className="flex flex-col bg-gray-800 rounded-lg h-full dark:border-gray-700"
+            className="flex flex-col bg-gray-800 rounded-lg h-full dark:border-gray-700 p-4 shadow-md"
             href={`/nodes/${hit.id}`}
             rel="noopener noreferrer"
         >

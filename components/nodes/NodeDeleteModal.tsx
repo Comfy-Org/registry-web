@@ -4,7 +4,7 @@ import { Button, Label, Modal, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useDeleteNode } from 'src/api/generated'
+import { useDeleteNode } from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 
 type NodeDeleteModalProps = {

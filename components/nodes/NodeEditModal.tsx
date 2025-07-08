@@ -4,7 +4,7 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { Error, Node, useUpdateNode } from 'src/api/generated'
+import { Error, Node, useUpdateNode } from '@/src/api/generated'
 import {
     CustomThemeTextArea,
     customThemeTextInput,

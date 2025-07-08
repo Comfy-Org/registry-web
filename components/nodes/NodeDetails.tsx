@@ -16,7 +16,7 @@ import {
     useGetUser,
     useListNodeVersions,
     useListPublishersForUser,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'

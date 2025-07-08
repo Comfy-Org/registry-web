@@ -10,7 +10,7 @@ import {
     Node,
     useGetNode,
     useUpdateNode,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { useNextTranslation } from 'src/hooks/i18n'
 
 export default function SearchRankingEditModal({

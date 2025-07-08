@@ -15,10 +15,6 @@ body {
     @apply grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2;
 }
 
-.ais-Hits-item {
-    @apply bg-gray-800 p-4 rounded-lg shadow-md;
-}
-
 .ais-Hits-item:hover,
 .ais-Snippet:hover,
 .ais-Hits-item h1:hover {

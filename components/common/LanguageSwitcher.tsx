@@ -14,6 +14,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
             label={LANGUAGE_NAMES[currentLanguage] || 'Language'}
             color="gray"
             className={className}
+            size="xs"
         >
             {Object.entries(LANGUAGE_NAMES).map(([langCode, langName]) => (
                 <Dropdown.Item

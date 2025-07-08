@@ -4,7 +4,7 @@ import { Button, Card, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useCreatePublisher, useValidatePublisher } from 'src/api/generated'
+import { useCreatePublisher, useValidatePublisher } from '@/src/api/generated'
 import { customThemeTextInput } from 'utils/comfyTheme'
 
 type CreatePublisherFormProps = {
