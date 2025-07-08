@@ -263,10 +263,9 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
             )
             updatedLangTranslations[key] = translation
             console.log(`+ ${lang} ${key}: ${translation}`)
+            // write to json immediately to avoid losing progress if the script crashes
             await writeJsonFile(langFile, updatedLangTranslations)
         }
-
-        await writeJsonFile(langFile, updatedLangTranslations)
         console.log(`${langFile}:`)
         console.log(`+ ${newKeysLang.length} new keys`)
         console.log(`- ${unusedKeysLang.length} unused keys`)
