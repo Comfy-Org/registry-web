@@ -45,3 +45,36 @@ export const WithTitle: Story = {
         title: 'Custom Title',
     },
 }
+
+export const MobileView: Story = {
+    args: {
+        isLoggedIn: false,
+    },
+    parameters: {
+        viewport: {
+            defaultViewport: 'mobile1',
+        },
+    },
+}
+
+export const TabletView: Story = {
+    args: {
+        isLoggedIn: false,
+    },
+    parameters: {
+        viewport: {
+            defaultViewport: 'tablet',
+        },
+    },
+}
+
+export const DesktopView: Story = {
+    args: {
+        isLoggedIn: false,
+    },
+    parameters: {
+        viewport: {
+            defaultViewport: 'desktop',
+        },
+    },
+}
