@@ -12,7 +12,7 @@ import {
     useGetNode,
     useListPublishers,
     useSearchNodes,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { z } from 'zod'
 

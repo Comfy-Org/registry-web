@@ -5,7 +5,7 @@ import {
     NodeVersion,
     AdminUpdateNodeVersionBody,
     useAdminUpdateNodeVersion,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'

@@ -9,7 +9,7 @@ import {
     Publisher,
     useListPublishers,
     useUpdateNode,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { PublisherId } from '../Search/PublisherId'
 

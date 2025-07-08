@@ -7,7 +7,7 @@ import {
     NodeVersion,
     useGetNodeVersion,
     useUpdateNodeVersion,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { FormatRelativeDate } from './NodeDetails'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
 type NodeVDrawerProps = {
