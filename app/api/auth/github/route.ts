@@ -55,9 +55,9 @@ export const GET = async (request: NextRequest) => {
         ).toString('base64')
 
         const frontendHost =
-            process.env.VERCEL_URL // usually [branch].vercel.app or registry.comfy.org
-            || request.headers.get('x-forwarded-host') // if use reverse-proxy
-            || request.headers.get('host'); // fallback to request host
+            process.env.VERCEL_URL || // usually [branch].vercel.app or registry.comfy.org
+            request.headers.get('x-forwarded-host') || // if use reverse-proxy
+            request.headers.get('host') // fallback to request host
         const origin = `https://${frontendHost}`
 
         // Redirect to GitHub OAuth
