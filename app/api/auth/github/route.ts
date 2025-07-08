@@ -53,9 +53,12 @@ export const GET = async (request: NextRequest) => {
                 timestamp: Date.now(),
             })
         ).toString('base64')
-        const host = '3000.stukivx.snomiao.dev'
-        // const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
-        const origin = `https://${host}`
+
+        const frontendHost =
+            process.env.VERCEL_URL // usually [branch].vercel.app or registry.comfy.org
+            || request.headers.get('x-forwarded-host') // if use reverse-proxy
+            || request.headers.get('host'); // fallback to request host
+        const origin = `https://${frontendHost}`
 
         // Redirect to GitHub OAuth
         const params = new URLSearchParams({
