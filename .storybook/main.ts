@@ -22,13 +22,14 @@ const config: StorybookConfig = {
         options: {},
     },
     staticDirs: ['../public'],
-    viteFinal: (c) => mergeConfig(c, {
-        server: { allowedHosts: true },
-        resolve: {
-            alias: {
-                '@': path.resolve(process.cwd()),
+    viteFinal: (c) =>
+        mergeConfig(c, {
+            server: { allowedHosts: true },
+            resolve: {
+                alias: {
+                    '@': path.resolve(process.cwd()),
+                },
             },
-        },
-    }),
+        }),
 }
 export default config
