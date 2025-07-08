@@ -8,7 +8,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
-import MailtoNodeVersionModal from 'components/MailtoNodeVersionModal'
+import MailtoNodeVersionModal from '@/components/MailtoNodeVersionModal'
 import {
     Breadcrumb,
     Button,
