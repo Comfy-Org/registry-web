@@ -34,7 +34,7 @@ GITHUB_CLIENT_SECRET="your_client_secret_here"
 
 For local development, you may want to create a separate OAuth app with:
 
-- **Homepage URL**: `http://localhost:3000/`
+- **Homepage URL**: `http://localhost:3000`
 - **Authorization callback URL**: `http://localhost:3000/api/auth/github/callback`
 
 This ensures your local development environment doesn't interfere with the production app.
