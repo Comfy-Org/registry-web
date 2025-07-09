@@ -166,10 +166,10 @@ const NodeDetails = () => {
         router.push(`/nodes/${nodeId}/claim`)
     }
 
-
     // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
     // usually this happens when publisher changes, e.g. when user claims a node
-    const isPublisherIdMismatchedBetweenURLandNode = node && _publisherId && publisherId !== _publisherId
+    const isPublisherIdMismatchedBetweenURLandNode =
+        node && _publisherId && publisherId !== _publisherId
     if (isPublisherIdMismatchedBetweenURLandNode) {
         router.replace(`/publishers/${publisherId}/nodes/${nodeId}`)
         return null // prevent rendering the component while redirecting
@@ -555,12 +555,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                        node
-                                                            .preempted_comfy_node_names
-                                                            .length > 0
+                                                    node
+                                                        .preempted_comfy_node_names
+                                                        .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                            '\n'
-                                                        )
+                                                              '\n'
+                                                          )
                                                         : t('None')}
                                                 </pre>
                                             </span>
