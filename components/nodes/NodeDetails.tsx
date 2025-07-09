@@ -111,13 +111,6 @@ const NodeDetails = () => {
     const { data: node, isLoading, isError } = useGetNode(nodeId)
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
-    // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
-    // usually this happens when publisher changes, e.g. when user claims a node
-    if (node && _publisherId && publisherId !== _publisherId) {
-        router.replace(`/publishers/${publisherId}/nodes/${nodeId}`)
-        return null // prevent rendering the component while redirecting
-    }
-
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId,
         nodeId
@@ -171,6 +164,15 @@ const NodeDetails = () => {
         }
         // Redirect to publisher selection page for claiming
         router.push(`/nodes/${nodeId}/claim`)
+    }
+
+
+    // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
+    // usually this happens when publisher changes, e.g. when user claims a node
+    const isPublisherIdMismatchedBetweenURLandNode = node && _publisherId && publisherId !== _publisherId
+    if (isPublisherIdMismatchedBetweenURLandNode) {
+        router.replace(`/publishers/${publisherId}/nodes/${nodeId}`)
+        return null // prevent rendering the component while redirecting
     }
 
     if (isError) {
@@ -553,12 +555,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
+                                                        node
+                                                            .preempted_comfy_node_names
+                                                            .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
+                                                            '\n'
+                                                        )
                                                         : t('None')}
                                                 </pre>
                                             </span>
