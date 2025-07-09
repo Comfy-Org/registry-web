@@ -326,7 +326,7 @@
   "Warning: found some similar nodes: \\n": "Attention: trouvé certains nœuds similaires: \\n",
   "Welcome to ComfyUI Registry": "Bienvenue sur le Registre ComfyUI",
   "Yesterday": "Hier",
-  "You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "Vous (utilisateur GitHub : {{username}}, ID : {{userId}}) n'avez pas la permission d'administrateur pour ce dépôt ({{owner}}/{{repo}}, ID de nœud : {{nodeId}}). Seuls les administrateurs du dépôt peuvent revendiquer des nœuds.",
+  "You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "Vous (utilisateur GitHub : {{username}}) n'avez pas la permission d'administrateur sur ce dépôt ({{owner}}/{{repo}}, ID du nœud : {{nodeId}}). Seuls les administrateurs du dépôt peuvent revendiquer des nœuds.",
   "You are about to {{action}} {{count}} node versions": "Vous êtes sur le point de {{action}} {{count}} versions de nœud",
   "You can contact the publisher via GitHub:": "Vous pouvez contacter l'éditeur via GitHub :",
   "You can contact the publisher via email:": "Vous pouvez contacter l'éditeur par email :",

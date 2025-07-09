@@ -326,7 +326,7 @@
   "Warning: found some similar nodes: \\n": "경고: 일부 유사한 노드를 찾았습니다: \\n",
   "Welcome to ComfyUI Registry": "ComfyUI 레지스트리에 오신 것을 환영합니다",
   "Yesterday": "어제",
-  "You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "당신(GitHub 사용자: {{username}}, ID: {{userId}})는 이 저장소({{owner}}/{{repo}}, 노드 ID: {{nodeId}})에 대한 관리자 권한이 없습니다. 저장소 관리자만 노드를 청구할 수 있습니다.",
+  "You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "당신 (GitHub 사용자: {{username}})은 이 저장소 ({{owner}}/{{repo}}, 노드 ID: {{nodeId}})에 대한 관리자 권한이 없습니다. 저장소 관리자만 노드를 청구할 수 있습니다.",
   "You are about to {{action}} {{count}} node versions": "당신은 {{count}}개의 노드 버전을 {{action}}하려고 합니다",
   "You can contact the publisher via GitHub:": "GitHub을 통해 발행인에게 연락하실 수 있습니다:",
   "You can contact the publisher via email:": "이메일을 통해 발행인에게 연락하실 수 있습니다:",

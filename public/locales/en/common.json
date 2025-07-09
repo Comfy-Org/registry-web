@@ -326,7 +326,7 @@
   "Warning: found some similar nodes: \\n": "Warning: found some similar nodes: \\n",
   "Welcome to ComfyUI Registry": "Welcome to ComfyUI Registry",
   "Yesterday": "Yesterday",
-  "You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.",
+  "You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.",
   "You are about to {{action}} {{count}} node versions": "You are about to {{action}} {{count}} node versions",
   "You can contact the publisher via GitHub:": "You can contact the publisher via GitHub:",
   "You can contact the publisher via email:": "You can contact the publisher via email:",

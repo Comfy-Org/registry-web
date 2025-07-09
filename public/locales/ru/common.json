@@ -326,7 +326,7 @@
   "Warning: found some similar nodes: \\n": "Предупреждение: найдены похожие узлы: \\n",
   "Welcome to ComfyUI Registry": "Добро пожаловать в реестр ComfyUI",
   "Yesterday": "Вчера",
-  "You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "Вы (пользователь GitHub: {{username}}, ID: {{userId}}) не имеете прав администратора в этом репозитории ({{owner}}/{{repo}}, ID узла: {{nodeId}}). Только администраторы репозитория могут заявлять узлы.",
+  "You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "Вы (пользователь GitHub: {{username}}) не имеете прав администратора на этот репозиторий ({{owner}}/{{repo}}, ID узла: {{nodeId}}). Только администраторы репозитория могут заявлять на узлы.",
   "You are about to {{action}} {{count}} node versions": "Вы собираетесь {{action}} {{count}} версий узлов",
   "You can contact the publisher via GitHub:": "Вы можете связаться с издателем через GitHub:",
   "You can contact the publisher via email:": "Вы можете связаться с издателем по email:",

@@ -326,7 +326,7 @@
   "Warning: found some similar nodes: \\n": "警告：发现了一些相似的节点：\\n",
   "Welcome to ComfyUI Registry": "欢迎来到 ComfyUI 注册表",
   "Yesterday": "昨天",
-  "You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "您（GitHub 用户：{{username}}，ID：{{userId}}）没有此仓库（{{owner}}/{{repo}}，节点 ID：{{nodeId}}）的管理员权限。只有仓库管理员可以认领节点。",
+  "You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.": "您（GitHub 用户：{{username}}）没有此仓库（{{owner}}/{{repo}}，节点 ID：{{nodeId}}）的管理员权限。只有仓库管理员可以认领节点。",
   "You are about to {{action}} {{count}} node versions": "您即将{{action}}{{count}}个节点版本",
   "You can contact the publisher via GitHub:": "您可以通过GitHub联系发布者：",
   "You can contact the publisher via email:": "您可以通过电子邮件联系发布者：",
