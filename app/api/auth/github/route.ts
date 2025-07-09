@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { DIE } from 'phpdie'
 import analytic from 'src/analytic/analytic'
 
-// Ensure environment variables are set for production
-if (process.env.NODE_ENV === 'production') {
+// Ensure environment variables are set for vercel production env
+if (process.env.VERCEL_URL && process.env.NODE_ENV === 'production') {
     process.env.GITHUB_CLIENT_ID || DIE('GITHUB_CLIENT_ID is not set');
     process.env.GITHUB_CLIENT_SECRET || DIE('GITHUB_CLIENT_SECRET is not set');
 }
