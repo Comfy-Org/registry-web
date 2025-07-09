@@ -55,8 +55,12 @@ function ClaimMyNodePage() {
     const [githubToken, setGithubToken] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
     const [permissionCheckLoading, setPermissionCheckLoading] = useState(false)
-    const [githubUsername, setGithubUsername] = useState<string>('unknown')
-    const [githubUserId, setGithubUserId] = useState<string>('unknown')
+    const [githubUsername, setGithubUsername] = useState<string | undefined>(
+        undefined
+    )
+    const [githubUserId, setGithubUserId] = useState<string | undefined>(
+        undefined
+    )
     const [claimCompletedAt, setClaimCompletedAt] = useState<Date | null>(null)
 
     // Get the node, claiming publisher, and current user
@@ -151,8 +155,13 @@ function ClaimMyNodePage() {
     const verifyRepoPermissions = async (
         token: string,
         owner: string,
-        repo: string
-    ) => {
+        repo: string,
+        nodeIdParam: string
+    ): Promise<{
+        hasPermission: boolean
+        userInfo?: { username: string; userId: string }
+        errorMessage?: string
+    }> => {
         try {
             setPermissionCheckLoading(true)
 
@@ -162,14 +171,27 @@ function ClaimMyNodePage() {
             })
 
             // Get GitHub user info first using Octokit REST API
+            let userInfo: { username: string; userId: string } | undefined
             try {
                 const { data: userData } =
                     await octokit.rest.users.getAuthenticated()
+                userInfo = {
+                    username: userData.login,
+                    userId: userData.id.toString(),
+                }
                 setGithubUsername(userData.login)
                 setGithubUserId(userData.id.toString())
             } catch (error) {
-                // If we can't get user data, we can't proceed with verification
-                return false
+                // If we can't get user data, set userInfo to undefined and allow retry
+                setGithubUsername(undefined)
+                setGithubUserId(undefined)
+                return {
+                    hasPermission: false,
+                    userInfo: undefined,
+                    errorMessage: t(
+                        'Failed to get GitHub user information. Please try again.'
+                    ),
+                }
             }
 
             // Check repository access
@@ -182,7 +204,10 @@ function ClaimMyNodePage() {
 
                 // If permissions is included and shows admin access, we have admin permission
                 if (repoData.permissions?.admin === true) {
-                    return true
+                    return {
+                        hasPermission: true,
+                        userInfo,
+                    }
                 }
 
                 // If we have basic access but need to verify specific permission level
@@ -193,30 +218,71 @@ function ClaimMyNodePage() {
                             {
                                 owner,
                                 repo,
-                                username: githubUsername,
+                                username: userInfo.username,
                             }
                         )
 
                     // Check if user has admin permission level
                     const permission = permissionData.permission
                     if (permission === 'admin') {
-                        return true
+                        return {
+                            hasPermission: true,
+                            userInfo,
+                        }
                     }
                 } catch (permissionError) {
                     // If we can't check specific permissions, we'll assume no admin access
-                    return false
+                    return {
+                        hasPermission: false,
+                        userInfo,
+                        errorMessage: t(
+                            'You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
+                            {
+                                username: userInfo.username,
+                                userId: userInfo.userId,
+                                owner,
+                                repo,
+                                nodeId: nodeIdParam,
+                            }
+                        ),
+                    }
                 }
 
                 // If we've reached here without a definitive answer, be conservative
-                return false
+                return {
+                    hasPermission: false,
+                    userInfo,
+                    errorMessage: t(
+                        'You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
+                        {
+                            username: userInfo.username,
+                            userId: userInfo.userId,
+                            owner,
+                            repo,
+                            nodeId: nodeIdParam,
+                        }
+                    ),
+                }
             } catch (repoError) {
                 // Repository not found or user doesn't have access
-                return false
+                return {
+                    hasPermission: false,
+                    userInfo,
+                    errorMessage: t(
+                        'Repository {{owner}}/{{repo}} not found or you do not have access to it.',
+                        { owner, repo }
+                    ),
+                }
             }
         } catch (err: any) {
-            // Instead of throwing an error, return false to indicate no permissions
-            // This makes the verification process more resilient
-            return false
+            // Instead of throwing an error, return structured error info
+            return {
+                hasPermission: false,
+                userInfo: undefined,
+                errorMessage: t(
+                    'There was an unexpected error verifying your repository permissions. Please try again.'
+                ),
+            }
         } finally {
             setPermissionCheckLoading(false)
         }
@@ -272,34 +338,36 @@ function ClaimMyNodePage() {
 
             // Verify repository permissions with the token
             setIsVerifying(true)
-            verifyRepoPermissions(token, owner, repo)
-                .then((hasPermission) => {
-                    if (hasPermission) {
+            verifyRepoPermissions(token, owner, repo, nodeIdParam)
+                .then((result) => {
+                    if (result.hasPermission) {
                         setIsVerified(true)
                         setCurrentStage('claim_node')
                         analytic.track('GitHub Verification Success', {
                             nodeId: nodeIdParam,
                             publisherId,
-                            githubUsername,
-                            githubUserId,
+                            githubUsername: result.userInfo?.username,
+                            githubUserId: result.userInfo?.userId,
                             hasAdminPermission: true,
                         })
                     } else {
-                        const errorMsg = t(
-                            `You (GitHub user: ${githubUsername}, ID: ${githubUserId}) do not have admin permission to this repository (${owner}/${repo}, Node ID: ${nodeIdParam}). Only repository administrators can claim nodes.`
-                        )
+                        const errorMsg =
+                            result.errorMessage ||
+                            t(
+                                'Unable to verify repository permissions. Please try again.'
+                            )
                         setError(errorMsg)
                         analytic.track('GitHub Verification Failed', {
                             nodeId: nodeIdParam,
                             publisherId,
-                            githubUsername,
-                            githubUserId,
+                            githubUsername: result.userInfo?.username,
+                            githubUserId: result.userInfo?.userId,
                             reason: 'No admin permission',
                         })
                     }
                 })
                 .catch((err) => {
-                    // This should rarely happen now since we return false for most errors
+                    // This should rarely happen now since we return structured errors
                     // But just in case there's an unexpected error
                     const errorMsg = t(
                         'There was an unexpected error verifying your repository permissions. Please try again.'
@@ -713,14 +781,24 @@ function ClaimMyNodePage() {
                                 </h3>
                             </div>
                             <p className="text-gray-300 mb-4">
-                                {t(
-                                    'Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
-                                    {
-                                        username: githubUsername,
-                                        nodeName: node?.name,
-                                        publisherName: publisherToClaim?.name,
-                                    }
-                                )}
+                                {githubUsername
+                                    ? t(
+                                          'Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
+                                          {
+                                              username: githubUsername,
+                                              nodeName: node?.name,
+                                              publisherName:
+                                                  publisherToClaim?.name,
+                                          }
+                                      )
+                                    : t(
+                                          'Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
+                                          {
+                                              nodeName: node?.name,
+                                              publisherName:
+                                                  publisherToClaim?.name,
+                                          }
+                                      )}
                             </p>
                             <div className="flex justify-end">
                                 <Button
