@@ -62,10 +62,11 @@ export const GET = async (request: NextRequest) => {
         ).toString('base64')
 
         // - [System environment variables](https://vercel.com/docs/environment-variables/system-environment-variables )
-        const frontendHost =
-            request.headers.get('x-forwarded-host') || // if use reverse-proxy
+        const xfh =
+            request.headers.get('x-forwarded-host') || // if use reverse-proxy, e.g. caddy/nginx/vercel
             request.headers.get('host') // fallback to request host
-        const origin = `https://${frontendHost}`
+        const xfp = request.headers.get('x-forwarded-proto') || 'http'
+        const origin = `${xfp}://${xfh}`
 
         // Redirect to GitHub OAuth
         const params = new URLSearchParams({
