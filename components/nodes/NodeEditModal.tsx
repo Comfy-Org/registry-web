@@ -4,7 +4,7 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { Error, Node, useUpdateNode } from '@/src/api/generated'
+import { Error, ErrorResponse, Node, useUpdateNode } from '@/src/api/generated'
 import {
     CustomThemeTextArea,
     customThemeTextInput,
@@ -55,6 +55,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             updateNodeMutation.mutate(
                 {
                     data: {
+                        id: nodeData.id, // necessary
                         name: nodeName,
                         description: description,
                         license: license,
@@ -64,14 +65,24 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                     publisherId: publisherId,
                 },
                 {
+                    onSuccess: (data) => {
+                        if (data) {
+                            toast.success(t('Node updated successfully'))
+                        } else {
+                            toast.error(t('Failed to update node'))
+                        }
+                    },
                     onError: (error, variables, context) => {
                         if (error instanceof AxiosError) {
-                            const axiosError: AxiosError<Error, any> = error
+                            const axiosError: AxiosError<ErrorResponse, any> = error
+                            console.error('Error updating node:', axiosError)
                             toast.error(
-                                `Failed to update node. ${axiosError.response?.data?.message}`
+                                t(`Failed to update node.\n{{detail}}`, {
+                                    detail: [(axiosError.response?.data?.message), (axiosError.response?.data?.error)].filter(Boolean).join('\n')
+                                })
                             )
                         } else {
-                            toast.error('Failed to update node')
+                            toast.error(t('Failed to update node'))
                         }
                     },
                 }
