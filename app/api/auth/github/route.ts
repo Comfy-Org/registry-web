@@ -61,8 +61,8 @@ export const GET = async (request: NextRequest) => {
             })
         ).toString('base64')
 
+        // - [System environment variables](https://vercel.com/docs/environment-variables/system-environment-variables )
         const frontendHost =
-            process.env.VERCEL_URL || // usually [branch].vercel.app or registry.comfy.org
             request.headers.get('x-forwarded-host') || // if use reverse-proxy
             request.headers.get('host') // fallback to request host
         const origin = `https://${frontendHost}`
