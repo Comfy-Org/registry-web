@@ -324,7 +324,7 @@ const NodeDetails = () => {
                                             )}
                                         </p>
                                         {user && (
-                                            // TODO: change this button to a small hint: "(i) This is my node? [Claim]" 
+                                            // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
                                             <Button
                                                 color="blue"
                                                 className="mt-4 font-bold"
