@@ -58,9 +58,6 @@ function ClaimMyNodePage() {
     const [githubUsername, setGithubUsername] = useState<string | undefined>(
         undefined
     )
-    const [githubUserId, setGithubUserId] = useState<string | undefined>(
-        undefined
-    )
     const [claimCompletedAt, setClaimCompletedAt] = useState<Date | null>(null)
 
     // Get the node, claiming publisher, and current user
@@ -159,7 +156,7 @@ function ClaimMyNodePage() {
         nodeIdParam: string
     ): Promise<{
         hasPermission: boolean
-        userInfo?: { username: string; userId: string }
+        userInfo?: { username: string }
         errorMessage?: string
     }> => {
         try {
@@ -171,20 +168,17 @@ function ClaimMyNodePage() {
             })
 
             // Get GitHub user info first using Octokit REST API
-            let userInfo: { username: string; userId: string } | undefined
+            let userInfo: { username: string } | undefined
             try {
                 const { data: userData } =
                     await octokit.rest.users.getAuthenticated()
                 userInfo = {
                     username: userData.login,
-                    userId: userData.id.toString(),
                 }
                 setGithubUsername(userData.login)
-                setGithubUserId(userData.id.toString())
             } catch (error) {
                 // If we can't get user data, set userInfo to undefined and allow retry
                 setGithubUsername(undefined)
-                setGithubUserId(undefined)
                 return {
                     hasPermission: false,
                     userInfo: undefined,
@@ -236,10 +230,9 @@ function ClaimMyNodePage() {
                         hasPermission: false,
                         userInfo,
                         errorMessage: t(
-                            'You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
+                            'You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
                             {
                                 username: userInfo.username,
-                                userId: userInfo.userId,
                                 owner,
                                 repo,
                                 nodeId: nodeIdParam,
@@ -253,10 +246,9 @@ function ClaimMyNodePage() {
                     hasPermission: false,
                     userInfo,
                     errorMessage: t(
-                        'You (GitHub user: {{username}}, ID: {{userId}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
+                        'You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
                         {
                             username: userInfo.username,
-                            userId: userInfo.userId,
                             owner,
                             repo,
                             nodeId: nodeIdParam,
@@ -347,7 +339,6 @@ function ClaimMyNodePage() {
                             nodeId: nodeIdParam,
                             publisherId,
                             githubUsername: result.userInfo?.username,
-                            githubUserId: result.userInfo?.userId,
                             hasAdminPermission: true,
                         })
                     } else {
@@ -361,7 +352,6 @@ function ClaimMyNodePage() {
                             nodeId: nodeIdParam,
                             publisherId,
                             githubUsername: result.userInfo?.username,
-                            githubUserId: result.userInfo?.userId,
                             reason: 'No admin permission',
                         })
                     }
@@ -398,7 +388,6 @@ function ClaimMyNodePage() {
         publisherId,
         router.query,
         githubUsername,
-        githubUserId,
     ])
 
     const initiateGitHubOAuth = () => {
