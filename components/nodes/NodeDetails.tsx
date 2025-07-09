@@ -324,6 +324,7 @@ const NodeDetails = () => {
                                             )}
                                         </p>
                                         {user && (
+                                            // TODO: change this button to a small hint: "(i) This is my node? [Claim]" 
                                             <Button
                                                 color="blue"
                                                 className="mt-4 font-bold"
@@ -545,12 +546,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
+                                                        node
+                                                            .preempted_comfy_node_names
+                                                            .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
+                                                            '\n'
+                                                        )
                                                         : t('None')}
                                                 </pre>
                                             </span>
