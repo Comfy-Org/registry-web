@@ -285,7 +285,7 @@ function ClaimMyNodePage() {
                             hasAdminPermission: true,
                         })
                     } else {
-                        const errorMsg = `You (GitHub user: ${githubUsername}, ID: ${githubUserId}) do not have admin permission to this repository (${owner}/${repo}, Node ID: ${nodeIdParam}). Only repository administrators can claim nodes.`
+                        const errorMsg = t(`You (GitHub user: ${githubUsername}, ID: ${githubUserId}) do not have admin permission to this repository (${owner}/${repo}, Node ID: ${nodeIdParam}). Only repository administrators can claim nodes.`)
                         setError(errorMsg)
                         analytic.track('GitHub Verification Failed', {
                             nodeId: nodeIdParam,
@@ -300,7 +300,7 @@ function ClaimMyNodePage() {
                     // This should rarely happen now since we return false for most errors
                     // But just in case there's an unexpected error
                     const errorMsg =
-                        'There was an unexpected error verifying your repository permissions. Please try again.'
+                        t('There was an unexpected error verifying your repository permissions. Please try again.')
                     setError(errorMsg)
                     analytic.track('GitHub Verification Error', {
                         nodeId: nodeIdParam,
@@ -478,13 +478,13 @@ function ClaimMyNodePage() {
                                         currentStage === 'info_confirmation'
                                             ? '0%'
                                             : currentStage === 'github_login'
-                                              ? '25%'
-                                              : currentStage ===
-                                                  'verifying_admin'
-                                                ? '50%'
-                                                : currentStage === 'claim_node'
-                                                  ? '75%'
-                                                  : '100%',
+                                                ? '25%'
+                                                : currentStage ===
+                                                    'verifying_admin'
+                                                    ? '50%'
+                                                    : currentStage === 'claim_node'
+                                                        ? '75%'
+                                                        : '100%',
                                 }}
                             ></div>
                             <div className={`h-full bg-gray-700 flex-1`}></div>
@@ -502,16 +502,15 @@ function ClaimMyNodePage() {
                                 <div key={stage} className="flex-1 text-center">
                                     <div
                                         className={`mx-auto rounded-full flex items-center justify-center w-8 h-8 mb-1
-                                        ${
-                                            stage === currentStage
+                                        ${stage === currentStage
                                                 ? 'bg-blue-600 text-white'
                                                 : [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(currentStage) >
+                                                    'info_confirmation',
+                                                    'github_login',
+                                                    'verifying_admin',
+                                                    'claim_node',
+                                                    'completed',
+                                                ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -521,23 +520,22 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                  ? 'bg-green-500 text-white'
-                                                  : 'bg-gray-700 text-gray-400'
-                                        }`}
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-gray-700 text-gray-400'
+                                            }`}
                                     >
                                         {index + 1}
                                     </div>
                                     <div
-                                        className={`text-xs mt-1 ${
-                                            stage === currentStage
+                                        className={`text-xs mt-1 ${stage === currentStage
                                                 ? 'text-blue-500 font-medium'
                                                 : [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(currentStage) >
+                                                    'info_confirmation',
+                                                    'github_login',
+                                                    'verifying_admin',
+                                                    'claim_node',
+                                                    'completed',
+                                                ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -547,9 +545,9 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                  ? 'text-green-500'
-                                                  : 'text-gray-500'
-                                        }`}
+                                                    ? 'text-green-500'
+                                                    : 'text-gray-500'
+                                            }`}
                                     >
                                         {stage === 'info_confirmation' &&
                                             t('Info')}
