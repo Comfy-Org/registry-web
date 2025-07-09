@@ -340,7 +340,7 @@ function ClaimMyNodePage() {
         const repoUrl = node.repository
         const repoMatch = repoUrl!.match(/github\.com\/([^\/]+)\/([^\/]+)/)
         if (!repoMatch) {
-            setError('Invalid GitHub repository URL format.')
+            setError(t('Invalid GitHub repository URL format.'))
             setIsVerifying(false)
             return
         }
@@ -528,25 +528,25 @@ function ClaimMyNodePage() {
                                     </div>
                                     <div
                                         className={`text-xs mt-1 ${stage === currentStage
-                                                ? 'text-blue-500 font-medium'
-                                                : [
+                                            ? 'text-blue-500 font-medium'
+                                            : [
+                                                'info_confirmation',
+                                                'github_login',
+                                                'verifying_admin',
+                                                'claim_node',
+                                                'completed',
+                                            ].indexOf(currentStage) >
+                                                [
                                                     'info_confirmation',
                                                     'github_login',
                                                     'verifying_admin',
                                                     'claim_node',
                                                     'completed',
-                                                ].indexOf(currentStage) >
-                                                    [
-                                                        'info_confirmation',
-                                                        'github_login',
-                                                        'verifying_admin',
-                                                        'claim_node',
-                                                        'completed',
-                                                    ].indexOf(
-                                                        stage as ClaimStage
-                                                    )
-                                                    ? 'text-green-500'
-                                                    : 'text-gray-500'
+                                                ].indexOf(
+                                                    stage as ClaimStage
+                                                )
+                                                ? 'text-green-500'
+                                                : 'text-gray-500'
                                             }`}
                                     >
                                         {stage === 'info_confirmation' &&
