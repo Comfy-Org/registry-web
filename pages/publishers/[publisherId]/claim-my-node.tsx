@@ -538,13 +538,13 @@ function ClaimMyNodePage() {
                                         currentStage === 'info_confirmation'
                                             ? '0%'
                                             : currentStage === 'github_login'
-                                                ? '25%'
-                                                : currentStage ===
-                                                    'verifying_admin'
-                                                    ? '50%'
-                                                    : currentStage === 'claim_node'
-                                                        ? '75%'
-                                                        : '100%',
+                                              ? '25%'
+                                              : currentStage ===
+                                                  'verifying_admin'
+                                                ? '50%'
+                                                : currentStage === 'claim_node'
+                                                  ? '75%'
+                                                  : '100%',
                                 }}
                             ></div>
                             <div className={`h-full bg-gray-700 flex-1`}></div>
@@ -562,15 +562,16 @@ function ClaimMyNodePage() {
                                 <div key={stage} className="flex-1 text-center">
                                     <div
                                         className={`mx-auto rounded-full flex items-center justify-center w-8 h-8 mb-1
-                                        ${stage === currentStage
+                                        ${
+                                            stage === currentStage
                                                 ? 'bg-blue-600 text-white'
                                                 : [
-                                                    'info_confirmation',
-                                                    'github_login',
-                                                    'verifying_admin',
-                                                    'claim_node',
-                                                    'completed',
-                                                ].indexOf(currentStage) >
+                                                        'info_confirmation',
+                                                        'github_login',
+                                                        'verifying_admin',
+                                                        'claim_node',
+                                                        'completed',
+                                                    ].indexOf(currentStage) >
                                                     [
                                                         'info_confirmation',
                                                         'github_login',
@@ -580,34 +581,35 @@ function ClaimMyNodePage() {
                                                     ].indexOf(
                                                         stage as ClaimStage
                                                     )
-                                                    ? 'bg-green-500 text-white'
-                                                    : 'bg-gray-700 text-gray-400'
-                                            }`}
+                                                  ? 'bg-green-500 text-white'
+                                                  : 'bg-gray-700 text-gray-400'
+                                        }`}
                                     >
                                         {index + 1}
                                     </div>
                                     <div
-                                        className={`text-xs mt-1 ${stage === currentStage
-                                            ? 'text-blue-500 font-medium'
-                                            : [
-                                                'info_confirmation',
-                                                'github_login',
-                                                'verifying_admin',
-                                                'claim_node',
-                                                'completed',
-                                            ].indexOf(currentStage) >
-                                                [
-                                                    'info_confirmation',
-                                                    'github_login',
-                                                    'verifying_admin',
-                                                    'claim_node',
-                                                    'completed',
-                                                ].indexOf(
-                                                    stage as ClaimStage
-                                                )
-                                                ? 'text-green-500'
-                                                : 'text-gray-500'
-                                            }`}
+                                        className={`text-xs mt-1 ${
+                                            stage === currentStage
+                                                ? 'text-blue-500 font-medium'
+                                                : [
+                                                        'info_confirmation',
+                                                        'github_login',
+                                                        'verifying_admin',
+                                                        'claim_node',
+                                                        'completed',
+                                                    ].indexOf(currentStage) >
+                                                    [
+                                                        'info_confirmation',
+                                                        'github_login',
+                                                        'verifying_admin',
+                                                        'claim_node',
+                                                        'completed',
+                                                    ].indexOf(
+                                                        stage as ClaimStage
+                                                    )
+                                                  ? 'text-green-500'
+                                                  : 'text-gray-500'
+                                        }`}
                                     >
                                         {stage === 'info_confirmation' &&
                                             t('Info')}
@@ -770,22 +772,22 @@ function ClaimMyNodePage() {
                             <p className="text-gray-300 mb-4">
                                 {githubUsername
                                     ? t(
-                                        'Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
-                                        {
-                                            username: githubUsername,
-                                            nodeName: node?.name,
-                                            publisherName:
-                                                publisherToClaim?.name,
-                                        }
-                                    )
+                                          'Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
+                                          {
+                                              username: githubUsername,
+                                              nodeName: node?.name,
+                                              publisherName:
+                                                  publisherToClaim?.name,
+                                          }
+                                      )
                                     : t(
-                                        'Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
-                                        {
-                                            nodeName: node?.name,
-                                            publisherName:
-                                                publisherToClaim?.name,
-                                        }
-                                    )}
+                                          'Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.',
+                                          {
+                                              nodeName: node?.name,
+                                              publisherName:
+                                                  publisherToClaim?.name,
+                                          }
+                                      )}
                             </p>
                             <div className="flex justify-end">
                                 <Button
