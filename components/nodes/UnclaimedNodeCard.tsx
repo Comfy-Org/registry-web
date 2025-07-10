@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { HiPencil } from 'react-icons/hi'
 import { Node } from '@/src/api/generated'
 import { PublisherId } from '../Search/PublisherId'
-import { NodeClaimModal } from './NodeClaimModal'
+import { AdminNodeClaimModal } from './AdminNodeClaimModal'
 
 export default function UnclaimedNodeCard({
     node,
@@ -70,7 +70,7 @@ export default function UnclaimedNodeCard({
             </div>
 
             {/* Claim Modal */}
-            <NodeClaimModal
+            <AdminNodeClaimModal
                 isOpen={isClaimModalOpen}
                 onClose={() => setIsClaimModalOpen(false)}
                 node={node}

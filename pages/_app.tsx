@@ -37,6 +37,8 @@ const queryClient = new QueryClient({
                 // Retry up to 3 times for other errors
                 return failureCount < 3
             },
+            staleTime: 0, // set to 0 to always query fresh data when page refreshed, and render staled data while requesting (swr)
+            gcTime: 86400e3,
         },
     },
 })
