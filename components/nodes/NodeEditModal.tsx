@@ -55,7 +55,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             updateNodeMutation.mutate(
                 {
                     data: {
-                        id: nodeData.id, // necessary
+                        id: nodeData.id, // solve missing id error
                         name: nodeName,
                         description: description,
                         license: license,
