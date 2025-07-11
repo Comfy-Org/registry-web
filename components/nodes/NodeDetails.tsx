@@ -202,7 +202,8 @@ const NodeDetails = () => {
         // TODO: show error message and allow navigate back to the list
     }
 
-    if (isLoading || !router.isReady || !_nodeId) {
+    const shouldShowLoading = isLoading || !router.isReady || !_nodeId;
+    if (shouldShowLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner className="" />
