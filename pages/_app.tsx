@@ -76,8 +76,7 @@ AXIOS_INSTANCE.interceptors.response.use(
             })
         }
         return response
-    },
-    (resp) => resp
+    }
 )
 
 const persistEffect = () => {
