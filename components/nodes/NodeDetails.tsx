@@ -343,38 +343,39 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed || nodeVersions?.length ? (
-                                    <>
+                                <>
+                                    {isUnclaimed || !nodeVersions?.length ? (
                                         <p className="text-base font-normal text-gray-200">
                                             {!nodeVersions?.length
                                                 ? t(
-                                                      'This node can only be installed via git, because it has no versions published yet'
-                                                  )
+                                                    'This node can only be installed via git, because it has no versions published yet'
+                                                )
                                                 : t(
-                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
-                                                  )}
+                                                    "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
                                                 />
                                             )}
                                         </p>
-                                        {user && (
-                                            // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
-                                            <Button
-                                                color="blue"
-                                                className="mt-4 font-bold"
-                                                onClick={handleClaimNode}
-                                            >
-                                                {t('Claim this node')}
-                                            </Button>
-                                        )}
-                                    </>
-                                ) : (
-                                    <CopyableCodeBlock
-                                        code={`comfy node install ${nodeId}`}
-                                    />
-                                )}
+                                    ) : (
+                                        <CopyableCodeBlock
+                                            code={`comfy node install ${nodeId}`}
+                                        />
+                                    )}
+
+                                    {(isUnclaimed && user) && (
+                                        // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                                        <Button
+                                            color="blue"
+                                            className="mt-4 font-bold"
+                                            onClick={handleClaimNode}
+                                        >
+                                            {t('Claim this node')}
+                                        </Button>
+                                    )}
+                                </>
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">
@@ -582,12 +583,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
+                                                        node
+                                                            .preempted_comfy_node_names
+                                                            .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
+                                                            '\n'
+                                                        )
                                                         : t('None')}
                                                 </pre>
                                             </span>
