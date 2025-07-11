@@ -9,6 +9,7 @@ import { useEffect } from 'react'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
 
 // Add an interceptor to attach the Firebase JWT token to every request
 // Put in _app.tsx because this only works in react-dom environment
@@ -42,6 +43,31 @@ const queryClient = new QueryClient({
         },
     },
 })
+
+// General in-mem cache invalidation for all endpoints
+AXIOS_INSTANCE.interceptors.response.use(
+    async function onSuccess(response: AxiosResponse) {
+        const req = response.request as AxiosRequestConfig;
+        if (!req?.url) return response;
+
+        const pathname = new URL(req.url).pathname
+
+        const isCreateDeleteMethod = ['POST', 'DELETE'].includes(req.method?.toUpperCase() ?? '')
+        const isEditMethod = ['PUT', 'PATCH'].includes(req.method?.toUpperCase() ?? '')
+
+        if (isEditMethod) {
+            // If the request is an edit method and the endpoint is cached, invalidate the query cache
+            queryClient.invalidateQueries({ queryKey: [pathname] })
+        }
+        if (isCreateDeleteMethod) {
+            // If the request is a create or delete method, refetch the query cache, and also the list method
+            queryClient.invalidateQueries({ queryKey: [pathname] })
+            queryClient.invalidateQueries({ queryKey: [pathname.split('/').slice(0, -1).join('/')] })
+        }
+
+        return response
+    })
+
 
 const persistEffect = () => {
     // - [persistQueryClient \| TanStack Query React Docs]( https://tanstack.com/query/v4/docs/framework/react/plugins/persistQueryClient )

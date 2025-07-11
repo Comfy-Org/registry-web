@@ -1,6 +1,11 @@
+import {
+    getGetNodeQueryOptions,
+    getListNodeVersionsQueryOptions,
+    getGetNodeByComfyNodeNameQueryOptions,
+    getListComfyNodesQueryOptions,
+} from '@/src/api/generated'
 import { REQUEST_OPTIONS_NO_CACHE } from '@/src/constants'
-import { useQueryClient } from '@tanstack/react-query'
-import { useCallback } from 'react'
+import { url } from 'inspector'
 //
 // This file should keep track with backend:
 // https://github.com/Comfy-Org/comfy-api/blob/main/server/middleware/cache_control.go
@@ -21,18 +26,24 @@ var comfyNodesNodeEndpointPattern = regexp.MustCompile(`^/comfy-nodes/[^/]+/node
 var comfyNodesListEndpointPattern = regexp.MustCompile(`^/nodes/[^/]+/versions/[^/]+/comfy-nodes$`)
 
 */
-
 // which is below 4 endpoints:
 // they must be refetched with INVALIDATE_CACHE_OPTION after any editing operation,
 // or all users will still fetch the cached data from proxies/cdns/isps cache
+export const shouldRevalidateRegex = {
+    nodeEndpointPattern: /^\/nodes\/[^/]+$/,
+    nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
+    comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
+    comfyNodesListEndpointPattern: /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
+}
+export function isCacheControlEndpointQ(pathname: string): boolean {
+    Object.values(shouldRevalidateRegex).forEach((regex) => {
+        if (regex.test(pathname)) {
+            return true
+        }
+    })
+    return false
+}
 
-// prettier-ignore
-import {
-    getGetNodeQueryOptions,
-    getListNodeVersionsQueryOptions,
-    getGetNodeByComfyNodeNameQueryOptions,
-    getListComfyNodesQueryOptions,
-} from '@/src/api/generated'
 
 /**
  * Endpoints should Invalidate cache after editing operations
@@ -70,3 +81,4 @@ export const INVALIDATE_CACHE_OPTION = {
     query: { staleTime: 0 }, // force refetch
     request: REQUEST_OPTIONS_NO_CACHE,
 }
+
