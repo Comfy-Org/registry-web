@@ -114,7 +114,7 @@ const NodeDetails = () => {
         isError,
     } = useGetNode(nodeId, undefined, {
         query: {
-            enabled: !!nodeId,
+            enabled: !!_nodeId,
         },
     })
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
