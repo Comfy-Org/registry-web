@@ -8,7 +8,7 @@ import {
     useGetNodeVersion,
     useUpdateNodeVersion,
 } from '@/src/api/generated'
-import { REQUEST_OPTIONS_NO_CACHE } from 'src/constants'
+import { REQUEST_OPTIONS_NO_CACHE, CACHE_TIMES } from 'src/constants'
 import { FormatRelativeDate } from './NodeDetails'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
 type NodeVDrawerProps = {
@@ -37,6 +37,10 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         refetch,
     } = useGetNodeVersion(nodeId, versionNumber, {
         request: REQUEST_OPTIONS_NO_CACHE,
+        query: {
+            staleTime: CACHE_TIMES.VERSION_DETAILS,
+            gcTime: CACHE_TIMES.VERSION_DETAILS * 2,
+        },
     })
 
     const isVersionAvailable = version && !version.deprecated

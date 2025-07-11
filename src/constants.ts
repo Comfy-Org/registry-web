@@ -45,3 +45,12 @@ export const NO_CACHE_HEADERS = {
 export const REQUEST_OPTIONS_NO_CACHE = {
     headers: NO_CACHE_HEADERS,
 } as const
+
+// React Query cache times (in milliseconds)
+export const CACHE_TIMES = {
+    NODE_DETAILS: 60 * 1000, // 60 seconds
+    NODE_VERSIONS: 60 * 1000, // 60 seconds
+    PERMISSIONS: 120 * 1000, // 2 minutes
+    USER_PUBLISHERS: 300 * 1000, // 5 minutes
+    VERSION_DETAILS: 120 * 1000, // 2 minutes
+} as const

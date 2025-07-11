@@ -20,6 +20,7 @@ import {
 import {
     UNCLAIMED_ADMIN_PUBLISHER_ID,
     REQUEST_OPTIONS_NO_CACHE,
+    CACHE_TIMES,
 } from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
@@ -117,6 +118,10 @@ const NodeDetails = () => {
         isError,
     } = useGetNode(nodeId, undefined, {
         request: REQUEST_OPTIONS_NO_CACHE,
+        query: {
+            staleTime: CACHE_TIMES.NODE_DETAILS,
+            gcTime: CACHE_TIMES.NODE_DETAILS * 2,
+        },
     })
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
@@ -125,6 +130,10 @@ const NodeDetails = () => {
         nodeId,
         {
             request: REQUEST_OPTIONS_NO_CACHE,
+            query: {
+                staleTime: CACHE_TIMES.PERMISSIONS,
+                gcTime: CACHE_TIMES.PERMISSIONS * 2,
+            },
         }
     )
 
@@ -133,6 +142,10 @@ const NodeDetails = () => {
     const canEdit = isAdmin || permissions?.canEdit
     const { data: myPublishers } = useListPublishersForUser({
         request: REQUEST_OPTIONS_NO_CACHE,
+        query: {
+            staleTime: CACHE_TIMES.USER_PUBLISHERS,
+            gcTime: CACHE_TIMES.USER_PUBLISHERS * 2,
+        },
     })
     const warningForAdminEdit =
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
@@ -153,6 +166,10 @@ const NodeDetails = () => {
             },
             {
                 request: REQUEST_OPTIONS_NO_CACHE,
+                query: {
+                    staleTime: CACHE_TIMES.NODE_VERSIONS,
+                    gcTime: CACHE_TIMES.NODE_VERSIONS * 2,
+                },
             }
         )
 
