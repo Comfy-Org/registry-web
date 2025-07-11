@@ -132,7 +132,7 @@ const NodeDetails = () => {
     const warningForAdminEdit =
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
-    const { data: nodeVersions, refetch: refetchVersions } =
+    const { data: nodeVersions, refetch: refetchVersions, isLoading: isNodeVersionsLoading } =
         useListNodeVersions(
             nodeId as string,
             {
@@ -333,11 +333,14 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed ? (
+                                {isUnclaimed || (nodeVersions?.length) ? (
                                     <>
                                         <p className="text-base font-normal text-gray-200">
-                                            {t(
-                                                'This node can only be installed via git'
+                                            {
+                                                !nodeVersions?.length ? t(
+                                                    'This node can only be installed via git, because it has no versions published yet'
+                                                ) :t(
+                                                "This node can only be installed via git, because it's unclaimed by any publisher"
                                             )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
@@ -356,7 +359,9 @@ const NodeDetails = () => {
                                             </Button>
                                         )}
                                     </>
-                                ) : (
+                                ) 
+                                
+                                : (
                                     <CopyableCodeBlock
                                         code={`comfy node registry-install ${nodeId}`}
                                     />
