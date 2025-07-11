@@ -4,6 +4,6 @@ export function usePage() {
     return useSearchParameter<number | undefined>(
         'page',
         (p) => (p ? Number(p) : undefined),
-        (v) => (v ? String(v) : [])
+        (v) => (v ? String(v) : []) // [] will remove the parameter
     )
 }

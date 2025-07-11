@@ -3,12 +3,15 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
-import { useGetPublisher } from '@/src/api/generated'
+import { useGetNode, useGetPublisher } from '@/src/api/generated'
 
 const NodeView = () => {
     const router = useRouter()
-    const { publisherId, nodeId } = router.query
-    const { data: publisher } = useGetPublisher(publisherId as string)
+    const { publisherId, nodeId } = router.query as {
+        publisherId?: string
+        nodeId?: string
+    }
+    const { data: node } = useGetNode(publisherId as string)
     const { t } = useNextTranslation()
 
     return (
@@ -33,14 +36,14 @@ const NodeView = () => {
                     }}
                     className="dark"
                 >
-                    {publisher?.name || publisherId}
+                    {node?.publisher?.name || publisherId}
                 </Breadcrumb.Item>
                 <Breadcrumb.Item className="text-blue-500">
-                    {nodeId as string}
+                    {node?.name || (nodeId as string)}
                 </Breadcrumb.Item>
             </Breadcrumb>
 
-            <NodeDetails />
+            {!!nodeId && <NodeDetails nodeId={nodeId} publisherId="" />}
         </div>
     )
 }

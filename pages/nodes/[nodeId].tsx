@@ -3,11 +3,20 @@ import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
 import NodeDetails from '../../components/nodes/NodeDetails'
+import { useGetNode } from '@/src/api/generated'
+
+// TODO(sno): try static props this later
+// export async function getStaticProps({ params: { nodeId } }: { params: { nodeId: string } }) {
+//     return { props: { nodeId, }, }
+// }
 
 const NodeView = () => {
     const router = useRouter()
-    const { nodeId } = router.query
+    const { nodeId } = router.query as { nodeId?: string }
     const { t } = useNextTranslation()
+    const { data: node } = useGetNode(nodeId ?? '', undefined, {
+        query: { enabled: !!nodeId },
+    })
 
     return (
         <div className="p-4">
@@ -28,12 +37,12 @@ const NodeView = () => {
                         {t('All Nodes')}
                     </Breadcrumb.Item>
                     <Breadcrumb.Item className="dark text-blue-500">
-                        {nodeId as string}
+                        {node?.name || (nodeId as string)}
                     </Breadcrumb.Item>
                 </Breadcrumb>
             </div>
 
-            <NodeDetails />
+            {!!nodeId && <NodeDetails nodeId={nodeId} />}
         </div>
     )
 }
