@@ -44,7 +44,8 @@ const queryClient = new QueryClient({
     },
 })
 
-// General in-mem cache invalidation for all endpoints
+// General localStorage cache invalidation for all endpoints
+// this interceptors will user always have latest data after edit.
 AXIOS_INSTANCE.interceptors.response.use(
     async function onSuccess(response: AxiosResponse) {
         const req = response.request as AxiosRequestConfig;
