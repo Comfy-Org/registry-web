@@ -5,7 +5,6 @@ import {
     getListComfyNodesQueryOptions,
 } from '@/src/api/generated'
 import { REQUEST_OPTIONS_NO_CACHE } from '@/src/constants'
-import { url } from 'inspector'
 //
 // This file should keep track with backend:
 // https://github.com/Comfy-Org/comfy-api/blob/main/server/middleware/cache_control.go
