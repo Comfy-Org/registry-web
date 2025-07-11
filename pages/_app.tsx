@@ -50,7 +50,6 @@ const queryClient = new QueryClient({
 // this interceptors will user always have latest data after edit.
 AXIOS_INSTANCE.interceptors.response.use(
     function onSuccess(response: AxiosResponse) {
-        console.log({ response })
         const req = response.config
         if (!req.url) return response
 
