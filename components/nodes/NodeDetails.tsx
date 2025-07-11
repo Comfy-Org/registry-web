@@ -108,12 +108,21 @@ const NodeDetails = () => {
     const nodeId = String(_nodeId) // nodeId is always string
 
     // fetch node details and permissions
-    const { data: node, isLoading, isError } = useGetNode(nodeId)
+    const { data: node, isLoading, isError } = useGetNode(nodeId, undefined, {
+        query: {
+            enabled: !!nodeId,
+        },
+    })
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId,
-        nodeId
+        nodeId,
+        {
+            query: {
+                enabled: !!nodeId,
+            },
+        }
     )
 
     const { data: user } = useGetUser()
@@ -134,6 +143,10 @@ const NodeDetails = () => {
                     ? []
                     : [NodeVersionStatus.NodeVersionStatusBanned]),
             ],
+        }, {
+            query: {
+                enabled: !!nodeId,
+            },
         })
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
@@ -555,12 +568,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
+                                                        node
+                                                            .preempted_comfy_node_names
+                                                            .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
+                                                            '\n'
+                                                        )
                                                         : t('None')}
                                                 </pre>
                                             </span>
