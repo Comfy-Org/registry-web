@@ -10,42 +10,10 @@ This document outlines the comprehensive cache control strategy implemented acro
 
 The application implements automatic cache invalidation through axios response interceptors that monitor all HTTP requests and automatically invalidate React Query cache based on request methods:
 
-```typescript
-AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
-    response: AxiosResponse
-) {
-    const req = response.request as AxiosRequestConfig
-    if (!req?.url) return response
-
-    const pathname = new URL(req.url).pathname
-
-    const isCreateDeleteMethod = ['POST', 'DELETE'].includes(
-        req.method?.toUpperCase() ?? ''
-    )
-    const isEditMethod = ['PUT', 'PATCH'].includes(
-        req.method?.toUpperCase() ?? ''
-    )
-
-    if (isEditMethod) {
-        // If the request is an edit method and the endpoint is cached, invalidate the query cache
-        queryClient.invalidateQueries({ queryKey: [pathname] })
-    }
-    if (isCreateDeleteMethod) {
-        // If the request is a create or delete method, refetch the query cache, and also the list method
-        queryClient.invalidateQueries({ queryKey: [pathname] })
-        queryClient.invalidateQueries({
-            queryKey: [pathname.split('/').slice(0, -1).join('/')],
-        })
-    }
-
-    return response
-})
-```
-
 **Automatic Invalidation Rules:**
 
-- **PUT/PATCH requests**: Invalidates the specific endpoint cache
-- **POST/DELETE requests**: Invalidates both the specific endpoint and its parent list endpoint
+- **POST requests**: Invalidates the specific endpoint cache
+- **PUT/PATCH/DELETE requests**: Invalidates both the specific endpoint and its parent list endpoint
 - **Example**: `DELETE /nodes/123/versions/456` invalidates both `/nodes/123/versions/456` and `/nodes/123/versions`
 
 ### 2. Manual Cache-Busting for Critical Endpoints

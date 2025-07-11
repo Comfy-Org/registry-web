@@ -55,19 +55,17 @@ AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
 
     const pathname = new URL(req.url).pathname
 
-    const isCreateDeleteMethod = ['POST', 'DELETE'].includes(
+    const isCreateMethod = ['POST',].includes(
         req.method!.toUpperCase() ?? ''
     )
-    const isEditMethod = ['PUT', 'PATCH'].includes(
+    const isEditMethod = ['PUT', 'PATCH','DELETE'].includes(
         req.method!.toUpperCase() ?? ''
     )
 
-    if (isEditMethod) {
-        // If the request is an edit method and the endpoint is cached, invalidate the query cache
+    if (isCreateMethod) {
         queryClient.invalidateQueries({ queryKey: [pathname] })
     }
-    if (isCreateDeleteMethod) {
-        // If the request is a create or delete method, refetch the query cache, and also the list method
+    if (isEditMethod) {
         queryClient.invalidateQueries({ queryKey: [pathname] })
         queryClient.invalidateQueries({
             queryKey: [pathname.split('/').slice(0, -1).join('/')],
