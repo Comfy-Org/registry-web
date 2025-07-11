@@ -36,7 +36,6 @@ export default function NodeVersionCompatibilityEditModal({
     const { t } = useNextTranslation()
     const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
     const queryClient = useQueryClient()
-    const queryClient = useQueryClient()
 
     const {
         control,
