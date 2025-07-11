@@ -114,11 +114,15 @@ function ClaimMyNodePage() {
                     })
                 }
 
-                // Set stage to completed
-                setCurrentStage('completed')
+                // Add a small delay to ensure backend has processed the claim
+                // The loading spinner will continue to show during this delay
+                setTimeout(() => {
+                    // Set stage to completed
+                    setCurrentStage('completed')
 
-                // Set claim completion time for timer
-                setClaimCompletedAt(new Date())
+                    // Set claim completion time for timer
+                    setClaimCompletedAt(new Date())
+                }, 2048)
             },
             onError: (error: any) => {
                 // axios error handling
@@ -449,7 +453,9 @@ function ClaimMyNodePage() {
     }
 
     const handleGoToNodePage = () => {
-        router.push(`/publishers/${publisherId}/nodes/${nodeId}`)
+        router.push(
+            `/publishers/${publisherId}/nodes/${nodeId}?justClaimed=true`
+        )
     }
 
     function renderPublisher(publisherId: string | undefined) {

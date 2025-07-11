@@ -16,6 +16,7 @@ import {
     useGetUser,
     useListNodeVersions,
     useListPublishersForUser,
+    getGetNodeQueryKey,
 } from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
@@ -104,8 +105,32 @@ const NodeDetails = () => {
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
     const qc = useQueryClient()
     const router = useRouter()
-    const { publisherId: _publisherId, nodeId: _nodeId } = router.query
+    const {
+        publisherId: _publisherId,
+        nodeId: _nodeId,
+        justClaimed,
+    } = router.query
     const nodeId = String(_nodeId) // nodeId is always string
+
+    // Check if we need to force refetch after claim
+    React.useEffect(() => {
+        if (justClaimed === 'true' && nodeId) {
+            // Force refetch the node data to get the latest publisher info
+            qc.invalidateQueries({ queryKey: ['nodes', nodeId] })
+            qc.refetchQueries({ queryKey: ['nodes', nodeId] })
+
+            // Remove the justClaimed param from URL to prevent refetching on subsequent visits
+            const { justClaimed, ...restQuery } = router.query
+            router.replace(
+                {
+                    pathname: router.pathname,
+                    query: restQuery,
+                },
+                undefined,
+                { shallow: true }
+            )
+        }
+    }, [justClaimed, nodeId, qc, router])
 
     // fetch node details and permissions
     const { data: node, isLoading, isError } = useGetNode(nodeId)
