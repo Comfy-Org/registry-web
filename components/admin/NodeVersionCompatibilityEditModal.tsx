@@ -6,7 +6,10 @@ import {
     AdminUpdateNodeVersionBody,
     useAdminUpdateNodeVersion,
 } from '@/src/api/generated'
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { toast } from 'react-toastify'
@@ -89,7 +92,7 @@ export default function NodeVersionCompatibilityEditModal({
                     ),
                 },
             })
-            
+
             // Cache-busting invalidation for cached endpoints
             queryClient.fetchQuery(
                 shouldInvalidate.getListNodeVersionsQueryOptions(
@@ -98,7 +101,7 @@ export default function NodeVersionCompatibilityEditModal({
                     INVALIDATE_CACHE_OPTION
                 )
             )
-            
+
             toast.success(t('Updated node version compatibility'))
             onClose()
             onSuccess?.()

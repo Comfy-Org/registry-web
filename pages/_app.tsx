@@ -45,29 +45,35 @@ const queryClient = new QueryClient({
 })
 
 // General in-mem cache invalidation for all endpoints
-AXIOS_INSTANCE.interceptors.response.use(
-    async function onSuccess(response: AxiosResponse) {
-        const req = response.request as AxiosRequestConfig;
-        if (!req?.url) return response;
+AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
+    response: AxiosResponse
+) {
+    const req = response.request as AxiosRequestConfig
+    if (!req?.url) return response
 
-        const pathname = new URL(req.url).pathname
+    const pathname = new URL(req.url).pathname
 
-        const isCreateDeleteMethod = ['POST', 'DELETE'].includes(req.method?.toUpperCase() ?? '')
-        const isEditMethod = ['PUT', 'PATCH'].includes(req.method?.toUpperCase() ?? '')
+    const isCreateDeleteMethod = ['POST', 'DELETE'].includes(
+        req.method?.toUpperCase() ?? ''
+    )
+    const isEditMethod = ['PUT', 'PATCH'].includes(
+        req.method?.toUpperCase() ?? ''
+    )
 
-        if (isEditMethod) {
-            // If the request is an edit method and the endpoint is cached, invalidate the query cache
-            queryClient.invalidateQueries({ queryKey: [pathname] })
-        }
-        if (isCreateDeleteMethod) {
-            // If the request is a create or delete method, refetch the query cache, and also the list method
-            queryClient.invalidateQueries({ queryKey: [pathname] })
-            queryClient.invalidateQueries({ queryKey: [pathname.split('/').slice(0, -1).join('/')] })
-        }
+    if (isEditMethod) {
+        // If the request is an edit method and the endpoint is cached, invalidate the query cache
+        queryClient.invalidateQueries({ queryKey: [pathname] })
+    }
+    if (isCreateDeleteMethod) {
+        // If the request is a create or delete method, refetch the query cache, and also the list method
+        queryClient.invalidateQueries({ queryKey: [pathname] })
+        queryClient.invalidateQueries({
+            queryKey: [pathname.split('/').slice(0, -1).join('/')],
+        })
+    }
 
-        return response
-    })
-
+    return response
+})
 
 const persistEffect = () => {
     // - [persistQueryClient \| TanStack Query React Docs]( https://tanstack.com/query/v4/docs/framework/react/plugins/persistQueryClient )

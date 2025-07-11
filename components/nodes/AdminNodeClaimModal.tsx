@@ -14,7 +14,10 @@ import {
     getListNodesForPublisherV2QueryKey,
     getSearchNodesQueryKey,
 } from '@/src/api/generated'
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { PublisherId } from '../Search/PublisherId'
 

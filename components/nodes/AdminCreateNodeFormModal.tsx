@@ -97,13 +97,12 @@ export function AdminCreateNodeFormModal({
                     INVALIDATE_CACHE_OPTION
                 )
             )
-            
+
             // Invalidate the nodes list to refresh the data (non-cached endpoint)
             const publisherId = node.publisher!.id!
             qc.invalidateQueries({
                 queryKey: getListNodesForPublisherV2QueryKey(publisherId),
             })
-
         })
     })
 
