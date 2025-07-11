@@ -76,15 +76,9 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                         if (error instanceof AxiosError) {
                             const axiosError: AxiosError<ErrorResponse, any> =
                                 error
-                            console.error('Error updating node:', axiosError)
                             toast.error(
                                 t(`Failed to update node.\n{{detail}}`, {
-                                    detail: [
-                                        axiosError.response?.data?.message,
-                                        axiosError.response?.data?.error,
-                                    ]
-                                        .filter(Boolean)
-                                        .join('\n'),
+                                    detail: parseAxiosErrorResponse(axiosError),
                                 })
                             )
                         } else {
@@ -229,3 +223,14 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
         </>
     )
 }
+
+function parseAxiosErrorResponse(axiosError: AxiosError<ErrorResponse, any>): string {
+    // TODO: extract this fn to utils and use for all api/generated requests errors
+    return [
+        axiosError.response?.data?.message,
+        axiosError.response?.data?.error,
+    ]
+        .filter(Boolean)
+        .join('\n')
+}
+
