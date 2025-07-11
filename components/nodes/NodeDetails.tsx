@@ -343,7 +343,7 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed || nodeVersions?.length ? (
+                                {isUnclaimed || !nodeVersions?.length ? (
                                     <>
                                         <p className="text-base font-normal text-gray-200">
                                             {!nodeVersions?.length
