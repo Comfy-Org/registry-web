@@ -49,7 +49,7 @@ interface FormData {
     policy: ComfyNodePolicy
 }
 
-export function ComfyNodeEditModal({
+function ComfyNodeEditModal({
     isOpen,
     onClose,
     comfyNode,
@@ -93,8 +93,8 @@ export function ComfyNodeEditModal({
                 return_types: data.return_types,
                 output_is_list: data.output_is_list
                     ? data.output_is_list
-                          .split(',')
-                          .map((s) => s.trim() === 'true')
+                        .split(',')
+                        .map((s) => s.trim() === 'true')
                     : undefined,
                 deprecated: data.deprecated,
                 experimental: data.experimental,
@@ -393,6 +393,10 @@ function ComfyNodesManage() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
+        if (!nodeIdFilter && !versionFilter && !comfyNodeNameFilter) {
+            toast.error(t('Please enter at least one search criterion'))
+            return
+        }
         setSearchNodeId(nodeIdFilter)
         setSearchVersion(versionFilter)
         setSearchComfyNodeName(comfyNodeNameFilter)
@@ -535,20 +539,14 @@ function ComfyNodesManage() {
                                         </Table.Cell>
                                         <Table.Cell>
                                             <Badge
-                                                color={
-                                                    comfyNode.policy
-                                                        ? getPolicyBadgeColor(
-                                                              comfyNode.policy
-                                                          )
-                                                        : 'default'
-                                                }
+                                                color={getPolicyBadgeColor(
+                                                    comfyNode.policy!
+                                                )}
                                                 size="sm"
                                             >
-                                                {comfyNode.policy
-                                                    ? getPolicyLabel(
-                                                          comfyNode.policy
-                                                      )
-                                                    : t('No Policy')}
+                                                {getPolicyLabel(
+                                                    comfyNode.policy!
+                                                )}
                                             </Badge>
                                         </Table.Cell>
                                         <Table.Cell>
