@@ -111,7 +111,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                 <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
                     <Modal.Header className="!bg-gray-800 px-8">
                         <p className="text-white">
-                            {t('Edit')} {t('Node')}
+                            {t('Edit Node')}
                         </p>
                     </Modal.Header>
                     <div className="flex justify-evenly">
