@@ -93,8 +93,8 @@ function ComfyNodeEditModal({
                 return_types: data.return_types,
                 output_is_list: data.output_is_list
                     ? data.output_is_list
-                        .split(',')
-                        .map((s) => s.trim() === 'true')
+                          .split(',')
+                          .map((s) => s.trim() === 'true')
                     : undefined,
                 deprecated: data.deprecated,
                 experimental: data.experimental,
