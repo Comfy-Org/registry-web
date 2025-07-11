@@ -84,7 +84,13 @@ export function formatDownloadCount(count: number): string {
     return `${cleanNum}${units[unitIndex]}`
 }
 
-const NodeDetails = () => {
+function NodeDetails({
+    publisherId: _publisherId,
+    nodeId,
+}: {
+    publisherId?: string
+    nodeId: string
+}) {
     const { t } = useNextTranslation()
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -104,16 +110,20 @@ const NodeDetails = () => {
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
     const qc = useQueryClient()
     const router = useRouter()
-    const { publisherId: _publisherId, nodeId: _nodeId } = router.query
-    const nodeId = String(_nodeId) // nodeId is always string
 
     // fetch node details and permissions
-    const { data: node, isLoading, isError } = useGetNode(nodeId, undefined, {
-        query: {
-            enabled: !!nodeId,
-        },
-    })
-    const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
+    const {
+        data: node,
+        isLoading,
+        isError,
+    } = useGetNode(
+        nodeId ?? '',
+        { include_translations: true },
+        { query: { enabled: !!nodeId } }
+    )
+    
+    // try use _publisherId from url while useGetNode is loading
+    const publisherId = (node?.publisher?.id ?? _publisherId ?? '') 
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId,
@@ -133,21 +143,21 @@ const NodeDetails = () => {
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
     const { data: nodeVersions, refetch: refetchVersions } =
-        useListNodeVersions(nodeId as string, {
-            statuses: [
-                NodeVersionStatus.NodeVersionStatusActive,
-                NodeVersionStatus.NodeVersionStatusPending,
-                NodeVersionStatus.NodeVersionStatusFlagged,
-                // show rejected versions only to publisher
-                ...(!canEdit
-                    ? []
-                    : [NodeVersionStatus.NodeVersionStatusBanned]),
-            ],
-        }, {
-            query: {
-                enabled: !!nodeId,
+        useListNodeVersions(
+            nodeId,
+            {
+                statuses: [
+                    NodeVersionStatus.NodeVersionStatusActive,
+                    NodeVersionStatus.NodeVersionStatusPending,
+                    NodeVersionStatus.NodeVersionStatusFlagged,
+                    // show rejected versions only to publisher
+                    ...(!canEdit
+                        ? []
+                        : [NodeVersionStatus.NodeVersionStatusBanned]),
+                ],
             },
-        })
+            { query: { enabled: !!nodeId, }, }
+        )
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
