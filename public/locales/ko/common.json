@@ -32,6 +32,8 @@
   "Batch Undo": "일괄 취소",
   "Batch {{action}} Node Versions": "배치 {{action}} 노드 버전",
   "Browse File": "파일 브라우즈",
+  "Cache refresh completed": "캐시 새로 고침 완료",
+  "Cache refresh time remaining": "캐시 새로 고침 남은 시간",
   "Cancel": "취소",
   "Cannot Update": "업데이트할 수 없습니다",
   "Cannot delete node.": "노드를 삭제할 수 없습니다.",
@@ -111,11 +113,14 @@
   "Edit details": "세부 정보 수정",
   "Edit secret key": "비밀 키 수정",
   "Edit unclaimed node": "미청구 노드 편집",
+<<<<<<< HEAD
   "Enter category": "카테고리 입력",
   "Enter comma-separated boolean values": "쉼표로 구분된 불리언 값을 입력하세요",
   "Enter description": "설명 입력",
   "Enter function name": "기능 이름 입력",
   "Enter input types": "입력 유형 입력",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Enter one OS per line": "한 줄에 하나의 운영 체제를 입력하세요.",
   "Enter one accelerator per line": "한 줄에 하나의 가속기를 입력하세요.",
   "Enter return names": "반환 이름 입력",
@@ -131,7 +136,10 @@
   "Error loading nodes. Please try again later.": "노드를 로드하는 중 오류가 발생했습니다. 나중에 다시 시도하십시오.",
   "Error reviewing node version": "노드 버전 검토 중 오류가 발생했습니다.",
   "Error undoing node version": "노드 버전 취소 중 오류가 발생했습니다.",
+<<<<<<< HEAD
   "Experimental": "실험적인",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to claim node. {{error}}": "노드를 청구하는 데 실패했습니다. {{error}}",
   "Failed to create node": "노드를 생성하는데 실패했습니다.",
   "Failed to create node. {{message}}": "노드를 생성하는데 실패했습니다. {{message}}",
@@ -140,7 +148,10 @@
   "Failed to delete node. {{message}}": "노드를 삭제하는데 실패했습니다. {{message}}",
   "Failed to delete version": "버전 삭제 실패",
   "Failed to get GitHub user information. Please try again.": "GitHub 사용자 정보를 가져오지 못했습니다. 다시 시도해 주세요.",
+<<<<<<< HEAD
   "Failed to update ComfyNode": "ComfyNode 업데이트 실패",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to update node version": "노드 버전 업데이트 실패",
   "Failed to update node version: {{error}}": "노드 버전 업데이트 실패: {{error}}",
   "Failed to update node: {{error}}": "노드 업데이트 실패: {{error}}",
@@ -165,7 +176,10 @@
   "Home": "홈",
   "ID": "ID",
   "Info": "정보",
+<<<<<<< HEAD
   "Input Types": "입력 유형",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Install Comfy CLI with: npm install -g comfy-cli": "다음 명령으로 Comfy CLI를 설치하세요: npm install -g comfy-cli",
   "Installs": "설치 횟수",
   "Invalid GitHub repository URL format.": "잘못된 GitHub 저장소 URL 형식입니다.",
@@ -174,7 +188,10 @@
   "License": "라이센스",
   "Live": "실시간",
   "Loading Publisher Selection": "게시자 선택 로드 중",
+<<<<<<< HEAD
   "Local Only": "로컬 전용",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Logging out...": "로그아웃 중...",
   "Login": "로그인",
   "Logout": "로그아웃",
@@ -234,7 +251,10 @@
   "Please select a publisher first": "먼저 발행인을 선택하십시오",
   "Please select a publisher to claim this node": "이 노드를 청구할 발행인을 선택하십시오.",
   "Please wait or follow the GitHub prompts if they appear.": "GitHub 메시지가 나타나면 기다리거나 따르십시오.",
+<<<<<<< HEAD
   "Policy": "정책",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Preempted Comfy Node Names": "사전 점유된 Comfy 노드 이름",
   "Preempted Comfy Node Names Management": "사전 점유된 Comfy 노드 이름 관리",
   "Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.": "사전 점유된 Comfy 노드 이름: 같은 comfy-node로 처리해야 하는 이름 목록입니다. 이는 이름이 다른 노드 간에 일관된 검색 결과를 유지하는 데 도움이 됩니다.",
@@ -260,8 +280,11 @@
   "Released": "발표됨",
   "Repository": "저장소",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "저장소 {{owner}}/{{repo}} 를 찾을 수 없거나 접근 권한이 없습니다.",
+<<<<<<< HEAD
   "Return Names": "반환 이름",
   "Return Types": "반환 유형",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Review Node Versions": "노드 버전 검토",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG, PNG, JPG 또는 GIF (최대. 800x400px)",
   "Save Changes": "변경 사항 저장",
@@ -297,6 +320,8 @@
   "Step 5: Claim Successful": "단계 5: 청구 성공",
   "Supported Accelerators": "지원되는 가속기",
   "Supported Operating Systems": "지원되는 운영 체제",
+  "The cache has been refreshed. The node ownership change should now be visible to the public.": "캐시가 새로 고침되었습니다. 노드 소유권 변경이 이제 공공에 가시화될 것입니다.",
+  "The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.": "노드 소유권 변경은 캐싱으로 인해 모든 페이지에 반영되기까지 최대 30분이 걸릴 수 있습니다. 나중에 노드 페이지를 확인해 주세요.",
   "There was an error loading the nodes. Please try again later.": "노드를 로드하는 중 오류가 발생했습니다. 나중에 다시 시도하십시오.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "저장소 권한을 확인하는 중 예상치 못한 오류가 발생했습니다. 다시 시도해 주세요.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "이 노드들은 어떤 발행인에게도 청구되지 않았습니다. 발행인에 의해 청구되거나 관리자에 의해 수정될 수 있습니다.",

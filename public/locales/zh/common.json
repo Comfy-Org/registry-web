@@ -32,6 +32,8 @@
   "Batch Undo": "批量撤销",
   "Batch {{action}} Node Versions": "批量{{action}}节点版本",
   "Browse File": "浏览文件",
+  "Cache refresh completed": "缓存刷新完成",
+  "Cache refresh time remaining": "缓存刷新剩余时间",
   "Cancel": "取消",
   "Cannot Update": "无法更新",
   "Cannot delete node.": "无法删除节点。",
@@ -111,11 +113,14 @@
   "Edit details": "编辑详情",
   "Edit secret key": "编辑密钥",
   "Edit unclaimed node": "编辑未认领节点",
+<<<<<<< HEAD
   "Enter category": "输入类别",
   "Enter comma-separated boolean values": "输入以逗号分隔的布尔值",
   "Enter description": "输入描述",
   "Enter function name": "输入功能名称",
   "Enter input types": "输入输入类型",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Enter one OS per line": "每行输入一个操作系统",
   "Enter one accelerator per line": "每行输入一个加速器",
   "Enter return names": "输入返回名称",
@@ -131,7 +136,10 @@
   "Error loading nodes. Please try again later.": "加载节点时出错。请稍后再试。",
   "Error reviewing node version": "审核节点版本时出错",
   "Error undoing node version": "撤销节点版本时出错",
+<<<<<<< HEAD
   "Experimental": "实验性的",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to claim node. {{error}}": "无法认领节点。{{error}}",
   "Failed to create node": "创建节点失败",
   "Failed to create node. {{message}}": "创建节点失败。{{message}}",
@@ -140,7 +148,10 @@
   "Failed to delete node. {{message}}": "删除节点失败。{{message}}",
   "Failed to delete version": "删除版本失败",
   "Failed to get GitHub user information. Please try again.": "无法获取 GitHub 用户信息。请再试一次。",
+<<<<<<< HEAD
   "Failed to update ComfyNode": "无法更新 ComfyNode",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to update node version": "更新节点版本失败",
   "Failed to update node version: {{error}}": "无法更新节点版本：{{error}}",
   "Failed to update node: {{error}}": "无法更新节点：{{error}}",
@@ -165,7 +176,10 @@
   "Home": "首页",
   "ID": "ID",
   "Info": "信息",
+<<<<<<< HEAD
   "Input Types": "输入类型",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Install Comfy CLI with: npm install -g comfy-cli": "通过以下命令安装 Comfy CLI：npm install -g comfy-cli",
   "Installs": "安装次数",
   "Invalid GitHub repository URL format.": "无效的 GitHub 仓库 URL 格式。",
@@ -174,7 +188,10 @@
   "License": "许可证",
   "Live": "直播",
   "Loading Publisher Selection": "加载发布者选择",
+<<<<<<< HEAD
   "Local Only": "仅限本地",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Logging out...": "正在登出...",
   "Login": "登录",
   "Logout": "登出",
@@ -234,7 +251,10 @@
   "Please select a publisher first": "请先选择一个发布者。",
   "Please select a publisher to claim this node": "请选择一个发布者来认领此节点",
   "Please wait or follow the GitHub prompts if they appear.": "请等待或跟随出现的 GitHub 提示。",
+<<<<<<< HEAD
   "Policy": "政策",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Preempted Comfy Node Names": "预占Comfy节点名称",
   "Preempted Comfy Node Names Management": "预占Comfy节点名称管理",
   "Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.": "预占Comfy节点名称：应视为相同comfy节点的名称列表。这有助于在名字不同的节点之间保持一致的搜索结果。",
@@ -260,8 +280,11 @@
   "Released": "已发布",
   "Repository": "仓库",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "未找到仓库 {{owner}}/{{repo}} 或您没有访问权限。",
+<<<<<<< HEAD
   "Return Names": "返回名称",
   "Return Types": "返回类型",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Review Node Versions": "审核节点版本",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG，PNG，JPG 或 GIF (最大 800x400px)",
   "Save Changes": "保存更改",
@@ -297,6 +320,8 @@
   "Step 5: Claim Successful": "步骤5：认领成功",
   "Supported Accelerators": "支持的加速器",
   "Supported Operating Systems": "支持的操作系统",
+  "The cache has been refreshed. The node ownership change should now be visible to the public.": "缓存已刷新。节点所有权的变更现在应该能对公众可见。",
+  "The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.": "节点所有权的变更可能需要最多30分钟才能在所有页面上反映出来，因为缓存的原因。请稍后查看节点页面。",
   "There was an error loading the nodes. Please try again later.": "加载节点时出现错误。请稍后再试。",
   "There was an unexpected error verifying your repository permissions. Please try again.": "在验证您的仓库权限时发生了意外错误。请再试一次。",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "这些节点没有被任何发布者认领。它们可以被发布者认领或由管理员编辑。",

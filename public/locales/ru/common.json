@@ -32,6 +32,8 @@
   "Batch Undo": "Массовая отмена",
   "Batch {{action}} Node Versions": "Массовое {{action}} версий узлов",
   "Browse File": "Выбрать файл",
+  "Cache refresh completed": "Обновление кэша завершено",
+  "Cache refresh time remaining": "Время до обновления кэша",
   "Cancel": "Отменить",
   "Cannot Update": "Невозможно обновить",
   "Cannot delete node.": "Невозможно удалить узел.",
@@ -111,11 +113,14 @@
   "Edit details": "Редактировать детали",
   "Edit secret key": "Редактировать секретный ключ",
   "Edit unclaimed node": "Редактировать невостребованный узел",
+<<<<<<< HEAD
   "Enter category": "Введите категорию",
   "Enter comma-separated boolean values": "Введите значения булевой логики, разделенные запятыми",
   "Enter description": "Введите описание",
   "Enter function name": "Введите имя функции",
   "Enter input types": "Введите типы ввода",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Enter one OS per line": "Введите одну операционную систему на каждую строку",
   "Enter one accelerator per line": "Введите один ускоритель на каждую строку",
   "Enter return names": "Введите возвращаемые имена",
@@ -131,7 +136,10 @@
   "Error loading nodes. Please try again later.": "Ошибка загрузки узлов. Пожалуйста, попробуйте позже.",
   "Error reviewing node version": "Ошибка проверки версии узла",
   "Error undoing node version": "Ошибка отмены версии узла",
+<<<<<<< HEAD
   "Experimental": "Экспериментальный",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to claim node. {{error}}": "Не удалось заявить на узел. {{error}}",
   "Failed to create node": "Не удалось создать узел",
   "Failed to create node. {{message}}": "Не удалось создать узел. {{message}}",
@@ -140,7 +148,10 @@
   "Failed to delete node. {{message}}": "Не удалось удалить узел. {{message}}",
   "Failed to delete version": "Не удалось удалить версию",
   "Failed to get GitHub user information. Please try again.": "Не удалось получить информацию о пользователе GitHub. Пожалуйста, попробуйте снова.",
+<<<<<<< HEAD
   "Failed to update ComfyNode": "Не удалось обновить ComfyNode",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to update node version": "Не удалось обновить версию узла",
   "Failed to update node version: {{error}}": "Не удалось обновить версию узла: {{error}}",
   "Failed to update node: {{error}}": "Не удалось обновить узел: {{error}}",
@@ -165,7 +176,10 @@
   "Home": "Главная",
   "ID": "ID",
   "Info": "Информация",
+<<<<<<< HEAD
   "Input Types": "Типы ввода",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Install Comfy CLI with: npm install -g comfy-cli": "Установите Comfy CLI командой: npm install -g comfy-cli",
   "Installs": "Установки",
   "Invalid GitHub repository URL format.": "Неверный формат URL репозитория GitHub.",
@@ -174,7 +188,10 @@
   "License": "Лицензия",
   "Live": "Активный",
   "Loading Publisher Selection": "Загрузка выбора издателя",
+<<<<<<< HEAD
   "Local Only": "Только локально",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Logging out...": "Выход из системы...",
   "Login": "Войти",
   "Logout": "Выйти",
@@ -234,7 +251,10 @@
   "Please select a publisher first": "Сначала выберите издателя",
   "Please select a publisher to claim this node": "Пожалуйста, выберите издателя, чтобы заявить на этот узел",
   "Please wait or follow the GitHub prompts if they appear.": "Пожалуйста, подождите или следуйте подсказкам GitHub, если они появятся.",
+<<<<<<< HEAD
   "Policy": "Политика",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Preempted Comfy Node Names": "Замещенные имена узлов Comfy",
   "Preempted Comfy Node Names Management": "Управление замещенными именами узлов Comfy",
   "Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.": "Замещенные имена узлов Comfy: Список имен, которые должны рассматриваться как один и тот же comfy-узел. Это помогает поддерживать согласованные результаты поиска для узлов с разными именами.",
@@ -260,8 +280,11 @@
   "Released": "Выпущено",
   "Repository": "Репозиторий",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "Репозиторий {{owner}}/{{repo}} не найден или у вас нет доступа к нему.",
+<<<<<<< HEAD
   "Return Names": "Возвратные имена",
   "Return Types": "Возвратные типы",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Review Node Versions": "Проверить версии узла",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG, PNG, JPG или GIF (МАКС. 800x400px)",
   "Save Changes": "Сохранить изменения",
@@ -297,6 +320,8 @@
   "Step 5: Claim Successful": "Шаг 5: Заявка успешна",
   "Supported Accelerators": "Поддерживаемые ускорители",
   "Supported Operating Systems": "Поддерживаемые операционные системы",
+  "The cache has been refreshed. The node ownership change should now be visible to the public.": "Кэш был обновлен. Изменение владельца узла теперь должно быть видно для публики.",
+  "The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.": "Изменение владельца узла может занять до 30 минут, чтобы отразиться на всех страницах из-за кэширования. Пожалуйста, проверьте страницу узла позже.",
   "There was an error loading the nodes. Please try again later.": "Произошла ошибка при загрузке узлов. Пожалуйста, попробуйте позже.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "При проверке разрешений вашего репозитория произошла непредвиденная ошибка. Пожалуйста, попробуйте снова.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "Эти узлы не заявлены ни одним издателем. Они могут быть заявлены издателями или отредактированы администраторами.",

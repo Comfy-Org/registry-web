@@ -32,6 +32,8 @@
   "Batch Undo": "Deshacer por Lotes",
   "Batch {{action}} Node Versions": "Lote {{action}} Versiones de Nodo",
   "Browse File": "Explorar archivo",
+  "Cache refresh completed": "Cache refresh completed",
+  "Cache refresh time remaining": "Tiempo restante de actualización de caché",
   "Cancel": "Cancelar",
   "Cannot Update": "No se puede actualizar",
   "Cannot delete node.": "No se puede eliminar el nodo.",
@@ -111,11 +113,14 @@
   "Edit details": "Editar detalles",
   "Edit secret key": "Editar clave secreta",
   "Edit unclaimed node": "Editar nodo no reclamado",
+<<<<<<< HEAD
   "Enter category": "Ingrese categoría",
   "Enter comma-separated boolean values": "Ingrese valores booleanos separados por comas",
   "Enter description": "Ingrese la descripción",
   "Enter function name": "Ingrese el nombre de la función",
   "Enter input types": "Ingrese los tipos de entrada",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Enter one OS per line": "Ingrese un sistema operativo por línea",
   "Enter one accelerator per line": "Ingrese un acelerador por línea",
   "Enter return names": "Ingrese los nombres de retorno",
@@ -131,7 +136,10 @@
   "Error loading nodes. Please try again later.": "Error al cargar los nodos. Por favor, inténtelo de nuevo más tarde.",
   "Error reviewing node version": "Error al revisar la versión del nodo",
   "Error undoing node version": "Error al deshacer la versión del nodo",
+<<<<<<< HEAD
   "Experimental": "Experimental",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to claim node. {{error}}": "No se pudo reclamar el nodo. {{error}}",
   "Failed to create node": "Error al crear el nodo",
   "Failed to create node. {{message}}": "No se pudo crear el nodo. {{message}}",
@@ -140,7 +148,10 @@
   "Failed to delete node. {{message}}": "No se pudo eliminar el nodo. {{message}}",
   "Failed to delete version": "Error al eliminar la versión",
   "Failed to get GitHub user information. Please try again.": "No se pudo obtener la información del usuario de GitHub. Por favor, inténtelo de nuevo.",
+<<<<<<< HEAD
   "Failed to update ComfyNode": "No se pudo actualizar ComfyNode",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Failed to update node version": "Actualización de versión de nodo fallida",
   "Failed to update node version: {{error}}": "No se pudo actualizar la versión del nodo: {{error}}",
   "Failed to update node: {{error}}": "Error al actualizar el nodo: {{error}}",
@@ -165,7 +176,10 @@
   "Home": "Inicio",
   "ID": "ID",
   "Info": "Información",
+<<<<<<< HEAD
   "Input Types": "Tipos de Entrada",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Install Comfy CLI with: npm install -g comfy-cli": "Instala Comfy CLI con: npm install -g comfy-cli",
   "Installs": "Instalaciones",
   "Invalid GitHub repository URL format.": "Formato de URL de repositorio de GitHub no válido.",
@@ -174,7 +188,10 @@
   "License": "Licencia",
   "Live": "En Vivo",
   "Loading Publisher Selection": "Cargando selección de editor",
+<<<<<<< HEAD
   "Local Only": "仅限本地",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Logging out...": "Cerrando sesión...",
   "Login": "Iniciar sesión",
   "Logout": "Cerrar sesión",
@@ -234,7 +251,10 @@
   "Please select a publisher first": "Por favor, seleccione un editor primero",
   "Please select a publisher to claim this node": "Por favor seleccione un editor para reclamar este nodo",
   "Please wait or follow the GitHub prompts if they appear.": "Por favor, espere o siga las indicaciones de GitHub si aparecen.",
+<<<<<<< HEAD
   "Policy": "Política",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Preempted Comfy Node Names": "Nombres de Nodo Comfy Anticipados",
   "Preempted Comfy Node Names Management": "Gestión de Nombres de Nodos Comfy Preempted",
   "Preempted Comfy Node Names: List of names that should be treated as the same comfy-node. This helps maintain consistent search results across differently named nodes.": "Nombres de nodos Comfy preemtidos: lista de nombres que deben tratarse como el mismo nodo cómodo. Esto ayuda a mantener resultados de búsqueda consistentes en nodos con diferentes nombres.",
@@ -260,8 +280,11 @@
   "Released": "Lanzado",
   "Repository": "Repositorio",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "Repositorio {{owner}}/{{repo}} no encontrado o no tienes acceso a él.",
+<<<<<<< HEAD
   "Return Names": "Return Names",
   "Return Types": "Tipos de Retorno",
+=======
+>>>>>>> 74ed14aaab18c2297e39610cff4bb1a0c4fc7a7d
   "Review Node Versions": "Revisar versiones de nodos",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG, PNG, JPG o GIF (MÁX. 800x400px)",
   "Save Changes": "Guardar Cambios",
@@ -297,6 +320,8 @@
   "Step 5: Claim Successful": "Paso 5: Reclamo exitoso",
   "Supported Accelerators": "Aceleradores compatibles",
   "Supported Operating Systems": "Sistemas Operativos Compatibles",
+  "The cache has been refreshed. The node ownership change should now be visible to the public.": "El caché ha sido actualizado. El cambio de propiedad del nodo ahora debería ser visible para el público.",
+  "The node ownership change may take up to 30 minutes to reflect across all pages due to caching. Please check the node page later.": "El cambio de propiedad del nodo puede tardar hasta 30 minutos en reflejarse en todas las páginas debido a la caché. Por favor, revisa la página del nodo más tarde.",
   "There was an error loading the nodes. Please try again later.": "Hubo un error al cargar los nodos. Por favor, inténtelo de nuevo más tarde.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "Hubo un error inesperado al verificar los permisos de su repositorio. Por favor, inténtelo de nuevo.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "Estos nodos no han sido reclamados por ningún editor. Pueden ser reclamados por los editores o editados por los administradores.",
