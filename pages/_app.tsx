@@ -55,10 +55,8 @@ AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
 
     const pathname = new URL(req.url).pathname
 
-    const isCreateMethod = ['POST',].includes(
-        req.method!.toUpperCase() ?? ''
-    )
-    const isEditMethod = ['PUT', 'PATCH','DELETE'].includes(
+    const isCreateMethod = ['POST'].includes(req.method!.toUpperCase() ?? '')
+    const isEditMethod = ['PUT', 'PATCH', 'DELETE'].includes(
         req.method!.toUpperCase() ?? ''
     )
 
