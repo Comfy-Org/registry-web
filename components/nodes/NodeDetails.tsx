@@ -115,13 +115,20 @@ const NodeDetails = () => {
         isLoading,
         isError,
     } = useGetNode(nodeId, undefined, {
-        request: REQUEST_OPTIONS_NO_CACHE,
+        query: {
+            enabled: !!_nodeId,
+        },
     })
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId,
-        nodeId
+        nodeId,
+        {
+            query: {
+                enabled: !!nodeId,
+            },
+        }
     )
 
     const { data: user } = useGetUser()
@@ -131,7 +138,7 @@ const NodeDetails = () => {
     const warningForAdminEdit =
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
-    const { data: nodeVersions, refetch: refetchVersions, isLoading: isNodeVersionsLoading } =
+    const { data: nodeVersions, refetch: refetchVersions } =
         useListNodeVersions(
             nodeId as string,
             {
@@ -145,7 +152,11 @@ const NodeDetails = () => {
                         : [NodeVersionStatus.NodeVersionStatusBanned]),
                 ],
             },
-            {}
+            {
+                query: {
+                    enabled: !!nodeId,
+                },
+            }
         )
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
@@ -362,7 +373,7 @@ const NodeDetails = () => {
                                 
                                 : (
                                     <CopyableCodeBlock
-                                        code={`comfy node registry-install ${nodeId}`}
+                                        code={`comfy node install ${nodeId}`}
                                     />
                                 )}
                             </div>
