@@ -1,4 +1,6 @@
+import { mergeConfig } from 'vite'
 import type { StorybookConfig } from '@storybook/experimental-nextjs-vite'
+import path from 'node:path'
 
 const config: StorybookConfig = {
     stories: [
@@ -11,7 +13,6 @@ const config: StorybookConfig = {
     ],
     addons: [
         '@storybook/addon-essentials',
-        '@storybook/addon-onboarding',
         '@chromatic-com/storybook',
         '@storybook/experimental-addon-test',
     ],
@@ -20,9 +21,14 @@ const config: StorybookConfig = {
         options: {},
     },
     staticDirs: ['../public'],
-    viteFinal: (c) => ({
-        ...c,
-        server: { ...c.server, allowedHosts: true },
-    }),
+    viteFinal: (c) =>
+        mergeConfig(c, {
+            server: { allowedHosts: true },
+            resolve: {
+                alias: {
+                    '@': path.resolve(process.cwd()),
+                },
+            },
+        }),
 }
 export default config

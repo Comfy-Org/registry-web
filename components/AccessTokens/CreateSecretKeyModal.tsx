@@ -1,9 +1,10 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
-import { CopyAccessTokenModal } from './CopyAccessKeyModal'
-import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
-import { useCreatePersonalAccessToken } from 'src/api/generated'
 import { toast } from 'react-toastify'
+import { useCreatePersonalAccessToken } from '@/src/api/generated'
+import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
+import { CopyAccessTokenModal } from './CopyAccessKeyModal'
 
 type CreateSecretKeyModalProps = {
     openModal: boolean
@@ -18,6 +19,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
     onCreationSuccess,
     publisherId,
 }) => {
+    const { t } = useNextTranslation()
     const [showSecondModal, setShowSecondModal] = useState(false)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
@@ -37,10 +39,10 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
             },
             {
                 onError: (error) => {
-                    toast.error('Failed to create secret key')
+                    toast.error(t('Failed to create secret key'))
                 },
                 onSuccess: () => {
-                    toast.success('Secret key created')
+                    toast.success(t('Secret key created'))
                     onCloseModal()
                     openSecondModal()
                     setName('')
@@ -66,16 +68,16 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                 <Modal.Body className="!bg-gray-800 p-8  md:px-9 md:py-8 ">
                     <div className="space-y-6">
                         <h3 className="text-2xl font-medium text-white">
-                            Create a new secret key
+                            {t('Create a new secret key')}
                         </h3>
                         <form className="mt-4 space-y-4 lg:space-y-6">
                             <div>
                                 <label className="block mb-1 text-xs font-bold text-white">
-                                    Name
+                                    {t('Name')}
                                 </label>
                                 <TextInput
                                     id="name"
-                                    placeholder="E.g. janedoe55"
+                                    placeholder={t('E.g. janedoe55')}
                                     // required
                                     theme={customThemeTextInput}
                                     type="text"
@@ -86,9 +88,9 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                             </div>
                             <div>
                                 <label className="block mb-1 text-xs font-bold text-white">
-                                    Description{' '}
+                                    {t('Description')}{' '}
                                     <span className="text-gray-400">
-                                        Optional
+                                        {t('Optional')}
                                     </span>
                                 </label>
                                 <TextInput
@@ -113,7 +115,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                                     className="w-full bg-gray-800 hover:!bg-gray-800"
                                 >
                                     <span className="text-xs text-white">
-                                        Cancel
+                                        {t('Cancel')}
                                     </span>
                                 </Button>
                                 <Button
@@ -128,7 +130,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                                     }
                                 >
                                     <span className="text-xs text-white hover:text-gray-500">
-                                        Create Secret Key
+                                        {t('Create Secret Key')}
                                     </span>
                                 </Button>
                             </div>

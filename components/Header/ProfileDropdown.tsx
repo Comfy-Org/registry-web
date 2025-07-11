@@ -1,15 +1,17 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { getAuth } from 'firebase/auth'
 import { Avatar, Dropdown } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { HiChevronDown } from 'react-icons/hi'
-import { useGetUser } from 'src/api/generated'
+import { useGetUser } from '@/src/api/generated'
 import app from '../../src/firebase'
 import { useLogout } from '../AuthUI/Logout'
 
 const ProfileDropdown: React.FC = () => {
     const router = useRouter()
+    const { t } = useNextTranslation()
     const [onSignOut, isSignoutLoading, error] = useLogout()
     const { data: user } = useGetUser()
 
@@ -43,22 +45,22 @@ const ProfileDropdown: React.FC = () => {
         >
             <Dropdown.Header>
                 <span className="block text-sm">
-                    {firebaseUser.displayName || 'User'}
+                    {firebaseUser.displayName || t('User')}
                 </span>
                 <span className="block truncate text-sm font-medium">
                     {firebaseUser.email}
                 </span>
             </Dropdown.Header>
             <Dropdown.Item onClick={() => router.push('/nodes')}>
-                Your Nodes
+                {t('Your Nodes')}
             </Dropdown.Item>
             {user?.isAdmin && (
                 <Dropdown.Item onClick={() => router.push('/admin')}>
-                    Admin Dashboard
+                    {t('Admin Dashboard')}
                 </Dropdown.Item>
             )}
             <Dropdown.Divider />
-            <Dropdown.Item onClick={onSignOut}>Logout</Dropdown.Item>
+            <Dropdown.Item onClick={onSignOut}>{t('Logout')}</Dropdown.Item>
         </Dropdown>
     )
 }

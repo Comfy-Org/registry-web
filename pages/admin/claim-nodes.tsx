@@ -1,6 +1,7 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import UnclaimedNodeCard from '@/components/nodes/UnclaimedNodeCard'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { Breadcrumb, Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
@@ -8,11 +9,12 @@ import { HiHome, HiPlus } from 'react-icons/hi'
 import {
     getListNodesForPublisherQueryKey,
     useListNodesForPublisherV2,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 
 export default withAdmin(ClaimNodesPage)
 function ClaimNodesPage() {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const queryClient = useQueryClient()
     const pageSize = 36
@@ -48,11 +50,12 @@ function ClaimNodesPage() {
         return (
             <div className="p-4 text-white">
                 <h1 className="text-2xl font-bold text-gray-200 mb-6">
-                    Error Loading Unclaimed Nodes
+                    {t('Error Loading Unclaimed Nodes')}
                 </h1>
                 <p className="text-red-400">
-                    There was an error loading the nodes. Please try again
-                    later.
+                    {t(
+                        'There was an error loading the nodes. Please try again later.'
+                    )}
                 </p>
             </div>
         )
@@ -63,21 +66,34 @@ function ClaimNodesPage() {
             <div className="mb-6">
                 <Breadcrumb className="py-4">
                     <Breadcrumb.Item
-                        href="/admin"
+                        href="/"
                         icon={HiHome}
+                        onClick={(e) => {
+                            e.preventDefault()
+                            router.push('/')
+                        }}
+                        className="dark"
+                    >
+                        {t('Home')}
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item
+                        href="/admin"
                         onClick={(e) => {
                             e.preventDefault()
                             router.push('/admin')
                         }}
+                        className="dark"
                     >
-                        Admin Dashboard
+                        {t('Admin Dashboard')}
                     </Breadcrumb.Item>
-                    <Breadcrumb.Item>Unclaimed Nodes</Breadcrumb.Item>
+                    <Breadcrumb.Item className="dark">
+                        {t('Unclaimed Nodes')}
+                    </Breadcrumb.Item>
                 </Breadcrumb>
 
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-gray-200">
-                        Unclaimed Nodes
+                        {t('Unclaimed Nodes')}
                     </h1>
                     <div>
                         <Button
@@ -88,20 +104,21 @@ function ClaimNodesPage() {
                             className="mr-2"
                         >
                             <HiPlus className="mr-2 h-5 w-5" />
-                            Add New Unclaimed Node
+                            {t('Add New Unclaimed Node')}
                         </Button>
                     </div>
                 </div>
             </div>
 
             <div className="text-gray-200 mb-4">
-                These nodes are not claimed by any publisher. They can be
-                claimed by publishers or edited by administrators.
+                {t(
+                    'These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.'
+                )}
             </div>
 
             {data?.nodes?.length === 0 ? (
                 <div className="bg-gray-800 p-4 rounded text-gray-200">
-                    No unclaimed nodes found.
+                    {t('No unclaimed nodes found.')}
                 </div>
             ) : (
                 <>

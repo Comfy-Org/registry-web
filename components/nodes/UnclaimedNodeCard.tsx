@@ -1,11 +1,12 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { HiPencil } from 'react-icons/hi'
-import { Node } from 'src/api/generated'
+import { Node } from '@/src/api/generated'
 import { PublisherId } from '../Search/PublisherId'
-import { NodeClaimModal } from './NodeClaimModal'
+import { AdminNodeClaimModal } from './AdminNodeClaimModal'
 
 export default function UnclaimedNodeCard({
     node,
@@ -14,6 +15,7 @@ export default function UnclaimedNodeCard({
     node: Node
     onSuccess?: () => void
 }) {
+    const { t } = useNextTranslation()
     const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
     const { name, description, icon, rating, id } = node
     const buttonLink = `/nodes/${id}`
@@ -50,7 +52,7 @@ export default function UnclaimedNodeCard({
                         className="flex items-center absolute top-2 right-2"
                     >
                         <HiPencil className="mr-1" />
-                        Edit
+                        {t('Edit')}
                     </Button>
                 </div>
 
@@ -62,13 +64,13 @@ export default function UnclaimedNodeCard({
                         {description}
                     </p>
                     <p className="text-blue-500 cursor-pointer">
-                        <Link href={buttonLink}>More</Link>
+                        <Link href={buttonLink}>{t('More')}</Link>
                     </p>
                 </div>
             </div>
 
             {/* Claim Modal */}
-            <NodeClaimModal
+            <AdminNodeClaimModal
                 isOpen={isClaimModalOpen}
                 onClose={() => setIsClaimModalOpen(false)}
                 node={node}

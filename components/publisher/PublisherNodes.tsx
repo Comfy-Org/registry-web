@@ -1,7 +1,8 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Pagination } from 'flowbite-react'
 import Link from 'next/link'
 import * as React from 'react'
-import { Publisher, useListNodesForPublisherV2 } from 'src/api/generated'
+import { Publisher, useListNodesForPublisherV2 } from '@/src/api/generated'
 import { CustomThemePagination } from 'utils/comfyTheme'
 import NodesCard from '../nodes/NodesCard'
 
@@ -20,6 +21,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
     onEditPublisher,
     include_banned = false,
 }) => {
+    const { t } = useNextTranslation()
     const [page, setPage] = React.useState(1)
     const { data, isError, isLoading } = useListNodesForPublisherV2(
         publisher.id as string,
@@ -30,7 +32,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
         <div className="pt-20">
             <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold leading-tight tracking-tight text-white sm:text-2xl">
-                    <Link legacyBehavior href={`/publishers/${publisher.id}`}>
+                    <Link href={`/publishers/${publisher.id}`}>
                         {publisher.name !== '' ? publisher.name : publisher.id}
                     </Link>
                 </h1>
@@ -73,8 +75,8 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
                     totalPages={data.totalPages}
                     onPageChange={(page) => setPage(page)}
                     showIcons={true}
-                    previousLabel="Previous"
-                    nextLabel="Next"
+                    previousLabel={t('Previous')}
+                    nextLabel={t('Next')}
                     layout="pagination"
                 />
             )}

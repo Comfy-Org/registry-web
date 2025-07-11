@@ -1,5 +1,5 @@
 import { Badge } from 'flowbite-react'
-import { NodeVersionStatus } from 'src/api/generated'
+import { NodeVersionStatus } from '@/src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
 export function NodeStatusBadge({
@@ -20,7 +20,9 @@ export function NodeStatusBadge({
             }
             className="text-[14px]"
         >
-            {NodeVersionStatusToReadable(status as NodeVersionStatus)}
+            {NodeVersionStatusToReadable({
+                status: status as NodeVersionStatus,
+            })}
             {count != null ? <span> x{count}</span> : null}
         </Badge>
     )

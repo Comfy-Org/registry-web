@@ -11,6 +11,7 @@ coverage
 # next.js
 .next/
 out/
+.cache
 
 # production
 build
@@ -60,3 +61,6 @@ yarn.lock
 # ignore storybook files
 storybook-static
 *storybook.log
+
+# ignore core file
+core

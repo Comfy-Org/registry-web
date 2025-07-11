@@ -1,7 +1,8 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { Node } from 'src/api/generated'
+import { Node } from '@/src/api/generated'
 interface NodesCard {
     node: Node
     buttonLink: string
@@ -10,6 +11,7 @@ const NodesCard: React.FC<NodesCard> = ({
     node: { name, description, icon, downloads, rating, id },
     buttonLink,
 }) => {
+    const { t } = useNextTranslation()
     return (
         <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
             {icon && (
@@ -34,7 +36,7 @@ const NodesCard: React.FC<NodesCard> = ({
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-500 cursor-pointer">
                         {' '}
-                        <Link href={buttonLink}>More</Link>
+                        <Link href={buttonLink}>{t('More')}</Link>
                     </p>
                 </div>
 

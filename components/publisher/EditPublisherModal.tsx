@@ -1,6 +1,7 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React from 'react'
-import { Publisher } from 'src/api/generated'
+import { Publisher } from '@/src/api/generated'
 
 type EditPublisherModalProps = {
     openModal: boolean
@@ -15,6 +16,7 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
     publisher,
     onSubmit,
 }) => {
+    const { t } = useNextTranslation()
     const [displayName, setDisplayName] = React.useState<string>(
         publisher.name || ''
     )
@@ -30,13 +32,13 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8">
                 <div className="space-y-6">
                     <h3 className="text-2xl font-medium text-white">
-                        Edit Publisher
+                        {t('Edit Publisher')}
                     </h3>
                     <form className="mt-4 space-y-4 lg:space-y-6">
                         <div>
                             <div>
                                 <label className=" mb-1 text-xs font-thin text-white">
-                                    Username
+                                    {t('Username')}
                                 </label>
                             </div>
                             <div>
@@ -47,7 +49,7 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
                         </div>
                         <div>
                             <label className=" mb-1 text-xs font-thin  text-white">
-                                Display Name
+                                {t('Display Name')}
                             </label>
                             <TextInput
                                 sizing="sm"
@@ -73,7 +75,7 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
                                 className="w-full bg-gray-800 hover:!bg-gray-800"
                             >
                                 <span className="text-xs text-white">
-                                    Cancel
+                                    {t('Cancel')}
                                 </span>
                             </Button>
                             <Button
@@ -87,7 +89,7 @@ const EditPublisherModal: React.FC<EditPublisherModalProps> = ({
                                 }}
                             >
                                 <span className="text-xs text-white">
-                                    Save Changes
+                                    {t('Save Changes')}
                                 </span>
                             </Button>
                         </div>

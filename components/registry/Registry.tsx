@@ -1,4 +1,5 @@
 import Autocomplete from '@/components/Search/Autocomplete'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import algoliasearch from 'algoliasearch/lite'
 import singletonRouter from 'next/router'
 import React from 'react'
@@ -19,16 +20,19 @@ const searchClient = algoliasearch(
 type RegistryProps = {}
 
 const Registry: React.FC<RegistryProps> = ({}) => {
+    const { t } = useNextTranslation()
     return (
-        <div className="relative mt-8 bg-gray-900 lg:mt-20 mb-8">
+        <div className="relative bg-gray-900 mb-12">
             <GenericHeader
-                title="Welcome to the Registry"
-                subTitle="View nodes or sign in to create and publish your own"
-                buttonText="Get Started"
+                title={t('Welcome to ComfyUI Registry')}
+                subTitle={t(
+                    'View nodes or sign in to create and publish your own'
+                )}
+                buttonText={t('Get Started')}
                 buttonLink="/nodes"
             />
 
-            <div className="md:w-full w-full mt-5">
+            <div className="md:w-full w-full mt-4">
                 <InstantSearch
                     searchClient={searchClient}
                     indexName={INSTANT_SEARCH_INDEX_NAME}
@@ -48,7 +52,7 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                         <div className="header-wrapper wrapper">
                             <Autocomplete
                                 searchClient={searchClient}
-                                placeholder="Search Nodes"
+                                placeholder={t('Search Nodes')}
                                 detachedMediaQuery="none"
                                 openOnFocus
                                 autoFocus
@@ -63,13 +67,13 @@ const Registry: React.FC<RegistryProps> = ({}) => {
                     />
 
                     {/* Display search results */}
-                    <div className="wrapper mt-2 w-full">
-                        <div>
-                            <Hits hitComponent={Hit} />
-                        </div>
+                    <div className="wrapper mt-4 w-full">
+                        <Hits hitComponent={Hit} />
                     </div>
 
-                    <CustomSearchPagination />
+                    <div className="mt-4">
+                        <CustomSearchPagination />
+                    </div>
                 </InstantSearch>
             </div>
         </div>

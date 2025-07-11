@@ -4,10 +4,11 @@ import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeForm
 import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
 import { parseJsonSafe } from '@/components/parseJsonSafe'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
-import MailtoNodeVersionModal from 'components/MailtoNodeVersionModal'
+import MailtoNodeVersionModal from '@/components/MailtoNodeVersionModal'
 import {
     Breadcrumb,
     Button,
@@ -34,11 +35,11 @@ import {
     useAdminUpdateNodeVersion,
     useGetUser,
     useListAllNodeVersions,
-    useListNodeVersions,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 
 function NodeVersionList({}) {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const [page, setPage] = React.useState<number>(1)
     const [selectedVersions, setSelectedVersions] = useState<{
@@ -76,6 +77,14 @@ function NodeVersionList({}) {
         banned: 'failure',
         active: 'info',
     }
+    const flagNames = {
+        all: t('All'),
+        flagged: t('Flagged'),
+        pending: t('Pending'),
+        deleted: t('Deleted'),
+        banned: t('Banned'),
+        active: t('Active'),
+    }
     const allFlags = [...Object.values(flags)].sort()
 
     const defaultSelectedStatus = [
@@ -107,49 +116,34 @@ function NodeVersionList({}) {
         })
             .toString()
             .replace(/^(?!$)/, '?')
-        router.push(router.pathname + search + location.hash)
+        const hash = router.asPath.split('#')[1]
+            ? `#${router.asPath.split('#')[1]}`
+            : ''
+        router.push(`${router.pathname}${search}${hash}`)
     }
 
     const [isAdminCreateNodeModalOpen, setIsAdminCreateNodeModalOpen] =
         useState(false)
 
-    const queryForNodeId = router.query.nodeId as string
+    const queryForNodeId = Array.isArray(router.query.nodeId)
+        ? router.query.nodeId[0]
+        : router.query.nodeId
     const queryForStatusReason = router.query.statusReason as string
 
-    const getAllNodeVersionsQuery = useListAllNodeVersions(
-        {
-            page: page,
-            pageSize: 8,
-            statuses: selectedStatus,
-            include_status_reason: true,
-            status_reason: queryForStatusReason || '',
-
-            // failed to filter, TODO: fix this in the backend
-            // nodeId: queryForNodeId || undefined,
-        },
-        { query: { enabled: !queryForNodeId } }
-    )
-
-    console.log('queryForNodeId', queryForNodeId)
-    // patched from frontend if queryForNodeId is set
-    const getSpecificNodeVersionQuery = useListNodeVersions(
-        queryForNodeId,
-        {
-            statuses: selectedStatus,
-            include_status_reason: true,
-        },
-        { query: { enabled: !!queryForNodeId } }
-    )
+    const getAllNodeVersionsQuery = useListAllNodeVersions({
+        page: page,
+        pageSize: 8,
+        statuses: selectedStatus,
+        include_status_reason: true,
+        status_reason: queryForStatusReason || undefined,
+        nodeId: queryForNodeId || undefined,
+    })
 
     // todo: also implement this in the backend
     const queryForVersion = router.query.version as string
 
     const versions =
-        (
-            getSpecificNodeVersionQuery.data ||
-            getAllNodeVersionsQuery.data?.versions ||
-            []
-        )?.filter((nv) => {
+        (getAllNodeVersionsQuery.data?.versions || [])?.filter((nv) => {
             if (queryForVersion) return nv.version === queryForVersion
             return true
         }) || []
@@ -159,7 +153,7 @@ function NodeVersionList({}) {
 
     React.useEffect(() => {
         if (getAllNodeVersionsQuery.isError) {
-            toast.error('Error getting node versions')
+            toast.error(t('Error getting node versions'))
         }
     }, [getAllNodeVersionsQuery])
 
@@ -215,9 +209,9 @@ function NodeVersionList({}) {
                     })
                 },
                 onError: (error) => {
-                    console.error('Error reviewing node version', error)
+                    console.error(t('Error reviewing node version'), error)
                     toast.error(
-                        `Error reviewing node version ${nv.node_id!}@${nv.version!}`
+                        `${t('Error reviewing node version')} ${nv.node_id!}@${nv.version!}`
                     )
                 },
             }
@@ -230,7 +224,7 @@ function NodeVersionList({}) {
         message: string,
         batchId: string
     ) => {
-        if (!message) return toast.error('Please provide a reason')
+        if (!message) return toast.error(t('Please provide a reason'))
 
         // parse previous status reason with fallbacks
         const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data
@@ -293,7 +287,7 @@ function NodeVersionList({}) {
         message: string,
         batchId: string
     ) => {
-        if (!message) return toast.error('Please provide a reason')
+        if (!message) return toast.error(t('Please provide a reason'))
 
         // parse previous status reason with fallbacks
         const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data
@@ -363,8 +357,8 @@ function NodeVersionList({}) {
             return
         }
 
-        message ||= prompt('Approve Reason: ', 'Approved by admin')
-        if (!message) return toast.error('Please provide a reason')
+        message ||= prompt(t('Approve Reason:'), t('Approved by admin'))
+        if (!message) return toast.error(t('Please provide a reason'))
 
         await onReview({
             nodeVersion: nv,
@@ -372,7 +366,12 @@ function NodeVersionList({}) {
             message,
             batchId, // Pass batchId to onReview if provided
         })
-        toast.success(`${nv.node_id!}@${nv.version!} Approved`)
+        toast.success(
+            t('{{id}}@{{version}} Approved', {
+                id: nv.node_id,
+                version: nv.version,
+            })
+        )
     }
     const onReject = async (
         nv: NodeVersion,
@@ -388,8 +387,8 @@ function NodeVersionList({}) {
             )
             return
         }
-        message ||= prompt('Reject Reason: ', 'Rejected by admin')
-        if (!message) return toast.error('Please provide a reason')
+        message ||= prompt(t('Reject Reason:'), t('Rejected by admin'))
+        if (!message) return toast.error(t('Please provide a reason'))
 
         await onReview({
             nodeVersion: nv,
@@ -397,7 +396,12 @@ function NodeVersionList({}) {
             message,
             batchId, // Pass batchId to onReview if provided
         })
-        toast.success(`${nv.node_id!}@${nv.version!} Rejected`)
+        toast.success(
+            t('{{id}}@{{version}} Rejected', {
+                id: nv.node_id,
+                version: nv.version,
+            })
+        )
     }
     const checkIsUndoable = (nv: NodeVersion) =>
         !!zStatusReason.safeParse(parseJsonSafe(nv.status_reason).data).data
@@ -416,7 +420,12 @@ function NodeVersionList({}) {
             parseJsonSafe(nv.status_reason).data
         ).data
         if (!statusReason?.batchId) {
-            toast.error(`No batch ID found for ${nv.node_id}@${nv.version}`)
+            toast.error(
+                t('No batch ID found for {{id}}@{{version}}', {
+                    id: nv.node_id,
+                    version: nv.version,
+                })
+            )
             return
         }
 
@@ -472,13 +481,18 @@ function NodeVersionList({}) {
         ).data?.statusHistory
         if (!statusHistory?.length)
             return toast.error(
-                `No status history found for ${nv.node_id}@${nv.version}`
+                t('No status history found for {{id}}@{{version}}', {
+                    id: nv.node_id,
+                    version: nv.version,
+                })
             )
 
         const prevStatus = statusHistory[statusHistory.length - 1].status
         const by = user?.email // the user who clicked undo
         if (!by) {
-            toast.error('Unable to get user email, please reload and try again')
+            toast.error(
+                t('Unable to get user email, please reload and try again')
+            )
             return
         }
 
@@ -501,13 +515,19 @@ function NodeVersionList({}) {
                 onSuccess: () => {
                     queryClient.invalidateQueries({ queryKey: ['/versions'] })
                     toast.success(
-                        `${nv.node_id!}@${nv.version!} Undone, back to ${NodeVersionStatusToReadable(prevStatus)}`
+                        t('{{id}}@{{version}} Undone, back to {{status}}', {
+                            id: nv.node_id,
+                            version: nv.version,
+                            status: NodeVersionStatusToReadable({
+                                status: prevStatus,
+                            }),
+                        })
                     )
                 },
                 onError: (error) => {
-                    console.error('Error undoing node version', error)
+                    console.error(t('Error undoing node version'), error)
                     toast.error(
-                        `Error undoing node version ${nv.node_id!}@${nv.version!}`
+                        `${t('Error undoing node version')} ${nv.node_id!}@${nv.version!}`
                     )
                 },
             }
@@ -519,7 +539,7 @@ function NodeVersionList({}) {
             (key) => selectedVersions[key]
         )
         if (selectedKeys.length === 0) {
-            toast.error('No versions selected')
+            toast.error(t('No versions selected'))
             return
         }
 
@@ -540,7 +560,7 @@ function NodeVersionList({}) {
         )
 
         if (selectedKeys.length === 0) {
-            toast.error('No versions selected')
+            toast.error(t('No versions selected'))
             return
         }
 
@@ -551,11 +571,11 @@ function NodeVersionList({}) {
         let reason =
             batchReason ||
             (batchAction in defaultBatchReasons
-                ? prompt('Reason', defaultBatchReasons[batchAction])
+                ? prompt(t('Reason'), t(defaultBatchReasons[batchAction]))
                 : '')
 
         if (!reason) {
-            toast.error('Please provide a reason')
+            toast.error(t('Please provide a reason'))
             return
         }
 
@@ -576,12 +596,16 @@ function NodeVersionList({}) {
                     (nv) => nv.node_id === nodeId && nv.version === version
                 )
                 if (!nodeVersion) {
-                    toast.error(`Node version ${key} not found`)
+                    toast.error(t('Node version {{key}} not found', { key }))
                     return
                 }
                 const actionHandler = batchActions[batchAction]
                 if (!actionHandler) {
-                    toast.error(`Invalid batch action: ${batchAction}`)
+                    toast.error(
+                        t('Invalid batch action: {{action}}', {
+                            action: batchAction,
+                        })
+                    )
                     return
                 }
                 if (actionHandler) {
@@ -636,7 +660,7 @@ function NodeVersionList({}) {
                             )
                         }}
                     >
-                        Select All
+                        {t('Select All')}
                     </Button>
                     <span className="text-white font-medium mr-4 ml-4">
                         {
@@ -644,7 +668,7 @@ function NodeVersionList({}) {
                                 (key) => selectedVersions[key]
                             ).length
                         }{' '}
-                        versions selected
+                        {t('versions selected')}
                     </span>
 
                     <Button
@@ -655,7 +679,7 @@ function NodeVersionList({}) {
                         }}
                         className="mr-2"
                     >
-                        <HiCheck className="mr-2" /> Batch Approve
+                        <HiCheck className="mr-2" /> {t('Batch Approve')}
                     </Button>
                     <Button
                         color="failure"
@@ -665,7 +689,7 @@ function NodeVersionList({}) {
                         }}
                         className="mr-2"
                     >
-                        <HiBan className="mr-2" /> Batch Reject
+                        <HiBan className="mr-2" /> {t('Batch Reject')}
                     </Button>
                     <Button
                         color="warning"
@@ -674,20 +698,17 @@ function NodeVersionList({}) {
                             handleBatchOperation()
                         }}
                     >
-                        <HiReply className="mr-2" /> Batch Undo
+                        <HiReply className="mr-2" /> {t('Batch Undo')}
                     </Button>
                 </div>
                 <Button color="gray" onClick={() => setSelectedVersions({})}>
-                    Clear Selection
+                    {t('Clear Selection')}
                 </Button>
             </div>
         )
     }
 
-    if (
-        getAllNodeVersionsQuery.isLoading ||
-        getSpecificNodeVersionQuery.isLoading
-    ) {
+    if (getAllNodeVersionsQuery.isLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner />
@@ -695,49 +716,63 @@ function NodeVersionList({}) {
         )
     }
 
+    const translatedActionNames = {
+        approve: t('approve'),
+        reject: t('reject'),
+        undo: t('undo'),
+    }
     return (
         <div>
             <Breadcrumb className="py-4 px-4">
                 <Breadcrumb.Item
-                    href="/admin"
+                    href="/"
                     icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/')
+                    }}
+                    className="dark"
+                >
+                    {t('Home')}
+                </Breadcrumb.Item>
+                <Breadcrumb.Item
+                    href="/admin"
                     onClick={(e) => {
                         e.preventDefault()
                         router.push('/admin')
                     }}
+                    className="dark"
                 >
-                    Admin Dashboard
+                    {t('Admin Dashboard')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Review Node Versions</Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    {t('Review Node Versions')}
+                </Breadcrumb.Item>
             </Breadcrumb>
-
             <BatchOperationBar />
-
             {/* Batch operation modal */}
             <Modal
                 show={isBatchModalOpen}
                 onClose={() => setIsBatchModalOpen(false)}
             >
                 <Modal.Header>
-                    {`Batch ${
-                        {
-                            approve: 'Approve',
-                            reject: 'Reject',
-                            undo: 'Undo',
-                        }[batchAction]
-                    } Node Versions`}
+                    {t(`Batch {{action}} Node Versions`, {
+                        action: translatedActionNames[batchAction],
+                    })}
                 </Modal.Header>
                 <Modal.Body>
                     <div className="space-y-6">
-                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 flex flex-wrap gap-2">
-                            You are about to{' '}
-                            {
+                        <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400 flex flex-wrap gap-2 items-center">
+                            {t(
+                                'You are about to {{action}} {{count}} node versions',
                                 {
-                                    approve: 'approve',
-                                    reject: 'reject',
-                                    undo: 'undo',
-                                }[batchAction]
-                            }{' '}
+                                    action: translatedActionNames[batchAction],
+                                    count: Object.keys(selectedVersions).filter(
+                                        (key) => selectedVersions[key]
+                                    ).length,
+                                }
+                            )}
+
                             <Tooltip
                                 content={
                                     <ol className="list-decimal list-inside">
@@ -752,14 +787,9 @@ function NodeVersionList({}) {
                                 }
                                 placement="top"
                             >
-                                <span className="inline-block underline cursor-pointer">
-                                    {
-                                        Object.keys(selectedVersions).filter(
-                                            (key) => selectedVersions[key]
-                                        ).length
-                                    }{' '}
-                                    node versions
-                                </span>
+                                <Button color="gray" size="xs" pill outline>
+                                    {t('Details')}
+                                </Button>
                             </Tooltip>
                         </p>
                         <div>
@@ -767,12 +797,14 @@ function NodeVersionList({}) {
                                 htmlFor="reason"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
-                                Reason (optional)
+                                {t('Reason (optional)')}
                             </Label>
                             <TextInput
                                 id="reason"
                                 placeholder={
-                                    defaultBatchReasons[batchAction] ?? ''
+                                    defaultBatchReasons[batchAction]
+                                        ? t(defaultBatchReasons[batchAction])
+                                        : ''
                                 }
                                 value={batchReason}
                                 onChange={(e) => setBatchReason(e.target.value)}
@@ -781,22 +813,23 @@ function NodeVersionList({}) {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={executeBatchOperation}>Confirm</Button>
+                    <Button onClick={executeBatchOperation}>
+                        {t('Confirm')}
+                    </Button>
                     <Button
                         color="gray"
                         onClick={() => setIsBatchModalOpen(false)}
                     >
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                 </Modal.Footer>
             </Modal>
-
             <div className="flex flex-col gap-4 mb-6">
                 <h1 className="text-2xl font-bold text-gray-200">
-                    Node Versions
+                    {t('Node Versions')}
                 </h1>
                 <div className="text-lg font-bold text-gray-200">
-                    Total Results : {getAllNodeVersionsQuery.data?.total}
+                    {t('Total Results')} : {getAllNodeVersionsQuery.data?.total}
                 </div>
                 <form
                     className="flex gap-2 items-center"
@@ -815,14 +848,15 @@ function NodeVersionList({}) {
                         })
                             .toString()
                             .replace(/^(?!$)/, '?')
-                        router.push(
-                            router.pathname + searchParams + location.hash
-                        )
+                        const hash = router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
+                            : ''
+                        router.push(router.pathname + searchParams + hash)
                     }}
                 >
                     <TextInput
                         id="filter-node-version"
-                        placeholder="Filter by nodeId@version"
+                        placeholder={t('Filter by nodeId@version')}
                         defaultValue={
                             queryForNodeId && queryForVersion
                                 ? `${queryForNodeId}@${queryForVersion}`
@@ -832,7 +866,7 @@ function NodeVersionList({}) {
                         }
                     />
 
-                    <Button color="blue">Search</Button>
+                    <Button color="blue">{t('Search')}</Button>
                 </form>
                 <form
                     className="flex gap-2 items-center"
@@ -848,17 +882,18 @@ function NodeVersionList({}) {
                         })
                             .toString()
                             .replace(/^(?!$)/, '?')
-                        router.push(
-                            router.pathname + searchParams + location.hash
-                        )
+                        const hash = router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
+                            : ''
+                        router.push(router.pathname + searchParams + hash)
                     }}
                 >
                     <TextInput
                         id="filter-status-reason"
-                        placeholder="Filter by status reason"
+                        placeholder={t('Filter by status reason')}
                         defaultValue={queryForStatusReason || ''}
                     />
-                    <Button color="blue">Search by Reason</Button>
+                    <Button color="blue">{t('Search by Reason')}</Button>
                 </form>
                 <div className="flex gap-2">
                     <Button
@@ -883,7 +918,7 @@ function NodeVersionList({}) {
                             setSelectedStatus(Object.values(NodeVersionStatus))
                         }
                     >
-                        All
+                        {t('All')}
                     </Button>
 
                     {Object.entries(flags).map(([flag, status]) => (
@@ -903,7 +938,9 @@ function NodeVersionList({}) {
                                 setSelectedStatus([status as NodeVersionStatus])
                             }
                         >
-                            {flag.charAt(0).toUpperCase() + flag.slice(1)} Nodes
+                            {t(`{{nodeStatus}} Nodes`, {
+                                nodeStatus: flagNames[flag] || flag,
+                            })}
                         </Button>
                     ))}
 
@@ -913,7 +950,6 @@ function NodeVersionList({}) {
                     />
                 </div>
             </div>
-
             {versions
                 .map((nv) => ({ ...nv, key: `${nv.node_id}@${nv.version}` }))
                 .map(({ key, ...nv }, index) => (
@@ -1038,7 +1074,7 @@ function NodeVersionList({}) {
                                     <Link
                                         target="_blank"
                                         href={nv.downloadUrl}
-                                        title="Download Archive"
+                                        title={t('Download Archive')}
                                     >
                                         <MdFolderZip />
                                     </Link>
@@ -1058,14 +1094,17 @@ function NodeVersionList({}) {
                                             .catch((e) => {
                                                 console.error(e)
                                                 toast.error(
-                                                    `Error getting node ${nv.node_id} repository`
+                                                    t(
+                                                        'Error getting node {{id}} repository',
+                                                        { id: nv.node_id }
+                                                    )
                                                 )
                                             })
                                     }}
                                 >
                                     <FaGithub
                                         className="w-6 h-6"
-                                        title="Github"
+                                        title={t('Github')}
                                     />
                                 </Link>
                             </div>
@@ -1085,7 +1124,7 @@ function NodeVersionList({}) {
                                         className="flex"
                                         onClick={() => onApprove(nv)}
                                     >
-                                        Approve
+                                        {t('Approve')}
                                     </Button>
                                 )}
                                 {/* show reject only flagged/active node versions */}
@@ -1099,7 +1138,7 @@ function NodeVersionList({}) {
                                         color="failure"
                                         onClick={() => onReject(nv)}
                                     >
-                                        Reject
+                                        {t('Reject')}
                                     </Button>
                                 )}
 
@@ -1108,7 +1147,7 @@ function NodeVersionList({}) {
                                         color="gray"
                                         onClick={() => onUndo(nv)}
                                     >
-                                        Undo
+                                        {t('Undo')}
                                     </Button>
                                 )}
 
@@ -1117,7 +1156,7 @@ function NodeVersionList({}) {
                                         color="warning"
                                         onClick={() => undoBatch(nv)}
                                     >
-                                        Undo Batch
+                                        {t('Undo Batch')}
                                     </Button>
                                 )}
                             </div>
@@ -1126,7 +1165,7 @@ function NodeVersionList({}) {
                                     color="gray"
                                     onClick={() => setMailtoNv(nv)}
                                 >
-                                    Contact Publisher
+                                    {t('Contact Publisher')}
                                 </Button>
                                 <MailtoNodeVersionModal
                                     nodeVersion={mailtoNv ?? undefined}

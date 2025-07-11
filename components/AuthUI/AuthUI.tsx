@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import Image from 'next/image'
@@ -12,8 +13,11 @@ import {
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import app from '../../src/firebase'
+import { useFromUrl } from '../common/HOC/useFromUrl'
+import LanguageSwitcher from '../common/LanguageSwitcher'
 
 const AuthUI: React.FC<{}> = ({}) => {
+    const { t } = useNextTranslation()
     const router = useRouter()
     const auth = getAuth(app)
     const [
@@ -32,10 +36,10 @@ const AuthUI: React.FC<{}> = ({}) => {
     // redirect back when user is logged in
     const [firebaseUser, _loadingFirebaseUser] = useAuthState(auth)
     const loggedIn = Boolean(firebaseUser)
+    const fromUrl = useFromUrl()
     React.useEffect(() => {
-        const fromUrl = new URLSearchParams(location.search).get('fromUrl')
         if (loggedIn) router.push(fromUrl ?? '/nodes')
-    }, [loggedIn, router])
+    }, [loggedIn, router, fromUrl])
 
     // handle errors
     React.useEffect(() => {
@@ -44,7 +48,9 @@ const AuthUI: React.FC<{}> = ({}) => {
                 googleSignInError.code ===
                 'auth/account-exists-with-different-credential'
             ) {
-                toast.error('Account already exists with different credential')
+                toast.error(
+                    t('Account already exists with different credential')
+                )
             } else {
                 toast.error(googleSignInError?.message)
                 console.log(googleSignInError)
@@ -55,31 +61,38 @@ const AuthUI: React.FC<{}> = ({}) => {
                 githubSignInError.code ===
                 'auth/account-exists-with-different-credential'
             ) {
-                toast.error('Account already exists with different credential')
+                toast.error(
+                    t('Account already exists with different credential')
+                )
             } else {
                 toast.error(githubSignInError?.message)
                 console.log(githubSignInError)
             }
         }
-    }, [googleSignInError, githubSignInError])
+    }, [t, googleSignInError, githubSignInError])
 
     return (
         <section>
+            <div className="absolute top-8 right-8 z-10">
+                <LanguageSwitcher />
+            </div>
+
             <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
                 <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
                     <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
                         <Link className="flex justify-center" href={'/'}>
                             <Image
                                 alt="Comfy Logo"
-                                src="https://storage.googleapis.com/comfy-assets/logo.png"
-                                className="w-6 h-6 mr-3 sm:w-16 sm:h-16"
-                                width={80}
-                                height={80}
+                                src="/images/logo_blue.png"
+                                className="w-16 h-16 mr-3 sm:w-32 sm:h-32 rounded-lg"
+                                width={128}
+                                height={128}
+                                sizes="(max-width: 640px) 64px, 128px"
                             />
                         </Link>
 
                         <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
-                            Sign In
+                            {t('Sign In')}
                         </h1>
 
                         <div className="mt-10 space-y-3 sm:space-x-4 sm:space-y-0">
@@ -130,7 +143,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                     </defs>
                                 </svg>
                                 <span className="text-gray-900">
-                                    Continue with Google
+                                    {t('Continue with Google')}
                                 </span>
                             </Button>
                         </div>
@@ -161,7 +174,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                                 />
                             </svg>
                             <span className="text-gray-900">
-                                Continue with GitHub
+                                {t('Continue with GitHub')}
                             </span>
                         </Button>
                     </Card>

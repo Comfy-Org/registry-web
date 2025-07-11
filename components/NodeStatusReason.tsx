@@ -1,3 +1,4 @@
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { DiffEditor, Editor } from '@monaco-editor/react'
 import { compareBy } from 'comparing'
 import { Button } from 'flowbite-react'
@@ -18,7 +19,7 @@ import {
     NodeVersionStatus,
     useGetNode,
     useListNodeVersions,
-} from 'src/api/generated'
+} from '@/src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import yaml from 'yaml'
 import { z } from 'zod'
@@ -107,6 +108,7 @@ export const zStatusReason = z.object({
 })
 
 export function NodeStatusReason(nv: NodeVersion) {
+    const { t } = useNextTranslation()
     const { node_id, status_reason } = nv
     const { ref, inView } = useInView()
 
@@ -247,7 +249,7 @@ export function NodeStatusReason(nv: NodeVersion) {
 
                         <h4 className="text-lg font-bold flex gap-2 items-center cursor-pointer ">
                             <FaHistory className="w-5 h-5 ml-4" />
-                            Node history:
+                            {t('Node history:')}
                         </h4>
                         <ul className="ml-4 flex gap-2 overflow-x-auto">
                             {Object.entries(
@@ -276,7 +278,9 @@ export function NodeStatusReason(nv: NodeVersion) {
                             href={`/admin/nodeversions?nodeId=${nv.node_id}`}
                             target="_blank"
                             className="button flex-0 hover:bg-gray-700 hover:text-white transition-colors"
-                            title={`View all node versions for ${nv.node_id}`}
+                            title={t('View all node versions for {{nodeId}}', {
+                                nodeId: nv.node_id,
+                            })}
                         >
                             <MdOpenInNew className="w-6 h-6" />
                         </Link>
@@ -293,7 +297,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             : ''
                                     }`}
                                     title={`${nv.version} ${NodeVersionStatusToReadable(
-                                        nv.status
+                                        { status: nv.status }
                                     )} ${
                                         zStatusReason.safeParse(
                                             nv.status_reason
@@ -328,7 +332,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     <code
                                         className="text-gray-400 whitespace-nowrap flex-1"
                                         title={`${nv.version} ${NodeVersionStatusToReadable(
-                                            nv.status
+                                            { status: nv.status }
                                         )} ${
                                             zStatusReason.safeParse(
                                                 nv.status_reason
@@ -368,7 +372,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                     </div>
                 </details>
             )}
-
             {!!problemsSummary?.length && (
                 <>
                     <h4>{'Problems Summary: '}</h4>
@@ -413,7 +416,6 @@ export function NodeStatusReason(nv: NodeVersion) {
                     </ol>
                 </>
             )}
-
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
                     <summary>{'Status Reason: '}</summary>
