@@ -48,16 +48,16 @@ const queryClient = new QueryClient({
 AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
     response: AxiosResponse
 ) {
-    const req = response.request as AxiosRequestConfig
-    if (!req?.url) return response
+    const config = response.config
+    if (!config?.url) return response
 
-    const pathname = new URL(req.url).pathname
+    const pathname = new URL(config.url).pathname
 
     const isCreateDeleteMethod = ['POST', 'DELETE'].includes(
-        req.method?.toUpperCase() ?? ''
+        config.method?.toUpperCase() ?? ''
     )
     const isEditMethod = ['PUT', 'PATCH'].includes(
-        req.method?.toUpperCase() ?? ''
+        config.method?.toUpperCase() ?? ''
     )
 
     if (isEditMethod) {
