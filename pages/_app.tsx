@@ -54,7 +54,10 @@ AXIOS_INSTANCE.interceptors.response.use(
         const req = response.config
         if (!req.url) return response
 
-        const baseURL = req.baseURL ?? globalThis.location.origin ?? DIE('Remember to fill window.location when testing axios')
+        const baseURL =
+            req.baseURL ??
+            globalThis.location.origin ??
+            DIE('Remember to fill window.location when testing axios')
         const pathname = new URL(req.url, baseURL).pathname
 
         const isCreateMethod = ['POST'].includes(
