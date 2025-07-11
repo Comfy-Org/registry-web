@@ -8108,6 +8108,29 @@ export type GetBranch200 = {
   branches?: string[];
 };
 
+export type ListAllComfyNodesParams = {
+limit?: number;
+offset?: number;
+/**
+ * Filter by node ID
+ */
+node_id?: string;
+/**
+ * Filter by node version
+ */
+node_version?: string;
+/**
+ * Filter by ComfyUI node name
+ */
+comfy_node_name?: string;
+};
+
+export type ListAllComfyNodes200 = {
+  comfy_nodes?: ComfyNode[];
+  /** Total number of comfy nodes */
+  total?: number;
+};
+
 export type ComfyNodesBackfillParams = {
 max_node?: number;
 };
@@ -9705,6 +9728,95 @@ export function useGetBranch<TData = Awaited<ReturnType<typeof getBranch>>, TErr
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetBranchQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary list all comfy-nodes
+ */
+export const listAllComfyNodes = (
+    params?: ListAllComfyNodesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListAllComfyNodes200>(
+      {url: `/comfy-nodes`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListAllComfyNodesQueryKey = (params?: ListAllComfyNodesParams,) => {
+    return [`/comfy-nodes`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListAllComfyNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllComfyNodesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllComfyNodes>>> = ({ signal }) => listAllComfyNodes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListAllComfyNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listAllComfyNodes>>>
+export type ListAllComfyNodesQueryError = ErrorResponse | void
+
+
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params: undefined |  ListAllComfyNodesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listAllComfyNodes>>,
+          TError,
+          Awaited<ReturnType<typeof listAllComfyNodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listAllComfyNodes>>,
+          TError,
+          Awaited<ReturnType<typeof listAllComfyNodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary list all comfy-nodes
+ */
+
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListAllComfyNodesQueryOptions(params,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -15778,6 +15890,136 @@ export const useMoonvalleyImageToVideo = <TError = unknown,
     }
     
 /**
+ * @summary Create Text to Image Prompt
+ */
+export const moonvalleyTextToImage = (
+    moonvalleyTextToImageRequest: MoonvalleyTextToImageRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/text-to-image`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyTextToImageRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyTextToImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyTextToImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToImage>>, {data: MoonvalleyTextToImageRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyTextToImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyTextToImageMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToImage>>>
+    export type MoonvalleyTextToImageMutationBody = MoonvalleyTextToImageRequest
+    export type MoonvalleyTextToImageMutationError = unknown
+
+    /**
+ * @summary Create Text to Image Prompt
+ */
+export const useMoonvalleyTextToImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyTextToImage>>,
+        TError,
+        {data: MoonvalleyTextToImageRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyTextToImageMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * @summary Create Text to Video Prompt
+ */
+export const moonvalleyTextToVideo = (
+    moonvalleyTextToVideoRequest: MoonvalleyTextToVideoRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/text-to-video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyTextToVideoRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyTextToVideoMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyTextToVideo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, {data: MoonvalleyTextToVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyTextToVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyTextToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToVideo>>>
+    export type MoonvalleyTextToVideoMutationBody = MoonvalleyTextToVideoRequest
+    export type MoonvalleyTextToVideoMutationError = unknown
+
+    /**
+ * @summary Create Text to Video Prompt
+ */
+export const useMoonvalleyTextToVideo = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyTextToVideo>>,
+        TError,
+        {data: MoonvalleyTextToVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyTextToVideoMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
  * @summary Create Video to Video Prompt
  */
 export const moonvalleyVideoToVideo = (
@@ -15995,136 +16237,6 @@ export function useMoonvalleyGetPrompt<TData = Awaited<ReturnType<typeof moonval
 
 
 
-/**
- * @summary Create Text to Image Prompt
- */
-export const moonvalleyTextToImage = (
-    moonvalleyTextToImageRequest: MoonvalleyTextToImageRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<MoonvalleyPromptResponse>(
-      {url: `/proxy/moonvalley/text-to-image`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: moonvalleyTextToImageRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getMoonvalleyTextToImageMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext> => {
-
-const mutationKey = ['moonvalleyTextToImage'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToImage>>, {data: MoonvalleyTextToImageRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  moonvalleyTextToImage(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type MoonvalleyTextToImageMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToImage>>>
-    export type MoonvalleyTextToImageMutationBody = MoonvalleyTextToImageRequest
-    export type MoonvalleyTextToImageMutationError = unknown
-
-    /**
- * @summary Create Text to Image Prompt
- */
-export const useMoonvalleyTextToImage = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyTextToImage>>,
-        TError,
-        {data: MoonvalleyTextToImageRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getMoonvalleyTextToImageMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
-/**
- * @summary Create Text to Video Prompt
- */
-export const moonvalleyTextToVideo = (
-    moonvalleyTextToVideoRequest: MoonvalleyTextToVideoRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<MoonvalleyPromptResponse>(
-      {url: `/proxy/moonvalley/text-to-video`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: moonvalleyTextToVideoRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getMoonvalleyTextToVideoMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext> => {
-
-const mutationKey = ['moonvalleyTextToVideo'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, {data: MoonvalleyTextToVideoRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  moonvalleyTextToVideo(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type MoonvalleyTextToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToVideo>>>
-    export type MoonvalleyTextToVideoMutationBody = MoonvalleyTextToVideoRequest
-    export type MoonvalleyTextToVideoMutationError = unknown
-
-    /**
- * @summary Create Text to Video Prompt
- */
-export const useMoonvalleyTextToVideo = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyTextToVideo>>,
-        TError,
-        {data: MoonvalleyTextToVideoRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getMoonvalleyTextToVideoMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
 /**
  * @summary Upload Files
  */
