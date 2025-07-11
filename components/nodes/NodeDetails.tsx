@@ -345,7 +345,7 @@ const NodeDetails = () => {
                                     </>
                                 ) : (
                                     <CopyableCodeBlock
-                                        code={`comfy node registry-install ${nodeId}`}
+                                        code={`comfy node install ${nodeId}`}
                                     />
                                 )}
                             </div>
