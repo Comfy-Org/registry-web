@@ -76,6 +76,8 @@ AXIOS_INSTANCE.interceptors.response.use(
             })
         }
         return response
+    }, (error) => {
+        return Promise.reject(error);
     }
 )
 
