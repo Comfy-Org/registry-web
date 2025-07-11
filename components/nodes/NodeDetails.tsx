@@ -344,8 +344,8 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed || nodeVersions?.length ? (
-                                    <>
+                                <>
+                                    {isUnclaimed || !nodeVersions?.length ? (
                                         <p className="text-base font-normal text-gray-200">
                                             {!nodeVersions?.length
                                                 ? t(
@@ -360,22 +360,23 @@ const NodeDetails = () => {
                                                 />
                                             )}
                                         </p>
-                                        {user && (
-                                            // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
-                                            <Button
-                                                color="blue"
-                                                className="mt-4 font-bold"
-                                                onClick={handleClaimNode}
-                                            >
-                                                {t('Claim this node')}
-                                            </Button>
-                                        )}
-                                    </>
-                                ) : (
-                                    <CopyableCodeBlock
-                                        code={`comfy node install ${nodeId}`}
-                                    />
-                                )}
+                                    ) : (
+                                        <CopyableCodeBlock
+                                            code={`comfy node install ${nodeId}`}
+                                        />
+                                    )}
+
+                                    {isUnclaimed && user && (
+                                        // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                                        <Button
+                                            color="blue"
+                                            className="mt-4 font-bold"
+                                            onClick={handleClaimNode}
+                                        >
+                                            {t('Claim this node')}
+                                        </Button>
+                                    )}
+                                </>
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">
