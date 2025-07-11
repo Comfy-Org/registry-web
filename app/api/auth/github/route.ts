@@ -4,7 +4,7 @@ import analytic from 'src/analytic/analytic'
 
 // Ensure environment variables are set for vercel production env
 // TODO (sno): 2025-07-11 temp disabled this, should only check when deploy into main branch
-// 
+//
 // if (process.env.VERCEL_URL && process.env.NODE_ENV === 'production') {
 //     process.env.GITHUB_CLIENT_ID || DIE('GITHUB_CLIENT_ID is not set')
 //     process.env.GITHUB_CLIENT_SECRET || DIE('GITHUB_CLIENT_SECRET is not set')
