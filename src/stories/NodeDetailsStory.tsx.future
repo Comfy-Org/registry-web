@@ -131,7 +131,7 @@ const NodeDetailsStory: React.FC<{
                             </div>
                             <div className="mt-5 mb-10">
                                 <CopyableCodeBlock
-                                    code={`comfy node registry-install ${node.id}`}
+                                    code={`comfy node install ${node.id}`}
                                 />
                             </div>
                             <div>

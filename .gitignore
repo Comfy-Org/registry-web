@@ -64,3 +64,5 @@ storybook-static
 
 # api definition files
 openapi.yaml
+# ignore core file
+core

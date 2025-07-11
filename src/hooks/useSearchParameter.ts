@@ -42,7 +42,7 @@ export function useSearchParameter<T>(
             // Update the router query directly
             // This is necessary to ensure the query is updated immediately
             // without waiting for the next render cycle
-            router.query = query
+            Object.assign(router.query, query)
         },
         [key, router, toParameter, value]
     )

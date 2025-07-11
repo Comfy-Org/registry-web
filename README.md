@@ -29,6 +29,10 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### GitHub OAuth App Setup
+
+For features that require GitHub authentication (like node claiming), you'll need to set up a GitHub OAuth App. See [docs/github-app.md](docs/github-app.md) for detailed setup instructions.
+
 ### Storybook
 
 We use Storybook for component development and documentation. To run Storybook:

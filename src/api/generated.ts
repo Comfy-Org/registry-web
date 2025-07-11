@@ -9270,6 +9270,11 @@ export type ListNodesForPublisherV2200 = {
   totalPages?: number;
 };
 
+export type ClaimMyNodeBody = {
+  /** GitHub token to verify if the user owns the repo of the node */
+  GH_TOKEN?: string;
+};
+
 export type GetPermissionOnPublisherNodes200 = {
   canEdit?: boolean;
 };
@@ -21091,7 +21096,7 @@ export const useBanPublisherNode = <TError = void | ErrorResponse,
 export const claimMyNode = (
     publisherId: string,
     nodeId: string,
-    claimMyNodeRequest: ClaimMyNodeRequest,
+    claimMyNodeBody: ClaimMyNodeBody,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -21099,16 +21104,16 @@ export const claimMyNode = (
       return customInstance<void>(
       {url: `/publishers/${publisherId}/nodes/${nodeId}/claim-my-node`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: claimMyNodeRequest, signal
+      data: claimMyNodeBody, signal
     },
       options);
     }
   
 
 
-export const getClaimMyNodeMutationOptions = <TError = ErrorResponse | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeRequest}, TContext> => {
+export const getClaimMyNodeMutationOptions = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext> => {
 
 const mutationKey = ['claimMyNode'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -21120,7 +21125,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimMyNode>>, {publisherId: string;nodeId: string;data: ClaimMyNodeRequest}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimMyNode>>, {publisherId: string;nodeId: string;data: ClaimMyNodeBody}> = (props) => {
           const {publisherId,nodeId,data} = props ?? {};
 
           return  claimMyNode(publisherId,nodeId,data,requestOptions)
@@ -21132,18 +21137,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ClaimMyNodeMutationResult = NonNullable<Awaited<ReturnType<typeof claimMyNode>>>
-    export type ClaimMyNodeMutationBody = ClaimMyNodeRequest
-    export type ClaimMyNodeMutationError = ErrorResponse | void
+    export type ClaimMyNodeMutationBody = ClaimMyNodeBody
+    export type ClaimMyNodeMutationError = void | ErrorResponse
 
     /**
  * @summary Claim nodeId into publisherId for the authenticated publisher
  */
-export const useClaimMyNode = <TError = ErrorResponse | void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useClaimMyNode = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof claimMyNode>>,
         TError,
-        {publisherId: string;nodeId: string;data: ClaimMyNodeRequest},
+        {publisherId: string;nodeId: string;data: ClaimMyNodeBody},
         TContext
       > => {
 

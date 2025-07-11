@@ -7,7 +7,15 @@ import { toast } from 'react-toastify'
 import { useCreatePublisher, useValidatePublisher } from '@/src/api/generated'
 import { customThemeTextInput } from 'utils/comfyTheme'
 
-const CreatePublisherForm = () => {
+type CreatePublisherFormProps = {
+    onSuccess?: () => void
+    onCancel?: () => void
+}
+
+const CreatePublisherForm: React.FC<CreatePublisherFormProps> = ({
+    onSuccess,
+    onCancel,
+}) => {
     const { t } = useNextTranslation()
     const router = useRouter()
     const [username, setUsername] = useState('')
@@ -39,7 +47,12 @@ const CreatePublisherForm = () => {
                     )
                 },
                 onSuccess: () => {
-                    router.push(`/publishers/${username}`)
+                    toast.success('Publisher created successfully!')
+                    if (onSuccess) {
+                        onSuccess()
+                    } else {
+                        router.push(`/publishers/${username}`)
+                    }
                 },
             }
         )
@@ -54,10 +67,10 @@ const CreatePublisherForm = () => {
     }, [error])
 
     return (
-        <section>
-            <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[90vh]">
-                <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
-                    <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
+        <section className="p-0">
+            <div className="flex items-center justify-center px-0 py-4 mx-auto">
+                <div className="w-full mx-auto shadow sm:max-w-lg">
+                    <Card className="p-2 bg-gray-800 border border-gray-700 md:p-6 rounded-2xl">
                         <h1 className="flex text-2xl font-bold text-white ">
                             {t('Create a Publisher')}
                         </h1>
@@ -132,7 +145,7 @@ const CreatePublisherForm = () => {
                             <div className="flex center gap-4">
                                 <Button
                                     type="button"
-                                    onClick={() => router.back()}
+                                    onClick={onCancel || (() => router.back())}
                                     color="light"
                                     className=" bg-gray-900"
                                 >
