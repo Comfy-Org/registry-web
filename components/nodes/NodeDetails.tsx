@@ -17,7 +17,10 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import {
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+    REQUEST_OPTIONS_NO_CACHE,
+} from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
@@ -102,12 +105,11 @@ const NodeDetails = () => {
     // useNodeList
     // parse query parameters from the URL
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
-    const qc = useQueryClient()
     const router = useRouter()
     const { publisherId: _publisherId, nodeId: _nodeId } = router.query
     const nodeId = String(_nodeId) // nodeId is always string
 
-    // fetch node details and permissions
+    // fetch node details and permissions with no-cache headers for real-time data
     const {
         data: node,
         isLoading,
@@ -341,12 +343,16 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed ? (
+                                {isUnclaimed || nodeVersions?.length ? (
                                     <>
                                         <p className="text-base font-normal text-gray-200">
-                                            {t(
-                                                'This node can only be installed via git'
-                                            )}
+                                            {!nodeVersions?.length
+                                                ? t(
+                                                      'This node can only be installed via git, because it has no versions published yet'
+                                                  )
+                                                : t(
+                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                  )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}

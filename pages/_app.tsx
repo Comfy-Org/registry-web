@@ -9,6 +9,8 @@ import { useEffect } from 'react'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { request } from 'http'
 
 // Add an interceptor to attach the Firebase JWT token to every request
 // Put in _app.tsx because this only works in react-dom environment
@@ -41,6 +43,36 @@ const queryClient = new QueryClient({
             gcTime: 86400e3,
         },
     },
+})
+
+// General localStorage cache invalidation for all endpoints
+// this interceptors will user always have latest data after edit.
+AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
+    response: AxiosResponse
+) {
+    const req = response.config
+    if (!req?.url) return response
+
+    const pathname = new URL(req.url).pathname
+
+    const isCreateMethod = ['POST',].includes(
+        req.method!.toUpperCase() ?? ''
+    )
+    const isEditMethod = ['PUT', 'PATCH','DELETE'].includes(
+        req.method!.toUpperCase() ?? ''
+    )
+
+    if (isCreateMethod) {
+        queryClient.invalidateQueries({ queryKey: [pathname] })
+    }
+    if (isEditMethod) {
+        queryClient.invalidateQueries({ queryKey: [pathname] })
+        queryClient.invalidateQueries({
+            queryKey: [pathname.split('/').slice(0, -1).join('/')],
+        })
+    }
+
+    return response
 })
 
 const persistEffect = () => {

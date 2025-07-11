@@ -33,3 +33,15 @@ export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
     ko: '한국어',
     ru: 'Русский',
 }
+
+// HTTP Cache Control Headers
+export const NO_CACHE_HEADERS = {
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0',
+} as const
+
+// Type for request options with no-cache headers
+export const REQUEST_OPTIONS_NO_CACHE = {
+    headers: NO_CACHE_HEADERS,
+} as const
