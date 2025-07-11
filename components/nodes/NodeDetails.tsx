@@ -105,7 +105,6 @@ const NodeDetails = () => {
     // useNodeList
     // parse query parameters from the URL
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
-    const qc = useQueryClient()
     const router = useRouter()
     const { publisherId: _publisherId, nodeId: _nodeId } = router.query
     const nodeId = String(_nodeId) // nodeId is always string
