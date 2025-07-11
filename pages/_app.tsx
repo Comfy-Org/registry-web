@@ -11,6 +11,7 @@ import Layout from '../components/layout'
 import '../styles/globals.css'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { request } from 'http'
+import { DIE } from 'phpdie'
 
 // Add an interceptor to attach the Firebase JWT token to every request
 // Put in _app.tsx because this only works in react-dom environment
@@ -53,7 +54,8 @@ AXIOS_INSTANCE.interceptors.response.use(
         const req = response.config
         if (!req.url) return response
 
-        const pathname = new URL(req.url, req.baseURL).pathname
+        const baseURL = req.baseURL ?? globalThis.location.origin ?? DIE('Remember to fill window.location when testing axios')
+        const pathname = new URL(req.url, baseURL).pathname
 
         const isCreateMethod = ['POST'].includes(
             req.method!.toUpperCase() ?? ''
