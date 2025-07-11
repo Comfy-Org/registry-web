@@ -1,3 +1,5 @@
+import { existsSync } from 'fs'
+
 // load backend url from .env.local and .env, not necessary if you use bun
 if (!globalThis.Bun) require('dotenv').config({ path: ['.env.local', '.env'] })
 
@@ -7,7 +9,9 @@ if (!globalThis.Bun) require('dotenv').config({ path: ['.env.local', '.env'] })
 export default {
     dripApi: {
         input: {
-            target: `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
+            target: existsSync('./openapi.yaml')
+                ? './openapi.yaml'
+                : `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
         },
         output: {
             target: './src/api/generated.ts',
