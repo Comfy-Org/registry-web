@@ -4,6 +4,7 @@ import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeForm
 import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
 import { parseJsonSafe } from '@/components/parseJsonSafe'
+import { shouldInvalidate, INVALIDATE_CACHE_OPTION } from '@/components/cache-control'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
@@ -204,6 +205,16 @@ function NodeVersionList({}) {
             },
             {
                 onSuccess: () => {
+                    // Cache-busting invalidation for cached endpoints
+                    queryClient.fetchQuery(
+                        shouldInvalidate.getListNodeVersionsQueryOptions(
+                            nv.node_id!.toString(),
+                            undefined,
+                            INVALIDATE_CACHE_OPTION
+                        )
+                    )
+                    
+                    // Regular invalidation for non-cached endpoints
                     queryClient.invalidateQueries({
                         queryKey: ['/versions'],
                     })
@@ -328,6 +339,16 @@ function NodeVersionList({}) {
             },
             {
                 onSuccess: () => {
+                    // Cache-busting invalidation for cached endpoints
+                    queryClient.fetchQuery(
+                        shouldInvalidate.getListNodeVersionsQueryOptions(
+                            nv.node_id!.toString(),
+                            undefined,
+                            INVALIDATE_CACHE_OPTION
+                        )
+                    )
+                    
+                    // Regular invalidation for non-cached endpoints
                     queryClient.invalidateQueries({
                         queryKey: ['/versions'],
                     })
@@ -513,7 +534,18 @@ function NodeVersionList({}) {
             },
             {
                 onSuccess: () => {
+                    // Cache-busting invalidation for cached endpoints
+                    queryClient.fetchQuery(
+                        shouldInvalidate.getListNodeVersionsQueryOptions(
+                            nv.node_id!.toString(),
+                            undefined,
+                            INVALIDATE_CACHE_OPTION
+                        )
+                    )
+                    
+                    // Regular invalidation for non-cached endpoints
                     queryClient.invalidateQueries({ queryKey: ['/versions'] })
+                    
                     toast.success(
                         t('{{id}}@{{version}} Undone, back to {{status}}', {
                             id: nv.node_id,

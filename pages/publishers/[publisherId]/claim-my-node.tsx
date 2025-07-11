@@ -30,9 +30,14 @@ import {
     getGetNodeQueryKey,
     getListNodesForPublisherV2QueryKey,
     getSearchNodesQueryKey,
+    getGetNodeQueryOptions,
+    getListNodesForPublisherV2QueryOptions,
 } from 'src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import {    
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+} from 'src/constants'
 import { AxiosError } from 'axios'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
 
 // Define the possible stages of the claim process
 type ClaimStage =
@@ -45,7 +50,7 @@ type ClaimStage =
 function ClaimMyNodePage() {
     const { t } = useNextTranslation()
     const router = useRouter()
-    const queryClient = useQueryClient()
+    const qc = useQueryClient()
     const { publisherId, nodeId } = router.query
     const [currentStage, setCurrentStage] =
         useState<ClaimStage>('info_confirmation')
@@ -75,44 +80,47 @@ function ClaimMyNodePage() {
     const { mutate: claimNode, isPending: isClaimingNode } = useClaimMyNode({
         mutation: {
             onSuccess: () => {
+                if (!nodeId || !publisherId)
+                    throw new Error(
+                        'SHOULD NEVER HAPPEN: Node or publisher data is missing after claim success'
+                    )
                 toast.success(t('Node claimed successfully!'))
                 analytic.track('Node Claimed', {
                     nodeId,
                     publisherId,
                 })
 
-                // Invalidate node cache to refresh data with cache-busting
-                const nodeIdParam =
-                    (router.query.nodeId as string) || (nodeId as string)
-                if (nodeIdParam) {
-                    queryClient.invalidateQueries({
-                        queryKey: getGetNodeQueryKey(nodeIdParam),
-                        // Force immediate refetch with cache-busting
-                        refetchType: 'all',
-                    })
+                // Invalidate caches to refresh data
 
-                    // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
-                    queryClient.invalidateQueries({
-                        queryKey: getListNodesForPublisherV2QueryKey(
-                            UNCLAIMED_ADMIN_PUBLISHER_ID
-                        ),
-                        refetchType: 'all',
-                    })
+                // Prefetch the created nodeId to refresh the node data
+                // MUST make a request to server immediately to invalidate upstream proxies/cdns/isps cache
+                // then other users can see the new node by refetch
+                qc.prefetchQuery(
+                    shouldInvalidate.getGetNodeQueryOptions(
+                        nodeId as string,
+                        undefined,
+                        INVALIDATE_CACHE_OPTION
+                    )
+                );
 
-                    // Invalidate the new publisher's nodes list
-                    queryClient.invalidateQueries({
-                        queryKey: getListNodesForPublisherV2QueryKey(
-                            publisherId as string
-                        ),
-                        refetchType: 'all',
-                    })
+                // ----
+                // there are no cache control headers in the endpoints below
+                // so we dont need to refetch them with no-cache header, just invalidateQueries is enough
+                // ----
 
-                    // Invalidate search results which might include this node
-                    queryClient.invalidateQueries({
-                        queryKey: getSearchNodesQueryKey().slice(0, 1),
-                        refetchType: 'all',
-                    })
-                }
+                // Invalidate multiple query caches
+                [
+                    // Unclaimed nodes list (node removed from @UNCLAIMED_ADMIN_PUBLISHER_ID)
+                    getListNodesForPublisherV2QueryKey(
+                        UNCLAIMED_ADMIN_PUBLISHER_ID
+                    ),
+                    // New publisher's nodes list as it may include the newly claimed node
+                    getListNodesForPublisherV2QueryKey(publisherId as string),
+                    // Search results which might include this node
+                    getSearchNodesQueryKey().slice(0, 1),
+                ].forEach((queryKey) => {
+                    qc.invalidateQueries({ queryKey })
+                })
 
                 // Set stage to completed
                 setCurrentStage('completed')

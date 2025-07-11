@@ -16,7 +16,10 @@ export const customInstance = <T>(
     const promise = AXIOS_INSTANCE({
         ...config,
         ...options,
-    }).then(({ data }) => data)
+    }).then(({ data }) => {
+
+        return data
+    })
 
     return promise
 }

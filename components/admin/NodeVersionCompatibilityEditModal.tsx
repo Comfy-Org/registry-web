@@ -6,6 +6,8 @@ import {
     AdminUpdateNodeVersionBody,
     useAdminUpdateNodeVersion,
 } from '@/src/api/generated'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
@@ -33,6 +35,8 @@ export default function NodeVersionCompatibilityEditModal({
 }: NodeVersionCompatibilityEditModalProps) {
     const { t } = useNextTranslation()
     const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
+    const queryClient = useQueryClient()
+    const queryClient = useQueryClient()
 
     const {
         control,
@@ -86,6 +90,16 @@ export default function NodeVersionCompatibilityEditModal({
                     ),
                 },
             })
+            
+            // Cache-busting invalidation for cached endpoints
+            queryClient.fetchQuery(
+                shouldInvalidate.getListNodeVersionsQueryOptions(
+                    nodeVersion.node_id!,
+                    undefined,
+                    INVALIDATE_CACHE_OPTION
+                )
+            )
+            
             toast.success(t('Updated node version compatibility'))
             onClose()
             onSuccess?.()

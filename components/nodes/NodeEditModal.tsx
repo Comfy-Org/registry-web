@@ -5,6 +5,8 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { Error, Node, useUpdateNode } from '@/src/api/generated'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import { useQueryClient } from '@tanstack/react-query'
 import {
     CustomThemeTextArea,
     customThemeTextInput,
@@ -27,6 +29,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
 }) => {
     const { t } = useNextTranslation()
     const updateNodeMutation = useUpdateNode({})
+    const queryClient = useQueryClient()
     const [nodeName, setNodeName] = useState('')
     // const [openLogoModal, setOpenLogoModal] = useState(false)
     const [description, setDescription] = useState('')
@@ -73,6 +76,18 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                         } else {
                             toast.error('Failed to update node')
                         }
+                    },
+                    onSuccess: () => {
+                        // Cache-busting invalidation for cached endpoints
+                        queryClient.fetchQuery(
+                            shouldInvalidate.getGetNodeQueryOptions(
+                                nodeData.id!,
+                                undefined,
+                                INVALIDATE_CACHE_OPTION
+                            )
+                        )
+                        
+                        toast.success(t('Node updated successfully'))
                     },
                 }
             )

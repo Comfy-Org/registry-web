@@ -8,7 +8,8 @@ import {
     useGetNodeVersion,
     useUpdateNodeVersion,
 } from '@/src/api/generated'
-import { REQUEST_OPTIONS_NO_CACHE, CACHE_TIMES } from 'src/constants'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import { useQueryClient } from '@tanstack/react-query'
 import { FormatRelativeDate } from './NodeDetails'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
 type NodeVDrawerProps = {
@@ -35,16 +36,11 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         data: version,
         isLoading,
         refetch,
-    } = useGetNodeVersion(nodeId, versionNumber, {
-        request: REQUEST_OPTIONS_NO_CACHE,
-        query: {
-            staleTime: CACHE_TIMES.VERSION_DETAILS,
-            gcTime: CACHE_TIMES.VERSION_DETAILS * 2,
-        },
-    })
+    } = useGetNodeVersion(nodeId, versionNumber)
 
     const isVersionAvailable = version && !version.deprecated
     const updateNodeVersionMutation = useUpdateNodeVersion()
+    const queryClient = useQueryClient()
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
     const handleToggleDeprecate = () => {
@@ -78,6 +74,15 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                     )
                 },
                 onSuccess: (version) => {
+                    // Cache-busting invalidation for cached endpoints
+                    queryClient.fetchQuery(
+                        shouldInvalidate.getListNodeVersionsQueryOptions(
+                            nodeId,
+                            undefined,
+                            INVALIDATE_CACHE_OPTION
+                        )
+                    )
+                    
                     toast.success(t('Version updated successfully'))
                     onUpdate(version)
                     refetch()
