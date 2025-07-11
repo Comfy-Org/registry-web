@@ -7,7 +7,7 @@ import analytic from 'src/analytic/analytic'
 // 
 // it's safe to omit github client when developing non-github related features.
 // 
-const isGithubClientRequired = !!process.env.VERCEL_GIT_COMMIT_REF?.match(/^main$|^staging$/)
+const isGithubClientRequired = !!process.env.VERCEL_GIT_COMMIT_REF?.match(/^(?:main|staging)$/)
 if (isGithubClientRequired) {
     process.env.GITHUB_CLIENT_ID || DIE('GITHUB_CLIENT_ID is not set')
     process.env.GITHUB_CLIENT_SECRET || DIE('GITHUB_CLIENT_SECRET is not set')
