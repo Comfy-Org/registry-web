@@ -47,33 +47,34 @@ const queryClient = new QueryClient({
 
 // General localStorage cache invalidation for all endpoints
 // this interceptors will user always have latest data after edit.
-AXIOS_INSTANCE.interceptors.response.use(async function onSuccess(
-    response: AxiosResponse
-) {
-    const req = response.config
-    if (!req?.url) return response
+AXIOS_INSTANCE.interceptors.response.use(
+    function onSuccess(response: AxiosResponse) {
+        console.log({ response })
+        const req = response.config
+        if (!req.url) return response
 
-    const pathname = new URL(req.url).pathname
+        const pathname = new URL(req.url, req.baseURL).pathname
 
-    const isCreateMethod = ['POST',].includes(
-        req.method!.toUpperCase() ?? ''
-    )
-    const isEditMethod = ['PUT', 'PATCH','DELETE'].includes(
-        req.method!.toUpperCase() ?? ''
-    )
+        const isCreateMethod = ['POST'].includes(
+            req.method!.toUpperCase() ?? ''
+        )
+        const isEditMethod = ['PUT', 'PATCH', 'DELETE'].includes(
+            req.method!.toUpperCase() ?? ''
+        )
 
-    if (isCreateMethod) {
-        queryClient.invalidateQueries({ queryKey: [pathname] })
-    }
-    if (isEditMethod) {
-        queryClient.invalidateQueries({ queryKey: [pathname] })
-        queryClient.invalidateQueries({
-            queryKey: [pathname.split('/').slice(0, -1).join('/')],
-        })
-    }
-
-    return response
-})
+        if (isCreateMethod) {
+            queryClient.invalidateQueries({ queryKey: [pathname] })
+        }
+        if (isEditMethod) {
+            queryClient.invalidateQueries({ queryKey: [pathname] })
+            queryClient.invalidateQueries({
+                queryKey: [pathname.split('/').slice(0, -1).join('/')],
+            })
+        }
+        return response
+    },
+    (resp) => resp
+)
 
 const persistEffect = () => {
     // - [persistQueryClient \| TanStack Query React Docs]( https://tanstack.com/query/v4/docs/framework/react/plugins/persistQueryClient )
