@@ -61,3 +61,6 @@ yarn.lock
 # ignore storybook files
 storybook-static
 *storybook.log
+
+# api definition files
+openapi.yaml
