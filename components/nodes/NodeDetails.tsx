@@ -17,7 +17,10 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import {
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+    REQUEST_OPTIONS_NO_CACHE,
+} from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
@@ -107,34 +110,51 @@ const NodeDetails = () => {
     const { publisherId: _publisherId, nodeId: _nodeId } = router.query
     const nodeId = String(_nodeId) // nodeId is always string
 
-    // fetch node details and permissions
-    const { data: node, isLoading, isError } = useGetNode(nodeId)
+    // fetch node details and permissions with no-cache headers for real-time data
+    const {
+        data: node,
+        isLoading,
+        isError,
+    } = useGetNode(nodeId, undefined, {
+        request: REQUEST_OPTIONS_NO_CACHE,
+    })
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId,
-        nodeId
+        nodeId,
+        {
+            request: REQUEST_OPTIONS_NO_CACHE,
+        }
     )
 
     const { data: user } = useGetUser()
     const isAdmin = user?.isAdmin
     const canEdit = isAdmin || permissions?.canEdit
-    const { data: myPublishers } = useListPublishersForUser({})
+    const { data: myPublishers } = useListPublishersForUser({
+        request: REQUEST_OPTIONS_NO_CACHE,
+    })
     const warningForAdminEdit =
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
     const { data: nodeVersions, refetch: refetchVersions } =
-        useListNodeVersions(nodeId as string, {
-            statuses: [
-                NodeVersionStatus.NodeVersionStatusActive,
-                NodeVersionStatus.NodeVersionStatusPending,
-                NodeVersionStatus.NodeVersionStatusFlagged,
-                // show rejected versions only to publisher
-                ...(!canEdit
-                    ? []
-                    : [NodeVersionStatus.NodeVersionStatusBanned]),
-            ],
-        })
+        useListNodeVersions(
+            nodeId as string,
+            {
+                statuses: [
+                    NodeVersionStatus.NodeVersionStatusActive,
+                    NodeVersionStatus.NodeVersionStatusPending,
+                    NodeVersionStatus.NodeVersionStatusFlagged,
+                    // show rejected versions only to publisher
+                    ...(!canEdit
+                        ? []
+                        : [NodeVersionStatus.NodeVersionStatusBanned]),
+                ],
+            },
+            {
+                request: REQUEST_OPTIONS_NO_CACHE,
+            }
+        )
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
