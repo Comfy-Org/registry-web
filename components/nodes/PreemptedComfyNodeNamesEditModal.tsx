@@ -11,7 +11,10 @@ import {
     useGetNode,
     useUpdateNode,
 } from '@/src/api/generated'
-import { shouldInvalidate, INVALIDATE_CACHE_OPTION } from '@/components/cache-control'
+import {
+    shouldInvalidate,
+    INVALIDATE_CACHE_OPTION,
+} from '@/components/cache-control'
 import { useNextTranslation } from 'src/hooks/i18n'
 
 export default function PreemptedComfyNodeNamesEditModal({
@@ -123,7 +126,7 @@ export default function PreemptedComfyNodeNamesEditModal({
                         INVALIDATE_CACHE_OPTION
                     )
                 )
-                
+
                 // Regular invalidation for non-cached endpoints
                 qc.invalidateQueries({
                     queryKey: getSearchNodesQueryKey().slice(0, 1),

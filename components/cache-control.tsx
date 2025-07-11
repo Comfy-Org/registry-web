@@ -33,7 +33,8 @@ export const shouldRevalidateRegex = {
     nodeEndpointPattern: /^\/nodes\/[^/]+$/,
     nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
     comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
-    comfyNodesListEndpointPattern: /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
+    comfyNodesListEndpointPattern:
+        /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
 }
 export function isCacheControlEndpointQ(pathname: string): boolean {
     Object.values(shouldRevalidateRegex).forEach((regex) => {
@@ -43,7 +44,6 @@ export function isCacheControlEndpointQ(pathname: string): boolean {
     })
     return false
 }
-
 
 /**
  * Endpoints should Invalidate cache after editing operations
@@ -81,4 +81,3 @@ export const INVALIDATE_CACHE_OPTION = {
     query: { staleTime: 0 }, // force refetch
     request: REQUEST_OPTIONS_NO_CACHE,
 }
-

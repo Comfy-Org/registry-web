@@ -88,24 +88,28 @@ export const INVALIDATE_CACHE_OPTION = {
 ### Cached Endpoints Requiring Manual Cache-Busting
 
 ### 1. Node Details: `/nodes/{nodeId}`
+
 - **Query Hook**: `useGetNode`
 - **Cache Option**: `shouldInvalidate.getGetNodeQueryOptions`
 - **When to Invalidate**: After any node mutation (create, update, delete, claim, etc.)
 - **Cache-Busting Required**: ✅ Yes (CDN cached)
 
 ### 2. Node Versions: `/nodes/{nodeId}/versions`
+
 - **Query Hook**: `useListNodeVersions`
 - **Cache Option**: `shouldInvalidate.getListNodeVersionsQueryOptions`
 - **When to Invalidate**: After any node version mutation (create, update, delete, status change)
 - **Cache-Busting Required**: ✅ Yes (CDN cached)
 
 ### 3. ComfyUI Node by Name: `/comfy-nodes/{comfyNodeName}/node`
+
 - **Query Hook**: `useGetNodeByComfyNodeName`
 - **Cache Option**: `shouldInvalidate.getGetNodeByComfyNodeNameQueryOptions`
 - **When to Invalidate**: After any node or version mutation affecting ComfyUI nodes
 - **Cache-Busting Required**: ✅ Yes (CDN cached)
 
 ### 4. ComfyUI Nodes List: `/nodes/{nodeId}/versions/{versionId}/comfy-nodes`
+
 - **Query Hook**: `useListComfyNodes`
 - **Cache Option**: `shouldInvalidate.getListComfyNodesQueryOptions`
 - **When to Invalidate**: After any ComfyUI node mutation
@@ -210,7 +214,7 @@ const mutation = useMutationHook({
                     INVALIDATE_CACHE_OPTION
                 )
             )
-            
+
             // For node version operations
             qc.fetchQuery(
                 shouldInvalidate.getListNodeVersionsQueryOptions(
@@ -225,11 +229,11 @@ const mutation = useMutationHook({
             ;[
                 getListNodesForPublisherV2QueryKey(publisherId),
                 getSearchNodesQueryKey().slice(0, 1),
-            ].forEach(queryKey => {
+            ].forEach((queryKey) => {
                 qc.invalidateQueries({ queryKey })
             })
-        }
-    }
+        },
+    },
 })
 ```
 

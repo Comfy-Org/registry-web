@@ -33,11 +33,12 @@ import {
     getGetNodeQueryOptions,
     getListNodesForPublisherV2QueryOptions,
 } from 'src/api/generated'
-import {    
-    UNCLAIMED_ADMIN_PUBLISHER_ID,
-} from 'src/constants'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import { AxiosError } from 'axios'
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 
 // Define the possible stages of the claim process
 type ClaimStage =
@@ -101,7 +102,7 @@ function ClaimMyNodePage() {
                         undefined,
                         INVALIDATE_CACHE_OPTION
                     )
-                );
+                )
 
                 // ----
                 // there are no cache control headers in the endpoints below
@@ -109,7 +110,7 @@ function ClaimMyNodePage() {
                 // ----
 
                 // Invalidate multiple query caches
-                [
+                ;[
                     // Unclaimed nodes list (node removed from @UNCLAIMED_ADMIN_PUBLISHER_ID)
                     getListNodesForPublisherV2QueryKey(
                         UNCLAIMED_ADMIN_PUBLISHER_ID

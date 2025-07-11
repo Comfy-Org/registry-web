@@ -4,7 +4,10 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import { useQueryClient } from '@tanstack/react-query'
 import { ErrorResponse, Node, useUpdateNode } from '@/src/api/generated'
 import {

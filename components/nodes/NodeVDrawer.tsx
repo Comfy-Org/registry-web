@@ -8,7 +8,10 @@ import {
     useGetNodeVersion,
     useUpdateNodeVersion,
 } from '@/src/api/generated'
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '@/components/cache-control'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import { useQueryClient } from '@tanstack/react-query'
 import { FormatRelativeDate } from './NodeDetails'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
@@ -82,7 +85,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                             INVALIDATE_CACHE_OPTION
                         )
                     )
-                    
+
                     toast.success(t('Version updated successfully'))
                     onUpdate(version)
                     refetch()

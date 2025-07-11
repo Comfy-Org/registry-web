@@ -343,15 +343,16 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed || (nodeVersions?.length) ? (
+                                {isUnclaimed || nodeVersions?.length ? (
                                     <>
                                         <p className="text-base font-normal text-gray-200">
-                                            {
-                                                !nodeVersions?.length ? t(
-                                                    'This node can only be installed via git, because it has no versions published yet'
-                                                ) :t(
-                                                "This node can only be installed via git, because it's unclaimed by any publisher"
-                                            )}
+                                            {!nodeVersions?.length
+                                                ? t(
+                                                      'This node can only be installed via git, because it has no versions published yet'
+                                                  )
+                                                : t(
+                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                  )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
@@ -369,9 +370,7 @@ const NodeDetails = () => {
                                             </Button>
                                         )}
                                     </>
-                                ) 
-                                
-                                : (
+                                ) : (
                                     <CopyableCodeBlock
                                         code={`comfy node install ${nodeId}`}
                                     />
