@@ -108,7 +108,11 @@ const NodeDetails = () => {
     const nodeId = String(_nodeId) // nodeId is always string
 
     // fetch node details and permissions
-    const { data: node, isLoading, isError } = useGetNode(nodeId, undefined, {
+    const {
+        data: node,
+        isLoading,
+        isError,
+    } = useGetNode(nodeId, undefined, {
         query: {
             enabled: !!nodeId,
         },
@@ -133,21 +137,25 @@ const NodeDetails = () => {
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
     const { data: nodeVersions, refetch: refetchVersions } =
-        useListNodeVersions(nodeId as string, {
-            statuses: [
-                NodeVersionStatus.NodeVersionStatusActive,
-                NodeVersionStatus.NodeVersionStatusPending,
-                NodeVersionStatus.NodeVersionStatusFlagged,
-                // show rejected versions only to publisher
-                ...(!canEdit
-                    ? []
-                    : [NodeVersionStatus.NodeVersionStatusBanned]),
-            ],
-        }, {
-            query: {
-                enabled: !!nodeId,
+        useListNodeVersions(
+            nodeId as string,
+            {
+                statuses: [
+                    NodeVersionStatus.NodeVersionStatusActive,
+                    NodeVersionStatus.NodeVersionStatusPending,
+                    NodeVersionStatus.NodeVersionStatusFlagged,
+                    // show rejected versions only to publisher
+                    ...(!canEdit
+                        ? []
+                        : [NodeVersionStatus.NodeVersionStatusBanned]),
+                ],
             },
-        })
+            {
+                query: {
+                    enabled: !!nodeId,
+                },
+            }
+        )
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
@@ -568,12 +576,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                        node
-                                                            .preempted_comfy_node_names
-                                                            .length > 0
+                                                    node
+                                                        .preempted_comfy_node_names
+                                                        .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                            '\n'
-                                                        )
+                                                              '\n'
+                                                          )
                                                         : t('None')}
                                                 </pre>
                                             </span>
