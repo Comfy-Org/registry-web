@@ -6,6 +6,8 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDeleteNode } from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '../cache-control'
+import { useQueryClient } from '@tanstack/react-query'
 
 type NodeDeleteModalProps = {
     openDeleteModal: boolean
@@ -23,6 +25,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
     const { t } = useNextTranslation()
     const mutation = useDeleteNode({})
     const router = useRouter()
+    const qc = useQueryClient()
     const handleSubmit = async () => {
         if (!publisherId) {
             toast.error(t('Cannot delete node.'))
@@ -47,6 +50,13 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
                 },
                 onSuccess: () => {
                     toast.success(t('Node deleted successfully'))
+                    qc.fetchQuery(
+                        shouldInvalidate.getGetNodeQueryOptions(
+                            nodeId,
+                            undefined,
+                            INVALIDATE_CACHE_OPTION
+                        )
+                    )
                     onClose()
                     router.push('/nodes')
                 },

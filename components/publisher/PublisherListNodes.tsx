@@ -54,7 +54,6 @@ const Nodes: React.FC = () => {
             </div>
         )
     }
-    console.log({ data })
 
     return (
         <section className="h-full mt-8 bg-gray-900 lg:mt-20">

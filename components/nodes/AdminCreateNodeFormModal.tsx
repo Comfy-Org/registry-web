@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import { HiPlus } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import {
+    getListNodesForPublisherV2QueryKey,
     Node,
     useAdminCreateNode,
     useGetNode,
@@ -15,6 +16,8 @@ import {
 } from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { z } from 'zod'
+import { useQueryClient } from '@tanstack/react-query'
+import { shouldInvalidate, INVALIDATE_CACHE_OPTION } from '../cache-control'
 
 const adminCreateNodeSchema = z.object({
     id: z
@@ -52,6 +55,7 @@ export function AdminCreateNodeFormModal({
     onClose?: () => void
 }) {
     const { t } = useNextTranslation()
+    const qc = useQueryClient()
     const mutation = useAdminCreateNode({
         mutation: {
             onError: (error) => {
@@ -67,7 +71,6 @@ export function AdminCreateNodeFormModal({
             },
             onSuccess: () => {
                 toast.success(t('Node created successfully'))
-                // onClose?.()
             },
         },
     })
@@ -84,10 +87,24 @@ export function AdminCreateNodeFormModal({
         resolver: zodResolver(adminCreateNodeSchema) as any,
         defaultValues: adminCreateNodeDefaultValues,
     })
+    const onSubmit = handleSubmit(async (node: Node) => {
+        await mutation.mutateAsync({ data: node }).finally(async () => {
+            // Cache-busting invalidation for the newly created node
+            qc.prefetchQuery(
+                shouldInvalidate.getGetNodeQueryOptions(
+                    node.id!,
+                    undefined,
+                    INVALIDATE_CACHE_OPTION
+                )
+            )
 
-    const onSubmit = handleSubmit((data: Node) =>
-        mutation.mutateAsync({ data }).then(() => reset())
-    )
+            // Invalidate the nodes list to refresh the data (non-cached endpoint)
+            const publisherId = node.publisher!.id!
+            qc.invalidateQueries({
+                queryKey: getListNodesForPublisherV2QueryKey(publisherId),
+            })
+        })
+    })
 
     const { data: allPublishers } = useListPublishers({
         query: { enabled: false },

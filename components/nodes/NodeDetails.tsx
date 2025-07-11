@@ -17,7 +17,10 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import {
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+    REQUEST_OPTIONS_NO_CACHE,
+} from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
@@ -102,12 +105,11 @@ const NodeDetails = () => {
     // useNodeList
     // parse query parameters from the URL
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
-    const qc = useQueryClient()
     const router = useRouter()
     const { publisherId: _publisherId, nodeId: _nodeId } = router.query
     const nodeId = String(_nodeId) // nodeId is always string
 
-    // fetch node details and permissions
+    // fetch node details and permissions with no-cache headers for real-time data
     const {
         data: node,
         isLoading,
@@ -200,7 +202,8 @@ const NodeDetails = () => {
         // TODO: show error message and allow navigate back to the list
     }
 
-    if (isLoading) {
+    const shouldShowLoading = isLoading || !router.isReady || !_nodeId
+    if (shouldShowLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner className="" />
@@ -341,34 +344,39 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed ? (
-                                    <>
+                                <>
+                                    {isUnclaimed || !nodeVersions?.length ? (
                                         <p className="text-base font-normal text-gray-200">
-                                            {t(
-                                                'This node can only be installed via git'
-                                            )}
+                                            {!nodeVersions?.length
+                                                ? t(
+                                                      'This node can only be installed via git, because it has no versions published yet'
+                                                  )
+                                                : t(
+                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                  )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
                                                 />
                                             )}
                                         </p>
-                                        {user && (
-                                            // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
-                                            <Button
-                                                color="blue"
-                                                className="mt-4 font-bold"
-                                                onClick={handleClaimNode}
-                                            >
-                                                {t('Claim this node')}
-                                            </Button>
-                                        )}
-                                    </>
-                                ) : (
-                                    <CopyableCodeBlock
-                                        code={`comfy node install ${nodeId}`}
-                                    />
-                                )}
+                                    ) : (
+                                        <CopyableCodeBlock
+                                            code={`comfy node install ${nodeId}`}
+                                        />
+                                    )}
+
+                                    {isUnclaimed && user && (
+                                        // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                                        <Button
+                                            color="blue"
+                                            className="mt-4 font-bold"
+                                            onClick={handleClaimNode}
+                                        >
+                                            {t('Claim this node')}
+                                        </Button>
+                                    )}
+                                </>
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">

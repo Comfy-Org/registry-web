@@ -5,6 +5,8 @@ import React from 'react'
 import { toast } from 'react-toastify'
 import { useDeleteNodeVersion } from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '../cache-control'
+import { useQueryClient } from '@tanstack/react-query'
 
 type NodeVersionDeleteModalProps = {
     openDeleteModal: boolean
@@ -23,7 +25,7 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
 }) => {
     const { t } = useNextTranslation()
     const deleteVersionMutation = useDeleteNodeVersion({})
-
+    const qc = useQueryClient()
     const handleDeleteVersion = () => {
         if (!publisherId) {
             toast.error(t('Cannot delete version.'))
@@ -47,6 +49,13 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                 },
                 onSuccess: () => {
                     toast.success(t('Version deleted successfully'))
+                    qc.fetchQuery(
+                        shouldInvalidate.getListNodeVersionsQueryOptions(
+                            nodeId,
+                            undefined,
+                            INVALIDATE_CACHE_OPTION
+                        )
+                    )
                     onCloseDeleteModal()
                 },
             }

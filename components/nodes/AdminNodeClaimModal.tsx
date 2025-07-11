@@ -14,6 +14,10 @@ import {
     getListNodesForPublisherV2QueryKey,
     getSearchNodesQueryKey,
 } from '@/src/api/generated'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { PublisherId } from '../Search/PublisherId'
 
@@ -80,10 +84,14 @@ export function AdminNodeClaimModal({
                         }
                     )
                 )
-                // Invalidate and refetch related queries to update the cache with cache-busting
-                queryClient.invalidateQueries({
-                    queryKey: getGetNodeQueryKey(node.id!),
-                })
+                // Cache-busting invalidation for cached endpoints
+                queryClient.fetchQuery(
+                    shouldInvalidate.getGetNodeQueryOptions(
+                        node.id!,
+                        undefined,
+                        INVALIDATE_CACHE_OPTION
+                    )
+                )
 
                 // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
                 queryClient.invalidateQueries({
