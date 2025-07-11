@@ -2,13 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { DIE } from 'phpdie'
 import analytic from 'src/analytic/analytic'
 
-// Ensure environment variables are set for vercel production env
-// TODO (sno): 2025-07-11 temp disabled this, should only check when deploy into main branch
+// Ensure GITHUB_CLIENT environment variables are set for vercel production/staging branch
+// this prevents server misconfiguration in vercel production deployments
 //
-// if (process.env.VERCEL_URL && process.env.NODE_ENV === 'production') {
-//     process.env.GITHUB_CLIENT_ID || DIE('GITHUB_CLIENT_ID is not set')
-//     process.env.GITHUB_CLIENT_SECRET || DIE('GITHUB_CLIENT_SECRET is not set')
-// }
+// it's safe to omit github client when developing non-github related features.
+const isGithubClientRequired =
+    !!process.env.VERCEL_GIT_COMMIT_REF?.match(/^(?:main|staging)$/)
+if (isGithubClientRequired) {
+    process.env.GITHUB_CLIENT_ID || DIE('GITHUB_CLIENT_ID is not set')
+    process.env.GITHUB_CLIENT_SECRET || DIE('GITHUB_CLIENT_SECRET is not set')
+}
 
 /**
  * API endpoint for GitHub OAuth authentication
