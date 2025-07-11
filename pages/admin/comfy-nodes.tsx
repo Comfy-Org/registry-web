@@ -393,10 +393,6 @@ function ComfyNodesManage() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()
-        if (!nodeIdFilter && !versionFilter && !comfyNodeNameFilter) {
-            toast.error(t('Please enter at least one search criterion'))
-            return
-        }
         setSearchNodeId(nodeIdFilter)
         setSearchVersion(versionFilter)
         setSearchComfyNodeName(comfyNodeNameFilter)
