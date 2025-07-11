@@ -36,12 +36,7 @@ export const shouldRevalidateRegex = {
         /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
 }
 export function isCacheControlEndpointQ(pathname: string): boolean {
-    Object.values(shouldRevalidateRegex).forEach((regex) => {
-        if (regex.test(pathname)) {
-            return true
-        }
-    })
-    return false
+    return Object.values(shouldRevalidateRegex).some((regex) => regex.test(pathname));
 }
 
 /**
