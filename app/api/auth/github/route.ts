@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { DIE } from 'phpdie'
 import analytic from 'src/analytic/analytic'
 
-// Ensure environment variables are set for vercel production/staging branch
+// Ensure GITHUB_CLIENT environment variables are set for vercel production/staging branch
 // this prevents server misconfiguration in vercel production deployments
 // 
 // it's safe to omit github client when developing non-github related features.
