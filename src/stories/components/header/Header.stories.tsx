@@ -1,5 +1,5 @@
 import Header from '@/components/Header/Header'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { WithQueryClientProvider } from '../WithQueryClientProvider'
 
 // Create a wrapper component to provide the query client
