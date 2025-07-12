@@ -17,7 +17,10 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import {
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+    REQUEST_OPTIONS_NO_CACHE,
+} from 'src/constants'
 import nodesLogo from '../../public/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
@@ -102,18 +105,30 @@ const NodeDetails = () => {
     // useNodeList
     // parse query parameters from the URL
     // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
-    const qc = useQueryClient()
     const router = useRouter()
     const { publisherId: _publisherId, nodeId: _nodeId } = router.query
     const nodeId = String(_nodeId) // nodeId is always string
 
-    // fetch node details and permissions
-    const { data: node, isLoading, isError } = useGetNode(nodeId)
+    // fetch node details and permissions with no-cache headers for real-time data
+    const {
+        data: node,
+        isLoading,
+        isError,
+    } = useGetNode(nodeId, undefined, {
+        query: {
+            enabled: !!_nodeId,
+        },
+    })
     const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
 
     const { data: permissions } = useGetPermissionOnPublisherNodes(
         publisherId,
-        nodeId
+        nodeId,
+        {
+            query: {
+                enabled: !!nodeId,
+            },
+        }
     )
 
     const { data: user } = useGetUser()
@@ -124,17 +139,25 @@ const NodeDetails = () => {
         isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
     const { data: nodeVersions, refetch: refetchVersions } =
-        useListNodeVersions(nodeId as string, {
-            statuses: [
-                NodeVersionStatus.NodeVersionStatusActive,
-                NodeVersionStatus.NodeVersionStatusPending,
-                NodeVersionStatus.NodeVersionStatusFlagged,
-                // show rejected versions only to publisher
-                ...(!canEdit
-                    ? []
-                    : [NodeVersionStatus.NodeVersionStatusBanned]),
-            ],
-        })
+        useListNodeVersions(
+            nodeId as string,
+            {
+                statuses: [
+                    NodeVersionStatus.NodeVersionStatusActive,
+                    NodeVersionStatus.NodeVersionStatusPending,
+                    NodeVersionStatus.NodeVersionStatusFlagged,
+                    // show rejected versions only to publisher
+                    ...(!canEdit
+                        ? []
+                        : [NodeVersionStatus.NodeVersionStatusBanned]),
+                ],
+            },
+            {
+                query: {
+                    enabled: !!nodeId,
+                },
+            }
+        )
 
     const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
@@ -157,11 +180,30 @@ const NodeDetails = () => {
         setIsEditModal(false)
     }
 
+    const handleClaimNode = () => {
+        if (!user) {
+            router.push(`/auth/login?fromUrl=${router.asPath}`)
+            return
+        }
+        // Redirect to publisher selection page for claiming
+        router.push(`/nodes/${nodeId}/claim`)
+    }
+
+    // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
+    // usually this happens when publisher changes, e.g. when user claims a node
+    const isPublisherIdMismatchedBetweenURLandNode =
+        node && _publisherId && publisherId !== _publisherId
+    if (isPublisherIdMismatchedBetweenURLandNode) {
+        router.replace(`/publishers/${publisherId}/nodes/${nodeId}`)
+        return null // prevent rendering the component while redirecting
+    }
+
     if (isError) {
         // TODO: show error message and allow navigate back to the list
     }
 
-    if (isLoading) {
+    const shouldShowLoading = isLoading || !router.isReady || !_nodeId
+    if (shouldShowLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner className="" />
@@ -302,22 +344,39 @@ const NodeDetails = () => {
                                 )}
                             </div>
                             <div className="mt-5 mb-10">
-                                {isUnclaimed ? (
-                                    <p className="text-base font-normal text-gray-200">
-                                        {t(
-                                            'This node can only be installed via git'
-                                        )}
-                                        {node.repository && (
-                                            <CopyableCodeBlock
-                                                code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
-                                            />
-                                        )}
-                                    </p>
-                                ) : (
-                                    <CopyableCodeBlock
-                                        code={`comfy node registry-install ${nodeId}`}
-                                    />
-                                )}
+                                <>
+                                    {isUnclaimed || !nodeVersions?.length ? (
+                                        <p className="text-base font-normal text-gray-200">
+                                            {!nodeVersions?.length
+                                                ? t(
+                                                      'This node can only be installed via git, because it has no versions published yet'
+                                                  )
+                                                : t(
+                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                  )}
+                                            {node.repository && (
+                                                <CopyableCodeBlock
+                                                    code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
+                                                />
+                                            )}
+                                        </p>
+                                    ) : (
+                                        <CopyableCodeBlock
+                                            code={`comfy node install ${nodeId}`}
+                                        />
+                                    )}
+
+                                    {isUnclaimed && user && (
+                                        // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                                        <Button
+                                            color="blue"
+                                            className="mt-4 font-bold"
+                                            onClick={handleClaimNode}
+                                        >
+                                            {t('Claim this node')}
+                                        </Button>
+                                    )}
+                                </>
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">

@@ -1,5 +1,6 @@
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
@@ -9,7 +10,14 @@ import {
     Publisher,
     useListPublishers,
     useUpdateNode,
+    getGetNodeQueryKey,
+    getListNodesForPublisherV2QueryKey,
+    getSearchNodesQueryKey,
 } from '@/src/api/generated'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { PublisherId } from '../Search/PublisherId'
 
@@ -20,13 +28,14 @@ interface NodeClaimModalProps {
     onSuccess?: () => void
 }
 
-export function NodeClaimModal({
+export function AdminNodeClaimModal({
     isOpen,
     onClose,
     node,
     onSuccess,
 }: NodeClaimModalProps) {
     const { t } = useNextTranslation()
+    const queryClient = useQueryClient()
     const [selectedPublisher, setSelectedPublisher] =
         useState<Publisher | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
@@ -75,6 +84,39 @@ export function NodeClaimModal({
                         }
                     )
                 )
+                // Cache-busting invalidation for cached endpoints
+                queryClient.fetchQuery(
+                    shouldInvalidate.getGetNodeQueryOptions(
+                        node.id!,
+                        undefined,
+                        INVALIDATE_CACHE_OPTION
+                    )
+                )
+
+                // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
+                queryClient.invalidateQueries({
+                    queryKey: getListNodesForPublisherV2QueryKey(
+                        UNCLAIMED_ADMIN_PUBLISHER_ID
+                    ),
+                    refetchType: 'all',
+                })
+
+                // Invalidate the new publisher's nodes list
+                if (selectedPublisher?.id) {
+                    queryClient.invalidateQueries({
+                        queryKey: getListNodesForPublisherV2QueryKey(
+                            selectedPublisher.id
+                        ),
+                        refetchType: 'all',
+                    })
+                }
+
+                // Invalidate search results which might include this node
+                queryClient.invalidateQueries({
+                    queryKey: getSearchNodesQueryKey().slice(0, 1),
+                    refetchType: 'all',
+                })
+
                 onSuccess?.()
                 onClose()
             },
@@ -113,7 +155,7 @@ export function NodeClaimModal({
 
             if (!match) {
                 setVerificationResult({
-                    error: 'Invalid repository URL format',
+                    error: t('Invalid repository URL format'),
                 })
                 return
             }
@@ -121,7 +163,7 @@ export function NodeClaimModal({
             const [, owner, repo] = match
             if (!owner || !repo) {
                 setVerificationResult({
-                    error: 'Could not extract owner and repo from URL',
+                    error: t('Could not extract owner and repo from URL'),
                 })
                 return
             }
@@ -158,7 +200,7 @@ export function NodeClaimModal({
 
             if (!result.fileContent) {
                 setVerificationResult({
-                    error: 'Could not find pyproject configuration files',
+                    error: t('Could not find pyproject configuration files'),
                 })
                 return
             }
@@ -172,7 +214,7 @@ export function NodeClaimModal({
             ]
             if (publisherIdMatches.length === 0) {
                 setVerificationResult({
-                    error: 'Could not find publisher ID in pyproject.toml',
+                    error: t('Could not find publisher ID in pyproject.toml'),
                 })
                 return
             }
@@ -194,7 +236,9 @@ export function NodeClaimModal({
                     : `❌ Found publisher ID in repository pyproject.toml: @${result.publisherId}, but it does not match the selected publisher @${selectedPublisher?.id}`,
                 error: matchesSelected
                     ? undefined
-                    : 'Publisher ID in repository does not match selected publisher',
+                    : t(
+                          'Publisher ID in repository does not match selected publisher'
+                      ),
                 verified: !!matchesSelected,
             })
         } catch (error) {
@@ -211,7 +255,7 @@ export function NodeClaimModal({
     // Handle claiming the node
     const handleClaimNode = async () => {
         if (!selectedPublisher?.id) {
-            toast.error('Please select a publisher')
+            toast.error(t('Please select a publisher'))
             return
         }
         if (node.publisher?.id !== UNCLAIMED_ADMIN_PUBLISHER_ID) {
@@ -226,7 +270,9 @@ export function NodeClaimModal({
             })
         } catch (error) {
             // Error is handled in the mutation's onError
-            toast.error('An unexpected error occurred while claiming the node.')
+            toast.error(
+                t('An unexpected error occurred while claiming the node.')
+            )
         }
     }
 
@@ -241,9 +287,29 @@ export function NodeClaimModal({
             dismissible
         >
             <Modal.Header className="!bg-gray-800">
-                <div className="text-white">Claim Node: {node.name}</div>
+                <div className="text-white">{t('Edit unclaimed node')}</div>
             </Modal.Header>
-            <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
+            <Modal.Body className="!bg-gray-800 p-2 md:px-4 rounded-none">
+                <div className="mb-4 p-3 bg-gray-700 rounded-lg">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <div className="text-white font-medium">
+                                {t('Node')}: {node.name}
+                            </div>
+                            <div className="text-sm text-gray-400">
+                                {t('ID')}: {node.id}
+                            </div>
+                        </div>
+                        <a
+                            href={`/nodes/${node.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline flex items-center"
+                        >
+                            {t('View')} <HiExternalLink className="ml-1" />
+                        </a>
+                    </div>
+                </div>
                 <div className="space-y-6">
                     <div className="mb-4">
                         <Label htmlFor="publisher" className="text-white mb-2">

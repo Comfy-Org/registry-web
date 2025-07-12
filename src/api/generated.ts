@@ -9130,6 +9130,11 @@ export type ListNodesForPublisherV2200 = {
   totalPages?: number;
 };
 
+export type ClaimMyNodeBody = {
+  /** GitHub token to verify if the user owns the repo of the node */
+  GH_TOKEN?: string;
+};
+
 export type GetPermissionOnPublisherNodes200 = {
   canEdit?: boolean;
 };
@@ -20717,6 +20722,75 @@ export const useBanPublisherNode = <TError = void | ErrorResponse,
       > => {
 
       const mutationOptions = getBanPublisherNodeMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * This endpoint allows a publisher to claim an unclaimed node that they own the repo, which is identified by the nodeId. The unclaimed node's repository must be owned by the authenticated user.
+
+ * @summary Claim nodeId into publisherId for the authenticated publisher
+ */
+export const claimMyNode = (
+    publisherId: string,
+    nodeId: string,
+    claimMyNodeBody: ClaimMyNodeBody,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/publishers/${publisherId}/nodes/${nodeId}/claim-my-node`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: claimMyNodeBody, signal
+    },
+      options);
+    }
+  
+
+
+export const getClaimMyNodeMutationOptions = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext> => {
+
+const mutationKey = ['claimMyNode'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimMyNode>>, {publisherId: string;nodeId: string;data: ClaimMyNodeBody}> = (props) => {
+          const {publisherId,nodeId,data} = props ?? {};
+
+          return  claimMyNode(publisherId,nodeId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ClaimMyNodeMutationResult = NonNullable<Awaited<ReturnType<typeof claimMyNode>>>
+    export type ClaimMyNodeMutationBody = ClaimMyNodeBody
+    export type ClaimMyNodeMutationError = void | ErrorResponse
+
+    /**
+ * @summary Claim nodeId into publisherId for the authenticated publisher
+ */
+export const useClaimMyNode = <TError = void | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof claimMyNode>>,
+        TError,
+        {publisherId: string;nodeId: string;data: ClaimMyNodeBody},
+        TContext
+      > => {
+
+      const mutationOptions = getClaimMyNodeMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }

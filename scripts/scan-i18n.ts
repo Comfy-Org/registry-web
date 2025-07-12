@@ -75,7 +75,25 @@ async function extractKeysFromFile(filePath: string): Promise<ExtractedKey[]> {
 async function readJsonFile(filePath: string): Promise<Record<string, string>> {
     try {
         const content = await fs.readFile(filePath, 'utf-8')
-        return JSON.parse(content)
+        try {
+            // Try to parse JSON
+            return JSON.parse(content)
+        } catch (e) {
+            // check if the file contains a merge conflict marker
+            // if it does, remove the conflict markers to ACCEPT ALL BOTH sides of the conflicts
+            if (content.includes('<<<<<<<')) {
+                return JSON.parse(
+                    content.replaceAll(
+                        /^<<<<<<< .*$|^=======$|^>>>>>>> .*$/gm,
+                        ''
+                    )
+                )
+            }
+            // If parsing fails, log a warning and return an empty object
+            throw new Error(
+                `Invalid JSON in ${filePath}: ${e instanceof Error ? e.message : String(e)}`
+            )
+        }
     } catch (error) {
         console.warn(`Could not read ${filePath}:`, error)
     }
@@ -245,10 +263,9 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
             )
             updatedLangTranslations[key] = translation
             console.log(`+ ${lang} ${key}: ${translation}`)
+            // write to json immediately to avoid losing progress if the script crashes
             await writeJsonFile(langFile, updatedLangTranslations)
         }
-
-        await writeJsonFile(langFile, updatedLangTranslations)
         console.log(`${langFile}:`)
         console.log(`+ ${newKeysLang.length} new keys`)
         console.log(`- ${unusedKeysLang.length} unused keys`)

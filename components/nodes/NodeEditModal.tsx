@@ -4,7 +4,12 @@ import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { Error, Node, useUpdateNode } from '@/src/api/generated'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
+import { useQueryClient } from '@tanstack/react-query'
+import { ErrorResponse, Node, useUpdateNode } from '@/src/api/generated'
 import {
     CustomThemeTextArea,
     customThemeTextInput,
@@ -27,6 +32,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
 }) => {
     const { t } = useNextTranslation()
     const updateNodeMutation = useUpdateNode({})
+    const queryClient = useQueryClient()
     const [nodeName, setNodeName] = useState('')
     // const [openLogoModal, setOpenLogoModal] = useState(false)
     const [description, setDescription] = useState('')
@@ -55,6 +61,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             updateNodeMutation.mutate(
                 {
                     data: {
+                        id: nodeData.id, // solve missing id error
                         name: nodeName,
                         description: description,
                         license: license,
@@ -64,14 +71,32 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                     publisherId: publisherId,
                 },
                 {
+                    onSuccess: (data) => {
+                        // Cache-busting invalidation for cached endpoints
+                        queryClient.fetchQuery(
+                            shouldInvalidate.getGetNodeQueryOptions(
+                                nodeData.id!,
+                                undefined,
+                                INVALIDATE_CACHE_OPTION
+                            )
+                        )
+                        if (data) {
+                            toast.success(t('Node updated successfully'))
+                        } else {
+                            toast.error(t('Failed to update node'))
+                        }
+                    },
                     onError: (error, variables, context) => {
                         if (error instanceof AxiosError) {
-                            const axiosError: AxiosError<Error, any> = error
+                            const axiosError: AxiosError<ErrorResponse, any> =
+                                error
                             toast.error(
-                                `Failed to update node. ${axiosError.response?.data?.message}`
+                                t(`Failed to update node.\n{{detail}}`, {
+                                    detail: parseAxiosErrorResponse(axiosError),
+                                })
                             )
                         } else {
-                            toast.error('Failed to update node')
+                            toast.error(t('Failed to update node'))
                         }
                     },
                 }
@@ -93,9 +118,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             >
                 <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
                     <Modal.Header className="!bg-gray-800 px-8">
-                        <p className="text-white">
-                            {t('Edit')} {t('Node')}
-                        </p>
+                        <p className="text-white">{t('Edit Node')}</p>
                     </Modal.Header>
                     <div className="flex justify-evenly">
                         <div className="relative max-w-sm transition-all duration-300 cursor-pointer ">
@@ -211,4 +234,16 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             /> */}
         </>
     )
+}
+
+function parseAxiosErrorResponse(
+    axiosError: AxiosError<ErrorResponse, any>
+): string {
+    // TODO: extract this fn to utils and use for all api/generated requests errors
+    return [
+        axiosError.response?.data?.message,
+        axiosError.response?.data?.error,
+    ]
+        .filter(Boolean)
+        .join('\n')
 }
