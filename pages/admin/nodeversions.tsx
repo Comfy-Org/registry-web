@@ -155,7 +155,7 @@ function NodeVersionList({}) {
         if (getAllNodeVersionsQuery.isError) {
             toast.error(t('Error getting node versions'))
         }
-    }, [getAllNodeVersionsQuery])
+    }, [getAllNodeVersionsQuery, t])
 
     async function onReview({
         nodeVersion: nv,
