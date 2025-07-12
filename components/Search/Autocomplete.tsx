@@ -156,7 +156,7 @@ export default function Autocomplete({
         })
 
         return () => autocompleteInstance.destroy()
-    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins, query])
+    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins])
 
     return <div className={className} ref={autocompleteContainer} />
 }
