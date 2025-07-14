@@ -156,7 +156,8 @@ export default function Autocomplete({
         })
 
         return () => autocompleteInstance.destroy()
-    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins, query])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins])
 
     return <div className={className} ref={autocompleteContainer} />
 }
