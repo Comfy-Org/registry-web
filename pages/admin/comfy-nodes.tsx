@@ -535,14 +535,10 @@ function ComfyNodesManage() {
                                         </Table.Cell>
                                         <Table.Cell>
                                             <Badge
-                                                color={getPolicyBadgeColor(
-                                                    comfyNode.policy!
-                                                )}
+                                                color={comfyNode.policy ? getPolicyBadgeColor(comfyNode.policy) : 'default'}
                                                 size="sm"
                                             >
-                                                {getPolicyLabel(
-                                                    comfyNode.policy!
-                                                )}
+                                                {comfyNode.policy ? getPolicyLabel(comfyNode.policy) : t('No Policy')}
                                             </Badge>
                                         </Table.Cell>
                                         <Table.Cell>
