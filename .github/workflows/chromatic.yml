@@ -34,7 +34,10 @@ jobs:
             - name: Install dependencies
               run: bun install
 
-            # Build Storybook
+            # Clean and build Storybook
+            - name: Clean storybook-static directory
+              run: rm -rf storybook-static
+              
             - name: Build Storybook
               run: bun run build-storybook
 
