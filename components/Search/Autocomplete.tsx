@@ -119,45 +119,55 @@ export default function Autocomplete({
         return [recentSearches, querySuggestions]
     }, [searchClient])
 
+    const autocompleteInstanceRef = useRef<any>(null)
+
     useEffect(() => {
         if (!autocompleteContainer.current) {
             return
         }
 
-        const autocompleteInstance = autocomplete({
-            ...autocompleteProps,
-            container: autocompleteContainer.current,
-            initialState: { query },
-            insights: true,
-            plugins,
-            onReset() {
-                setInstantSearchUiState({
-                    query: '',
-                })
-            },
-            onSubmit({ state }) {
-                setInstantSearchUiState({ query: state.query })
-            },
-            onStateChange({ prevState, state }) {
-                if (prevState.query !== state.query) {
-                    debouncedSetInstantSearchUiState({ query: state.query })
-                }
-            },
-            renderer: { createElement, Fragment, render: () => {} },
-            render({ children }, root) {
-                if (!panelRootRef.current || rootRef.current !== root) {
-                    rootRef.current = root
-                    panelRootRef.current?.unmount()
-                    panelRootRef.current = createRoot(root)
-                }
+        // Only create autocomplete instance once
+        if (!autocompleteInstanceRef.current) {
+            autocompleteInstanceRef.current = autocomplete({
+                ...autocompleteProps,
+                container: autocompleteContainer.current,
+                initialState: { query },
+                insights: true,
+                plugins,
+                onReset() {
+                    setInstantSearchUiState({
+                        query: '',
+                    })
+                },
+                onSubmit({ state }) {
+                    setInstantSearchUiState({ query: state.query })
+                },
+                onStateChange({ prevState, state }) {
+                    if (prevState.query !== state.query) {
+                        debouncedSetInstantSearchUiState({ query: state.query })
+                    }
+                },
+                renderer: { createElement, Fragment, render: () => {} },
+                render({ children }, root) {
+                    if (!panelRootRef.current || rootRef.current !== root) {
+                        rootRef.current = root
+                        panelRootRef.current?.unmount()
+                        panelRootRef.current = createRoot(root)
+                    }
 
-                panelRootRef.current.render(children)
-            },
-        })
+                    panelRootRef.current.render(children)
+                },
+            })
+        }
 
-        return () => autocompleteInstance.destroy()
+        return () => {
+            if (autocompleteInstanceRef.current) {
+                autocompleteInstanceRef.current.destroy()
+                autocompleteInstanceRef.current = null
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [autocompleteProps, debouncedSetInstantSearchUiState, plugins])
+    }, [])
 
     return <div className={className} ref={autocompleteContainer} />
 }
