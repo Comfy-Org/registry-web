@@ -1,5 +1,5 @@
 import Container from '@/components/common/Container'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof Container> = {
     title: 'Components/Common/Container',

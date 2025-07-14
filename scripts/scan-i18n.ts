@@ -17,7 +17,7 @@ interface ExtractedKey {
 // Configuration
 const ROOT_DIR = path.relative(process.cwd(), path.resolve(__dirname, '..'))
 const OUTPUT_FILE = path.join(ROOT_DIR, '.cache/extracted-i18n-keys.json')
-const LOCALES_DIR = path.join(ROOT_DIR, 'public/locales')
+const LOCALES_DIR = path.join(ROOT_DIR, 'locales')
 const EN_LOCALE_FILE = path.join(LOCALES_DIR, 'en/common.json')
 
 // Regex to match t('key') patterns
@@ -33,6 +33,7 @@ async function findTsxFiles(): Promise<string[]> {
             '**/dist/**',
             '**/build/**',
             '**/public/**',
+            '**/locales/**',
         ],
         absolute: true,
     })

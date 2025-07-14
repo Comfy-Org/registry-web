@@ -1,6 +1,6 @@
 import Hit from '@/components/Search/SearchHit'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 // Mock the react-instantsearch Snippet component
 // jest.mock('react-instantsearch', () => ({

@@ -1,5 +1,5 @@
 import { ClearableLabel } from '@/components/Labels/ClearableLabel'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
 
 // We need to use a functional component for this because it has state

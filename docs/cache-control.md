@@ -337,6 +337,10 @@ All mutation operations now properly implement cache invalidation:
 - `components/cache-control.tsx` - Manual cache-busting utilities
 - `pages/publishers/[publisherId]/claim-my-node.tsx` - Reference implementation
 
+**Additional Resources**:
+
+- [Cache Control Explanation Guide](https://snomiao.github.io/comfy-registry-cache-control-explain/) - Interactive guide explaining cache control concepts and implementation
+
 ## Summary
 
 The application now implements a comprehensive **hybrid cache control strategy**:

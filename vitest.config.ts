@@ -3,12 +3,12 @@ import { fileURLToPath } from 'node:url'
 
 import { defineConfig } from 'vitest/config'
 
-import { storybookTest } from '@storybook/experimental-addon-test/vitest-plugin'
+import storybookTest from '@storybook/addon-vitest/vitest-plugin'
 
 const dirname =
     typeof __dirname !== 'undefined'
-        ? __dirname
-        : path.dirname(fileURLToPath(import.meta.url))
+        ? __dirname // run by nodejs, vitest
+        : path.dirname(fileURLToPath(import.meta.url)) // bun
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
@@ -19,6 +19,7 @@ export default defineConfig({
                 plugins: [
                     // The plugin will run tests for the stories defined in your Storybook config
                     // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
+                    // @ts-expect-error: The storybookTest plugin has incomplete type definitions, but it works as expected.
                     storybookTest({
                         configDir: path.join(dirname, '.storybook'),
                     }),

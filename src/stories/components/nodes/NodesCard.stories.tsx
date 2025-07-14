@@ -1,6 +1,6 @@
 import NodesCard from '@/components/nodes/NodesCard'
 import { Node } from '@/src/api/generated'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof NodesCard> = {
     title: 'Components/Nodes/NodesCard',
