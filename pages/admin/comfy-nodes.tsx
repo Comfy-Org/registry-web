@@ -49,7 +49,7 @@ interface FormData {
     policy: ComfyNodePolicy
 }
 
-export function ComfyNodeEditModal({
+function ComfyNodeEditModal({
     isOpen,
     onClose,
     comfyNode,
@@ -535,20 +535,10 @@ function ComfyNodesManage() {
                                         </Table.Cell>
                                         <Table.Cell>
                                             <Badge
-                                                color={
-                                                    comfyNode.policy
-                                                        ? getPolicyBadgeColor(
-                                                              comfyNode.policy
-                                                          )
-                                                        : 'default'
-                                                }
+                                                color={comfyNode.policy ? getPolicyBadgeColor(comfyNode.policy) : 'default'}
                                                 size="sm"
                                             >
-                                                {comfyNode.policy
-                                                    ? getPolicyLabel(
-                                                          comfyNode.policy
-                                                      )
-                                                    : t('No Policy')}
+                                                {comfyNode.policy ? getPolicyLabel(comfyNode.policy) : t('No Policy')}
                                             </Badge>
                                         </Table.Cell>
                                         <Table.Cell>
