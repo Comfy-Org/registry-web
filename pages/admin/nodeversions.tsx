@@ -1124,7 +1124,12 @@ function NodeVersionList({}) {
                                         )
                                     }}
                                     onClick={async () => {
-                                        await queryClient.fetchQuery(getGetNodeQueryOptions(nv.node_id!))
+                                        await queryClient
+                                            .fetchQuery(
+                                                getGetNodeQueryOptions(
+                                                    nv.node_id!
+                                                )
+                                            )
                                             .then((e) => e.repository)
                                             .then((url) => {
                                                 window.open(
