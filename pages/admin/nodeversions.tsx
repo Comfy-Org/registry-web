@@ -33,10 +33,12 @@ import { HiBan, HiCheck, HiHome, HiReply } from 'react-icons/hi'
 import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import {
+    getGetNodeQueryOptions,
     getNode,
     NodeVersion,
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
+    useGetNode,
     useGetUser,
     useListAllNodeVersions,
 } from '@/src/api/generated'
@@ -1115,9 +1117,14 @@ function NodeVersionList({}) {
                                     </Link>
                                 )}
                                 <Link
-                                    href="javascript:void(0)"
+                                    href="#"
+                                    onPointerEnter={() => {
+                                        queryClient.prefetchQuery(
+                                            getGetNodeQueryOptions(nv.node_id!)
+                                        )
+                                    }}
                                     onClick={async () => {
-                                        await getNode(nv.node_id!)
+                                        await queryClient.fetchQuery(getGetNodeQueryOptions(nv.node_id!))
                                             .then((e) => e.repository)
                                             .then((url) => {
                                                 window.open(
