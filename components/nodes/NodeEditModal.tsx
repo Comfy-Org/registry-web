@@ -15,7 +15,7 @@ import {
     customThemeTextInput,
     customThemeTModal,
 } from 'utils/comfyTheme'
-import nodesLogo from '../../public/images/nodelogo2.png'
+import nodesLogo from '@/src/assets/images/nodelogo2.png'
 
 type NodeEditModalProps = {
     openEditModal: boolean
