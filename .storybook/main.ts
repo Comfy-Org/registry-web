@@ -16,6 +16,7 @@ export default defineConfig({
     '@chromatic-com/storybook',
     '@storybook/addon-docs',
     '@storybook/addon-vitest',
+    '@storybook/addon-actions',
   ],
   framework: '@storybook/nextjs-vite',
   staticDirs: ['../public', '../src/assets'],
