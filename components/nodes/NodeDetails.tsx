@@ -21,7 +21,7 @@ import {
     UNCLAIMED_ADMIN_PUBLISHER_ID,
     REQUEST_OPTIONS_NO_CACHE,
 } from 'src/constants'
-import nodesLogo from '../../public/images/nodesLogo.svg'
+import nodesLogo from '@/src/assets/images/nodesLogo.svg'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'

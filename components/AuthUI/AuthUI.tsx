@@ -12,6 +12,7 @@ import {
 } from 'react-firebase-hooks/auth'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
+import logoBluePng from '@/src/assets/images/logo_blue.png'
 import app from '../../src/firebase'
 import { useFromUrl } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
@@ -83,7 +84,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                         <Link className="flex justify-center" href={'/'}>
                             <Image
                                 alt="Comfy Logo"
-                                src="/images/logo_blue.png"
+                                src={logoBluePng}
                                 className="w-16 h-16 mr-3 sm:w-32 sm:h-32 rounded-lg"
                                 width={128}
                                 height={128}
