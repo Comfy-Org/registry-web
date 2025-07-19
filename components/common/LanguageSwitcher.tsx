@@ -23,6 +23,9 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                     className={currentLanguage === langCode ? 'font-bold' : ''}
                 >
                     {langName}
+                    {langCode === 'ar' && (
+                        <span className="ml-1 text-xs text-gray-500">(Beta)</span>
+                    )}
                 </Dropdown.Item>
             ))}
         </Dropdown>

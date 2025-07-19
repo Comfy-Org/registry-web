@@ -21,6 +21,7 @@ export const SUPPORTED_LANGUAGES = [
     'es',
     'ko',
     'ru',
+    'ar',
 ] as const
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
 export const DEFAULT_LANGUAGE = 'en'
@@ -32,6 +33,7 @@ export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
     es: 'Español',
     ko: '한국어',
     ru: 'Русский',
+    ar: 'العربية',
 }
 
 // HTTP Cache Control Headers
