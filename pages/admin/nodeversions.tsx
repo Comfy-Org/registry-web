@@ -225,7 +225,13 @@ function NodeVersionList({}) {
                 onError: (error) => {
                     console.error(t('Error reviewing node version'), error)
                     toast.error(
-                        `${t('Error reviewing node version')} ${nv.node_id!}@${nv.version!}`
+                        t(
+                            'Error reviewing node version {{nodeId}}@{{version}}',
+                            {
+                                nodeId: nv.node_id!,
+                                version: nv.version!,
+                            }
+                        )
                     )
                 },
             }
@@ -562,7 +568,10 @@ function NodeVersionList({}) {
                 onError: (error) => {
                     console.error(t('Error undoing node version'), error)
                     toast.error(
-                        `${t('Error undoing node version')} ${nv.node_id!}@${nv.version!}`
+                        t('Error undoing node version {{nodeId}}@{{version}}', {
+                            nodeId: nv.node_id!,
+                            version: nv.version!,
+                        })
                     )
                 },
             }
