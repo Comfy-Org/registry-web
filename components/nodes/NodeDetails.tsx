@@ -29,7 +29,7 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
-import { toast } from 'react-toastify'
+// Line removed as it is unused
 
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
@@ -221,8 +221,13 @@ const NodeDetails = () => {
                             </h1>
                             {/* reason */}
                             <p className="mb-4 text-lg font-normal text-gray-400">
-                                {t('Reason')}: {error.message}
+                                {t('Reason')}: {t('An unexpected error occurred. Please try again later.')}
                             </p>
+                            {process.env.NODE_ENV === 'development' && (
+                                <p className="text-sm text-gray-500">
+                                    {t('Debug info')}: {error.message}
+                                </p>
+                            )}
                             <div className="mt-6">
                                 <Button
                                     color="blue"

@@ -7,7 +7,7 @@ import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { Node, NodeStatus, PublisherStatus } from '@/src/api/generated'
 
 // Create a wrapper component to provide the query client
-const NodeDetailsWithQueryClient = (props) => {
+const NodeDetailsWithQueryClient = (props: React.ComponentProps<typeof NodeDetails>) => {
     return (
         <WithQueryClientProvider>
             <NodeDetails {...props} />
