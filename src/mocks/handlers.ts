@@ -1,6 +1,12 @@
 import { http, HttpResponse } from 'msw'
-import { ListNodesForPublisherV2200, NodeStatus, PublisherStatus, type Node, type Publisher, type User } from '../api/generated'
-
+import {
+    ListNodesForPublisherV2200,
+    NodeStatus,
+    PublisherStatus,
+    type Node,
+    type Publisher,
+    type User,
+} from '../api/generated'
 
 export const CAPI = (path: `/${string}`) => {
     // api.comfy.org
@@ -18,7 +24,8 @@ const mockNodes: Node[] = [
     {
         id: 'example-comfyui-custom-node',
         name: 'Example ComfyUI Custom Node',
-        description: 'A demonstration custom node for ComfyUI showcasing basic functionality',
+        description:
+            'A demonstration custom node for ComfyUI showcasing basic functionality',
         author: 'A ComfyUI Publisher',
         repository: 'https://github.com/example/comfyui-custom-node',
         github_stars: 156,
@@ -34,7 +41,8 @@ const mockNodes: Node[] = [
         tags: ['example', 'custom', 'demo'],
         latest_version: {
             version: '1.0.0',
-            downloadUrl: 'https://api.example.com/downloads/example-comfyui-custom-node/v1.0.0.zip'
+            downloadUrl:
+                'https://api.example.com/downloads/example-comfyui-custom-node/v1.0.0.zip',
         },
         license: 'MIT',
         icon: 'https://raw.githubusercontent.com/example/comfyui-custom-node/main/icon.png',
@@ -48,7 +56,8 @@ const mockNodes: Node[] = [
         name: 'ComfyUI-AnimateDiff-Evolved',
         description: 'Advanced AnimateDiff implementation for ComfyUI',
         author: 'Kosinkadink',
-        repository: 'https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved',
+        repository:
+            'https://github.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved',
         github_stars: 892,
         downloads: 5420,
         publisher: {
@@ -62,15 +71,18 @@ const mockNodes: Node[] = [
         tags: ['animation', 'diffusion', 'video'],
         latest_version: {
             version: '3.0.0',
-            downloadUrl: 'https://api.example.com/downloads/comfyui-animatediff-evolved/v3.0.0.zip'
+            downloadUrl:
+                'https://api.example.com/downloads/comfyui-animatediff-evolved/v3.0.0.zip',
         },
         license: 'MIT',
         icon: 'https://raw.githubusercontent.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved/main/icon.png',
         status: NodeStatus.NodeStatusActive,
         search_ranking: 5,
-        preempted_comfy_node_names: ['AnimateDiffEvolvedLoader', 'AnimateDiffSampler'],
+        preempted_comfy_node_names: [
+            'AnimateDiffEvolvedLoader',
+            'AnimateDiffSampler',
+        ],
         created_at: '2023-06-01T00:00:00Z',
-
     },
     {
         id: 'comfyui-manager',
@@ -91,7 +103,8 @@ const mockNodes: Node[] = [
         tags: ['manager', 'utility', 'tools'],
         latest_version: {
             version: '2.15.0',
-            downloadUrl: 'https://api.example.com/downloads/comfyui-manager/v2.15.0.zip'
+            downloadUrl:
+                'https://api.example.com/downloads/comfyui-manager/v2.15.0.zip',
         },
         license: 'GPL-3.0',
         icon: 'https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/icon.png',
@@ -161,7 +174,8 @@ export const handlers = [
         if (searchTerm) {
             filteredNodes = mockNodes.filter(
                 (node) =>
-                    node.name?.toLowerCase()
+                    node.name
+                        ?.toLowerCase()
                         .includes(searchTerm.toLowerCase()) ||
                     node.description
                         ?.toLowerCase()
@@ -264,17 +278,20 @@ export const handlers = [
     }),
 
     // User permissions endpoints
-    http.get(CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'), ({ params }) => {
-        const publisherId = params.publisherId as string
-        const nodeId = params.nodeId as string
+    http.get(
+        CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'),
+        ({ params }) => {
+            const publisherId = params.publisherId as string
+            const nodeId = params.nodeId as string
 
-        // Mock permissions - canEdit true for demo purposes
-        return HttpResponse.json({
-            canEdit: false,
-            canDelete: false,
-            canPublish: false,
-        })
-    }),
+            // Mock permissions - canEdit true for demo purposes
+            return HttpResponse.json({
+                canEdit: false,
+                canDelete: false,
+                canPublish: false,
+            })
+        }
+    ),
 
     // User's publishers
     http.get(CAPI('/users/publishers'), () => {
