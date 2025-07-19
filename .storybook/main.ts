@@ -21,7 +21,7 @@ const config: StorybookConfig = {
         name: '@storybook/nextjs-vite',
         options: {},
     },
-    staticDirs: ['../public'],
+    staticDirs: ['../public', '../src/assets'],
     viteFinal: (c) =>
         mergeConfig(c, {
             server: { allowedHosts: true },
