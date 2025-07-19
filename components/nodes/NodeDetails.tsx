@@ -390,7 +390,6 @@ const NodeDetails = () => {
                                                             "This node can only be installed via git"
                                                         )
                                             }
-
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
