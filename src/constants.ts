@@ -23,6 +23,7 @@ const LANGUAGE_NAMES = {
     es: 'Español',
     ko: '한국어',
     ru: 'Русский',
+    ar: 'العربية',
 }
 
 export const SUPPORTED_LANGUAGES = Object.keys(LANGUAGE_NAMES) as Array<

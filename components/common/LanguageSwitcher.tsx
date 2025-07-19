@@ -96,6 +96,9 @@ export default function LanguageSwitcher() {
                                 })}
                             >
                                 {nameInThatLanguage}
+                                {langCode === 'ar' && (
+                                    <span className="ml-1 text-xs text-gray-500">(Beta)</span>
+                                )}
                             </span>
                         ) : (
                             <>
@@ -105,6 +108,9 @@ export default function LanguageSwitcher() {
                                     )}
                                 >
                                     {nameInThatLanguage}
+                                    {langCode === 'ar' && (
+                                        <span className="ml-1 text-xs text-gray-500">(Beta)</span>
+                                    )}
                                 </span>
 
                                 <span className={clsx('text-left pl-2')}>
