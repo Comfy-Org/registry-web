@@ -16,7 +16,35 @@ export const ALGO = (path: `/${string}`) => {
 // Mock data
 const mockNodes: Node[] = [
     {
-        id: '1',
+        id: 'example-comfyui-custom-node',
+        name: 'Example ComfyUI Custom Node',
+        description: 'A demonstration custom node for ComfyUI showcasing basic functionality',
+        author: 'A ComfyUI Publisher',
+        repository: 'https://github.com/example/comfyui-custom-node',
+        github_stars: 156,
+        downloads: 1250,
+        publisher: {
+            id: 'a-comfy-ui-publisher',
+            name: 'A ComfyUI Publisher',
+            description: 'Professional ComfyUI extension publisher',
+            logo: 'https://avatars.githubusercontent.com/u/comfyui?v=4',
+            status: PublisherStatus.PublisherStatusActive,
+            createdAt: '2023-04-01T00:00:00Z',
+        },
+        tags: ['example', 'custom', 'demo'],
+        latest_version: {
+            version: '1.0.0',
+            downloadUrl: 'https://api.example.com/downloads/example-comfyui-custom-node/v1.0.0.zip'
+        },
+        license: 'MIT',
+        icon: 'https://raw.githubusercontent.com/example/comfyui-custom-node/main/icon.png',
+        status: NodeStatus.NodeStatusActive,
+        search_ranking: 2,
+        preempted_comfy_node_names: ['ExampleNode', 'CustomProcessor'],
+        created_at: '2023-09-01T00:00:00Z',
+    },
+    {
+        id: 'comfyui-animatediff-evolved',
         name: 'ComfyUI-AnimateDiff-Evolved',
         description: 'Advanced AnimateDiff implementation for ComfyUI',
         author: 'Kosinkadink',
@@ -34,7 +62,7 @@ const mockNodes: Node[] = [
         tags: ['animation', 'diffusion', 'video'],
         latest_version: {
             version: '3.0.0',
-            downloadUrl: 'https://api.example.com/downloads/1/v3.0.0.zip'
+            downloadUrl: 'https://api.example.com/downloads/comfyui-animatediff-evolved/v3.0.0.zip'
         },
         license: 'MIT',
         icon: 'https://raw.githubusercontent.com/Kosinkadink/ComfyUI-AnimateDiff-Evolved/main/icon.png',
@@ -45,7 +73,7 @@ const mockNodes: Node[] = [
 
     },
     {
-        id: '2',
+        id: 'comfyui-manager',
         name: 'ComfyUI-Manager',
         description: 'Extension manager for ComfyUI',
         author: 'ltdrdata',
@@ -63,7 +91,7 @@ const mockNodes: Node[] = [
         tags: ['manager', 'utility', 'tools'],
         latest_version: {
             version: '2.15.0',
-            downloadUrl: 'https://api.example.com/downloads/2/v2.15.0.zip'
+            downloadUrl: 'https://api.example.com/downloads/comfyui-manager/v2.15.0.zip'
         },
         license: 'GPL-3.0',
         icon: 'https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main/icon.png',
@@ -75,6 +103,14 @@ const mockNodes: Node[] = [
 ]
 
 const mockPublishers: Publisher[] = [
+    {
+        id: 'a-comfy-ui-publisher',
+        name: 'Example ComfyUI Publisher',
+        description: 'Professional ComfyUI extension publisher',
+        logo: 'https://avatars.githubusercontent.com/u/comfyui?v=4',
+        status: PublisherStatus.PublisherStatusActive,
+        createdAt: '2023-04-01T00:00:00Z',
+    },
     {
         id: 'kosinkadink',
         name: 'Kosinkadink',
@@ -91,12 +127,20 @@ const mockPublishers: Publisher[] = [
         status: PublisherStatus.PublisherStatusActive,
         createdAt: '2023-02-01T00:00:00Z',
     },
+    {
+        id: 'snomiao',
+        name: '@snomiao',
+        description: 'ComfyUI node developer',
+        logo: 'https://avatars.githubusercontent.com/u/snomiao?v=4',
+        status: PublisherStatus.PublisherStatusActive,
+        createdAt: '2023-03-01T00:00:00Z',
+    },
 ]
 
 const mockUser: User = {
-    id: 'user-123',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
+    id: 'a-comfy-ui-user',
+    name: 'Example ComfyUI User',
+    email: 'a-comfy-ui-user@example.com',
     isAdmin: false,
     isApproved: true,
 }
@@ -150,7 +194,7 @@ export const handlers = [
         return HttpResponse.json(node)
     }),
 
-    // Publishers endpoints
+    // List all Publishers endpoints
     http.get(CAPI('/publishers'), () => {
         return HttpResponse.json({
             publishers: mockPublishers,
@@ -226,15 +270,15 @@ export const handlers = [
 
         // Mock permissions - canEdit true for demo purposes
         return HttpResponse.json({
-            canEdit: true,
-            canDelete: true,
-            canPublish: true,
+            canEdit: false,
+            canDelete: false,
+            canPublish: false,
         })
     }),
 
     // User's publishers
     http.get(CAPI('/users/publishers'), () => {
-        return HttpResponse.json(mockPublishers)
+        return HttpResponse.json(mockPublishers.slice(0, 1)) // Example ComfyUI Publisher
     }),
 
     // Default fallback for unmatched requests
