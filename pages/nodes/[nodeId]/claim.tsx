@@ -187,7 +187,9 @@ function ClaimNodePage() {
                             </Link>
                         </>
                     ) : (
-                        t('Choose which publisher account you want to use to claim this node.')
+                        t(
+                            'Choose which publisher account you want to use to claim this node.'
+                        )
                     )}
                 </p>
 
