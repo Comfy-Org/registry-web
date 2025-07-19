@@ -339,6 +339,8 @@
     "approve": "одобрить",
     "at": "в",
     "downloads": "загрузки",
+    "GitHub Stars": "GitHub звёзды",
+    "GitHub stars": "GitHub звёзды",
     "e.g.\\nCUDA\\nROCm\\nMetal\\nCPU": "например:\\nCUDA\\nROCm\\nMetal\\nCPU",
     "e.g.\\nWindows\\nmacOS\\nLinux": "например:\\nWindows\\nmacOS\\nLinux",
     "key": "ключ",

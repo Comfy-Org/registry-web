@@ -339,6 +339,8 @@
     "approve": "承認",
     "at": "で",
     "downloads": "ダウンロード",
+    "GitHub Stars": "GitHub スター",
+    "GitHub stars": "GitHub スター",
     "e.g.\\nCUDA\\nROCm\\nMetal\\nCPU": "例：\nCUDA\nROCm\nMetal\nCPU",
     "e.g.\\nWindows\\nmacOS\\nLinux": "例:\\nWindows\\nmacOS\\nLinux",
     "key": "キー",
