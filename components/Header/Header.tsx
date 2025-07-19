@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
+import logoBluePng from '@/src/assets/images/logo_blue.png'
 import { useFromUrlParam } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
 import ProfileDropdown from './ProfileDropdown'
@@ -41,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             <Link href="/" className="flex gap-1">
                 <Image
                     alt="Comfy Logo"
-                    src="/images/logo_blue.png"
+                    src={logoBluePng}
                     width={36}
                     height={36}
                     className="w-6 h-6 mr-3 sm:w-9 sm:h-9 rounded-lg"
