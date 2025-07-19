@@ -29,6 +29,7 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
+import { toast } from 'react-toastify'
 
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
@@ -113,7 +114,7 @@ const NodeDetails = () => {
     const {
         data: node,
         isLoading,
-        isError,
+        error,
     } = useGetNode(nodeId, undefined, {
         query: {
             enabled: !!_nodeId,
@@ -198,15 +199,41 @@ const NodeDetails = () => {
         return null // prevent rendering the component while redirecting
     }
 
-    if (isError) {
-        // TODO: show error message and allow navigate back to the list
-    }
-
     const shouldShowLoading = isLoading || !router.isReady || !_nodeId
     if (shouldShowLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner className="" />
+            </div>
+        )
+    }
+
+    if (error) {
+        // TODO: show error message and allow navigate back to the list
+        return (
+            <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
+                <section className="text-white bg-gray-900 whitespace-nowrap">
+                    <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
+                        <div className="max-w-screen-sm mx-auto text-center">
+                            <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
+                                {t('Error loading node details')}
+
+                            </h1>
+                            {/* reason */}
+                            <p className="mb-4 text-lg font-normal text-gray-400">
+                                {t('Reason')}: {error.message}
+                            </p>
+                            <div className="mt-6">
+                                <Button
+                                    color="blue"
+                                    onClick={() => router.back()}
+                                >
+                                    {t('Go back')}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         )
     }
@@ -591,12 +618,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
+                                                        node
+                                                            .preempted_comfy_node_names
+                                                            .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
+                                                            '\n'
+                                                        )
                                                         : t('None')}
                                                 </pre>
                                             </span>
