@@ -346,13 +346,11 @@ All mutation operations now properly implement cache invalidation:
 The application now implements a comprehensive **hybrid cache control strategy**:
 
 1. **Automatic Cache Invalidation** via axios response interceptors in `_app.tsx`
-
     - Handles 90% of endpoints automatically
     - PUT/PATCH requests → Invalidates specific endpoint
     - POST/DELETE requests → Invalidates endpoint + parent list
 
 2. **Manual Cache-Busting** for CDN-cached endpoints via `cache-control.tsx`
-
     - 4 critical endpoints require explicit no-cache headers
     - Bypasses CDN/proxy caches to ensure immediate data freshness
     - Uses `shouldInvalidate` helper with `INVALIDATE_CACHE_OPTION`
