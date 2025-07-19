@@ -161,7 +161,7 @@ export const handlers = [
         return HttpResponse.json(response)
     }),
 
-    http.get('/nodes/:id', ({ params }) => {
+    http.get(CAPI('/nodes/:id'), ({ params }) => {
         const nodeId = params.id as string
         const node = mockNodes.find((n) => n.id === nodeId)
 
