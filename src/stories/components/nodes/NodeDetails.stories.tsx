@@ -4,6 +4,7 @@ import { CAPI, handlers } from '@/src/mocks/handlers'
 import { http, HttpResponse } from 'msw'
 import { WithQueryClientProvider } from '../WithQueryClientProvider'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { Node, NodeStatus, PublisherStatus } from '@/src/api/generated'
 
 // Create a wrapper component to provide the query client
 const NodeDetailsWithQueryClient = (props) => {
@@ -135,10 +136,10 @@ export const UnclaimedNode: Story = {
                             name: 'Unclaimed Admin Publisher',
                             display_name: 'Unclaimed',
                             description: 'System publisher for unclaimed nodes',
-                            status: 'approved',
+                            status: PublisherStatus.PublisherStatusActive,
                             created_at: '2023-01-01T00:00:00Z',
                         },
-                        status: 'approved',
+                        status: NodeStatus.NodeStatusActive,
                         created_at: '2023-01-01T00:00:00Z',
                         updated_at: '2023-01-01T00:00:00Z',
                     })
@@ -164,7 +165,6 @@ export const AdminUser: Story = {
         },
         msw: {
             handlers: [
-                ...handlers,
                 http.get(CAPI('/users'), () => {
                     return HttpResponse.json({
                         id: 'admin-user',
@@ -174,6 +174,7 @@ export const AdminUser: Story = {
                         isApproved: true,
                     })
                 }),
+                ...handlers,
             ],
         },
     },
@@ -191,7 +192,6 @@ export const NoPermissions: Story = {
         },
         msw: {
             handlers: [
-                ...handlers,
                 http.get(CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'), () => {
                     return HttpResponse.json({
                         canEdit: false,
@@ -208,6 +208,7 @@ export const NoPermissions: Story = {
                         isApproved: true,
                     })
                 }),
+                ...handlers,
             ],
         },
     },
@@ -239,14 +240,14 @@ export const NodeWithoutIcon: Story = {
                             name: 'Test Publisher',
                             display_name: 'Test Publisher',
                             description: 'Test publisher description',
-                            status: 'approved',
+                            status: PublisherStatus.PublisherStatusActive,
                             created_at: '2023-01-01T00:00:00Z',
                         },
                         latest_version: {
                             version: '1.0.0',
                             downloadUrl: 'https://api.example.com/downloads/no-icon/v1.0.0.zip'
                         },
-                        status: 'approved',
+                        status: NodeStatus.NodeStatusActive,
                         created_at: '2023-01-01T00:00:00Z',
                         updated_at: '2023-01-01T00:00:00Z',
                     })
@@ -282,17 +283,17 @@ export const NodeWithManyVersions: Story = {
                             name: 'Prolific Developer',
                             display_name: 'Prolific Developer',
                             description: 'Active node developer',
-                            status: 'approved',
+                            status: PublisherStatus.PublisherStatusActive,
                             created_at: '2023-01-01T00:00:00Z',
                         },
                         latest_version: {
                             version: '5.2.1',
                             downloadUrl: 'https://api.example.com/downloads/many-versions/v5.2.1.zip'
                         },
-                        status: 'approved',
+                        status: NodeStatus.NodeStatusActive,
                         created_at: '2023-01-01T00:00:00Z',
                         updated_at: '2024-01-15T10:30:00Z',
-                    })
+                    } satisfies Node)
                 }),
                 http.get(CAPI('/nodes/many-versions/versions'), () => {
                     return HttpResponse.json([
