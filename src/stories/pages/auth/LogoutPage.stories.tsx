@@ -16,7 +16,8 @@ const meta: Meta<typeof LogoutPageStory> = {
         layout: 'fullscreen',
         docs: {
             description: {
-                component: 'The logout page that provides users with a way to log out of their account. Shows a simple logout button with loading and error states.',
+                component:
+                    'The logout page that provides users with a way to log out of their account. Shows a simple logout button with loading and error states.',
             },
         },
     },

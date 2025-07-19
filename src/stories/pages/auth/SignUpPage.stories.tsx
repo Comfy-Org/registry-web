@@ -6,9 +6,7 @@ import AuthUIStory from '../../components/auth/AuthUIStory'
  * Note: In the actual app, signup uses the same AuthUI component as signin
  */
 const SignUpPageStory = () => {
-    return (
-        <AuthUIStory />
-    )
+    return <AuthUIStory />
 }
 
 const meta: Meta<typeof SignUpPageStory> = {
@@ -18,7 +16,8 @@ const meta: Meta<typeof SignUpPageStory> = {
         layout: 'fullscreen',
         docs: {
             description: {
-                component: 'The sign-up page that users see when navigating to /auth/signup. In the actual application, this uses the same AuthUI component as the sign-in page, as both Google and GitHub handle the signup/signin flow automatically.',
+                component:
+                    'The sign-up page that users see when navigating to /auth/signup. In the actual application, this uses the same AuthUI component as the sign-in page, as both Google and GitHub handle the signup/signin flow automatically.',
             },
         },
     },
