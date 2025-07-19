@@ -11,7 +11,7 @@ const i18n = i18next
     .use(
         i18nextResourcesToBackend(
             (language: string, namespace: string) =>
-                import(`@/locales/${language}/${namespace}.json`)
+                import(`../../../locales/${language}/${namespace}.json`)
         )
     )
     .use(initReactI18next)
