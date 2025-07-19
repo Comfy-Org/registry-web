@@ -10,6 +10,7 @@ import {
     HiOutlineCollection,
     HiOutlineDuplicate,
     HiOutlineSupport,
+    HiOutlineCog,
 } from 'react-icons/hi'
 
 export default withAdmin(AdminDashboard)
@@ -75,6 +76,15 @@ function AdminDashboard() {
                     <HiOutlineSupport className="h-20 w-20 mb-4" />
                     <span className="text-center">
                         {t('Node Version Compatibility')}
+                    </span>
+                </Link>
+                <Link
+                    href="/admin/comfy-nodes"
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg w-full h-48 flex flex-col items-center justify-center p-6 transition-colors"
+                >
+                    <HiOutlineCog className="h-20 w-20 mb-4" />
+                    <span className="text-center">
+                        {t('Manage ComfyNodes')}
                     </span>
                 </Link>
                 {/* Add more admin links here as needed */}
