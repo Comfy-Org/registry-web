@@ -16,7 +16,8 @@ const meta: Meta<typeof SignInPageStory> = {
         layout: 'fullscreen',
         docs: {
             description: {
-                component: 'The sign-in page that users see when navigating to /auth/login. Uses the AuthUI component to provide Google and GitHub authentication options.',
+                component:
+                    'The sign-in page that users see when navigating to /auth/login. Uses the AuthUI component to provide Google and GitHub authentication options.',
             },
         },
     },
