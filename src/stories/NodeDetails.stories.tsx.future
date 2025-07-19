@@ -1,6 +1,6 @@
 import NodeDetails from '@/components/nodes/NodeDetails'
 import { NodeStatus, NodeVersion, NodeVersionStatus, PublisherStatus } from '@/src/api/generated'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { QueryClient } from '@tanstack/react-query'
 import { WithQueryClientProvider } from './components/WithQueryClientProvider'
 
