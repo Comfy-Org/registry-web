@@ -172,13 +172,11 @@ function ClaimNodePage() {
                     {t('Select a Publisher')}
                 </h2>
                 <p className="text-gray-300 mb-6">
-                    {t(
-                        'Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository'
-                    )}
                     {node?.repository ? (
                         <>
-                            {' '}
-                            {t('at')}{' '}
+                            {t(
+                                'Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository at'
+                            )}{' '}
                             <Link
                                 href={node.repository}
                                 target="_blank"
@@ -189,7 +187,7 @@ function ClaimNodePage() {
                             </Link>
                         </>
                     ) : (
-                        ` ${t('to claim this node.')}`
+                        t('Choose which publisher account you want to use to claim this node.')
                     )}
                 </p>
 
