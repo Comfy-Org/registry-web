@@ -22,7 +22,7 @@ export function useLogout() {
     useEffect(() => {
         if (error)
             toast.error(
-                `${t('Logout')} ${t('Error')}:${String(error?.message || error)}`
+                t('Logout error: {{error}}', { error: String(error?.message || error) })
             )
     }, [error, t])
     return [logout, loading, error] as const

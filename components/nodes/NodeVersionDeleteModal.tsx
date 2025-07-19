@@ -41,7 +41,7 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                 onError: (error) => {
                     if (error instanceof AxiosError) {
                         toast.error(
-                            `${t('Failed to delete version')}. ${error.response?.data?.message}`
+                            t('Failed to delete version: {{message}}', { message: error.response?.data?.message })
                         )
                     } else {
                         toast.error(t('Failed to delete version'))
