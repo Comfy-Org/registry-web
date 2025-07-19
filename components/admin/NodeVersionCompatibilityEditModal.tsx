@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Modal, Button, TextInput, Label, Textarea } from 'flowbite-react'
 import { useForm, Controller } from 'react-hook-form'
 import {
@@ -56,6 +56,21 @@ export default function NodeVersionCompatibilityEditModal({
                 nodeVersion?.supported_accelerators?.join('\n') || '',
         },
     })
+
+    // Reset form when nodeVersion changes
+    useEffect(() => {
+        if (nodeVersion && isOpen) {
+            reset({
+                supported_comfyui_frontend_version:
+                    nodeVersion.supported_comfyui_frontend_version || '',
+                supported_comfyui_version:
+                    nodeVersion.supported_comfyui_version || '',
+                supported_os: nodeVersion.supported_os?.join('\n') || '',
+                supported_accelerators:
+                    nodeVersion.supported_accelerators?.join('\n') || '',
+            })
+        }
+    }, [nodeVersion, isOpen, reset])
 
     const normalizeSupportList = (text: string) => {
         return (
