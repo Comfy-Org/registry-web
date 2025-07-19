@@ -45,7 +45,8 @@ export const Default: Story = {
                     return HttpResponse.json({
                         id: '1',
                         name: 'Test Node',
-                        description: 'This is a test node for demonstration purposes',
+                        description:
+                            'This is a test node for demonstration purposes',
                     })
                 }),
                 ...handlers,
@@ -58,7 +59,10 @@ export const WithPublisherRoute: Story = {
     parameters: {
         nextjs: {
             router: {
-                query: { publisherId: 'kosinkadink', nodeId: 'example-comfyui-custom-node' },
+                query: {
+                    publisherId: 'kosinkadink',
+                    nodeId: 'example-comfyui-custom-node',
+                },
                 pathname: '/publishers/[publisherId]/nodes/[nodeId]',
                 asPath: '/publishers/kosinkadink/nodes/1',
                 isReady: true,
@@ -117,7 +121,8 @@ export const UnclaimedNode: Story = {
                     return HttpResponse.json({
                         id: 'unclaimed',
                         name: 'Unclaimed Node',
-                        description: 'This node has not been claimed by any publisher yet',
+                        description:
+                            'This node has not been claimed by any publisher yet',
                         author: 'Unknown',
                         repository: 'https://github.com/example/unclaimed-node',
                         downloads: 0,
@@ -155,13 +160,16 @@ export const AdminUser: Story = {
         },
         msw: {
             handlers: [
-                http.get(CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'), () => {
-                    return HttpResponse.json({
-                        canEdit: true,
-                        canDelete: true,
-                        canPublish: true,
-                    })
-                }),
+                http.get(
+                    CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'),
+                    () => {
+                        return HttpResponse.json({
+                            canEdit: true,
+                            canDelete: true,
+                            canPublish: true,
+                        })
+                    }
+                ),
                 http.get(CAPI('/users'), () => {
                     return HttpResponse.json({
                         id: 'admin-user',
@@ -172,12 +180,12 @@ export const AdminUser: Story = {
                     })
                 }),
                 http.get(CAPI('/users/publishers'), () => {
-                        return HttpResponse.json({
-                            id: 'admin-user',
-                            name: 'Admin User',
-                            email: 'admin@example.com',
-                            isAdmin: true,
-                            isApproved: true,
+                    return HttpResponse.json({
+                        id: 'admin-user',
+                        name: 'Admin User',
+                        email: 'admin@example.com',
+                        isAdmin: true,
+                        isApproved: true,
                     })
                 }),
 
@@ -199,13 +207,16 @@ export const NoPermissions: Story = {
         },
         msw: {
             handlers: [
-                http.get(CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'), () => {
-                    return HttpResponse.json({
-                        canEdit: false,
-                        canDelete: false,
-                        canPublish: false,
-                    })
-                }),
+                http.get(
+                    CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'),
+                    () => {
+                        return HttpResponse.json({
+                            canEdit: false,
+                            canDelete: false,
+                            canPublish: false,
+                        })
+                    }
+                ),
                 http.get(CAPI('/users'), () => {
                     return HttpResponse.json({
                         id: 'regular-user',
@@ -251,7 +262,8 @@ export const NodeWithoutIcon: Story = {
                         },
                         latest_version: {
                             version: '1.0.0',
-                            downloadUrl: 'https://api.example.com/downloads/no-icon/v1.0.0.zip'
+                            downloadUrl:
+                                'https://api.example.com/downloads/no-icon/v1.0.0.zip',
                         },
                         status: NodeStatus.NodeStatusActive,
                         created_at: '2023-01-01T00:00:00Z',
@@ -282,7 +294,8 @@ export const NodeWithManyVersions: Story = {
                         name: 'Node With Many Versions',
                         description: 'This node has multiple version releases',
                         author: 'Prolific Developer',
-                        repository: 'https://github.com/example/many-versions-node',
+                        repository:
+                            'https://github.com/example/many-versions-node',
                         downloads: 5000,
                         publisher: {
                             id: 'prolific-dev',
@@ -292,7 +305,8 @@ export const NodeWithManyVersions: Story = {
                         },
                         latest_version: {
                             version: '5.2.1',
-                            downloadUrl: 'https://api.example.com/downloads/many-versions/v5.2.1.zip'
+                            downloadUrl:
+                                'https://api.example.com/downloads/many-versions/v5.2.1.zip',
                         },
                         status: NodeStatus.NodeStatusActive,
                         created_at: '2023-01-01T00:00:00Z',
@@ -300,22 +314,98 @@ export const NodeWithManyVersions: Story = {
                 }),
                 http.get(CAPI('/nodes/many-versions/versions'), () => {
                     const versions = [
-                        { version: '5.2.1', changelog: 'Latest bug fixes and performance improvements', date: '2024-01-15T10:30:00Z' },
-                        { version: '5.2.0', changelog: 'Added new features and improved stability', date: '2024-01-01T14:20:00Z' },
-                        { version: '5.1.0', changelog: 'Major performance optimizations and bug fixes', date: '2023-12-15T09:45:00Z' },
-                        { version: '5.0.0', changelog: 'Breaking changes: Complete API rewrite for better performance', date: '2023-11-01T12:00:00Z' },
-                        { version: '4.9.2', changelog: 'Final release of v4 series - legacy support', date: '2023-10-15T08:30:00Z' },
-                        { version: '4.9.1', changelog: 'Critical security fixes and stability improvements', date: '2023-09-20T16:15:00Z' },
-                        { version: '4.9.0', changelog: 'New animation features and improved UI controls', date: '2023-08-10T11:45:00Z' },
-                        { version: '4.8.3', changelog: 'Bug fixes for memory leak and crash issues', date: '2023-07-25T09:20:00Z' },
-                        { version: '4.8.2', changelog: 'Performance optimizations for large datasets', date: '2023-06-30T14:10:00Z' },
-                        { version: '4.8.1', changelog: 'Hotfix for rendering pipeline issues', date: '2023-06-15T08:40:00Z' },
-                        { version: '4.8.0', changelog: 'Major update with new rendering engine', date: '2023-05-20T13:25:00Z' },
-                        { version: '4.7.5', changelog: 'Compatibility fixes for latest ComfyUI version', date: '2023-04-18T10:55:00Z' },
-                        { version: '4.7.4', changelog: 'Minor bug fixes and documentation updates', date: '2023-03-22T15:30:00Z' },
-                        { version: '4.7.3', changelog: 'Enhanced error handling and logging', date: '2023-02-28T12:15:00Z' },
-                        { version: '4.7.2', changelog: 'Fixed issues with batch processing', date: '2023-01-30T09:45:00Z' },
-                        { version: '4.7.1', changelog: 'Initial stable release with core features', date: '2023-01-15T14:20:00Z' },
+                        {
+                            version: '5.2.1',
+                            changelog:
+                                'Latest bug fixes and performance improvements',
+                            date: '2024-01-15T10:30:00Z',
+                        },
+                        {
+                            version: '5.2.0',
+                            changelog:
+                                'Added new features and improved stability',
+                            date: '2024-01-01T14:20:00Z',
+                        },
+                        {
+                            version: '5.1.0',
+                            changelog:
+                                'Major performance optimizations and bug fixes',
+                            date: '2023-12-15T09:45:00Z',
+                        },
+                        {
+                            version: '5.0.0',
+                            changelog:
+                                'Breaking changes: Complete API rewrite for better performance',
+                            date: '2023-11-01T12:00:00Z',
+                        },
+                        {
+                            version: '4.9.2',
+                            changelog:
+                                'Final release of v4 series - legacy support',
+                            date: '2023-10-15T08:30:00Z',
+                        },
+                        {
+                            version: '4.9.1',
+                            changelog:
+                                'Critical security fixes and stability improvements',
+                            date: '2023-09-20T16:15:00Z',
+                        },
+                        {
+                            version: '4.9.0',
+                            changelog:
+                                'New animation features and improved UI controls',
+                            date: '2023-08-10T11:45:00Z',
+                        },
+                        {
+                            version: '4.8.3',
+                            changelog:
+                                'Bug fixes for memory leak and crash issues',
+                            date: '2023-07-25T09:20:00Z',
+                        },
+                        {
+                            version: '4.8.2',
+                            changelog:
+                                'Performance optimizations for large datasets',
+                            date: '2023-06-30T14:10:00Z',
+                        },
+                        {
+                            version: '4.8.1',
+                            changelog: 'Hotfix for rendering pipeline issues',
+                            date: '2023-06-15T08:40:00Z',
+                        },
+                        {
+                            version: '4.8.0',
+                            changelog: 'Major update with new rendering engine',
+                            date: '2023-05-20T13:25:00Z',
+                        },
+                        {
+                            version: '4.7.5',
+                            changelog:
+                                'Compatibility fixes for latest ComfyUI version',
+                            date: '2023-04-18T10:55:00Z',
+                        },
+                        {
+                            version: '4.7.4',
+                            changelog:
+                                'Minor bug fixes and documentation updates',
+                            date: '2023-03-22T15:30:00Z',
+                        },
+                        {
+                            version: '4.7.3',
+                            changelog: 'Enhanced error handling and logging',
+                            date: '2023-02-28T12:15:00Z',
+                        },
+                        {
+                            version: '4.7.2',
+                            changelog: 'Fixed issues with batch processing',
+                            date: '2023-01-30T09:45:00Z',
+                        },
+                        {
+                            version: '4.7.1',
+                            changelog:
+                                'Initial stable release with core features',
+                            date: '2023-01-15T14:20:00Z',
+                        },
                     ]
 
                     return HttpResponse.json(

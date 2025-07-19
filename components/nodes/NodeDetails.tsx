@@ -215,11 +215,13 @@ const NodeDetails = () => {
                         <div className="max-w-screen-sm mx-auto text-center">
                             <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
                                 {t('Error loading node details')}
-
                             </h1>
                             {/* reason */}
                             <p className="mb-4 text-lg font-normal text-gray-400">
-                                {t('Reason')}: {t('An unexpected error occurred. Please try again later.')}
+                                {t('Reason')}:{' '}
+                                {t(
+                                    'An unexpected error occurred. Please try again later.'
+                                )}
                             </p>
                             {process.env.NODE_ENV === 'development' && (
                                 <p className="text-sm text-gray-500">
@@ -377,19 +379,17 @@ const NodeDetails = () => {
                                 <>
                                     {isUnclaimed || !nodeVersions?.length ? (
                                         <p className="text-base font-normal text-gray-200">
-                                            {
-                                                isUnclaimed ?
-                                                    t(
-                                                        "This node can only be installed via git, because it's unclaimed by any publisher"
-                                                    ) : !nodeVersions?.length
-                                                        ? t(
-                                                            'This node can only be installed via git, because it has no versions published yet'
-                                                        )
-                                                        :
-                                                        t(
-                                                            "This node can only be installed via git"
-                                                        )
-                                            }
+                                            {isUnclaimed
+                                                ? t(
+                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                  )
+                                                : !nodeVersions?.length
+                                                  ? t(
+                                                        'This node can only be installed via git, because it has no versions published yet'
+                                                    )
+                                                  : t(
+                                                        'This node can only be installed via git'
+                                                    )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
@@ -620,12 +620,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                        node
-                                                            .preempted_comfy_node_names
-                                                            .length > 0
+                                                    node
+                                                        .preempted_comfy_node_names
+                                                        .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                            '\n'
-                                                        )
+                                                              '\n'
+                                                          )
                                                         : t('None')}
                                                 </pre>
                                             </span>
