@@ -1,6 +1,6 @@
 import ProfileDropdown from '@/components/Header/ProfileDropdown'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { handlers } from '@/src/mocks/handlers'
+import { CAPI, handlers } from '@/src/mocks/handlers'
 import { http, HttpResponse } from 'msw'
 import { User } from '@/src/api/generated'
 
@@ -41,10 +41,8 @@ export const RegularUser: Story = {
     parameters: {
         msw: {
             handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json(regularUser)),
                 ...handlers,
-                http.get('*/users', () => {
-                    return HttpResponse.json(regularUser)
-                }),
             ],
         },
     },
@@ -54,10 +52,8 @@ export const AdminUser: Story = {
     parameters: {
         msw: {
             handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json(adminUser)),
                 ...handlers,
-                http.get('*/users', () => {
-                    return HttpResponse.json(adminUser)
-                }),
             ],
         },
     },
@@ -67,13 +63,11 @@ export const UnapprovedUser: Story = {
     parameters: {
         msw: {
             handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json({
+                    ...regularUser,
+                    isApproved: false,
+                })),
                 ...handlers,
-                http.get('*/users', () => {
-                    return HttpResponse.json({
-                        ...regularUser,
-                        isApproved: false,
-                    })
-                }),
             ],
         },
     },
