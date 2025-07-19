@@ -84,12 +84,17 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     </span>
                 </Button>
 
-                <Badge
-                    icon={DiscordIcon}
-                    color="gray"
-                    href="/discord"
-                    size="xs"
-                />
+                <a
+                    href="https://discord.gg/comfyorg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <Badge
+                        icon={DiscordIcon}
+                        color="gray"
+                        size="xs"
+                    />
+                </a>
             </div>
         </Navbar>
     )
