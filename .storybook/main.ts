@@ -15,6 +15,7 @@ const config: StorybookConfig = {
         '@chromatic-com/storybook',
         '@storybook/addon-vitest',
         '@storybook/addon-docs',
+        '@storybook/addon-actions',
     ],
     framework: {
         name: '@storybook/nextjs-vite',
