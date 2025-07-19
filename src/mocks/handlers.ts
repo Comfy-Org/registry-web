@@ -7,7 +7,6 @@ import {
     type Publisher,
     type User,
 } from '../api/generated'
-
 export const CAPI = (path: `/${string}`) => {
     // api.comfy.org
     return new URL(path, process.env.NEXT_PUBLIC_BACKEND_URL!).toString()
