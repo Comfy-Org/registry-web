@@ -8,7 +8,7 @@ import type {
 } from 'instantsearch.js'
 import Link from 'next/link'
 import React from 'react'
-import { HiDownload } from 'react-icons/hi'
+import { HiDownload, HiStar } from 'react-icons/hi'
 import { Snippet } from 'react-instantsearch'
 import Markdown from 'react-markdown'
 import { PublisherId } from './PublisherId'
@@ -19,6 +19,7 @@ interface NodeHit {
     publisher_id: string
     total_install: number
     latest_version: string
+    github_stars?: number
 
     comfy_nodes?: string[]
 }
@@ -112,6 +113,16 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                             title={t('Installs')}
                         />{' '}
                         {ShortNumber(hit.total_install)}
+                    </span>
+                )}
+                {hit.github_stars && hit.github_stars > 0 && (
+                    <span className="">
+                        {' | '}
+                        <HiStar
+                            className="inline h-3 w-3"
+                            title={t('GitHub Stars')}
+                        />{' '}
+                        {ShortNumber(hit.github_stars)}
                     </span>
                 )}
             </p>

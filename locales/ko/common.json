@@ -339,6 +339,8 @@
     "approve": "승인",
     "at": "에서",
     "downloads": "다운로드",
+    "GitHub Stars": "GitHub 별점",
+    "GitHub stars": "GitHub 별점",
     "e.g.\\nCUDA\\nROCm\\nMetal\\nCPU": "예:\\nCUDA\\nROCm\\nMetal\\nCPU",
     "e.g.\\nWindows\\nmacOS\\nLinux": "예:\\nWindows\\nmacOS\\nLinux",
     "key": "키",
