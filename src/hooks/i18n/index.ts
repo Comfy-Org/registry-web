@@ -10,7 +10,7 @@ const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
     .use(
         i18nextResourcesToBackend(
-            (language, namespace) =>
+            (language: string, namespace: string) =>
                 import(`@/locales/${language}/${namespace}.json`)
         )
     )
