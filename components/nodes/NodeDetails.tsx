@@ -286,18 +286,14 @@ const NodeDetails = () => {
                                         className="text-[18px] pt-2 text-gray-300"
                                         hidden={isUnclaimed}
                                     >
-                                        {node.publisher?.id?.replace(
-                                            /^(?!$)/,
-                                            '@'
-                                        )}
-                                        {node.latest_version && (
-                                            <span>
-                                                {!!node.publisher?.id && ` | `}
-                                                {`v${node.latest_version?.version}`}
-                                                <span className="pl-3 text-gray-400">
-                                                    {t('Most recent version')}
-                                                </span>
-                                            </span>
+                                        {node.latest_version ? (
+                                            t('{{publisher}} | v{{version}} {{mostRecentLabel}}', {
+                                                publisher: node.publisher?.id?.replace(/^(?!$)/, '@') || '',
+                                                version: node.latest_version.version,
+                                                mostRecentLabel: t('Most recent version')
+                                            })
+                                        ) : (
+                                            node.publisher?.id?.replace(/^(?!$)/, '@')
                                         )}
                                     </p>
                                 </div>
