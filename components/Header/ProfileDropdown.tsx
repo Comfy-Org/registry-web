@@ -34,10 +34,8 @@ export default function ProfileDropdown() {
                                       .charAt(0)
                                       .toUpperCase()
                                 : firebaseUser.email
-                                ? firebaseUser.email
-                                      .charAt(0)
-                                      .toUpperCase()
-                                : 'U'
+                                  ? firebaseUser.email.charAt(0).toUpperCase()
+                                  : 'U'
                         }
                     />
                     <span className="hidden md:inline text-white">
