@@ -1,21 +1,21 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { getAuth } from 'firebase/auth'
 import { Avatar, Dropdown } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { HiChevronDown } from 'react-icons/hi'
 import { useGetUser } from '@/src/api/generated'
-import app from '../../src/firebase'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import { useLogout } from '../AuthUI/Logout'
 
-const ProfileDropdown: React.FC = () => {
+export default function ProfileDropdown() {
     const router = useRouter()
     const { t } = useNextTranslation()
     const [onSignOut, isSignoutLoading, error] = useLogout()
     const { data: user } = useGetUser()
 
-    const [firebaseUser] = useAuthState(getAuth(app))
+    // // debug
+    // return <>{JSON.stringify(useFirebaseUser(), null, 2)}</>
+    const [firebaseUser] = useFirebaseUser()
     if (!firebaseUser) return null
 
     return (
@@ -64,5 +64,3 @@ const ProfileDropdown: React.FC = () => {
         </Dropdown>
     )
 }
-
-export default ProfileDropdown

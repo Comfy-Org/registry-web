@@ -1,15 +1,13 @@
 import { mergeConfig } from 'vite'
 import type { StorybookConfig } from '@storybook/nextjs-vite'
-import path from 'node:path'
+import path, { relative } from 'node:path'
 import fastGlob from 'fast-glob'
 const config: StorybookConfig = {
   stories: [
-    '../app/**/*.mdx',
     '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../src/**/*.mdx',
-    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../components/**/*.mdx',
     '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/stories/**/*.mdx',
   ],
   addons: [
     'msw-storybook-addon',
@@ -17,23 +15,34 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-vitest',
   ],
-  framework: {
-    name: '@storybook/nextjs-vite',
-    options: {},
-  },
+  framework: '@storybook/nextjs-vite',
   staticDirs: ['../public', '../src/assets'],
   viteFinal: async (c) => {
-    const mocks = await fastGlob('./src/**/*.mock.ts')
-    console.log(mocks)
+    // const mocks = await fastGlob('./src/**/*.mock.ts')
+    // console.log('Found mocks:', mocks)
     const PATH = (p: string) => path.resolve(process.cwd(), p)
+
     return mergeConfig(c, {
       server: { allowedHosts: true },
+    //   plugins: [
+    //     ...(c.plugins || []),
+    //     // {
+    //     //   name: 'mock-resolver',
+    //     //   resolveId(id, importer) {
+    //     //     const pathname = relative(process.cwd(), id)
+    //     //     console.log('Resolving ID:', pathname, 'from:', importer)
+    //     //     if (pathname === '@/src/hooks/useFirebaseUser') {
+    //     //       const resolved = PATH('./src/hooks/useFirebaseUser.mock.ts')
+    //     //       console.log('!!!! Redirecting to mock:', resolved)
+    //     //       return resolved
+    //     //     }
+    //     //     return null
+    //     //   },
+    //     // },
+    //   ],
       resolve: {
         alias: {
-          //   '@/': PATH('/'),
-          // '@/src/hooks/useFirebaseUser': PATH(
-          //     '/src/hooks/useFirebaseUser.mock.ts'
-          // ),
+            '@/': PATH('./'),
         },
       },
     })

@@ -3,6 +3,8 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { CAPI, handlers } from '@/src/mocks/handlers'
 import { http, HttpResponse } from 'msw'
 import { User } from '@/src/api/generated'
+import { User as FirebaseUser } from 'firebase/auth'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
 
 const meta: Meta<typeof ProfileDropdown> = {
     title: 'Components/Header/ProfileDropdown',
@@ -37,6 +39,27 @@ const adminUser: User = {
     isApproved: true,
 }
 
+// Mock Firebase user data
+const mockFirebaseUser = {
+    uid: 'firebase-user-123',
+    email: 'john.doe@example.com',
+    displayName: 'John Doe',
+    photoURL: 'https://via.placeholder.com/40',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    refreshToken: '',
+    tenantId: null,
+    delete: async () => undefined,
+    getIdToken: async () => '',
+    getIdTokenResult: async () => ({}) as any,
+    reload: async () => undefined,
+    toJSON: () => ({}),
+    phoneNumber: null,
+    providerId: 'google',
+} satisfies FirebaseUser // Using 'as any' to avoid having to mock the entire Firebase User interface
+
 export const RegularUser: Story = {
     parameters: {
         msw: {
@@ -45,6 +68,10 @@ export const RegularUser: Story = {
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -57,18 +84,48 @@ export const AdminUser: Story = {
             ],
         },
     },
+    beforeEach: () => {
+        // Mock Firebase user as admin
+        useFirebaseUser.mockReturnValue([
+            {
+                ...mockFirebaseUser,
+                email: 'admin@example.com',
+                displayName: 'Admin User',
+            },
+            false,
+            undefined,
+        ])
+    },
 }
 
 export const UnapprovedUser: Story = {
     parameters: {
         msw: {
             handlers: [
-                http.get(CAPI('/users'), () => HttpResponse.json({
-                    ...regularUser,
-                    isApproved: false,
-                })),
+                http.get(CAPI('/users'), () =>
+                    HttpResponse.json({
+                        ...regularUser,
+                        isApproved: false,
+                    })
+                ),
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as unapproved
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
+}
+
+export const LoggedOut: Story = {
+    parameters: {
+        msw: {
+            handlers: [...handlers],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
     },
 }

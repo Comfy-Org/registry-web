@@ -1,9 +1,8 @@
-import { getAuth } from 'firebase/auth'
 import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { useGetUser } from '@/src/api/generated'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import { useFromUrlParam } from './useFromUrl'
 
 /**
@@ -17,11 +16,10 @@ import { useFromUrlParam } from './useFromUrl'
 const withAdmin = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        const auth = getAuth()
         const fromUrlParam = useFromUrlParam()
 
         // if firebaseUser is signed out, redirect to login page
-        const [firebaseUser, firebaseUserLoading] = useAuthState(auth)
+        const [firebaseUser, firebaseUserLoading] = useFirebaseUser()
         useEffect(() => {
             if (!firebaseUserLoading && !firebaseUser) {
                 router.push(`/auth/login?${fromUrlParam}`)
