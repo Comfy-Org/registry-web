@@ -76,6 +76,11 @@ const config: StorybookConfig = {
               console.log('!!!! Redirecting to mock:', resolved)
               return resolved
             }
+            if (id === 'react-firebase-hooks/auth') {
+              const resolved = PATH('./react-firebase-hooks/auth.mock.ts')
+              console.log('!!!! Redirecting react-firebase-hooks/auth to mock:', resolved)
+              return resolved
+            }
           },
         },
       ],
