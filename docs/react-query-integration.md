@@ -217,37 +217,43 @@ const { data } = useGetNodes({
 
 ## Testing with Storybook
 
-### Query Client Provider (`src/stories/components/WithQueryClientProvider.tsx`)
+### Global Query Client Configuration
+
+React Query is now configured globally in Storybook's `preview.tsx` file using decorators. This means all stories automatically have access to a QueryClient without needing individual wrapper components.
 
 ```typescript
-export const WithQueryClientProvider = ({ children }) => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: { retry: false },
-            mutations: { retry: false },
+// .storybook/preview.tsx
+const preview: Preview = {
+    decorators: [
+        (Story) => {
+            const queryClient = new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        retry: false,
+                        staleTime: 0,
+                    },
+                },
+            })
+            return (
+                <QueryClientProvider client={queryClient}>
+                    <Story />
+                </QueryClientProvider>
+            )
         },
-    })
-
-    return (
-        <QueryClientProvider client={queryClient}>
-            {children}
-        </QueryClientProvider>
-    )
+    ],
 }
 ```
 
 ### Story Integration
 
+With the global configuration, stories no longer need to manually wrap components:
+
 ```typescript
 export default {
     title: 'Components/NodeDetails',
     component: NodeDetails,
-    decorators: [
-        (Story) => (
-            <WithQueryClientProvider>
-                <Story />
-            </WithQueryClientProvider>
-        ),
+    // No decorators needed - QueryClient is provided globally
+}
     ],
 }
 ```

@@ -29,7 +29,6 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
-
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
     const date = new Date(dateString)
@@ -113,7 +112,7 @@ const NodeDetails = () => {
     const {
         data: node,
         isLoading,
-        isError,
+        error,
     } = useGetNode(nodeId, undefined, {
         query: {
             enabled: !!_nodeId,
@@ -198,15 +197,48 @@ const NodeDetails = () => {
         return null // prevent rendering the component while redirecting
     }
 
-    if (isError) {
-        // TODO: show error message and allow navigate back to the list
-    }
-
     const shouldShowLoading = isLoading || !router.isReady || !_nodeId
     if (shouldShowLoading) {
         return (
             <div className="flex items-center justify-center h-screen">
                 <Spinner className="" />
+            </div>
+        )
+    }
+
+    if (error) {
+        // TODO: show error message and allow navigate back to the list
+        return (
+            <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
+                <section className="text-white bg-gray-900 whitespace-nowrap">
+                    <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
+                        <div className="max-w-screen-sm mx-auto text-center">
+                            <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
+                                {t('Error loading node details')}
+                            </h1>
+                            {/* reason */}
+                            <p className="mb-4 text-lg font-normal text-gray-400">
+                                {t('Reason')}:{' '}
+                                {t(
+                                    'An unexpected error occurred. Please try again later.'
+                                )}
+                            </p>
+                            {process.env.NODE_ENV === 'development' && (
+                                <p className="text-sm text-gray-500">
+                                    {t('Debug info')}: {error.message}
+                                </p>
+                            )}
+                            <div className="mt-6">
+                                <Button
+                                    color="blue"
+                                    onClick={() => router.back()}
+                                >
+                                    {t('Go back')}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         )
     }
@@ -347,13 +379,17 @@ const NodeDetails = () => {
                                 <>
                                     {isUnclaimed || !nodeVersions?.length ? (
                                         <p className="text-base font-normal text-gray-200">
-                                            {!nodeVersions?.length
+                                            {isUnclaimed
                                                 ? t(
-                                                      'This node can only be installed via git, because it has no versions published yet'
-                                                  )
-                                                : t(
                                                       "This node can only be installed via git, because it's unclaimed by any publisher"
-                                                  )}
+                                                  )
+                                                : !nodeVersions?.length
+                                                  ? t(
+                                                        'This node can only be installed via git, because it has no versions published yet'
+                                                    )
+                                                  : t(
+                                                        'This node can only be installed via git'
+                                                    )}
                                             {node.repository && (
                                                 <CopyableCodeBlock
                                                     code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
@@ -373,7 +409,7 @@ const NodeDetails = () => {
                                             className="mt-4 font-bold"
                                             onClick={handleClaimNode}
                                         >
-                                            {t('Claim this node')}
+                                            {t('Claim my node')}
                                         </Button>
                                     )}
                                 </>
