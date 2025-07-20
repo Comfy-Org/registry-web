@@ -366,5 +366,6 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} 승인됨",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} 거부됨",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} 취소됨, {{status}}로 돌아감",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} 노드"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} 노드",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }

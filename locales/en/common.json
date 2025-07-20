@@ -397,5 +397,6 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} Approved",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} Rejected",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} Undone, back to {{status}}",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} Nodes"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} Nodes",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }

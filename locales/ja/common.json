@@ -366,5 +366,6 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} 承認済み",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}}が拒否されました",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} 元に戻され、{{status}}に戻る",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} ノード"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} ノード",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }
