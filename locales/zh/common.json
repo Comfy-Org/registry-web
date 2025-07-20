@@ -366,5 +366,6 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} 已批准",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} 已被拒绝",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} 撤销，回到 {{status}}",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} 节点"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} 节点",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }

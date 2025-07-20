@@ -366,5 +366,6 @@
   "{{id}}@{{version}} Approved": "موافقة {{id}}@{{version}}",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} مرفوضة",
   "{{id}}@{{version}} Undone, back to {{status}}": "تم إلغاء {{id}}@{{version}}، العودة إلى {{status}}",
-  "{{nodeStatus}} Nodes": "عقد {{nodeStatus}}"
+  "{{nodeStatus}} Nodes": "عقد {{nodeStatus}}",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }

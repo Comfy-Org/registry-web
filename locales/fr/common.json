@@ -366,5 +366,6 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} Approuvé",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} Rejeté",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} Annulé, retour à {{status}}",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} Nœuds"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} Nœuds",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }
