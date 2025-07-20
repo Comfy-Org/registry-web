@@ -125,7 +125,7 @@ export const LoggedOut: Story = {
                 http.get(CAPI('/users'), () =>
                     HttpResponse.json(null, { status: 401 })
                 ),
-                ...handlers
+                ...handlers,
             ],
         },
     },
