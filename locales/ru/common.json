@@ -366,5 +366,6 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} Одобрено",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} Отклонено",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} Отменено, возвращено к {{status}}",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} узлы"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} узлы",
+  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
 }
