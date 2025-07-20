@@ -13,18 +13,8 @@ export const LANGUAGE_STORAGE_KEY =
     'comfy-registry-language-preference' as const
 
 // Language configuration
-export const SUPPORTED_LANGUAGES = [
-    'en',
-    'zh',
-    'ja',
-    'fr',
-    'es',
-    'ko',
-    'ru',
-] as const
-export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
 export const DEFAULT_LANGUAGE = 'en'
-export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
+export const LANGUAGE_NAMES = {
     en: 'English',
     zh: '中文',
     ja: '日本語',
@@ -33,6 +23,11 @@ export const LANGUAGE_NAMES: Record<SupportedLanguage, string> = {
     ko: '한국어',
     ru: 'Русский',
 }
+
+export const SUPPORTED_LANGUAGES = Object.keys(LANGUAGE_NAMES) as Array<
+    keyof typeof LANGUAGE_NAMES
+>
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
 
 // HTTP Cache Control Headers
 export const NO_CACHE_HEADERS = {

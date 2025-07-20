@@ -1,16 +1,13 @@
-import { getAuth } from 'firebase/auth'
 import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import app from 'src/firebase'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import { useFromUrlParam } from './useFromUrl'
 
 const withAuth = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        const auth = getAuth(app)
-        const [user, loading, error] = useAuthState(auth)
+        const [user, loading, error] = useFirebaseUser()
         const fromUrlParam = useFromUrlParam()
 
         useEffect(() => {

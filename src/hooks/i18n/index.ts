@@ -10,8 +10,8 @@ const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
     .use(
         i18nextResourcesToBackend(
-            (language, namespace) =>
-                import(`@/locales/${language}/${namespace}.json`)
+            (language: string, namespace: string) =>
+                import(`../../../locales/${language}/${namespace}.json`)
         )
     )
     .use(initReactI18next)
