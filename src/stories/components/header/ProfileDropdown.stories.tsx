@@ -44,7 +44,7 @@ const mockFirebaseUser = {
     uid: 'firebase-user-123',
     email: 'john.doe@example.com',
     displayName: 'John Doe',
-    photoURL: 'https://via.placeholder.com/40',
+    photoURL: 'https://picsum.photos/40/40',
     emailVerified: true,
     isAnonymous: false,
     metadata: {},

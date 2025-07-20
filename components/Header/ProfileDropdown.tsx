@@ -33,6 +33,10 @@ export default function ProfileDropdown() {
                                 ? firebaseUser.displayName
                                       .charAt(0)
                                       .toUpperCase()
+                                : firebaseUser.email
+                                ? firebaseUser.email
+                                      .charAt(0)
+                                      .toUpperCase()
                                 : 'U'
                         }
                     />

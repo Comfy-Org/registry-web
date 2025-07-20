@@ -28,7 +28,7 @@ const conf: NextConfig = {
             // image
             'firebasestorage.googleapis.com',
             'storage.googleapis.com',
-            'via.placeholder.com',
+            'picsum.photos',
         ],
     },
     webpack: (config) => {
