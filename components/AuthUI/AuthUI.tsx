@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
-    useAuthState,
     useSignInWithGithub,
     useSignInWithGoogle,
 } from 'react-firebase-hooks/auth'
@@ -16,6 +15,7 @@ import logoBluePng from '@/src/assets/images/logo_blue.png'
 import app from '../../src/firebase'
 import { useFromUrl } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const { t } = useNextTranslation()
@@ -35,7 +35,7 @@ const AuthUI: React.FC<{}> = ({}) => {
     ] = useSignInWithGithub(auth)
 
     // redirect back when user is logged in
-    const [firebaseUser, _loadingFirebaseUser] = useAuthState(auth)
+    const [firebaseUser, _loadingFirebaseUser] = useFirebaseUser()
     const loggedIn = Boolean(firebaseUser)
     const fromUrl = useFromUrl()
     React.useEffect(() => {

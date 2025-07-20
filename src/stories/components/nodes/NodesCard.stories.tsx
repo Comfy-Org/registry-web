@@ -1,6 +1,7 @@
 import NodesCard from '@/components/nodes/NodesCard'
 import { Node } from '@/src/api/generated'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { handlers } from '@/src/mocks/handlers'
 
 const meta: Meta<typeof NodesCard> = {
     title: 'Components/Nodes/NodesCard',
@@ -8,6 +9,9 @@ const meta: Meta<typeof NodesCard> = {
     parameters: {
         layout: 'centered',
         backgrounds: { default: 'dark' },
+        msw: {
+            handlers: handlers,
+        },
     },
     tags: ['autodocs'],
 }
@@ -21,7 +25,7 @@ const sampleNode: Node = {
     name: 'Sample Node',
     description:
         'This is a sample node with a detailed description of what it does and how it can be used in your projects.',
-    icon: 'https://via.placeholder.com/200',
+    icon: 'https://picsum.photos/200/200',
     downloads: 1250,
     rating: 4.5,
 }

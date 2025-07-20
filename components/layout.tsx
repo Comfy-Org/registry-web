@@ -1,14 +1,12 @@
-import { getAuth } from 'firebase/auth'
 import { ThemeModeScript } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import analytic from 'src/analytic/analytic'
-import app from 'src/firebase'
 import { useNextTranslation } from '../src/hooks/i18n'
+import { useFirebaseUser } from '../src/hooks/useFirebaseUser'
 import Header from './Header/Header'
 import Container from './common/Container'
 
@@ -20,8 +18,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     const isReservedPath = /^\/(auth|api|_error|_app|_document)/.test(
         router.pathname
     )
-    const auth = getAuth(app)
-    const [user, loading, error] = useAuthState(auth)
+    const [user, loading, error] = useFirebaseUser()
 
     React.useEffect(() => {
         if (user) {
