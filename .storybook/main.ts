@@ -38,8 +38,15 @@ const config: StorybookConfig = {
               process.cwd(),
               resolve(path.dirname(importer), id)
             )
+            console.log('Resolving ID:', id, pathname, 'from:', importer)
             if (id.replace(/^(\.\.\/)+/, '') === 'src/hooks/useFirebaseUser') {
               const resolved = PATH('./src/hooks/useFirebaseUser.mock.ts')
+              console.log('!!!! Redirecting to mock:', resolved)
+              return resolved
+            }
+            if (id === 'react-firebase-hooks/auth') {
+              const resolved = PATH('./react-firebase-hooks/auth.mock.ts')
+              console.log('!!!! Redirecting react-firebase-hooks/auth to mock:', resolved)
               return resolved
             }
           },
