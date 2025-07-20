@@ -1,12 +1,25 @@
+import AuthUI from '@/components/AuthUI/AuthUI'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { CAPI, handlers } from '@/src/mocks/handlers'
+import { http, HttpResponse } from 'msw'
+import { User } from '@/src/api/generated'
+import { User as FirebaseUser } from 'firebase/auth'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import { 
+    useSignInWithGoogle, 
+    useSignInWithGithub 
+} from 'react-firebase-hooks/auth'
 import { fn } from '@storybook/test'
-import AuthUIStory from './AuthUIStory'
 
-const meta: Meta<typeof AuthUIStory> = {
-    title: 'Auth/SignIn',
-    component: AuthUIStory,
+const meta: Meta<typeof AuthUI> = {
+    title: 'Components/Auth/SignIn',
+    component: AuthUI,
     parameters: {
         layout: 'fullscreen',
+        backgrounds: { default: 'dark' },
+        msw: {
+            handlers: handlers,
+        },
     },
     tags: ['autodocs'],
     decorators: [
@@ -16,67 +29,148 @@ const meta: Meta<typeof AuthUIStory> = {
             </div>
         ),
     ],
-    argTypes: {
-        isLoading: {
-            control: 'boolean',
-            description: 'Whether the sign-in process is loading',
-        },
-        error: {
-            control: 'text',
-            description: 'Error message to display',
-        },
-        showLoginButton: {
-            control: 'boolean',
-            description: 'Whether to show the login buttons',
-        },
-        onGoogleSignIn: {
-            action: 'google-signin',
-            description: 'Callback for Google sign-in',
-        },
-        onGithubSignIn: {
-            action: 'github-signin',
-            description: 'Callback for GitHub sign-in',
-        },
-    },
 }
 
 export default meta
-type Story = StoryObj<typeof AuthUIStory>
+type Story = StoryObj<typeof AuthUI>
+
+// Mock user data
+const mockUser: User = {
+    id: 'user-123',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    isAdmin: false,
+    isApproved: true,
+}
+
+// Mock Firebase user data
+const mockFirebaseUser = {
+    uid: 'firebase-user-123',
+    email: 'john.doe@example.com',
+    displayName: 'John Doe',
+    photoURL: 'https://picsum.photos/40/40',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    refreshToken: '',
+    tenantId: null,
+    delete: async () => undefined,
+    getIdToken: async () => '',
+    getIdTokenResult: async () => ({}) as any,
+    reload: async () => undefined,
+    toJSON: () => ({}),
+    phoneNumber: null,
+    providerId: 'google',
+} satisfies FirebaseUser
 
 export const Default: Story = {
-    args: {
-        isLoading: false,
-        error: undefined,
-        showLoginButton: true,
-        onGoogleSignIn: fn(),
-        onGithubSignIn: fn(),
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => 
+                    HttpResponse.json(null, { status: 401 })
+                ),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
+        
+        // Mock Firebase auth hooks
+        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
+        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
 
 export const Loading: Story = {
-    args: {
-        ...Default.args,
-        isLoading: true,
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => 
+                    HttpResponse.json(null, { status: 401 })
+                ),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as loading
+        useFirebaseUser.mockReturnValue([null, true, undefined])
+        
+        // Mock Firebase auth hooks with Google loading state
+        useSignInWithGoogle.mockReturnValue([fn(), undefined, true, undefined])
+        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
 
-export const WithError: Story = {
-    args: {
-        ...Default.args,
-        error: 'Account already exists with different credential',
+export const GoogleError: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => 
+                    HttpResponse.json(null, { status: 401 })
+                ),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
+        
+        // Mock Firebase auth hooks with Google error
+        const googleError = {
+            code: 'auth/account-exists-with-different-credential',
+            message: 'Account already exists with different credential'
+        }
+        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, googleError])
+        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
 
-export const NetworkError: Story = {
-    args: {
-        ...Default.args,
-        error: 'Network error. Please try again.',
+export const GitHubError: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => 
+                    HttpResponse.json(null, { status: 401 })
+                ),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
+        
+        // Mock Firebase auth hooks with GitHub error
+        const githubError = {
+            code: 'auth/network-request-failed',
+            message: 'Network error. Please try again.'
+        }
+        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
+        useSignInWithGithub.mockReturnValue([fn(), undefined, false, githubError])
     },
 }
 
-export const ButtonsDisabled: Story = {
-    args: {
-        ...Default.args,
-        showLoginButton: false,
+export const AlreadyLoggedIn: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json(mockUser)),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in (component should redirect)
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+        
+        // Mock Firebase auth hooks
+        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
+        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
