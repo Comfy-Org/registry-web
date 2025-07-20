@@ -1,12 +1,22 @@
+import Logout from '@/components/AuthUI/Logout'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { CAPI, handlers } from '@/src/mocks/handlers'
+import { http, HttpResponse } from 'msw'
+import { User } from '@/src/api/generated'
+import { User as FirebaseUser } from 'firebase/auth'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import { useSignOut } from 'react-firebase-hooks/auth'
 import { fn } from '@storybook/test'
-import LogoutStory from './LogoutStory'
 
-const meta: Meta<typeof LogoutStory> = {
-    title: 'Auth/Logout',
-    component: LogoutStory,
+const meta: Meta<typeof Logout> = {
+    title: 'Components/Auth/Logout',
+    component: Logout,
     parameters: {
         layout: 'fullscreen',
+        backgrounds: { default: 'dark' },
+        msw: {
+            handlers: handlers,
+        },
     },
     tags: ['autodocs'],
     decorators: [
@@ -16,55 +26,115 @@ const meta: Meta<typeof LogoutStory> = {
             </div>
         ),
     ],
-    argTypes: {
-        isLoading: {
-            control: 'boolean',
-            description: 'Whether the logout process is loading',
-        },
-        error: {
-            control: 'text',
-            description: 'Error message to display',
-        },
-        showSuccessMessage: {
-            control: 'boolean',
-            description: 'Whether to show success message',
-        },
-        onLogout: {
-            action: 'logout',
-            description: 'Callback for logout action',
-        },
-    },
 }
 
 export default meta
-type Story = StoryObj<typeof LogoutStory>
+type Story = StoryObj<typeof Logout>
+
+// Mock user data
+const mockUser: User = {
+    id: 'user-123',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    isAdmin: false,
+    isApproved: true,
+}
+
+// Mock Firebase user data
+const mockFirebaseUser = {
+    uid: 'firebase-user-123',
+    email: 'john.doe@example.com',
+    displayName: 'John Doe',
+    photoURL: 'https://picsum.photos/40/40',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    refreshToken: '',
+    tenantId: null,
+    delete: async () => undefined,
+    getIdToken: async () => '',
+    getIdTokenResult: async () => ({}) as any,
+    reload: async () => undefined,
+    toJSON: () => ({}),
+    phoneNumber: null,
+    providerId: 'google',
+} satisfies FirebaseUser
 
 export const Default: Story = {
-    args: {
-        isLoading: false,
-        error: undefined,
-        showSuccessMessage: false,
-        onLogout: fn(),
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json(mockUser)),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+        
+        // Mock Firebase auth hooks
+        useSignOut.mockReturnValue([fn(), false, undefined])
     },
 }
 
 export const Loading: Story = {
-    args: {
-        ...Default.args,
-        isLoading: true,
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json(mockUser)),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+        
+        // Mock Firebase auth hooks with loading state
+        useSignOut.mockReturnValue([fn(), true, undefined])
     },
 }
 
 export const WithError: Story = {
-    args: {
-        ...Default.args,
-        error: 'Failed to logout. Please try again.',
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => HttpResponse.json(mockUser)),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+        
+        // Mock Firebase auth hooks with error
+        const logoutError = {
+            code: 'auth/network-request-failed',
+            message: 'Failed to logout. Please try again.'
+        }
+        useSignOut.mockReturnValue([fn(), false, logoutError])
     },
 }
 
-export const Success: Story = {
-    args: {
-        ...Default.args,
-        showSuccessMessage: true,
+export const LoggedOut: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get(CAPI('/users'), () => 
+                    HttpResponse.json(null, { status: 401 })
+                ),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
+        
+        // Mock Firebase auth hooks
+        useSignOut.mockReturnValue([fn(), false, undefined])
     },
 }
