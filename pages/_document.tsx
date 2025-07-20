@@ -13,10 +13,10 @@ class MyDocument extends Document {
     render() {
         // Access locale from __NEXT_DATA__ which is available in Document context
         const locale = (this.props as any)?.__NEXT_DATA__?.locale || 'en'
-        const isRTL = i18next.dir(locale)
+        const dir = i18next.dir(locale)
 
         return (
-            <Html lang={locale} dir={isRTL ? 'rtl' : 'ltr'}>
+            <Html lang={locale} dir={dir}>
                 <Head />
                 <body>
                     <Main />
