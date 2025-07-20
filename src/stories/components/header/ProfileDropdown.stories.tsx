@@ -121,7 +121,12 @@ export const UnapprovedUser: Story = {
 export const LoggedOut: Story = {
     parameters: {
         msw: {
-            handlers: [...handlers],
+            handlers: [
+                http.get(CAPI('/users'), () =>
+                    HttpResponse.json(null, { status: 401 })
+                ),
+                ...handlers
+            ],
         },
     },
     beforeEach: () => {
