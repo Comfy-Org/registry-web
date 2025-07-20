@@ -180,13 +180,16 @@ export const AdminUser: Story = {
                     })
                 }),
                 http.get(CAPI('/users/publishers'), () => {
-                    return HttpResponse.json({
-                        id: 'admin-user',
-                        name: 'Admin User',
-                        email: 'admin@example.com',
-                        isAdmin: true,
-                        isApproved: true,
-                    })
+                    return HttpResponse.json([
+                        {
+                            id: 'admin-publisher',
+                            name: 'Admin Publisher',
+                            display_name: 'Admin Publisher',
+                            description: 'Publisher for admin users',
+                            status: PublisherStatus.PublisherStatusActive,
+                            created_at: '2023-01-01T00:00:00Z',
+                        },
+                    ])
                 }),
 
                 ...handlers,
