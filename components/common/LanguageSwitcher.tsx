@@ -11,7 +11,7 @@ interface LanguageSwitcherProps {
 }
 
 const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
-    const { t, changeLanguage, currentLanguage } = useNextTranslation()
+    const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
     const router = useRouter()
 
     // Memoize display names to avoid recreating Intl.DisplayNames instances on every render
@@ -51,7 +51,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     }, [currentLanguage])
 
     return (
-        <Dropdown label={currentLanguageLabel} color="gray" size="xs">
+        <Dropdown label={currentLanguageLabel} color="gray" size="xs" dismissOnClick>
             {SUPPORTED_LANGUAGES.map((langCode) => {
                 const { nameInMyLanguage, nameInThatLanguage } =
                     displayNames[langCode]
@@ -62,13 +62,14 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                         className={clsx('grid grid-cols-2', {
                             'font-bold': isCurrent,
                         })}
-                        // use Link component to allow search engine indexing this page in other languages
-                        // this make content searchable in all languages
                         as={
-                            ((props) => (
+                            // forwardRef for allowing navigate using arrow-keys
+                            (React.forwardRef((props, ref) => (
+                                // use Link component to allow search engine indexing this page in other languages
+                                // this make content searchable in all languages
                                 <Link
                                     {...props}
-                                    itemProp=""
+                                    ref={ref as React.Ref<HTMLAnchorElement>}
                                     onClick={(e) => {
                                         // we need to use changeLanguage() to persist the language change
                                         // and also update the cookie for server-side detection
@@ -77,11 +78,12 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                                     }}
                                     locale={langCode}
                                     href={router.asPath}
+                                    as={router.asPath}
                                     replace
                                 >
                                     {props.children}
                                 </Link>
-                            )) as typeof Link
+                            ))) as typeof Link
                         }
                     >
                         {isCurrent ? (
