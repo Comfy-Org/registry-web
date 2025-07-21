@@ -6,11 +6,8 @@ import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import Link, { LinkProps } from 'next/link'
 
-interface LanguageSwitcherProps {
-    className?: string
-}
 
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
+export default function LanguageSwitcher() {
     const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
     const router = useRouter()
 
@@ -36,8 +33,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                 return acc
             },
             {} as Record<
-                string,
-                { nameInMyLanguage?: string; nameInThatLanguage?: string }
+                string, { nameInMyLanguage?: string; nameInThatLanguage?: string} 
             >
         )
     }, [currentLanguage])
@@ -58,8 +54,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
             dismissOnClick
         >
             {SUPPORTED_LANGUAGES.map((langCode) => {
-                const { nameInMyLanguage, nameInThatLanguage } =
-                    displayNames[langCode]
+                const { nameInMyLanguage, nameInThatLanguage } = displayNames[langCode]
                 const isCurrent = langCode === currentLanguage
                 return (
                     <DropdownItem
@@ -80,7 +75,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                                         // and also update the cookie for server-side detection
                                         e.preventDefault()
                                         changeLanguage(langCode)
-                                    }}
+                                    } }
                                     locale={langCode}
                                     href={router.asPath}
                                     as={router.asPath}
@@ -88,8 +83,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                                 >
                                     {props.children}
                                 </Link>
-                            )) as typeof Link
-                        }
+                            )) as typeof Link}
                     >
                         {isCurrent ? (
                             <span
@@ -120,5 +114,3 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         </Dropdown>
     )
 }
-
-export default LanguageSwitcher
