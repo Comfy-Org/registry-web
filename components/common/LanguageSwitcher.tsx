@@ -6,7 +6,6 @@ import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import Link, { LinkProps } from 'next/link'
 
-
 export default function LanguageSwitcher() {
     const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
     const router = useRouter()
@@ -33,7 +32,8 @@ export default function LanguageSwitcher() {
                 return acc
             },
             {} as Record<
-                string, { nameInMyLanguage?: string; nameInThatLanguage?: string }
+                string,
+                { nameInMyLanguage?: string; nameInThatLanguage?: string }
             >
         )
     }, [currentLanguage])
@@ -54,7 +54,8 @@ export default function LanguageSwitcher() {
             dismissOnClick
         >
             {SUPPORTED_LANGUAGES.map((langCode) => {
-                const { nameInMyLanguage, nameInThatLanguage } = displayNames[langCode]
+                const { nameInMyLanguage, nameInThatLanguage } =
+                    displayNames[langCode]
                 const isCurrent = langCode === currentLanguage
                 return (
                     <DropdownItem
@@ -68,7 +69,9 @@ export default function LanguageSwitcher() {
                                 return (
                                     <Link
                                         {...props}
-                                        ref={ref as React.Ref<HTMLAnchorElement>}
+                                        ref={
+                                            ref as React.Ref<HTMLAnchorElement>
+                                        }
                                         onClick={(e) => {
                                             // we need to use changeLanguage() to persist the language change
                                             // and also update the cookie for server-side detection
@@ -83,7 +86,8 @@ export default function LanguageSwitcher() {
                                         {props.children}
                                     </Link>
                                 )
-                            }) as typeof Link}
+                            }) as typeof Link
+                        }
                     >
                         {isCurrent ? (
                             <span
