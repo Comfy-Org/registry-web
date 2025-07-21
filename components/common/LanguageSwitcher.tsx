@@ -16,37 +16,48 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
 
     // Memoize display names to avoid recreating Intl.DisplayNames instances on every render
     const displayNames = useMemo(() => {
-        const currentLangDisplayNames = new Intl.DisplayNames([currentLanguage], {
-            type: 'language',
-        })
-
-        return SUPPORTED_LANGUAGES.reduce((acc, langCode) => {
-            const nativeLangDisplayNames = new Intl.DisplayNames([langCode], {
+        const currentLangDisplayNames = new Intl.DisplayNames(
+            [currentLanguage],
+            {
                 type: 'language',
-            })
-
-            acc[langCode] = {
-                nameInMyLanguage: currentLangDisplayNames.of(langCode),
-                nameInTheLanguage: nativeLangDisplayNames.of(langCode),
             }
-            return acc
-        }, {} as Record<string, { nameInMyLanguage?: string; nameInTheLanguage?: string }>)
+        )
+
+        return SUPPORTED_LANGUAGES.reduce(
+            (acc, langCode) => {
+                const nativeLangDisplayNames = new Intl.DisplayNames(
+                    [langCode],
+                    {
+                        type: 'language',
+                    }
+                )
+
+                acc[langCode] = {
+                    nameInMyLanguage: currentLangDisplayNames.of(langCode),
+                    nameInTheLanguage: nativeLangDisplayNames.of(langCode),
+                }
+                return acc
+            },
+            {} as Record<
+                string,
+                { nameInMyLanguage?: string; nameInTheLanguage?: string }
+            >
+        )
     }, [currentLanguage])
 
     const currentLanguageLabel = useMemo(() => {
-        return new Intl.DisplayNames([currentLanguage], {
-            type: 'language',
-        }).of(currentLanguage) || 'Language'
+        return (
+            new Intl.DisplayNames([currentLanguage], {
+                type: 'language',
+            }).of(currentLanguage) || 'Language'
+        )
     }, [currentLanguage])
 
     return (
-        <Dropdown
-            label={currentLanguageLabel}
-            color="gray"
-            size="xs"
-        >
+        <Dropdown label={currentLanguageLabel} color="gray" size="xs">
             {SUPPORTED_LANGUAGES.map((langCode) => {
-                const { nameInMyLanguage, nameInTheLanguage } = displayNames[langCode]
+                const { nameInMyLanguage, nameInTheLanguage } =
+                    displayNames[langCode]
                 const isCurrent = langCode === currentLanguage
                 return (
                     <DropdownItem
