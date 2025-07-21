@@ -51,7 +51,12 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     }, [currentLanguage])
 
     return (
-        <Dropdown label={currentLanguageLabel} color="gray" size="xs" dismissOnClick>
+        <Dropdown
+            label={currentLanguageLabel}
+            color="gray"
+            size="xs"
+            dismissOnClick
+        >
             {SUPPORTED_LANGUAGES.map((langCode) => {
                 const { nameInMyLanguage, nameInThatLanguage } =
                     displayNames[langCode]
@@ -64,7 +69,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                         })}
                         as={
                             // forwardRef for allowing navigate using arrow-keys
-                            (React.forwardRef((props, ref) => (
+                            React.forwardRef((props, ref) => (
                                 // use Link component to allow search engine indexing this page in other languages
                                 // this make content searchable in all languages
                                 <Link
@@ -83,7 +88,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                                 >
                                     {props.children}
                                 </Link>
-                            ))) as typeof Link
+                            )) as typeof Link
                         }
                     >
                         {isCurrent ? (
