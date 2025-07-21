@@ -4,7 +4,7 @@ import { Dropdown, DropdownItem } from 'flowbite-react'
 import React, { useMemo } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
+import Link, { LinkProps } from 'next/link'
 
 interface LanguageSwitcherProps {
     className?: string
@@ -21,16 +21,16 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
         })
 
         return SUPPORTED_LANGUAGES.reduce((acc, langCode) => {
-            const nativeLangDisplayNames = new Intl.DisplayNames([langCode], {
+            const thatLangDisplayNames = new Intl.DisplayNames([langCode], {
                 type: 'language',
             })
 
             acc[langCode] = {
                 nameInMyLanguage: currentLangDisplayNames.of(langCode),
-                nameInTheLanguage: nativeLangDisplayNames.of(langCode),
+                nameInThatLanguage: thatLangDisplayNames.of(langCode),
             }
             return acc
-        }, {} as Record<string, { nameInMyLanguage?: string; nameInTheLanguage?: string }>)
+        }, {} as Record<string, { nameInMyLanguage?: string; nameInThatLanguage?: string }>)
     }, [currentLanguage])
 
     const currentLanguageLabel = useMemo(() => {
@@ -46,33 +46,46 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
             size="xs"
         >
             {SUPPORTED_LANGUAGES.map((langCode) => {
-                const { nameInMyLanguage, nameInTheLanguage } = displayNames[langCode]
+                const { nameInMyLanguage, nameInThatLanguage } = displayNames[langCode]
                 const isCurrent = langCode === currentLanguage
                 return (
                     <DropdownItem
                         key={langCode}
-                        className={clsx('grid grid-cols-2 gap-4', {
+                        className={clsx('grid grid-cols-2', {
                             'font-bold': isCurrent,
-                        })}
-                        as={Link}
-                        itemProp=""
-                        locale={langCode}
-                        href={router.asPath}
+                        })}                        
+                        
+                        // use Link component to allow search engine indexing this page in other languages
+                        // this make content searchable in all languages
+                        as={((props) => (
+                            <Link {...props} itemProp=""
+                                onClick={(e) => {
+                                    // we need to use changeLanguage() to persist the language change
+                                    // and also update the cookie for server-side detection
+                                    e.preventDefault()
+                                    changeLanguage(langCode)
+                                }}
+                                locale={langCode}
+                                href={router.asPath}
+                                replace
+                            >{props.children}</Link>)) as typeof Link
+                        }
                     >
-                        {nameInTheLanguage === nameInMyLanguage ? (
+                        {isCurrent ? (
                             <span
                                 className={clsx('text-center col-span-2', {
                                     'font-bold': isCurrent,
                                 })}
                             >
-                                {nameInTheLanguage}
+                                {nameInThatLanguage}
                             </span>
                         ) : (
                             <>
-                                <span className={clsx('text-right')}>
-                                    {nameInTheLanguage}
+                                <span className={clsx('text-right border-r-2 border-gray-300  pr-2 ')}>
+                                    {nameInThatLanguage}
                                 </span>
-                                <span className={clsx('text-left')}>
+                                
+                                <span className={clsx('text-left pl-2')}>
                                     {nameInMyLanguage}
                                 </span>
                             </>
