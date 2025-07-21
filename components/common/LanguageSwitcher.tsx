@@ -33,7 +33,7 @@ export default function LanguageSwitcher() {
                 return acc
             },
             {} as Record<
-                string, { nameInMyLanguage?: string; nameInThatLanguage?: string} 
+                string, { nameInMyLanguage?: string; nameInThatLanguage?: string }
             >
         )
     }, [currentLanguage])
@@ -64,26 +64,26 @@ export default function LanguageSwitcher() {
                         })}
                         as={
                             // forwardRef for allowing navigate using arrow-keys
-                            React.forwardRef((props, ref) => (
-                                // use Link component to allow search engine indexing this page in other languages
-                                // this make content searchable in all languages
-                                <Link
-                                    {...props}
-                                    ref={ref as React.Ref<HTMLAnchorElement>}
-                                    onClick={(e) => {
-                                        // we need to use changeLanguage() to persist the language change
-                                        // and also update the cookie for server-side detection
-                                        e.preventDefault()
-                                        changeLanguage(langCode)
-                                    } }
-                                    locale={langCode}
-                                    href={router.asPath}
-                                    as={router.asPath}
-                                    replace
-                                >
-                                    {props.children}
-                                </Link>
-                            )) as typeof Link}
+                            React.forwardRef(function LanguageLink(props, ref) {
+                                return (
+                                    <Link
+                                        {...props}
+                                        ref={ref as React.Ref<HTMLAnchorElement>}
+                                        onClick={(e) => {
+                                            // we need to use changeLanguage() to persist the language change
+                                            // and also update the cookie for server-side detection
+                                            e.preventDefault()
+                                            changeLanguage(langCode)
+                                        }}
+                                        locale={langCode}
+                                        href={router.asPath}
+                                        as={router.asPath}
+                                        replace
+                                    >
+                                        {props.children}
+                                    </Link>
+                                )
+                            }) as typeof Link}
                     >
                         {isCurrent ? (
                             <span
