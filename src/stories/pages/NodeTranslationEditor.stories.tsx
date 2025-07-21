@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { http, HttpResponse } from 'msw'
 import { CAPI } from '@/src/mocks/handlers'
 import { NodeStatus, PublisherStatus } from '@/src/api/generated'
-import NodeTranslationEditor from '../../../pages/nodes/[nodeId]/translations'
+import NodeTranslationEditor from '../../../pages/nodes/[nodeId]/i18n'
 
 const meta: Meta<typeof NodeTranslationEditor> = {
     title: 'Pages/NodeTranslationEditor',
