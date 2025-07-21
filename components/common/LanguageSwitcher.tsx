@@ -34,17 +34,15 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
     }, [currentLanguage])
 
     const currentLanguageLabel = useMemo(() => {
-        return new Intl.DisplayNames([currentLanguage], {
-            type: 'language',
-        }).of(currentLanguage) || 'Language'
+        return (
+            new Intl.DisplayNames([currentLanguage], {
+                type: 'language',
+            }).of(currentLanguage) || 'Language'
+        )
     }, [currentLanguage])
 
     return (
-        <Dropdown
-            label={currentLanguageLabel}
-            color="gray"
-            size="xs"
-        >
+        <Dropdown label={currentLanguageLabel} color="gray" size="xs">
             {SUPPORTED_LANGUAGES.map((langCode) => {
                 const { nameInMyLanguage, nameInThatLanguage } = displayNames[langCode]
                 const isCurrent = langCode === currentLanguage
