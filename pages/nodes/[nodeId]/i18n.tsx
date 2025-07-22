@@ -62,7 +62,7 @@ const NodeTranslationEditor = () => {
         return {
             ...existingTranslations[selectedLanguage],
             ...translations[selectedLanguage],
-        } as Record<string, unknown>
+        } as Record<string, string | string[]>
     }
 
     const updateTranslation = (field: string, value: string) => {
