@@ -1,14 +1,22 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { LANGUAGE_NAMES } from '@/src/constants'
 import { Dropdown } from 'flowbite-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 
-interface LanguageSwitcherProps {
+export default function LanguageSwitcher({
+    className,
+}: {
     className?: string
-}
+}) {
+    const { i18n, changeLanguage, currentLanguage } = useNextTranslation()
 
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
-    const { t, changeLanguage, currentLanguage } = useNextTranslation()
+    // _document.tsx sets the initial direction based on locale,
+    // here we update document direction by locale without reloading the page
+    const dir = i18n.resolvedLanguage && i18n.dir(i18n.resolvedLanguage)
+    useEffect(() => {
+        if (dir) document.documentElement.dir = dir
+    }, [dir])
+
     return (
         <Dropdown
             label={LANGUAGE_NAMES[currentLanguage] || 'Language'}
@@ -23,10 +31,13 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
                     className={currentLanguage === langCode ? 'font-bold' : ''}
                 >
                     {langName}
+                    {langCode === 'ar' && (
+                        <span className="ml-1 text-xs text-gray-500">
+                            (Beta)
+                        </span>
+                    )}
                 </Dropdown.Item>
             ))}
         </Dropdown>
     )
 }
-
-export default LanguageSwitcher
