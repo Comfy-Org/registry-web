@@ -273,9 +273,7 @@ const NodeTranslationEditor = () => {
                             {field === 'description' ? (
                                 <Textarea
                                     value={
-                                        (currentTranslations[
-                                            field
-                                        ] as string) || ''
+                                        currentTranslations[field] || ''
                                     }
                                     onChange={(e) =>
                                         updateTranslation(field, e.target.value)
