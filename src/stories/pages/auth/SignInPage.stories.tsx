@@ -2,11 +2,6 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import AuthUI from '@/components/AuthUI/AuthUI'
 import { handlers } from '@/src/mocks/handlers'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
-import { 
-    useSignInWithGoogle, 
-    useSignInWithGithub 
-} from 'react-firebase-hooks/auth'
-import { fn } from '@storybook/test'
 
 /**
  * Sign In Page Story - represents the /auth/login page
@@ -49,9 +44,5 @@ export const Default: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged out
         useFirebaseUser.mockReturnValue([null, false, undefined])
-        
-        // Mock Firebase auth hooks
-        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
-        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
