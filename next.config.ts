@@ -36,15 +36,5 @@ const conf: NextConfig = {
         return config
     },
     transpilePackages: ['@algolia/autocomplete-shared'],
-
-    async redirects() {
-        return [
-            {
-                source: '/discord',
-                destination: 'https://discord.gg/comfyorg',
-                permanent: false,
-            },
-        ]
-    },
 }
 export default withMDX(conf)

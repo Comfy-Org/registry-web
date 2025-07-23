@@ -1,5 +1,5 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { Badge, Button, Navbar } from 'flowbite-react'
+import { Button, Navbar } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -83,12 +83,14 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     </span>
                 </Button>
 
-                <Badge
-                    icon={DiscordIcon}
-                    color="gray"
-                    href="/discord"
-                    size="xs"
-                />
+                <a
+                    href="https://discord.gg/comfyorg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center p-1 text-xs font-medium text-gray-500 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                >
+                    <DiscordIcon className="w-3 h-3" />
+                </a>
 
                 {/* place in the most-right to reduce ... when switching language  */}
                 <LanguageSwitcher />
