@@ -69,7 +69,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                         </Button>
                     </>
                 )}
-                <LanguageSwitcher className="mx-2" />
                 <Button
                     href={
                         router.locale && router.locale.startsWith('zh')
@@ -90,6 +89,9 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     href="/discord"
                     size="xs"
                 />
+
+                {/* place in the most-right to reduce ... when switching language  */}
+                <LanguageSwitcher />
             </div>
         </Navbar>
     )
