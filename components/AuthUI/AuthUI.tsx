@@ -74,7 +74,7 @@ const AuthUI: React.FC<{}> = ({}) => {
 
     return (
         <section>
-            <div className="absolute top-8 right-8 z-10">
+            <div className="absolute top-8 right-8 z-10 left-8 flex justify-end">
                 <LanguageSwitcher />
             </div>
 
