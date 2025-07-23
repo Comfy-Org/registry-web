@@ -5,8 +5,6 @@ import { http, HttpResponse } from 'msw'
 import { User } from '@/src/api/generated'
 import { User as FirebaseUser } from 'firebase/auth'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
-import { useSignOut } from 'react-firebase-hooks/auth'
-import { fn } from '@storybook/test'
 
 const meta: Meta<typeof Logout> = {
     title: 'Components/Auth/Logout',
@@ -73,9 +71,6 @@ export const Default: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged in
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
-        
-        // Mock Firebase auth hooks
-        useSignOut.mockReturnValue([fn(), false, undefined])
     },
 }
 
@@ -91,9 +86,6 @@ export const Loading: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged in
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
-        
-        // Mock Firebase auth hooks with loading state
-        useSignOut.mockReturnValue([fn(), true, undefined])
     },
 }
 
@@ -109,13 +101,6 @@ export const WithError: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged in
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
-        
-        // Mock Firebase auth hooks with error
-        const logoutError = {
-            code: 'auth/network-request-failed',
-            message: 'Failed to logout. Please try again.'
-        }
-        useSignOut.mockReturnValue([fn(), false, logoutError])
     },
 }
 
@@ -123,7 +108,7 @@ export const LoggedOut: Story = {
     parameters: {
         msw: {
             handlers: [
-                http.get(CAPI('/users'), () => 
+                http.get(CAPI('/users'), () =>
                     HttpResponse.json(null, { status: 401 })
                 ),
                 ...handlers,
@@ -133,8 +118,5 @@ export const LoggedOut: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged out
         useFirebaseUser.mockReturnValue([null, false, undefined])
-        
-        // Mock Firebase auth hooks
-        useSignOut.mockReturnValue([fn(), false, undefined])
     },
 }

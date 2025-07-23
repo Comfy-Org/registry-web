@@ -2,8 +2,6 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import Logout from '@/components/AuthUI/Logout'
 import { handlers } from '@/src/mocks/handlers'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
-import { useSignOut } from 'react-firebase-hooks/auth'
-import { fn } from '@storybook/test'
 import { User as FirebaseUser } from 'firebase/auth'
 
 /**
@@ -68,8 +66,5 @@ export const Default: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged in
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
-        
-        // Mock Firebase auth hooks
-        useSignOut.mockReturnValue([fn(), false, undefined])
     },
 }
