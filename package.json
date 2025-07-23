@@ -15,9 +15,19 @@
     "i18n": "bun scripts/scan-i18n.ts",
     "lint": "next lint",
     "orval": "bunx orval@latest",
+    "prepare": "husky",
     "start": "next start",
     "storybook": "storybook dev -p 6006",
     "test": "bun test --coverage"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "next lint --fix --file",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@algolia/autocomplete-core": "^1.19.2",
@@ -112,7 +122,9 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-storybook": "^9.0.17",
     "glob": "^11.0.3",
+    "husky": "^9.1.7",
     "i18next-typescript-parser": "^0.3.0",
+    "lint-staged": "^16.1.2",
     "msw": "^2.10.3",
     "msw-storybook-addon": "^2.0.5",
     "orval": "^7.9.0",
