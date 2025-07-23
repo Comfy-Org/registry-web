@@ -5,11 +5,6 @@ import { http, HttpResponse } from 'msw'
 import { User } from '@/src/api/generated'
 import { User as FirebaseUser } from 'firebase/auth'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
-import { 
-    useSignInWithGoogle, 
-    useSignInWithGithub 
-} from 'react-firebase-hooks/auth'
-import { fn } from '@storybook/test'
 
 const meta: Meta<typeof AuthUI> = {
     title: 'Components/Auth/SignIn',
@@ -68,7 +63,7 @@ export const Default: Story = {
     parameters: {
         msw: {
             handlers: [
-                http.get(CAPI('/users'), () => 
+                http.get(CAPI('/users'), () =>
                     HttpResponse.json(null, { status: 401 })
                 ),
                 ...handlers,
@@ -78,10 +73,6 @@ export const Default: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged out
         useFirebaseUser.mockReturnValue([null, false, undefined])
-        
-        // Mock Firebase auth hooks
-        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
-        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
 
@@ -89,7 +80,7 @@ export const Loading: Story = {
     parameters: {
         msw: {
             handlers: [
-                http.get(CAPI('/users'), () => 
+                http.get(CAPI('/users'), () =>
                     HttpResponse.json(null, { status: 401 })
                 ),
                 ...handlers,
@@ -99,10 +90,6 @@ export const Loading: Story = {
     beforeEach: () => {
         // Mock Firebase user as loading
         useFirebaseUser.mockReturnValue([null, true, undefined])
-        
-        // Mock Firebase auth hooks with Google loading state
-        useSignInWithGoogle.mockReturnValue([fn(), undefined, true, undefined])
-        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
 
@@ -110,7 +97,7 @@ export const GoogleError: Story = {
     parameters: {
         msw: {
             handlers: [
-                http.get(CAPI('/users'), () => 
+                http.get(CAPI('/users'), () =>
                     HttpResponse.json(null, { status: 401 })
                 ),
                 ...handlers,
@@ -120,14 +107,6 @@ export const GoogleError: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged out
         useFirebaseUser.mockReturnValue([null, false, undefined])
-        
-        // Mock Firebase auth hooks with Google error
-        const googleError = {
-            code: 'auth/account-exists-with-different-credential',
-            message: 'Account already exists with different credential'
-        }
-        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, googleError])
-        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
 
@@ -135,7 +114,7 @@ export const GitHubError: Story = {
     parameters: {
         msw: {
             handlers: [
-                http.get(CAPI('/users'), () => 
+                http.get(CAPI('/users'), () =>
                     HttpResponse.json(null, { status: 401 })
                 ),
                 ...handlers,
@@ -145,14 +124,6 @@ export const GitHubError: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged out
         useFirebaseUser.mockReturnValue([null, false, undefined])
-        
-        // Mock Firebase auth hooks with GitHub error
-        const githubError = {
-            code: 'auth/network-request-failed',
-            message: 'Network error. Please try again.'
-        }
-        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
-        useSignInWithGithub.mockReturnValue([fn(), undefined, false, githubError])
     },
 }
 
@@ -168,9 +139,5 @@ export const AlreadyLoggedIn: Story = {
     beforeEach: () => {
         // Mock Firebase user as logged in (component should redirect)
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
-        
-        // Mock Firebase auth hooks
-        useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
-        useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
     },
 }
