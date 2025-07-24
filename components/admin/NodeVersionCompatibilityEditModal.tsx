@@ -78,7 +78,7 @@ export default function NodeVersionCompatibilityEditModal({
                 .split('\n')
                 .map((item) => item.trim())
                 .filter(Boolean)
-                .toSorted()
+                .sort()
                 // uniq
                 .reduce<string[]>((acc, item) => {
                     if (!acc.includes(item)) acc.push(item)
