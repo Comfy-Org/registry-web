@@ -10,7 +10,7 @@ const PageLayout = () => {
             id: 'node-1',
             name: 'Image Upscaler',
             description: 'A node that upscales images using AI technology',
-            icon: 'https://via.placeholder.com/200',
+            icon: 'https://picsum.photos/200/200',
             downloads: 2500,
             rating: 4.5,
         },
@@ -19,7 +19,7 @@ const PageLayout = () => {
             name: 'Text Generator',
             description:
                 'Generates text based on prompts using advanced language models',
-            icon: 'https://via.placeholder.com/200',
+            icon: 'https://picsum.photos/200/200',
             downloads: 1800,
             rating: 4.2,
         },
@@ -28,7 +28,7 @@ const PageLayout = () => {
             name: 'Color Palette Generator',
             description:
                 'Creates harmonious color palettes from images or base colors',
-            icon: 'https://via.placeholder.com/200',
+            icon: 'https://picsum.photos/200/200',
             downloads: 1200,
             rating: 3.9,
         },

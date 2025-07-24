@@ -6,15 +6,16 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import {
-    useAuthState,
     useSignInWithGithub,
     useSignInWithGoogle,
 } from 'react-firebase-hooks/auth'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
+import logoBluePng from '@/src/assets/images/logo_blue.png'
 import app from '../../src/firebase'
 import { useFromUrl } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const { t } = useNextTranslation()
@@ -34,7 +35,7 @@ const AuthUI: React.FC<{}> = ({}) => {
     ] = useSignInWithGithub(auth)
 
     // redirect back when user is logged in
-    const [firebaseUser, _loadingFirebaseUser] = useAuthState(auth)
+    const [firebaseUser, _loadingFirebaseUser] = useFirebaseUser()
     const loggedIn = Boolean(firebaseUser)
     const fromUrl = useFromUrl()
     React.useEffect(() => {
@@ -73,7 +74,7 @@ const AuthUI: React.FC<{}> = ({}) => {
 
     return (
         <section>
-            <div className="absolute top-8 right-8 z-10">
+            <div className="absolute top-8 right-8 z-10 left-8 flex justify-end">
                 <LanguageSwitcher />
             </div>
 
@@ -83,7 +84,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                         <Link className="flex justify-center" href={'/'}>
                             <Image
                                 alt="Comfy Logo"
-                                src="/images/logo_blue.png"
+                                src={logoBluePng}
                                 className="w-16 h-16 mr-3 sm:w-32 sm:h-32 rounded-lg"
                                 width={128}
                                 height={128}

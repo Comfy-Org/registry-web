@@ -1,22 +1,9 @@
 import Header from '@/components/Header/Header'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { WithQueryClientProvider } from '../WithQueryClientProvider'
 
-// Create a wrapper component to provide the query client
-const HeaderWithQueryClient = (props) => {
-    // Note: We're not modifying window.location as it's read-only
-    // Instead, we'll use the already existing location object
-
-    return (
-        <WithQueryClientProvider>
-            <Header {...props} />
-        </WithQueryClientProvider>
-    )
-}
-
-const meta: Meta<typeof HeaderWithQueryClient> = {
+const meta: Meta<typeof Header> = {
     title: 'Components/Header/Header',
-    component: HeaderWithQueryClient,
+    component: Header,
     parameters: {
         layout: 'fullscreen',
         backgrounds: { default: 'dark' },

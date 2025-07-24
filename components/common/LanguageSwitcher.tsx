@@ -1,32 +1,120 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { LANGUAGE_NAMES } from '@/src/constants'
-import { Dropdown } from 'flowbite-react'
-import React from 'react'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
+import { Dropdown, DropdownItem } from 'flowbite-react'
+import React, { useMemo } from 'react'
+import clsx from 'clsx'
+import { useRouter } from 'next/router'
+import Link, { LinkProps } from 'next/link'
 
-interface LanguageSwitcherProps {
-    className?: string
-}
+export default function LanguageSwitcher() {
+    const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
+    const router = useRouter()
 
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ className }) => {
-    const { t, changeLanguage, currentLanguage } = useNextTranslation()
+    // Memoize display names to avoid recreating Intl.DisplayNames instances on every render
+    const displayNames = useMemo(() => {
+        const currentLangDisplayNames = new Intl.DisplayNames(
+            [currentLanguage],
+            {
+                type: 'language',
+            }
+        )
+
+        return SUPPORTED_LANGUAGES.reduce(
+            (acc, langCode) => {
+                const thatLangDisplayNames = new Intl.DisplayNames([langCode], {
+                    type: 'language',
+                })
+
+                acc[langCode] = {
+                    nameInMyLanguage: currentLangDisplayNames.of(langCode),
+                    nameInThatLanguage: thatLangDisplayNames.of(langCode),
+                }
+                return acc
+            },
+            {} as Record<
+                string,
+                { nameInMyLanguage?: string; nameInThatLanguage?: string }
+            >
+        )
+    }, [currentLanguage])
+
+    const currentLanguageLabel = useMemo(() => {
+        return (
+            new Intl.DisplayNames([currentLanguage], {
+                type: 'language',
+            }).of(currentLanguage) || 'Language'
+        )
+    }, [currentLanguage])
+
     return (
         <Dropdown
-            label={LANGUAGE_NAMES[currentLanguage] || 'Language'}
+            label={currentLanguageLabel}
             color="gray"
-            className={className}
             size="xs"
+            dismissOnClick
         >
-            {Object.entries(LANGUAGE_NAMES).map(([langCode, langName]) => (
-                <Dropdown.Item
-                    key={langCode}
-                    onClick={() => changeLanguage(langCode)}
-                    className={currentLanguage === langCode ? 'font-bold' : ''}
-                >
-                    {langName}
-                </Dropdown.Item>
-            ))}
+            {SUPPORTED_LANGUAGES.map((langCode) => {
+                const { nameInMyLanguage, nameInThatLanguage } =
+                    displayNames[langCode]
+                const isCurrent = langCode === currentLanguage
+                return (
+                    <DropdownItem
+                        key={langCode}
+                        className={clsx('grid grid-cols-2', {
+                            'font-bold': isCurrent,
+                        })}
+                        as={
+                            // forwardRef for allowing navigate using arrow-keys
+                            React.forwardRef(function LanguageLink(props, ref) {
+                                return (
+                                    <Link
+                                        {...props}
+                                        ref={
+                                            ref as React.Ref<HTMLAnchorElement>
+                                        }
+                                        onClick={(e) => {
+                                            // we need to use changeLanguage() to persist the language change
+                                            // and also update the cookie for server-side detection
+                                            e.preventDefault()
+                                            changeLanguage(langCode)
+                                        }}
+                                        locale={langCode}
+                                        href={router.asPath}
+                                        as={router.asPath}
+                                        replace
+                                    >
+                                        {props.children}
+                                    </Link>
+                                )
+                            }) as typeof Link
+                        }
+                    >
+                        {isCurrent ? (
+                            <span
+                                className={clsx('text-center col-span-2', {
+                                    'font-bold': isCurrent,
+                                })}
+                            >
+                                {nameInThatLanguage}
+                            </span>
+                        ) : (
+                            <>
+                                <span
+                                    className={clsx(
+                                        'text-right border-r-2 border-gray-300  pr-2 '
+                                    )}
+                                >
+                                    {nameInThatLanguage}
+                                </span>
+
+                                <span className={clsx('text-left pl-2')}>
+                                    {nameInMyLanguage}
+                                </span>
+                            </>
+                        )}
+                    </DropdownItem>
+                )
+            })}
         </Dropdown>
     )
 }
-
-export default LanguageSwitcher
