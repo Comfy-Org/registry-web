@@ -14,8 +14,8 @@ export function useSearchParameter<T>(
         undefined === router.query[key]
             ? toValue()
             : typeof router.query[key] === 'string'
-              ? toValue(router.query[key])
-              : toValue(...router.query[key])
+              ? toValue(router.query[key] as string)
+              : toValue(...(router.query[key] as string[]))
 
     // Function to update the search parameter
     const setValue = useCallback(
