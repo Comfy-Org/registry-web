@@ -67,6 +67,23 @@ const Nodes: React.FC = () => {
                 />
             </div>
 
+            {/* Publish instruction banner */}
+            <div className="mb-6 p-4 bg-blue-900/20 border border-blue-700/30 rounded-lg">
+                <p className="text-blue-200 text-sm">
+                    {t(
+                        'Wanna publish my first node? Check publish tutorial here:'
+                    )}{' '}
+                    <a
+                        href="https://docs.comfy.org/registry/publishing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 underline"
+                    >
+                        {t('Publishing Nodes - ComfyUI')}
+                    </a>
+                </p>
+            </div>
+
             {data?.map((publisher, index) => (
                 <PublisherNodes
                     key={index}
