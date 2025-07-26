@@ -298,7 +298,7 @@ function NodeList() {
                         id="filter-node-id"
                         placeholder={t('Search by node ID or name')}
                         defaultValue={queryForNodeId || ''}
-                        className="flex-1"
+                        className="flex-1 dark"
                     />
                     <Button color="blue">{t('Search')}</Button>
                 </form>
@@ -354,16 +354,16 @@ function NodeList() {
             </div>
 
             <div className="overflow-x-auto">
-                <Table hoverable className="min-w-full">
-                    <Table.Head>
-                        <Table.HeadCell>{t('Node')}</Table.HeadCell>
-                        <Table.HeadCell>{t('Publisher')}</Table.HeadCell>
-                        <Table.HeadCell>{t('Category')}</Table.HeadCell>
-                        <Table.HeadCell>{t('Tags')}</Table.HeadCell>
-                        <Table.HeadCell>{t('Status')}</Table.HeadCell>
-                        <Table.HeadCell>{t('Actions')}</Table.HeadCell>
+                <Table hoverable className="min-w-full dark">
+                    <Table.Head className="dark">
+                        <Table.HeadCell className="dark">{t('Node')}</Table.HeadCell>
+                        <Table.HeadCell className="dark">{t('Publisher')}</Table.HeadCell>
+                        <Table.HeadCell className="dark">{t('Category')}</Table.HeadCell>
+                        <Table.HeadCell className="dark">{t('Tags')}</Table.HeadCell>
+                        <Table.HeadCell className="dark">{t('Status')}</Table.HeadCell>
+                        <Table.HeadCell className="dark">{t('Actions')}</Table.HeadCell>
                     </Table.Head>
-                    <Table.Body className="divide-y">
+                    <Table.Body className="divide-y dark">
                         {filteredNodes.map((node) => (
                             <Table.Row
                                 key={node.id}
@@ -383,7 +383,7 @@ function NodeList() {
                                         </Link>
                                     </div>
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="dark">
                                     {node.publisher?.name && (
                                         <div>
                                             <div>{node.publisher.name}</div>
@@ -393,8 +393,8 @@ function NodeList() {
                                         </div>
                                     )}
                                 </Table.Cell>
-                                <Table.Cell>{node.category || '-'}</Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="dark">{node.category || '-'}</Table.Cell>
+                                <Table.Cell className="dark">
                                     {node.tags?.length ? (
                                         <div className="flex flex-wrap gap-1">
                                             {node.tags.map((tag, index) => (
@@ -410,7 +410,7 @@ function NodeList() {
                                         '-'
                                     )}
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="dark">
                                     <span
                                         className={`px-2 py-1 text-xs font-medium rounded ${
                                             node.status ===
@@ -428,7 +428,7 @@ function NodeList() {
                                         ) || 'Unknown'}
                                     </span>
                                 </Table.Cell>
-                                <Table.Cell>
+                                <Table.Cell className="dark">
                                     <Button
                                         size="sm"
                                         onClick={() => openEditModal(node)}
@@ -459,14 +459,14 @@ function NodeList() {
             </div>
 
             {/* Edit Modal */}
-            <Modal show={!!editingNode} onClose={closeEditModal} size="lg">
-                <Modal.Header>
+            <Modal show={!!editingNode} onClose={closeEditModal} size="lg" className="dark">
+                <Modal.Header className="dark">
                     {t('Edit Node')}: {editingNode?.name}
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className="dark">
                     <div className="space-y-6" onKeyDown={handleKeyDown}>
                         <div>
-                            <Label htmlFor="category">{t('Category')}</Label>
+                            <Label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{t('Category')}</Label>
                             <TextInput
                                 id="category"
                                 value={editFormData.category}
@@ -477,10 +477,11 @@ function NodeList() {
                                     }))
                                 }
                                 placeholder={t('Enter category')}
+                                className="dark"
                             />
                         </div>
                         <div>
-                            <Label htmlFor="tags">
+                            <Label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 {t('Tags')} ({t('comma separated')})
                             </Label>
                             <TextInput
@@ -495,14 +496,15 @@ function NodeList() {
                                 placeholder={t(
                                     'Enter tags separated by commas'
                                 )}
+                                className="dark"
                             />
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
                             {t('Press Ctrl+Enter to save')}
                         </div>
                     </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="dark">
                     <Button
                         onClick={handleSave}
                         disabled={updateNodeMutation.isPending}
