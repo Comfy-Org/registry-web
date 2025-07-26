@@ -301,6 +301,7 @@
   "Supported Accelerators": "サポートされている加速器",
   "Supported Operating Systems": "サポートされているオペレーティングシステム",
   "Tags": "タグ",
+  "Tags (comma separated)": "タグ（コンマ区切り）",
   "There was an error loading the nodes. Please try again later.": "ノードの読み込み中にエラーが発生しました。後でもう一度お試しください。",
   "There was an unexpected error verifying your repository permissions. Please try again.": "リポジトリ権限を確認中に予期しないエラーが発生しました。もう一度お試しください。",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "これらのノードはいずれのパブリッシャーにも請求されていません。パブリッシャーによって請求されるか、管理者によって編集することができます。",
