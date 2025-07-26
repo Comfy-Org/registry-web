@@ -518,67 +518,72 @@ function NodeList() {
                                     {t('Quick Add Tags')}:
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    {[
-                                        'dev',
-                                        'unsafe',
-                                        'fragile_deps',
-                                        'tricky_deps',
-                                        'poor_desc',
-                                        'unmaintained',
-                                    ].map((tag) => {
+                                    {(() => {
                                         const currentTags = editFormData.tags
                                             .split(',')
                                             .map((t) => t.trim())
                                             .filter((t) => t.length > 0)
-                                        const isSelected =
-                                            currentTags.includes(tag)
 
-                                        return (
-                                            <button
-                                                key={tag}
-                                                type="button"
-                                                onClick={() => {
-                                                    if (isSelected) {
-                                                        // Remove tag
-                                                        const newTags =
-                                                            currentTags.filter(
-                                                                (t) => t !== tag
+                                        return [
+                                            'dev',
+                                            'unsafe',
+                                            'fragile_deps',
+                                            'tricky_deps',
+                                            'poor_desc',
+                                            'unmaintained',
+                                        ].map((tag) => {
+                                            const isSelected =
+                                                currentTags.includes(tag)
+
+                                            return (
+                                                <button
+                                                    key={tag}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        if (isSelected) {
+                                                            // Remove tag
+                                                            const newTags =
+                                                                currentTags.filter(
+                                                                    (t) =>
+                                                                        t !==
+                                                                        tag
+                                                                )
+                                                            setEditFormData(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    tags: newTags.join(
+                                                                        ', '
+                                                                    ),
+                                                                })
                                                             )
-                                                        setEditFormData(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                tags: newTags.join(
-                                                                    ', '
-                                                                ),
-                                                            })
-                                                        )
-                                                    } else {
-                                                        // Add tag
-                                                        const newTags = [
-                                                            ...currentTags,
-                                                            tag,
-                                                        ]
-                                                        setEditFormData(
-                                                            (prev) => ({
-                                                                ...prev,
-                                                                tags: newTags.join(
-                                                                    ', '
-                                                                ),
-                                                            })
-                                                        )
-                                                    }
-                                                }}
-                                                className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
-                                                    isSelected
-                                                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
-                                                }`}
-                                            >
-                                                {isSelected ? '✓ ' : '+ '}
-                                                {tag}
-                                            </button>
-                                        )
-                                    })}
+                                                        } else {
+                                                            // Add tag
+                                                            const newTags = [
+                                                                ...currentTags,
+                                                                tag,
+                                                            ]
+                                                            setEditFormData(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    tags: newTags.join(
+                                                                        ', '
+                                                                    ),
+                                                                })
+                                                            )
+                                                        }
+                                                    }}
+                                                    className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                                                        isSelected
+                                                            ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
+                                                    }`}
+                                                >
+                                                    {isSelected ? '✓ ' : '+ '}
+                                                    {tag}
+                                                </button>
+                                            )
+                                        })
+                                    })()}
                                 </div>
                             </div>
 
