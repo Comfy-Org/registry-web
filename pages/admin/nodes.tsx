@@ -1,0 +1,341 @@
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
+import {
+    Breadcrumb,
+    Button,
+    Modal,
+    Spinner,
+    Table,
+    TextInput,
+    Label,
+} from 'flowbite-react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { HiHome, HiPencil } from 'react-icons/hi'
+import { MdOpenInNew } from 'react-icons/md'
+import { toast } from 'react-toastify'
+import {
+    Node,
+    NodeStatus,
+    useListAllNodes,
+    useUpdateNode,
+    useGetUser,
+} from '@/src/api/generated'
+
+function NodeList() {
+    const { t } = useNextTranslation()
+    const router = useRouter()
+    const [page, setPage] = React.useState<number>(1)
+    const [editingNode, setEditingNode] = useState<Node | null>(null)
+    const [editFormData, setEditFormData] = useState({ tags: '', category: '' })
+    const queryClient = useQueryClient()
+    const { data: user } = useGetUser()
+
+    // Handle page from URL
+    React.useEffect(() => {
+        if (router.query.page) {
+            setPage(parseInt(router.query.page as string))
+        }
+    }, [router.query.page])
+
+    const getAllNodesQuery = useListAllNodes({
+        page: page,
+        limit: 10,
+        include_banned: true,
+    })
+
+    const updateNodeMutation = useUpdateNode()
+
+    React.useEffect(() => {
+        if (getAllNodesQuery.isError) {
+            toast.error(t('Error getting nodes'))
+        }
+    }, [getAllNodesQuery, t])
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage)
+        router.push(
+            {
+                pathname: router.pathname,
+                query: { ...router.query, page: newPage },
+            },
+            undefined,
+            { shallow: true }
+        )
+    }
+
+    const openEditModal = (node: Node) => {
+        setEditingNode(node)
+        setEditFormData({
+            tags: node.tags?.join(', ') || '',
+            category: node.category || '',
+        })
+    }
+
+    const closeEditModal = () => {
+        setEditingNode(null)
+        setEditFormData({ tags: '', category: '' })
+    }
+
+    const handleSave = async () => {
+        if (!editingNode || !editingNode.publisher?.id) {
+            toast.error(
+                t('Unable to save: missing node or publisher information')
+            )
+            return
+        }
+
+        const updatedNode: Node = {
+            ...editingNode,
+            tags: editFormData.tags
+                .split(',')
+                .map((tag) => tag.trim())
+                .filter((tag) => tag.length > 0),
+            category: editFormData.category.trim() || undefined,
+        }
+
+        try {
+            await updateNodeMutation.mutateAsync({
+                publisherId: editingNode.publisher.id,
+                nodeId: editingNode.id!,
+                data: updatedNode,
+            })
+
+            toast.success(t('Node updated successfully'))
+            closeEditModal()
+            queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+        } catch (error) {
+            console.error('Error updating node:', error)
+            toast.error(t('Error updating node'))
+        }
+    }
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault()
+            handleSave()
+        }
+    }
+
+    if (getAllNodesQuery.isLoading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <Spinner />
+            </div>
+        )
+    }
+
+    const nodes = getAllNodesQuery.data?.nodes || []
+    const totalPages = Math.ceil((getAllNodesQuery.data?.total || 0) / 10)
+
+    return (
+        <div>
+            <Breadcrumb className="py-4 px-4">
+                <Breadcrumb.Item
+                    href="/"
+                    icon={HiHome}
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/')
+                    }}
+                    className="dark"
+                >
+                    {t('Home')}
+                </Breadcrumb.Item>
+                <Breadcrumb.Item
+                    href="/admin"
+                    onClick={(e) => {
+                        e.preventDefault()
+                        router.push('/admin')
+                    }}
+                    className="dark"
+                >
+                    {t('Admin Dashboard')}
+                </Breadcrumb.Item>
+                <Breadcrumb.Item className="dark">
+                    {t('Manage Nodes')}
+                </Breadcrumb.Item>
+            </Breadcrumb>
+
+            <div className="flex flex-col gap-4 mb-6">
+                <h1 className="text-2xl font-bold text-gray-200">
+                    {t('Node Management')}
+                </h1>
+                <div className="text-lg font-bold text-gray-200">
+                    {t('Total Results')}: {getAllNodesQuery.data?.total || 0}
+                </div>
+            </div>
+
+            <div className="overflow-x-auto">
+                <Table hoverable className="min-w-full">
+                    <Table.Head>
+                        <Table.HeadCell>{t('Node')}</Table.HeadCell>
+                        <Table.HeadCell>{t('Publisher')}</Table.HeadCell>
+                        <Table.HeadCell>{t('Category')}</Table.HeadCell>
+                        <Table.HeadCell>{t('Tags')}</Table.HeadCell>
+                        <Table.HeadCell>{t('Status')}</Table.HeadCell>
+                        <Table.HeadCell>{t('Actions')}</Table.HeadCell>
+                    </Table.Head>
+                    <Table.Body className="divide-y">
+                        {nodes.map((node) => (
+                            <Table.Row
+                                key={node.id}
+                                className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                            >
+                                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                                    <div className="flex items-center gap-2">
+                                        <span>{node.name}</span>
+                                        <span className="text-sm text-gray-500">
+                                            @{node.id}
+                                        </span>
+                                        <Link
+                                            target="_blank"
+                                            href={`/nodes/${node.id}`}
+                                        >
+                                            <MdOpenInNew className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {node.publisher?.name && (
+                                        <div>
+                                            <div>{node.publisher.name}</div>
+                                            <div className="text-sm text-gray-500">
+                                                {node.publisher.id}
+                                            </div>
+                                        </div>
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>{node.category || '-'}</Table.Cell>
+                                <Table.Cell>
+                                    {node.tags?.length ? (
+                                        <div className="flex flex-wrap gap-1">
+                                            {node.tags.map((tag, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        '-'
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <span
+                                        className={`px-2 py-1 text-xs font-medium rounded ${
+                                            node.status ===
+                                            NodeStatus.NodeStatusActive
+                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                                : node.status ===
+                                                    NodeStatus.NodeStatusBanned
+                                                  ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                                                  : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                                        }`}
+                                    >
+                                        {node.status?.replace(
+                                            'NodeStatus',
+                                            ''
+                                        ) || 'Unknown'}
+                                    </span>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Button
+                                        size="sm"
+                                        onClick={() => openEditModal(node)}
+                                        disabled={!node.publisher?.id}
+                                        title={
+                                            !node.publisher?.id
+                                                ? t(
+                                                      'No publisher information available'
+                                                  )
+                                                : t('Edit node')
+                                        }
+                                    >
+                                        <HiPencil className="w-4 h-4" />
+                                    </Button>
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table>
+            </div>
+
+            <div className="py-8">
+                <CustomPagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            </div>
+
+            {/* Edit Modal */}
+            <Modal show={!!editingNode} onClose={closeEditModal} size="lg">
+                <Modal.Header>
+                    {t('Edit Node')}: {editingNode?.name}
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="space-y-6" onKeyDown={handleKeyDown}>
+                        <div>
+                            <Label htmlFor="category">{t('Category')}</Label>
+                            <TextInput
+                                id="category"
+                                value={editFormData.category}
+                                onChange={(e) =>
+                                    setEditFormData((prev) => ({
+                                        ...prev,
+                                        category: e.target.value,
+                                    }))
+                                }
+                                placeholder={t('Enter category')}
+                            />
+                        </div>
+                        <div>
+                            <Label htmlFor="tags">
+                                {t('Tags')} ({t('comma separated')})
+                            </Label>
+                            <TextInput
+                                id="tags"
+                                value={editFormData.tags}
+                                onChange={(e) =>
+                                    setEditFormData((prev) => ({
+                                        ...prev,
+                                        tags: e.target.value,
+                                    }))
+                                }
+                                placeholder={t(
+                                    'Enter tags separated by commas'
+                                )}
+                            />
+                        </div>
+                        <div className="text-sm text-gray-500">
+                            {t('Press Ctrl+Enter to save')}
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button
+                        onClick={handleSave}
+                        disabled={updateNodeMutation.isPending}
+                    >
+                        {updateNodeMutation.isPending ? (
+                            <Spinner size="sm" />
+                        ) : (
+                            t('Save')
+                        )}
+                    </Button>
+                    <Button color="gray" onClick={closeEditModal}>
+                        {t('Cancel')}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
+    )
+}
+
+export default withAdmin(NodeList)

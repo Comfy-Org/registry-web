@@ -77,6 +77,13 @@ function AdminDashboard() {
                         {t('Node Version Compatibility')}
                     </span>
                 </Link>
+                <Link
+                    href="/admin/nodes"
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg w-full h-48 flex flex-col items-center justify-center p-6 transition-colors"
+                >
+                    <HiOutlineCollection className="h-20 w-20 mb-4" />
+                    <span className="text-center">{t('Manage Nodes')}</span>
+                </Link>
                 {/* Add more admin links here as needed */}
             </div>
         </div>
