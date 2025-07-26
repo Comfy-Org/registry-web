@@ -1,5 +1,9 @@
 import PublisherDetail from '@/components/publisher/PublisherDetail'
-import { Publisher, PublisherStatus, PersonalAccessToken } from '@/src/api/generated'
+import {
+    Publisher,
+    PublisherStatus,
+    PersonalAccessToken,
+} from '@/src/api/generated'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { CAPI, handlers } from '@/src/mocks/handlers'
 import { http, HttpResponse } from 'msw'
