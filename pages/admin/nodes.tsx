@@ -382,17 +382,19 @@ function NodeList() {
                                 className="bg-white dark:border-gray-700 dark:bg-gray-800"
                             >
                                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                                    <div className="flex items-center gap-2">
-                                        <span>{node.name}</span>
-                                        <span className="text-sm text-gray-500">
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span>{node.name}</span>
+                                            <Link
+                                                target="_blank"
+                                                href={`/nodes/${node.id}`}
+                                            >
+                                                <MdOpenInNew className="w-4 h-4" />
+                                            </Link>
+                                        </div>
+                                        <div className="text-sm text-gray-500">
                                             @{node.id}
-                                        </span>
-                                        <Link
-                                            target="_blank"
-                                            href={`/nodes/${node.id}`}
-                                        >
-                                            <MdOpenInNew className="w-4 h-4" />
-                                        </Link>
+                                        </div>
                                     </div>
                                 </Table.Cell>
                                 <Table.Cell className="dark">
@@ -509,7 +511,7 @@ function NodeList() {
                                 htmlFor="tags"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
-                                {t('Tags')}
+                                {t('Tags (comma separated)')}
                             </Label>
 
                             {/* Predefined Tags */}

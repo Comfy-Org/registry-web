@@ -301,6 +301,7 @@
   "Supported Accelerators": "Aceleradores compatibles",
   "Supported Operating Systems": "Sistemas Operativos Compatibles",
   "Tags": "Etiquetas",
+  "Tags (comma separated)": "Etiquetas (separadas por comas)",
   "There was an error loading the nodes. Please try again later.": "Hubo un error al cargar los nodos. Por favor, inténtelo de nuevo más tarde.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "Hubo un error inesperado al verificar los permisos de su repositorio. Por favor, inténtelo de nuevo.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "Estos nodos no han sido reclamados por ningún editor. Pueden ser reclamados por los editores o editados por los administradores.",

@@ -301,6 +301,7 @@
   "Supported Accelerators": "Поддерживаемые ускорители",
   "Supported Operating Systems": "Поддерживаемые операционные системы",
   "Tags": "Теги",
+  "Tags (comma separated)": "Теги (разделенные запятыми)",
   "There was an error loading the nodes. Please try again later.": "Произошла ошибка при загрузке узлов. Пожалуйста, попробуйте позже.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "При проверке разрешений вашего репозитория произошла непредвиденная ошибка. Пожалуйста, попробуйте снова.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "Эти узлы не заявлены ни одним издателем. Они могут быть заявлены издателями или отредактированы администраторами.",

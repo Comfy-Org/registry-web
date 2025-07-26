@@ -301,6 +301,7 @@
   "Supported Accelerators": "지원되는 가속기",
   "Supported Operating Systems": "지원되는 운영 체제",
   "Tags": "태그",
+  "Tags (comma separated)": "태그 (쉼표로 구분)",
   "There was an error loading the nodes. Please try again later.": "노드를 로드하는 중 오류가 발생했습니다. 나중에 다시 시도하십시오.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "저장소 권한을 확인하는 중 예상치 못한 오류가 발생했습니다. 다시 시도해 주세요.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "이 노드들은 어떤 발행인에게도 청구되지 않았습니다. 발행인에 의해 청구되거나 관리자에 의해 수정될 수 있습니다.",
