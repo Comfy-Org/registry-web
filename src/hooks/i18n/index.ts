@@ -3,6 +3,7 @@ import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
+import { forEach } from 'rambda'
 import { initReactI18next, useTranslation } from 'react-i18next'
 import reactUseCookie from 'react-use-cookie'
 
@@ -28,6 +29,35 @@ const i18n = i18next
         detection: {
             order: ['htmlTag'],
             caches: [],
+        },
+
+        saveMissing: true,
+        missingKeyNoValueFallbackToKey: true,
+        missingKeyHandler: async (lngs, ns, key) => {
+            lngs.map(async (lng) => {
+                console.log(
+                    `Missing translation for key "${key}" in language "${lng}"`
+                )
+                // (Experimental) Try use broswer Translator API to handle missing keys
+                // If the Translator API is not available, just return the key
+                if (typeof globalThis.Translator === 'undefined') return
+
+                //
+                const Translator = globalThis.Translator as any
+                const translator = await Translator.create({
+                    sourceLanguage: 'en',
+                    targetLanguage: 'ja',
+                })
+                let tr = ''
+                for await (const chunk of translator.translateStreaming(key)) {
+                    tr += chunk
+                }
+                console.log(
+                    `Translated "${key}" to "${tr}" in language "${lng}"`
+                )
+                // add to i18next resources
+                i18next.addResource(lng, ns, key, tr)
+            })
         },
     })
 
