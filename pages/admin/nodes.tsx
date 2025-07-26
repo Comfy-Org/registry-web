@@ -2,6 +2,7 @@ import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
+import clsx from 'clsx'
 import {
     Breadcrumb,
     Button,
@@ -13,6 +14,7 @@ import {
 } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { omit } from 'rambda'
 import React, { useState } from 'react'
 import { HiHome, HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
@@ -41,10 +43,78 @@ function NodeList() {
         }
     }, [router.query.page])
 
+    // Status filter functionality
+    const statusFlags = {
+        active: NodeStatus.NodeStatusActive,
+        banned: NodeStatus.NodeStatusBanned,
+        deleted: NodeStatus.NodeStatusDeleted,
+    } satisfies Record<string, NodeStatus>
+
+    const statusColors = {
+        all: 'success',
+        active: 'info',
+        banned: 'failure',
+        deleted: 'failure',
+    }
+
+    const statusNames = {
+        all: t('All'),
+        active: t('Active'),
+        banned: t('Banned'),
+        deleted: t('Deleted'),
+    }
+
+    const allStatuses = [...Object.values(statusFlags)].sort()
+
+    const defaultSelectedStatuses = [
+        (router.query as any)?.status ?? Object.keys(statusFlags),
+    ]
+        .flat()
+        .map((status) => statusFlags[status])
+        .filter(Boolean)
+
+    const [selectedStatuses, _setSelectedStatuses] = React.useState<
+        NodeStatus[]
+    >(
+        defaultSelectedStatuses.length > 0
+            ? defaultSelectedStatuses
+            : [NodeStatus.NodeStatusActive]
+    )
+
+    const setSelectedStatuses = (statuses: NodeStatus[]) => {
+        _setSelectedStatuses(statuses)
+
+        const checkedAll =
+            allStatuses.join(',').toString() ===
+            [...statuses].sort().join(',').toString()
+        const searchParams = checkedAll
+            ? undefined
+            : ({
+                  status: Object.entries(statusFlags)
+                      .filter(([status, s]) => statuses.includes(s))
+                      .map(([status]) => status),
+              } as any)
+        const search = new URLSearchParams({
+            ...(omit('status')(router.query) as object),
+            ...searchParams,
+        })
+            .toString()
+            .replace(/^(?!$)/, '?')
+        const hash = router.asPath.split('#')[1]
+            ? `#${router.asPath.split('#')[1]}`
+            : ''
+        router.push(`${router.pathname}${search}${hash}`)
+    }
+
+    // Search filter
+    const queryForNodeId = Array.isArray(router.query.nodeId)
+        ? router.query.nodeId[0]
+        : router.query.nodeId
+
     const getAllNodesQuery = useListAllNodes({
         page: page,
         limit: 10,
-        include_banned: true,
+        include_banned: selectedStatuses.includes(NodeStatus.NodeStatusBanned),
     })
 
     const updateNodeMutation = useUpdateNode()
@@ -54,6 +124,41 @@ function NodeList() {
             toast.error(t('Error getting nodes'))
         }
     }, [getAllNodesQuery, t])
+
+    // Filter nodes by status and search
+    const filteredNodes = React.useMemo(() => {
+        let nodes = getAllNodesQuery.data?.nodes || []
+
+        // Filter by status
+        if (
+            selectedStatuses.length > 0 &&
+            selectedStatuses.length < allStatuses.length
+        ) {
+            nodes = nodes.filter((node) =>
+                selectedStatuses.includes(node.status as NodeStatus)
+            )
+        }
+
+        // Filter by nodeId search
+        if (queryForNodeId) {
+            nodes = nodes.filter(
+                (node) =>
+                    node.id
+                        ?.toLowerCase()
+                        .includes(queryForNodeId.toLowerCase()) ||
+                    node.name
+                        ?.toLowerCase()
+                        .includes(queryForNodeId.toLowerCase())
+            )
+        }
+
+        return nodes
+    }, [
+        getAllNodesQuery.data?.nodes,
+        selectedStatuses,
+        queryForNodeId,
+        allStatuses.length,
+    ])
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage)
@@ -128,7 +233,6 @@ function NodeList() {
         )
     }
 
-    const nodes = getAllNodesQuery.data?.nodes || []
     const totalPages = Math.ceil((getAllNodesQuery.data?.total || 0) / 10)
 
     return (
@@ -165,7 +269,87 @@ function NodeList() {
                     {t('Node Management')}
                 </h1>
                 <div className="text-lg font-bold text-gray-200">
-                    {t('Total Results')}: {getAllNodesQuery.data?.total || 0}
+                    {t('Total Results')}: {filteredNodes.length} /{' '}
+                    {getAllNodesQuery.data?.total || 0}
+                </div>
+
+                {/* Search Filter */}
+                <form
+                    className="flex gap-2 items-center"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        const inputElement = document.getElementById(
+                            'filter-node-id'
+                        ) as HTMLInputElement
+                        const nodeId = inputElement.value.trim()
+                        const searchParams = new URLSearchParams({
+                            ...(omit(['nodeId'])(router.query) as object),
+                            ...(nodeId ? { nodeId } : {}),
+                        })
+                            .toString()
+                            .replace(/^(?!$)/, '?')
+                        const hash = router.asPath.split('#')[1]
+                            ? `#${router.asPath.split('#')[1]}`
+                            : ''
+                        router.push(router.pathname + searchParams + hash)
+                    }}
+                >
+                    <TextInput
+                        id="filter-node-id"
+                        placeholder={t('Search by node ID or name')}
+                        defaultValue={queryForNodeId || ''}
+                        className="flex-1"
+                    />
+                    <Button color="blue">{t('Search')}</Button>
+                </form>
+
+                {/* Status Filters */}
+                <div className="flex gap-2 flex-wrap">
+                    <Button
+                        color={
+                            selectedStatuses.length >=
+                            Object.keys(statusFlags).length
+                                ? statusColors.all
+                                : 'gray'
+                        }
+                        className={clsx({
+                            'brightness-50': !(
+                                selectedStatuses.length >=
+                                Object.keys(statusFlags).length
+                            ),
+                            'hover:brightness-100': !(
+                                selectedStatuses.length >=
+                                Object.keys(statusFlags).length
+                            ),
+                            'transition-all duration-200': true,
+                        })}
+                        onClick={() =>
+                            setSelectedStatuses(Object.values(NodeStatus))
+                        }
+                    >
+                        {t('All')}
+                    </Button>
+
+                    {Object.entries(statusFlags).map(
+                        ([status, statusValue]) => (
+                            <Button
+                                key={status}
+                                color={statusColors[status]}
+                                className={clsx({
+                                    'brightness-50':
+                                        !selectedStatuses.includes(statusValue),
+                                    'hover:brightness-100':
+                                        !selectedStatuses.includes(statusValue),
+                                    'transition-all duration-200': true,
+                                })}
+                                onClick={() =>
+                                    setSelectedStatuses([statusValue])
+                                }
+                            >
+                                {statusNames[status]} {t('Nodes')}
+                            </Button>
+                        )
+                    )}
                 </div>
             </div>
 
@@ -180,7 +364,7 @@ function NodeList() {
                         <Table.HeadCell>{t('Actions')}</Table.HeadCell>
                     </Table.Head>
                     <Table.Body className="divide-y">
-                        {nodes.map((node) => (
+                        {filteredNodes.map((node) => (
                             <Table.Row
                                 key={node.id}
                                 className="bg-white dark:border-gray-700 dark:bg-gray-800"
