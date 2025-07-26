@@ -356,12 +356,24 @@ function NodeList() {
             <div className="overflow-x-auto">
                 <Table hoverable className="min-w-full dark">
                     <Table.Head className="dark">
-                        <Table.HeadCell className="dark">{t('Node')}</Table.HeadCell>
-                        <Table.HeadCell className="dark">{t('Publisher')}</Table.HeadCell>
-                        <Table.HeadCell className="dark">{t('Category')}</Table.HeadCell>
-                        <Table.HeadCell className="dark">{t('Tags')}</Table.HeadCell>
-                        <Table.HeadCell className="dark">{t('Status')}</Table.HeadCell>
-                        <Table.HeadCell className="dark">{t('Actions')}</Table.HeadCell>
+                        <Table.HeadCell className="dark">
+                            {t('Node')}
+                        </Table.HeadCell>
+                        <Table.HeadCell className="dark">
+                            {t('Publisher')}
+                        </Table.HeadCell>
+                        <Table.HeadCell className="dark">
+                            {t('Category')}
+                        </Table.HeadCell>
+                        <Table.HeadCell className="dark">
+                            {t('Tags')}
+                        </Table.HeadCell>
+                        <Table.HeadCell className="dark">
+                            {t('Status')}
+                        </Table.HeadCell>
+                        <Table.HeadCell className="dark">
+                            {t('Actions')}
+                        </Table.HeadCell>
                     </Table.Head>
                     <Table.Body className="divide-y dark">
                         {filteredNodes.map((node) => (
@@ -393,7 +405,9 @@ function NodeList() {
                                         </div>
                                     )}
                                 </Table.Cell>
-                                <Table.Cell className="dark">{node.category || '-'}</Table.Cell>
+                                <Table.Cell className="dark">
+                                    {node.category || '-'}
+                                </Table.Cell>
                                 <Table.Cell className="dark">
                                     {node.tags?.length ? (
                                         <div className="flex flex-wrap gap-1">
@@ -459,14 +473,24 @@ function NodeList() {
             </div>
 
             {/* Edit Modal */}
-            <Modal show={!!editingNode} onClose={closeEditModal} size="lg" className="dark">
+            <Modal
+                show={!!editingNode}
+                onClose={closeEditModal}
+                size="lg"
+                className="dark"
+            >
                 <Modal.Header className="dark">
                     {t('Edit Node')}: {editingNode?.name}
                 </Modal.Header>
                 <Modal.Body className="dark">
                     <div className="space-y-6" onKeyDown={handleKeyDown}>
                         <div>
-                            <Label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{t('Category')}</Label>
+                            <Label
+                                htmlFor="category"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                                {t('Category')}
+                            </Label>
                             <TextInput
                                 id="category"
                                 value={editFormData.category}
@@ -481,7 +505,10 @@ function NodeList() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="tags" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <Label
+                                htmlFor="tags"
+                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
                                 {t('Tags')} ({t('comma separated')})
                             </Label>
                             <TextInput
