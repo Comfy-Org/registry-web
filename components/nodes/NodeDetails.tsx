@@ -477,7 +477,7 @@ const NodeDetails = () => {
                                     {t('Description')}
                                 </h2>
                                 <p className="text-base font-normal text-gray-200">
-                                    {node.description}
+                                    {node.description && t(node.description)}
                                 </p>
                             </div>
                             <div className="mt-10" hidden={isUnclaimed}>
