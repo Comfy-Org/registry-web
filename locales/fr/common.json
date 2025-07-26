@@ -301,6 +301,7 @@
   "Supported Accelerators": "Accélérateurs pris en charge",
   "Supported Operating Systems": "Systèmes d'exploitation pris en charge",
   "Tags": "Tags",
+  "Tags (comma separated)": "Tags (séparés par des virgules)",
   "There was an error loading the nodes. Please try again later.": "Il y a eu une erreur lors du chargement des nœuds. Veuillez réessayer plus tard.",
   "There was an unexpected error verifying your repository permissions. Please try again.": "Il y a eu une erreur inattendue lors de la vérification de vos autorisations de dépôt. Veuillez réessayer.",
   "These nodes are not claimed by any publisher. They can be claimed by publishers or edited by administrators.": "Ces nœuds ne sont revendiqués par aucun éditeur. Ils peuvent être revendiqués par des éditeurs ou modifiés par des administrateurs.",
