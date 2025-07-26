@@ -1,4 +1,4 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useDynamicTranslate, useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
@@ -88,6 +88,8 @@ export function formatDownloadCount(count: number): string {
 
 const NodeDetails = () => {
     const { t } = useNextTranslation()
+    const { dt, Switcher } = useDynamicTranslate()
+
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
@@ -419,7 +421,8 @@ const NodeDetails = () => {
                                     {t('Description')}
                                 </h2>
                                 <p className="text-base font-normal text-gray-200">
-                                    {node.description}
+                                    <Switcher />
+                                    {dt(node.description)}
                                 </p>
                             </div>
                             <div className="mt-10" hidden={isUnclaimed}>
@@ -443,7 +446,7 @@ const NodeDetails = () => {
                                                 />
                                             </p>
                                             <div className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
-                                                {version.changelog}
+                                                {dt(version.changelog)}
                                             </div>
                                             <div
                                                 className="text-sm font-normal text-blue-500 cursor-pointer"
