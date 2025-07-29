@@ -1,7 +1,10 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-// Mock function for actions
+import { http, HttpResponse } from 'msw'
 import { Node, Publisher } from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { User as FirebaseUser } from 'firebase/auth'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
 import ClaimNodePage from '@/pages/nodes/[nodeId]/claim'
 
 const meta: Meta<typeof ClaimNodePage> = {
@@ -76,10 +79,9 @@ const sampleUnclaimedNode: Node = {
     description: 'A sample ComfyUI custom node for testing purposes',
     icon: 'https://via.placeholder.com/200',
     downloads: 1250,
-    rating: 4.5,
     repository: 'https://github.com/sample-user/sample-comfy-node',
     publisher: {
-        id: 'unclaimed-admin',
+        id: UNCLAIMED_ADMIN_PUBLISHER_ID,
         name: 'Unclaimed Admin',
     },
 }
@@ -92,6 +94,11 @@ const sampleClaimedNode: Node = {
         id: 'existing-publisher',
         name: 'Existing Publisher',
     },
+}
+
+const sampleNodeWithoutRepository: Node = {
+    ...sampleUnclaimedNode,
+    repository: undefined,
 }
 
 const samplePublishers: Publisher[] = [
@@ -107,13 +114,43 @@ const samplePublishers: Publisher[] = [
     },
 ]
 
+// Mock Firebase user data
+const mockFirebaseUser = {
+    uid: 'firebase-user-123',
+    email: 'user@example.com',
+    displayName: 'Test User',
+    photoURL: 'https://picsum.photos/40/40',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    refreshToken: '',
+    tenantId: null,
+    delete: async () => undefined,
+    getIdToken: async () => '',
+    getIdTokenResult: async () => ({}) as any,
+    reload: async () => undefined,
+    toJSON: () => ({}),
+    phoneNumber: null,
+    providerId: 'google',
+} satisfies FirebaseUser
+
 export const WithPublishers: Story = {
     parameters: {
         msw: {
             handlers: [
-                // Mock API responses for WithPublishers scenario
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleUnclaimedNode)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json(samplePublishers)
+                }),
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -121,9 +158,18 @@ export const WithoutPublishers: Story = {
     parameters: {
         msw: {
             handlers: [
-                // Mock API responses for WithoutPublishers scenario
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleUnclaimedNode)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json([])
+                }),
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in but no publishers
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -131,9 +177,18 @@ export const AlreadyClaimed: Story = {
     parameters: {
         msw: {
             handlers: [
-                // Mock API responses for AlreadyClaimed scenario
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleClaimedNode)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json(samplePublishers)
+                }),
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -141,9 +196,26 @@ export const Loading: Story = {
     parameters: {
         msw: {
             handlers: [
-                // Mock API responses for Loading scenario
+                http.get('*/nodes/sample-node-1', () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve(HttpResponse.json(sampleUnclaimedNode))
+                        }, 2000)
+                    })
+                }),
+                http.get('*/users/publishers', () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve(HttpResponse.json(samplePublishers))
+                        }, 1500)
+                    })
+                }),
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -151,8 +223,102 @@ export const WithoutRepository: Story = {
     parameters: {
         msw: {
             handlers: [
-                // Mock API responses for WithoutRepository scenario
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleNodeWithoutRepository)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json(samplePublishers)
+                }),
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
+}
+
+export const NodeError: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(
+                        { error: 'Node not found' },
+                        { status: 404 }
+                    )
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json(samplePublishers)
+                }),
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
+}
+
+export const PublishersError: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleUnclaimedNode)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json(
+                        { error: 'Failed to load publishers' },
+                        { status: 500 }
+                    )
+                }),
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
+}
+
+export const SinglePublisher: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleUnclaimedNode)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json([samplePublishers[0]])
+                }),
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
+}
+
+export const LoggedOut: Story = {
+    parameters: {
+        msw: {
+            handlers: [
+                http.get('*/nodes/sample-node-1', () => {
+                    return HttpResponse.json(sampleUnclaimedNode)
+                }),
+                http.get('*/users/publishers', () => {
+                    return HttpResponse.json(
+                        { error: 'Unauthorized' },
+                        { status: 401 }
+                    )
+                }),
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
     },
 }
