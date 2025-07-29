@@ -4,5 +4,3 @@ export * from './useFirebaseUser'
 export const useFirebaseUser = fn(actual.useFirebaseUser).mockName(
     'useFirebaseUser'
 )
-
-console.log('mocking useFirebaseUser', useFirebaseUser)
