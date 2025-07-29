@@ -514,24 +514,42 @@ const NodeDetails = () => {
                                 ) => {
                                     e.preventDefault()
                                     const comfyUrl = `comfy://install-custom-node/${nodeId}`
-                                    
+
                                     try {
                                         // Try to open the comfy:// protocol
-                                        const newWindow = window.open(comfyUrl, '_blank')
-                                        
+                                        const newWindow = window.open(
+                                            comfyUrl,
+                                            '_blank'
+                                        )
+
                                         // Check if the window was blocked or failed to open
                                         setTimeout(() => {
-                                            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                                            if (
+                                                !newWindow ||
+                                                newWindow.closed ||
+                                                typeof newWindow.closed ===
+                                                    'undefined'
+                                            ) {
                                                 // Show fallback message if ComfyUI Desktop isn't available
-                                                alert(t('Install Latest ComfyUI Desktop Application'))
+                                                alert(
+                                                    t(
+                                                        'Install Latest ComfyUI Desktop Application'
+                                                    )
+                                                )
                                             }
                                         }, 500)
-                                        
+
                                         analytic.track('Quick Install Node')
                                     } catch (error) {
                                         // Fallback if protocol handler fails
-                                        alert(t('Install Latest ComfyUI Desktop Application'))
-                                        analytic.track('Quick Install Node Failed')
+                                        alert(
+                                            t(
+                                                'Install Latest ComfyUI Desktop Application'
+                                            )
+                                        )
+                                        analytic.track(
+                                            'Quick Install Node Failed'
+                                        )
                                     }
                                 }}
                             >
