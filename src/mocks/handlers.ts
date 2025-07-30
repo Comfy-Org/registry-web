@@ -148,6 +148,8 @@ const mockUser: User = {
     isApproved: true,
 }
 
+export { CAPI }
+
 export const handlers = [
     // Users endpoints
     http.get(CAPI('/users'), () => {
