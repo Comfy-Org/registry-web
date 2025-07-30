@@ -63,7 +63,6 @@ const config: StorybookConfig = {
   framework: '@storybook/nextjs-vite',
   staticDirs: ['../public', '../src/assets'],
   viteFinal: async (c) => {
-    const PATH = (p: string) => path.resolve(process.cwd(), p)
     return mergeConfig(c, {
       server: { allowedHosts: true },
       plugins: [createMockResolverPlugin()],
