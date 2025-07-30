@@ -50,12 +50,14 @@ This admin tool provides a comprehensive interface for updating node version com
 ### Editing Compatibility Information
 
 1. **Open Edit Modal**:
+
     - Click the "Edit" button for any node version row
     - A modal will open with the current compatibility information
     - The modal includes a specification reference link to the ComfyUI registry documentation
     - The modal displays the node ID and version at the top for reference
 
 2. **Update Fields**:
+
     - **ComfyUI Frontend Version**: Enter the supported frontend version (e.g., "1.2.0")
     - **ComfyUI Version**: Enter the supported backend version (e.g., "0.1.0")
     - **Operating Systems**: Enter one OS per line (e.g., "Windows", "macOS", "Linux")
