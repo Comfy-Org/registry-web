@@ -26,7 +26,7 @@ const CreatePublisher = () => {
     })
     const createPublisherMutation = useCreatePublisher()
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         createPublisherMutation.mutate(
             {
