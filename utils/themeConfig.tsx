@@ -1,5 +1,84 @@
 import { CustomFlowbiteTheme } from 'flowbite-react'
-import { themeConfig } from './themeConfig'
+
+// Theme configuration for both light and dark modes
+export const themeConfig = {
+    modal: {
+        overlay: 'bg-gray-900/50 dark:bg-gray-900/80',
+        content: 'bg-white dark:bg-gray-800',
+        inner: 'bg-gray-50 dark:bg-gray-200',
+        body: 'bg-white dark:bg-gray-100',
+        header: {
+            border: 'border-gray-200 dark:border-gray-600',
+            title: 'text-gray-900 dark:text-white',
+        },
+        close: {
+            base: 'text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white',
+        },
+        footer: {
+            border: 'border-gray-200 dark:border-gray-600',
+        },
+    },
+    textInput: {
+        base: 'border-gray-300 bg-white text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500',
+        addon: 'border-gray-300 bg-gray-200 text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200',
+        icon: 'text-gray-500 dark:text-gray-400',
+    },
+    textArea: {
+        base: 'border-gray-300 bg-white text-gray-900 placeholder-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500',
+    },
+    pagination: {
+        text: 'text-gray-700 dark:text-gray-400',
+        span: 'text-gray-900 dark:text-white',
+        button: 'border-gray-300 bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+        active: 'bg-cyan-50 text-cyan-600 hover:bg-cyan-100 hover:text-cyan-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white',
+    },
+    header: {
+        background: 'bg-white dark:bg-gray-900',
+        text: 'text-gray-900 dark:text-white',
+        border: 'border-gray-200 dark:border-gray-700',
+    },
+    navbar: {
+        background: 'bg-white dark:bg-gray-900',
+        item: 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white',
+    },
+    dropdown: {
+        background: 'bg-white dark:bg-gray-800',
+        item: 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+        border: 'border-gray-200 dark:border-gray-600',
+    },
+    body: {
+        background: 'bg-gray-50 dark:bg-gray-900',
+        text: 'text-gray-900 dark:text-white',
+    },
+    card: {
+        background: 'bg-white dark:bg-gray-800',
+        border: 'border-gray-200 dark:border-gray-700',
+        text: 'text-gray-900 dark:text-white',
+    },
+    button: {
+        primary:
+            'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600',
+        secondary:
+            'bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white',
+        ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700',
+    },
+}
+
+// Helper function to get theme classes dynamically
+export const getThemeClasses = (path: string) => {
+    const keys = path.split('.')
+    let current: any = themeConfig
+
+    for (const key of keys) {
+        if (current && typeof current === 'object' && key in current) {
+            current = current[key]
+        } else {
+            return ''
+        }
+    }
+
+    return typeof current === 'string' ? current : ''
+}
 
 export const customThemeTModal: CustomFlowbiteTheme = {
     root: {
@@ -55,6 +134,7 @@ export const customThemeTModal: CustomFlowbiteTheme = {
         popup: 'border-t',
     },
 }
+
 export const customThemeTextInput = {
     base: 'flex',
     addon: `inline-flex items-center rounded-l-md border border-r-0 px-3 text-sm ${themeConfig.textInput.addon}`,
@@ -77,13 +157,13 @@ export const customThemeTextInput = {
             },
             colors: {
                 gray: themeConfig.textInput.base,
-                info: 'border-blue-500 bg-blue-50 text-blue-900 focus:border-blue-500 focus:ring-blue-500',
+                info: 'border-blue-500 bg-blue-50 text-blue-900 focus:border-blue-500 focus:ring-blue-500 dark:border-blue-400 dark:bg-blue-100',
                 failure:
-                    'border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500',
+                    'border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100',
                 warning:
-                    'border-yellow-500 bg-yellow-50 text-yellow-900 focus:border-yellow-500 focus:ring-yellow-500',
+                    'border-yellow-500 bg-yellow-50 text-yellow-900 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100',
                 success:
-                    'border-green-500 bg-green-50 text-green-900 focus:border-green-500 focus:ring-green-500',
+                    'border-green-500 bg-green-50 text-green-900 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100',
             },
         },
     },

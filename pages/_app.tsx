@@ -8,6 +8,7 @@ import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
+import { ThemeProvider } from '@/src/hooks/useTheme'
 import '../styles/globals.css'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { request } from 'http'
@@ -114,11 +115,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <FlowBiteThemeProvider>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </FlowBiteThemeProvider>
+            <ThemeProvider>
+                <FlowBiteThemeProvider>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </FlowBiteThemeProvider>
+            </ThemeProvider>
         </QueryClientProvider>
     )
 }
