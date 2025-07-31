@@ -46,10 +46,10 @@ export async function createMockResolverPlugin() {
   // Scan for all .mock.ts files
   const mockMap = new Map<string, string>()
   const glob = '**/*.mock.{ts,tsx}'
+  const id = (path: string) => path.replace(/\.mock(\.tsx?)$/, '')
   const _destroy = await watch(
     glob,
     ({ added, deleted }) => {
-      const id = (path: string) => path.replace(/\.mock(\.tsx?)$/, '')
       added.forEach(({ path }) => {
         mockMap.set(id(path), path)
         console.log(`+ Mock ${path}`)
