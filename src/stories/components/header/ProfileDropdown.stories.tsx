@@ -17,10 +17,10 @@ const meta: Meta<typeof ProfileDropdown> = {
             handlers: handlers,
         },
     },
-    tags: ['autodocs'],
 }
 
 export default meta
+
 type Story = StoryObj<typeof ProfileDropdown>
 
 // Mock user data variations
