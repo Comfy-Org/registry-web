@@ -173,7 +173,6 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
                                             type="submit"
                                             color="blue"
                                             size="sm"
-                                            onClick={handleSubmit}
                                             disabled={
                                                 isLoadingValidation ||
                                                 !!publisherValidationError
