@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import '../src/firebase' // Initialize Firebase for Storybook
 
-initialize({
+const mswApp = initialize({
   onUnhandledRequest: 'bypass',
 })
 
@@ -21,6 +21,9 @@ const preview: Preview = {
     },
     msw: {
       handlers: [],
+    },
+    docs: {
+      toc: true,
     },
   },
   loaders: [mswLoader],
@@ -42,6 +45,17 @@ const preview: Preview = {
     },
   ],
   globalTypes: {
+    darkMode: {
+      description: 'Toggle dark mode',
+      defaultValue: 'dark',
+      toolbar: {
+        icon: 'circlehollow',
+        items: [
+          { value: 'light', right: '☀️', title: 'Light Mode' },
+          { value: 'dark', right: '🌙', title: 'Dark Mode' },
+        ],
+      },
+    },
     locale: {
       description: 'Internationalization locale',
       toolbar: {
@@ -60,6 +74,7 @@ const preview: Preview = {
   initialGlobals: {
     locale: 'en',
   },
+  tags: ['autodocs'],
 }
 
 export default preview
