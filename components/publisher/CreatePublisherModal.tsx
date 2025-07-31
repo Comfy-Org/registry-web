@@ -33,7 +33,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
     })
     const createPublisherMutation = useCreatePublisher()
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         createPublisherMutation.mutate(
             {
