@@ -23,12 +23,12 @@ jobs:
                   fi
 
             - name: Checkout repository
-              uses: actions/checkout@v4
+              uses: actions/checkout@v2
 
             - name: Setup Node
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v3
               with:
-                  node-version: '18'
+                  node-version: 16.x
                   cache: npm
                   cache-dependency-path: NativeApp/package-lock.json
 
