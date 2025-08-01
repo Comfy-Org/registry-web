@@ -5,16 +5,20 @@ import fastGlob from 'fast-glob'
 import { time, timeEnd, timeLog } from 'node:console'
 const config: StorybookConfig = {
   stories: [
+    '../app/**/*.mdx',
     '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/**/*.mdx',
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../components/**/*.mdx',
+    '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../src/stories/**/*.mdx',
   ],
   addons: [
     'msw-storybook-addon',
     '@chromatic-com/storybook',
-    '@storybook/addon-docs',
     '@storybook/addon-vitest',
+    '@storybook/addon-docs',
+    '@storybook/addon-actions',
   ],
   framework: '@storybook/nextjs-vite',
   staticDirs: ['../public', '../src/assets'],
@@ -68,6 +72,11 @@ const config: StorybookConfig = {
             )
             if (id.replace(/^(\.\.\/)+/, '') === 'src/hooks/useFirebaseUser') {
               const resolved = PATH('./src/hooks/useFirebaseUser.mock.ts')
+              return resolved
+            }
+            if (id === 'react-firebase-hooks/auth') {
+              const resolved = PATH('./react-firebase-hooks/auth.mock.ts')
+              console.log('!!!! Redirecting react-firebase-hooks/auth to mock:', resolved)
               return resolved
             }
           },
