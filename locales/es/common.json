@@ -366,6 +366,8 @@
   "You don't have any publishers yet. Create a publisher first to claim nodes.": "Aún no tienes ningún editor. Crea un editor primero para reclamar nodos.",
   "Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "Tu cuenta de GitHub ({{username}}) ha sido verificada con permisos de administrador para el repositorio. Ahora puedes reclamar el nodo {{nodeName}} como editor: {{publisherName}}.",
   "Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "Su cuenta de GitHub ha sido verificada con permisos de administrador para el repositorio. Ahora puede reclamar el nodo {{nodeName}} como editor: {{publisherName}}.",
+  "GitHub Stars": "Estrellas de GitHub",
+  "GitHub stars": "estrellas de GitHub",
   "Your Nodes": "Tus nodos",
   "Your nodes": "Tus nodos",
   "approve": "aprobar",
