@@ -31,7 +31,7 @@ const conf: NextConfig = {
             'storage.googleapis.com',
             'picsum.photos',
         ],
-        // 如果需要啟用圖片優化，可以移除 unoptimized: true 並添加以下配置
+        // To enable image optimization, remove unoptimized: true and add the following config
         // formats: ['image/webp'],
         // loader: 'default',
     },
