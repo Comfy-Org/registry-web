@@ -366,6 +366,8 @@
   "You don't have any publishers yet. Create a publisher first to claim nodes.": "У вас еще нет ни одного издателя. Сначала создайте издателя, чтобы заявить на узлы.",
   "Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "Ваш аккаунт GitHub ({{username}}) был проверен с административными правами доступа к репозиторию. Теперь вы можете заявить на узел {{nodeName}} как издатель: {{publisherName}}.",
   "Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "Ваш GitHub аккаунт был проверен с административными правами доступа к репозиторию. Теперь вы можете заявить на узел {{nodeName}} как издатель: {{publisherName}}.",
+  "GitHub Stars": "GitHub звёзды",
+  "GitHub stars": "GitHub звёзды",
   "Your Nodes": "Ваши узлы",
   "Your nodes": "Ваши узлы",
   "approve": "одобрить",

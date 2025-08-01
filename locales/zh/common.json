@@ -366,6 +366,8 @@
   "You don't have any publishers yet. Create a publisher first to claim nodes.": "您还没有任何发布者。先创建一个发布者以认领节点。",
   "Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "您的GitHub帐户（{{username}}）已通过管理员权限验证仓库。现在，您可以作为发布者：{{publisherName}}认领节点{{nodeName}}。",
   "Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "您的GitHub帐户已通过管理员权限验证仓库。现在，您可以作为发布者：{{publisherName}}认领节点{{nodeName}}。",
+  "GitHub Stars": "GitHub 星标",
+  "GitHub stars": "GitHub 星标",
   "Your Nodes": "您的节点",
   "Your nodes": "您的节点",
   "approve": "批准",

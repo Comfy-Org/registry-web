@@ -366,6 +366,8 @@
   "You don't have any publishers yet. Create a publisher first to claim nodes.": "아직 발행인이 없습니다. 노드를 청구하려면 먼저 발행인을 생성하세요.",
   "Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "귀하의 GitHub 계정 ({{username}})이 저장소에 대한 관리자 권한으로 검증되었습니다. 이제 발행인: {{publisherName}}으로 노드 {{nodeName}}을(를) 청구할 수 있습니다.",
   "Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "당신의 GitHub 계정은 저장소에 대한 관리자 권한으로 검증되었습니다. 이제 발행인: {{publisherName}}으로 노드 {{nodeName}}을(를) 청구할 수 있습니다.",
+  "GitHub Stars": "GitHub 별점",
+  "GitHub stars": "GitHub 별점",
   "Your Nodes": "당신의 노드",
   "Your nodes": "당신의 노드",
   "approve": "승인",

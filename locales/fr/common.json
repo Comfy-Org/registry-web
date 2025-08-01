@@ -366,6 +366,8 @@
   "You don't have any publishers yet. Create a publisher first to claim nodes.": "Vous n'avez pas encore de rédacteurs. Créez d'abord un rédacteur pour revendiquer des nœuds.",
   "Your GitHub account ({{username}}) has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "Votre compte GitHub ({{username}}) a été vérifié avec des permissions d'administrateur sur le dépôt. Vous pouvez maintenant revendiquer le nœud {{nodeName}} en tant qu'éditeur : {{publisherName}}.",
   "Your GitHub account has been verified with admin permissions to the repository. You can now claim node {{nodeName}} as publisher: {{publisherName}}.": "Votre compte GitHub a été vérifié avec des permissions d'administrateur sur le dépôt. Vous pouvez maintenant revendiquer le nœud {{nodeName}} en tant qu'éditeur : {{publisherName}}.",
+  "GitHub Stars": "Étoiles GitHub",
+  "GitHub stars": "étoiles GitHub",
   "Your Nodes": "Vos Nœuds",
   "Your nodes": "Vos nœuds",
   "approve": "approuver",
