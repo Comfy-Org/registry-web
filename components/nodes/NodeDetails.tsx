@@ -4,7 +4,8 @@ import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
+import TimeAgo from 'react-timeago'
 import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
@@ -29,6 +30,8 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
+import { intlFormatDistance } from 'date-fns'
+
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
     const date = new Date(dateString)
@@ -87,7 +90,7 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const { t } = useNextTranslation()
+    const { t, i18n } = useNextTranslation()
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
@@ -283,30 +286,46 @@ const NodeDetails = () => {
                                     </h1>
 
                                     <p
-                                        className="text-[18px] pt-2 text-gray-300"
+                                        className="text-[18px] pt-2 text-gray-300 space-x-2"
                                         hidden={isUnclaimed}
                                     >
-                                        {node.latest_version
-                                            ? t(
-                                                  '{{publisher}} | v{{version}} {{mostRecentLabel}}',
-                                                  {
-                                                      publisher:
-                                                          node.publisher?.id?.replace(
-                                                              /^(?!$)/,
-                                                              '@'
-                                                          ) || '',
-                                                      version:
-                                                          node.latest_version
-                                                              .version,
-                                                      mostRecentLabel: t(
-                                                          'Most recent version'
-                                                      ),
-                                                  }
-                                              )
-                                            : node.publisher?.id?.replace(
-                                                  /^(?!$)/,
-                                                  '@'
-                                              )}
+                                        {[
+                                            <div dir="ltr">
+                                                {node.publisher?.id?.replace(
+                                                    /^(?!$)/,
+                                                    '@'
+                                                )}
+                                            </div>,
+
+                                            node.latest_version?.version?.replace(
+                                                /^(?!$)/,
+                                                'v'
+                                            ),
+
+                                            node.latest_version?.createdAt &&
+                                            intlFormatDistance(
+                                                new Date(
+                                                    node.latest_version.createdAt
+                                                ),
+                                                new Date(),
+                                                {
+                                                    numeric: 'auto',
+                                                    locale: i18n.language,
+                                                }
+                                            ),
+                                        ]
+                                            .flatMap((e) => (e ? [e] : []))
+                                            // same as .join(' | '), but with span element
+                                            .reduce(
+                                                (acc, x, i, a) => [
+                                                    ...acc,
+                                                    x,
+                                                    i < a.length - 1 && <span> | </span>,
+                                                ],
+                                                [] as ReactNode[]
+                                            ).filter(
+                                                Boolean
+                                            )}
                                     </p>
                                 </div>
                             </div>
@@ -415,13 +434,13 @@ const NodeDetails = () => {
                                         <p className="text-base font-normal text-gray-200">
                                             {isUnclaimed
                                                 ? t(
-                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
-                                                  )
+                                                    "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                )
                                                 : !nodeVersions?.length
-                                                  ? t(
+                                                    ? t(
                                                         'This node can only be installed via git, because it has no versions published yet'
                                                     )
-                                                  : t(
+                                                    : t(
                                                         'This node can only be installed via git'
                                                     )}
                                             {node.repository && (
@@ -654,12 +673,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
+                                                        node
+                                                            .preempted_comfy_node_names
+                                                            .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
+                                                            '\n'
+                                                        )
                                                         : t('None')}
                                                 </pre>
                                             </span>
