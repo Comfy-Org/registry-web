@@ -23,16 +23,13 @@ export default function LanguageSwitcher({
 
     // Memoize display names to avoid recreating Intl.DisplayNames instances on every render
     const displayNames = useMemo(() => {
-        const currentLangDisplayNames = new Intl.DisplayNames(
-            [currentLanguage],
-            {
-                type: 'language',
-            }
-        )
+        const currentLangDisplayNames = new Intl.DisplayNames(currentLanguage, {
+            type: 'language',
+        })
 
         return SUPPORTED_LANGUAGES.reduce(
             (acc, langCode) => {
-                const thatLangDisplayNames = new Intl.DisplayNames([langCode], {
+                const thatLangDisplayNames = new Intl.DisplayNames(langCode, {
                     type: 'language',
                 })
 
@@ -49,13 +46,13 @@ export default function LanguageSwitcher({
         )
     }, [currentLanguage])
 
-    const currentLanguageLabel = useMemo(() => {
-        return (
-            new Intl.DisplayNames([currentLanguage], {
+    const currentLanguageLabel = useMemo(
+        () =>
+            new Intl.DisplayNames(currentLanguage, {
                 type: 'language',
-            }).of(currentLanguage) || 'Language'
-        )
-    }, [currentLanguage])
+            }).of(currentLanguage) || 'Language',
+        [currentLanguage]
+    )
 
     return (
         <Dropdown
