@@ -68,10 +68,10 @@ const Nodes: React.FC = () => {
             </div>
 
             {/* Publish instruction banner */}
-            <div className="mb-6 p-4 bg-blue-900/20 border border-blue-700/30 rounded-lg">
+            <div className="mb-6 p-4 bg-blue-900/20 border border-blue-700/30 rounded-lg mt-4">
                 <p className="text-blue-200 text-sm">
                     {t(
-                        'Wanna publish my first node? Check publish tutorial here:'
+                        'Wanna publish your first node? Check publish tutorial here:'
                     )}{' '}
                     <a
                         href="https://docs.comfy.org/registry/publishing"
