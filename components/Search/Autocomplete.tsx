@@ -47,6 +47,7 @@ export default function Autocomplete({
 
     const [instantSearchUiState, setInstantSearchUiState] =
         useState<SetInstantSearchUiStateOptions>({ query })
+    const [hasUserInteracted, setHasUserInteracted] = useState(false)
     const debouncedSetInstantSearchUiState = debounce(
         setInstantSearchUiState,
         500
@@ -66,6 +67,12 @@ export default function Autocomplete({
                     ...source,
                     onSelect({ item }) {
                         setInstantSearchUiState({ query: item.label })
+                    },
+                    getItems(params) {
+                        if (!hasUserInteracted) {
+                            return []
+                        }
+                        return source.getItems(params)
                     },
                 }
             },
@@ -89,7 +96,7 @@ export default function Autocomplete({
                         })
                     },
                     getItems(params) {
-                        if (!params.state.query) {
+                        if (!hasUserInteracted || !params.state.query) {
                             return []
                         }
 
@@ -117,7 +124,7 @@ export default function Autocomplete({
         })
 
         return [recentSearches, querySuggestions]
-    }, [searchClient])
+    }, [searchClient, hasUserInteracted])
 
     useEffect(() => {
         if (!autocompleteContainer.current) {
@@ -143,6 +150,35 @@ export default function Autocomplete({
                     debouncedSetInstantSearchUiState({ query: state.query })
                 }
             },
+            environment: autocompleteProps.environment
+                ? {
+                      ...autocompleteProps.environment,
+                      addEventListener(target, type, listener) {
+                          if (type === 'input') {
+                              const wrappedListener = (event: Event) => {
+                                  setHasUserInteracted(true)
+                                  listener(event)
+                              }
+                              target.addEventListener(type, wrappedListener)
+                          } else {
+                              target.addEventListener(type, listener)
+                          }
+                      },
+                  }
+                : {
+                      ...window,
+                      addEventListener(target, type, listener) {
+                          if (type === 'input') {
+                              const wrappedListener = (event: Event) => {
+                                  setHasUserInteracted(true)
+                                  listener(event)
+                              }
+                              target.addEventListener(type, wrappedListener)
+                          } else {
+                              target.addEventListener(type, listener)
+                          }
+                      },
+                  },
             renderer: { createElement, Fragment, render: () => {} },
             render({ children }, root) {
                 if (!panelRootRef.current || rootRef.current !== root) {
