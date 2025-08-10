@@ -74,9 +74,12 @@
         "@babel/core": "7.19.3",
         "@chromatic-com/storybook": "^4.0.1",
         "@mdx-js/react": "2.1.4",
+        "@storybook/addon-actions": "^9.0.8",
         "@storybook/addon-docs": "^9.0.17",
+        "@storybook/addon-onboarding": "^9.0.16",
         "@storybook/addon-vitest": "9.0.17",
         "@storybook/nextjs-vite": "^9.0.17",
+        "@storybook/react": "^9.0.16",
         "@types/async-busboy": "^1.1.4",
         "@types/downloadjs": "^1.4.6",
         "@types/mixpanel-browser": "^2.60.0",
@@ -759,7 +762,11 @@
 
     "@stoplight/yaml-ast-parser": ["@stoplight/yaml-ast-parser@0.0.50", "", {}, "sha512-Pb6M8TDO9DtSVla9yXSTAxmo9GVEouq5P40DWXdOie69bXogZTkgvopCq+yEvTMA0F6PEvdJmbtTV3ccIp11VQ=="],
 
+    "@storybook/addon-actions": ["@storybook/addon-actions@9.0.8", "", {}, "sha512-LFePu7PPnWN0Il/uoUpmA5T0J0C7d6haJIbg0pXrjxW2MQVSYXE4S4LSUz8fOImltBDV3xAl6tLPYHFj6VcrOA=="],
+
     "@storybook/addon-docs": ["@storybook/addon-docs@9.0.17", "", { "dependencies": { "@mdx-js/react": "^3.0.0", "@storybook/csf-plugin": "9.0.17", "@storybook/icons": "^1.2.12", "@storybook/react-dom-shim": "9.0.17", "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "ts-dedent": "^2.0.0" }, "peerDependencies": { "storybook": "^9.0.17" } }, "sha512-LOX/kKgQGnyulrqZHsvf77+ZoH/nSUaplGr5hvZglW/U6ak6fO9seJyXAzVKEnC6p+F8n02kFBZbi3s+znQhSg=="],
+
+    "@storybook/addon-onboarding": ["@storybook/addon-onboarding@9.1.1", "", { "peerDependencies": { "storybook": "^9.1.1" } }, "sha512-QHkirYjgHqhJMmD2riVJ4qvkwNif79phEJuMd+Zna2niT5MMkmFSd+lfLgbEYr6ufbL2OWnsoUmxRY5s3RgKQw=="],
 
     "@storybook/addon-vitest": ["@storybook/addon-vitest@9.0.17", "", { "dependencies": { "@storybook/global": "^5.0.0", "@storybook/icons": "^1.4.0", "prompts": "^2.4.0", "ts-dedent": "^2.2.0" }, "peerDependencies": { "@vitest/browser": "^3.0.0", "@vitest/runner": "^3.0.0", "storybook": "^9.0.17", "vitest": "^3.0.0" }, "optionalPeers": ["@vitest/browser", "@vitest/runner", "vitest"] }, "sha512-eogqcGbACR1sTedBSE2SP/4QV1ruicHYEhYjBtoPIjvYgymN1g5KSuQNysLx4f0SvAzczrcNjX2WVVLX2DVyzA=="],
 

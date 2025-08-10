@@ -26,7 +26,7 @@ const config: StorybookConfig = {
   staticDirs: ['../public', '../src/assets'],
   viteFinal: async (c) => {
     const PATH = (p: string) => path.resolve(process.cwd(), p)
-    
+
     return mergeConfig(c, {
       server: { allowedHosts: true },
       plugins: [
@@ -46,7 +46,10 @@ const config: StorybookConfig = {
             }
             if (id === 'react-firebase-hooks/auth') {
               const resolved = PATH('./react-firebase-hooks/auth.mock.ts')
-              console.log('!!!! Redirecting react-firebase-hooks/auth to mock:', resolved)
+              console.log(
+                '!!!! Redirecting react-firebase-hooks/auth to mock:',
+                resolved
+              )
               return resolved
             }
           },
