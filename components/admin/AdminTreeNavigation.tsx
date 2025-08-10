@@ -62,7 +62,7 @@ export default function AdminTreeNavigation({
                     id: 'category-management',
                     label: t('Category Management'),
                     icon: HiOutlineCollection,
-                    href: '/admin/category',
+                    href: '/admin/categories',
                 },
             ],
         },

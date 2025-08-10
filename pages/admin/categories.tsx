@@ -1,25 +1,38 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
+import { CustomPagination } from '@/components/common/CustomPagination'
 import { useListAllNodes } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb, Card, Badge } from 'flowbite-react'
 import { HiHome, HiOutlineCollection } from 'react-icons/hi'
-import { useMemo } from 'react'
+import { useRouter } from 'next/router'
+import React, { useMemo, useState } from 'react'
 
-export default withAdmin(CategoryPage)
-function CategoryPage() {
+export default withAdmin(CategoriesPage)
+function CategoriesPage() {
     const { t } = useNextTranslation()
-    const { data: nodes } = useListAllNodes({
-        page: 1,
-        limit: 1000,
+    const router = useRouter()
+    const [page, setPage] = useState<number>(1)
+    const [limit] = useState<number>(20)
+
+    // Handle page from URL
+    React.useEffect(() => {
+        if (router.query.page) {
+            setPage(parseInt(router.query.page as string))
+        }
+    }, [router.query.page])
+
+    const { data: nodesData } = useListAllNodes({
+        page: page,
+        limit: limit,
         sort: ['category'],
     })
 
     const categoriesData = useMemo(() => {
-        if (!nodes) return []
+        if (!nodesData?.nodes) return []
 
         const categoryMap = new Map<string, number>()
-        nodes.forEach((node) => {
+        nodesData.nodes.forEach((node) => {
             const category = node.category || 'Uncategorized'
             categoryMap.set(category, (categoryMap.get(category) || 0) + 1)
         })
@@ -27,7 +40,21 @@ function CategoryPage() {
         return Array.from(categoryMap.entries())
             .map(([category, count]) => ({ category, count }))
             .sort((a, b) => b.count - a.count)
-    }, [nodes])
+    }, [nodesData?.nodes])
+
+    const totalPages = Math.ceil((nodesData?.total || 0) / limit)
+
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage)
+        router.push(
+            {
+                pathname: router.pathname,
+                query: { ...router.query, page: newPage },
+            },
+            undefined,
+            { shallow: true }
+        )
+    }
 
     return (
         <div className="p-4">
@@ -88,6 +115,16 @@ function CategoryPage() {
                                 <p className="text-gray-400">
                                     {t('No categories found')}
                                 </p>
+                            </div>
+                        )}
+
+                        {totalPages > 1 && (
+                            <div className="py-8">
+                                <CustomPagination
+                                    currentPage={page}
+                                    totalPages={totalPages}
+                                    onPageChange={handlePageChange}
+                                />
                             </div>
                         )}
                     </Card>

@@ -72,7 +72,7 @@ function AdminDashboard() {
                                 <span>{t('Manage All Nodes')}</span>
                             </Link>
                             <Link
-                                href="/admin/category"
+                                href="/admin/categories"
                                 className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg p-4 flex items-center transition-colors"
                             >
                                 <HiOutlineCollection className="h-8 w-8 mr-3" />
