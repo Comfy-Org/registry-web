@@ -1,30 +1,23 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import { CustomPagination } from '@/components/common/CustomPagination'
+import { usePage } from '@/components/hooks/usePage'
 import { useListAllNodes } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb, Card, Badge } from 'flowbite-react'
 import { HiHome, HiOutlineCollection } from 'react-icons/hi'
-import { useRouter } from 'next/router'
 import React, { useMemo, useState } from 'react'
 
 export default withAdmin(CategoriesPage)
 function CategoriesPage() {
     const { t } = useNextTranslation()
-    const router = useRouter()
-    const [page, setPage] = useState<number>(1)
+    const [page, setPage] = usePage()
     const [limit] = useState<number>(20)
 
-    // Handle page from URL
-    React.useEffect(() => {
-        if (router.query.page) {
-            setPage(parseInt(router.query.page as string))
-        }
-    }, [router.query.page])
-
     const { data: nodesData } = useListAllNodes({
-        page: page,
+        page: page || 1,
         limit: limit,
+
         sort: ['category'],
     })
 
@@ -43,18 +36,6 @@ function CategoriesPage() {
     }, [nodesData?.nodes])
 
     const totalPages = Math.ceil((nodesData?.total || 0) / limit)
-
-    const handlePageChange = (newPage: number) => {
-        setPage(newPage)
-        router.push(
-            {
-                pathname: router.pathname,
-                query: { ...router.query, page: newPage },
-            },
-            undefined,
-            { shallow: true }
-        )
-    }
 
     return (
         <div className="p-4">
@@ -121,9 +102,9 @@ function CategoriesPage() {
                         {totalPages > 1 && (
                             <div className="py-8">
                                 <CustomPagination
-                                    currentPage={page}
+                                    currentPage={page || 1}
                                     totalPages={totalPages}
-                                    onPageChange={handlePageChange}
+                                    onPageChange={setPage}
                                 />
                             </div>
                         )}
