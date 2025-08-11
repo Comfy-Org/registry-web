@@ -409,6 +409,11 @@ export interface BFLValidationError {
   type: string;
 }
 
+export interface ClaimMyNodeRequest {
+  /** GitHub token to verify if the user owns the repo of the node */
+  GH_TOKEN: string;
+}
+
 export interface ComfyNode {
   /** UI category where the node is listed, used for grouping nodes. */
   category?: string;
@@ -426,6 +431,7 @@ export interface ComfyNode {
   input_types?: string;
   /** Boolean values indicating if each output is a list. */
   output_is_list?: boolean[];
+  policy?: ComfyNodePolicy;
   /** Names of the outputs for clarity in workflows. */
   return_names?: string;
   /** Specifies the types of outputs produced by the node. */
@@ -437,6 +443,38 @@ export interface ComfyNodeCloudBuildInfo {
   location?: string;
   project_id?: string;
   project_number?: string;
+}
+
+export type ComfyNodePolicy = typeof ComfyNodePolicy[keyof typeof ComfyNodePolicy];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ComfyNodePolicy = {
+  ComfyNodePolicyActive: 'ComfyNodePolicyActive',
+  ComfyNodePolicyBanned: 'ComfyNodePolicyBanned',
+  ComfyNodePolicyLocalOnly: 'ComfyNodePolicyLocalOnly',
+} as const;
+
+export interface ComfyNodeUpdateRequest {
+  /** UI category where the node is listed, used for grouping nodes. */
+  category?: string;
+  /** Indicates if the node is deprecated. Deprecated nodes are hidden in the UI. */
+  deprecated?: boolean;
+  /** Brief description of the node's functionality or purpose. */
+  description?: string;
+  /** Indicates if the node is experimental, subject to changes or removal. */
+  experimental?: boolean;
+  /** Name of the entry-point function to execute the node. */
+  function?: string;
+  /** Defines input parameters */
+  input_types?: string;
+  /** Boolean values indicating if each output is a list. */
+  output_is_list?: boolean[];
+  policy?: ComfyNodePolicy;
+  /** Names of the outputs for clarity in workflows. */
+  return_names?: string;
+  /** Specifies the types of outputs produced by the node. */
+  return_types?: string;
 }
 
 export type ComputerToolCallAction = { [key: string]: unknown };
@@ -3318,29 +3356,6 @@ export type MoonvalleyImageToVideoRequestAllOf = {
 
 export type MoonvalleyImageToVideoRequest = MoonvalleyTextToVideoRequest & MoonvalleyImageToVideoRequestAllOf;
 
-export interface MoonvalleyInferenceParams {
-  add_quality_guidance?: boolean;
-  caching_coefficient?: number;
-  caching_cooldown?: number;
-  caching_warmup?: number;
-  clip_value?: number;
-  conditioning_frame_index?: number;
-  cooldown_steps?: number;
-  fps?: number;
-  guidance_scale?: number;
-  height?: number;
-  negative_prompt?: string;
-  num_frames?: number;
-  seed?: number;
-  shift_value?: number;
-  steps?: number;
-  use_guidance_schedule?: boolean;
-  use_negative_prompts?: boolean;
-  use_timestep_transform?: boolean;
-  warmup_steps?: number;
-  width?: number;
-}
-
 export type MoonvalleyPromptResponseError = { [key: string]: unknown };
 
 export type MoonvalleyPromptResponseFrameConditioning = { [key: string]: unknown };
@@ -3385,14 +3400,57 @@ export type MoonvalleyResizeVideoRequest = MoonvalleyVideoToVideoRequest & Moonv
 
 export interface MoonvalleyTextToImageRequest {
   image_url?: string;
-  inference_params?: MoonvalleyInferenceParams;
+  inference_params?: MoonvalleyTextToVideoInferenceParams;
   prompt_text?: string;
   webhook_url?: string;
 }
 
+export interface MoonvalleyTextToVideoInferenceParams {
+  /** Whether to add quality guidance */
+  add_quality_guidance?: boolean;
+  /** Caching coefficient for optimization */
+  caching_coefficient?: number;
+  /** Number of caching cooldown steps */
+  caching_cooldown?: number;
+  /** Number of caching warmup steps */
+  caching_warmup?: number;
+  /** CLIP value for generation control */
+  clip_value?: number;
+  /** Index of the conditioning frame */
+  conditioning_frame_index?: number;
+  /** Number of cooldown steps (calculated based on num_frames) */
+  cooldown_steps?: number;
+  /** Frames per second of the generated video */
+  fps?: number;
+  /** Guidance scale for generation control */
+  guidance_scale?: number;
+  /** Height of the generated video in pixels */
+  height?: number;
+  /** Negative prompt text */
+  negative_prompt?: string;
+  /** Number of frames to generate */
+  num_frames?: number;
+  /** Random seed for generation (default: random) */
+  seed?: number;
+  /** Shift value for generation control */
+  shift_value?: number;
+  /** Number of denoising steps */
+  steps?: number;
+  /** Whether to use guidance scheduling */
+  use_guidance_schedule?: boolean;
+  /** Whether to use negative prompts */
+  use_negative_prompts?: boolean;
+  /** Whether to use timestep transformation */
+  use_timestep_transform?: boolean;
+  /** Number of warmup steps (calculated based on num_frames) */
+  warmup_steps?: number;
+  /** Width of the generated video in pixels */
+  width?: number;
+}
+
 export interface MoonvalleyTextToVideoRequest {
   image_url?: string;
-  inference_params?: MoonvalleyInferenceParams;
+  inference_params?: MoonvalleyTextToVideoInferenceParams;
   prompt_text?: string;
   webhook_url?: string;
 }
@@ -3405,12 +3463,64 @@ export interface MoonvalleyUploadFileResponse {
   access_url?: string;
 }
 
-export type MoonvalleyVideoToVideoRequestAllOf = {
-  control_type: string;
-  video_url: string;
-};
+export interface MoonvalleyVideoToVideoInferenceParams {
+  /** Whether to add quality guidance */
+  add_quality_guidance?: boolean;
+  /** Caching coefficient for optimization */
+  caching_coefficient?: number;
+  /** Number of caching cooldown steps */
+  caching_cooldown?: number;
+  /** Number of caching warmup steps */
+  caching_warmup?: number;
+  /** CLIP value for generation control */
+  clip_value?: number;
+  /** Index of the conditioning frame */
+  conditioning_frame_index?: number;
+  /** Number of cooldown steps (calculated based on num_frames) */
+  cooldown_steps?: number;
+  /** Guidance scale for generation control */
+  guidance_scale?: number;
+  /** Negative prompt text */
+  negative_prompt?: string;
+  /** Random seed for generation (default: random) */
+  seed?: number;
+  /** Shift value for generation control */
+  shift_value?: number;
+  /** Number of denoising steps */
+  steps?: number;
+  /** Whether to use guidance scheduling */
+  use_guidance_schedule?: boolean;
+  /** Whether to use negative prompts */
+  use_negative_prompts?: boolean;
+  /** Whether to use timestep transformation */
+  use_timestep_transform?: boolean;
+  /** Number of warmup steps (calculated based on num_frames) */
+  warmup_steps?: number;
+}
 
-export type MoonvalleyVideoToVideoRequest = MoonvalleyTextToVideoRequest & MoonvalleyVideoToVideoRequestAllOf & Required<Pick<MoonvalleyTextToVideoRequest & MoonvalleyVideoToVideoRequestAllOf, 'prompt_text'>>;
+/**
+ * Supported types for video control
+ */
+export type MoonvalleyVideoToVideoRequestControlType = typeof MoonvalleyVideoToVideoRequestControlType[keyof typeof MoonvalleyVideoToVideoRequestControlType];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const MoonvalleyVideoToVideoRequestControlType = {
+  motion_control: 'motion_control',
+  pose_control: 'pose_control',
+} as const;
+
+export interface MoonvalleyVideoToVideoRequest {
+  /** Supported types for video control */
+  control_type: MoonvalleyVideoToVideoRequestControlType;
+  inference_params?: MoonvalleyVideoToVideoInferenceParams;
+  /** Describes the video to generate */
+  prompt_text: string;
+  /** Url to control video */
+  video_url: string;
+  /** Optional webhook URL for notifications */
+  webhook_url?: string;
+}
 
 /**
  * Translations of node metadata in different languages.
@@ -3474,11 +3584,18 @@ export const NodeStatus = {
   NodeStatusBanned: 'NodeStatusBanned',
 } as const;
 
+/**
+ * The policies associated with the comfy node.
+ */
+export type NodeVersionComfyNodePolicies = {[key: string]: ComfyNodePolicy};
+
 export interface NodeVersion {
   /** Summary of changes made in this version */
   changelog?: string;
   /** The status of comfy node extraction process. */
   comfy_node_extract_status?: string;
+  /** The policies associated with the comfy node. */
+  comfy_node_policies?: NodeVersionComfyNodePolicies;
   /** The date and time the version was created. */
   createdAt?: string;
   /** A list of pip dependencies required by the node. */
@@ -7991,6 +8108,29 @@ export type GetBranch200 = {
   branches?: string[];
 };
 
+export type ListAllComfyNodesParams = {
+limit?: number;
+offset?: number;
+/**
+ * Filter by node ID
+ */
+node_id?: string;
+/**
+ * Filter by node version
+ */
+node_version?: string;
+/**
+ * Filter by ComfyUI node name
+ */
+comfy_node_name?: string;
+};
+
+export type ListAllComfyNodes200 = {
+  comfy_nodes?: ComfyNode[];
+  /** Total number of comfy nodes */
+  total?: number;
+};
+
 export type ComfyNodesBackfillParams = {
 max_node?: number;
 };
@@ -9377,6 +9517,72 @@ export const useAdminCreateNode = <TError = ErrorResponse | void,
     }
     
 /**
+ * Only admins can update a node with admin privileges.
+ * @summary Admin Update Node
+ */
+export const adminUpdateNode = (
+    nodeId: string,
+    node: Node,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<Node>(
+      {url: `/admin/nodes/${nodeId}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: node
+    },
+      options);
+    }
+  
+
+
+export const getAdminUpdateNodeMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateNode>>, TError,{nodeId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminUpdateNode>>, TError,{nodeId: string;data: Node}, TContext> => {
+
+const mutationKey = ['adminUpdateNode'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminUpdateNode>>, {nodeId: string;data: Node}> = (props) => {
+          const {nodeId,data} = props ?? {};
+
+          return  adminUpdateNode(nodeId,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminUpdateNodeMutationResult = NonNullable<Awaited<ReturnType<typeof adminUpdateNode>>>
+    export type AdminUpdateNodeMutationBody = Node
+    export type AdminUpdateNodeMutationError = ErrorResponse | void
+
+    /**
+ * @summary Admin Update Node
+ */
+export const useAdminUpdateNode = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateNode>>, TError,{nodeId: string;data: Node}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof adminUpdateNode>>,
+        TError,
+        {nodeId: string;data: Node},
+        TContext
+      > => {
+
+      const mutationOptions = getAdminUpdateNodeMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
  * Only admins can approve a node version.
  * @summary Admin Update Node Version Status
  */
@@ -9522,6 +9728,95 @@ export function useGetBranch<TData = Awaited<ReturnType<typeof getBranch>>, TErr
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetBranchQueryOptions(params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * @summary list all comfy-nodes
+ */
+export const listAllComfyNodes = (
+    params?: ListAllComfyNodesParams,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<ListAllComfyNodes200>(
+      {url: `/comfy-nodes`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getListAllComfyNodesQueryKey = (params?: ListAllComfyNodesParams,) => {
+    return [`/comfy-nodes`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getListAllComfyNodesQueryOptions = <TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAllComfyNodesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAllComfyNodes>>> = ({ signal }) => listAllComfyNodes(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ListAllComfyNodesQueryResult = NonNullable<Awaited<ReturnType<typeof listAllComfyNodes>>>
+export type ListAllComfyNodesQueryError = ErrorResponse | void
+
+
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params: undefined |  ListAllComfyNodesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listAllComfyNodes>>,
+          TError,
+          Awaited<ReturnType<typeof listAllComfyNodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof listAllComfyNodes>>,
+          TError,
+          Awaited<ReturnType<typeof listAllComfyNodes>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary list all comfy-nodes
+ */
+
+export function useListAllComfyNodes<TData = Awaited<ReturnType<typeof listAllComfyNodes>>, TError = ErrorResponse | void>(
+ params?: ListAllComfyNodesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listAllComfyNodes>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getListAllComfyNodesQueryOptions(params,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
@@ -12133,6 +12428,73 @@ export function useGetComfyNode<TData = Awaited<ReturnType<typeof getComfyNode>>
 
 
 
+/**
+ * @summary Update a specific comfy-node
+ */
+export const updateComfyNode = (
+    nodeId: string,
+    version: string,
+    comfyNodeName: string,
+    comfyNodeUpdateRequest: ComfyNodeUpdateRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      
+      
+      return customInstance<ComfyNode>(
+      {url: `/nodes/${nodeId}/versions/${version}/comfy-nodes/${comfyNodeName}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: comfyNodeUpdateRequest
+    },
+      options);
+    }
+  
+
+
+export const getUpdateComfyNodeMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateComfyNode>>, TError,{nodeId: string;version: string;comfyNodeName: string;data: ComfyNodeUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateComfyNode>>, TError,{nodeId: string;version: string;comfyNodeName: string;data: ComfyNodeUpdateRequest}, TContext> => {
+
+const mutationKey = ['updateComfyNode'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateComfyNode>>, {nodeId: string;version: string;comfyNodeName: string;data: ComfyNodeUpdateRequest}> = (props) => {
+          const {nodeId,version,comfyNodeName,data} = props ?? {};
+
+          return  updateComfyNode(nodeId,version,comfyNodeName,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateComfyNodeMutationResult = NonNullable<Awaited<ReturnType<typeof updateComfyNode>>>
+    export type UpdateComfyNodeMutationBody = ComfyNodeUpdateRequest
+    export type UpdateComfyNodeMutationError = ErrorResponse | void
+
+    /**
+ * @summary Update a specific comfy-node
+ */
+export const useUpdateComfyNode = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateComfyNode>>, TError,{nodeId: string;version: string;comfyNodeName: string;data: ComfyNodeUpdateRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof updateComfyNode>>,
+        TError,
+        {nodeId: string;version: string;comfyNodeName: string;data: ComfyNodeUpdateRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getUpdateComfyNodeMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Forwards image editing requests to BFL's Flux Kontext Max API and returns the results.
  * @summary Proxy request to BFL Flux Kontext Max for image editing
@@ -15528,6 +15890,136 @@ export const useMoonvalleyImageToVideo = <TError = unknown,
     }
     
 /**
+ * @summary Create Text to Image Prompt
+ */
+export const moonvalleyTextToImage = (
+    moonvalleyTextToImageRequest: MoonvalleyTextToImageRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/text-to-image`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyTextToImageRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyTextToImageMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyTextToImage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToImage>>, {data: MoonvalleyTextToImageRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyTextToImage(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyTextToImageMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToImage>>>
+    export type MoonvalleyTextToImageMutationBody = MoonvalleyTextToImageRequest
+    export type MoonvalleyTextToImageMutationError = unknown
+
+    /**
+ * @summary Create Text to Image Prompt
+ */
+export const useMoonvalleyTextToImage = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyTextToImage>>,
+        TError,
+        {data: MoonvalleyTextToImageRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyTextToImageMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * @summary Create Text to Video Prompt
+ */
+export const moonvalleyTextToVideo = (
+    moonvalleyTextToVideoRequest: MoonvalleyTextToVideoRequest,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<MoonvalleyPromptResponse>(
+      {url: `/proxy/moonvalley/prompts/text-to-video`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: moonvalleyTextToVideoRequest, signal
+    },
+      options);
+    }
+  
+
+
+export const getMoonvalleyTextToVideoMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext> => {
+
+const mutationKey = ['moonvalleyTextToVideo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, {data: MoonvalleyTextToVideoRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  moonvalleyTextToVideo(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MoonvalleyTextToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToVideo>>>
+    export type MoonvalleyTextToVideoMutationBody = MoonvalleyTextToVideoRequest
+    export type MoonvalleyTextToVideoMutationError = unknown
+
+    /**
+ * @summary Create Text to Video Prompt
+ */
+export const useMoonvalleyTextToVideo = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof moonvalleyTextToVideo>>,
+        TError,
+        {data: MoonvalleyTextToVideoRequest},
+        TContext
+      > => {
+
+      const mutationOptions = getMoonvalleyTextToVideoMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
  * @summary Create Video to Video Prompt
  */
 export const moonvalleyVideoToVideo = (
@@ -15745,136 +16237,6 @@ export function useMoonvalleyGetPrompt<TData = Awaited<ReturnType<typeof moonval
 
 
 
-/**
- * @summary Create Text to Image Prompt
- */
-export const moonvalleyTextToImage = (
-    moonvalleyTextToImageRequest: MoonvalleyTextToImageRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<MoonvalleyPromptResponse>(
-      {url: `/proxy/moonvalley/text-to-image`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: moonvalleyTextToImageRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getMoonvalleyTextToImageMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext> => {
-
-const mutationKey = ['moonvalleyTextToImage'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToImage>>, {data: MoonvalleyTextToImageRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  moonvalleyTextToImage(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type MoonvalleyTextToImageMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToImage>>>
-    export type MoonvalleyTextToImageMutationBody = MoonvalleyTextToImageRequest
-    export type MoonvalleyTextToImageMutationError = unknown
-
-    /**
- * @summary Create Text to Image Prompt
- */
-export const useMoonvalleyTextToImage = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToImage>>, TError,{data: MoonvalleyTextToImageRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyTextToImage>>,
-        TError,
-        {data: MoonvalleyTextToImageRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getMoonvalleyTextToImageMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
-/**
- * @summary Create Text to Video Prompt
- */
-export const moonvalleyTextToVideo = (
-    moonvalleyTextToVideoRequest: MoonvalleyTextToVideoRequest,
- options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
-) => {
-      
-      
-      return customInstance<MoonvalleyPromptResponse>(
-      {url: `/proxy/moonvalley/text-to-video`, method: 'POST',
-      headers: {'Content-Type': 'application/json', },
-      data: moonvalleyTextToVideoRequest, signal
-    },
-      options);
-    }
-  
-
-
-export const getMoonvalleyTextToVideoMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext> => {
-
-const mutationKey = ['moonvalleyTextToVideo'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, {data: MoonvalleyTextToVideoRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  moonvalleyTextToVideo(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type MoonvalleyTextToVideoMutationResult = NonNullable<Awaited<ReturnType<typeof moonvalleyTextToVideo>>>
-    export type MoonvalleyTextToVideoMutationBody = MoonvalleyTextToVideoRequest
-    export type MoonvalleyTextToVideoMutationError = unknown
-
-    /**
- * @summary Create Text to Video Prompt
- */
-export const useMoonvalleyTextToVideo = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof moonvalleyTextToVideo>>, TError,{data: MoonvalleyTextToVideoRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof moonvalleyTextToVideo>>,
-        TError,
-        {data: MoonvalleyTextToVideoRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getMoonvalleyTextToVideoMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
 /**
  * @summary Upload Files
  */
@@ -20734,7 +21096,7 @@ export const useBanPublisherNode = <TError = void | ErrorResponse,
 export const claimMyNode = (
     publisherId: string,
     nodeId: string,
-    claimMyNodeBody: ClaimMyNodeBody,
+    claimMyNodeRequest: ClaimMyNodeRequest,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
@@ -20742,16 +21104,16 @@ export const claimMyNode = (
       return customInstance<void>(
       {url: `/publishers/${publisherId}/nodes/${nodeId}/claim-my-node`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: claimMyNodeBody, signal
+      data: claimMyNodeRequest, signal
     },
       options);
     }
   
 
 
-export const getClaimMyNodeMutationOptions = <TError = void | ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext> => {
+export const getClaimMyNodeMutationOptions = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeRequest}, TContext> => {
 
 const mutationKey = ['claimMyNode'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -20763,7 +21125,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimMyNode>>, {publisherId: string;nodeId: string;data: ClaimMyNodeBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof claimMyNode>>, {publisherId: string;nodeId: string;data: ClaimMyNodeRequest}> = (props) => {
           const {publisherId,nodeId,data} = props ?? {};
 
           return  claimMyNode(publisherId,nodeId,data,requestOptions)
@@ -20775,18 +21137,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ClaimMyNodeMutationResult = NonNullable<Awaited<ReturnType<typeof claimMyNode>>>
-    export type ClaimMyNodeMutationBody = ClaimMyNodeBody
-    export type ClaimMyNodeMutationError = void | ErrorResponse
+    export type ClaimMyNodeMutationBody = ClaimMyNodeRequest
+    export type ClaimMyNodeMutationError = ErrorResponse | void
 
     /**
  * @summary Claim nodeId into publisherId for the authenticated publisher
  */
-export const useClaimMyNode = <TError = void | ErrorResponse,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeBody}, TContext>, request?: SecondParameter<typeof customInstance>}
+export const useClaimMyNode = <TError = ErrorResponse | void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof claimMyNode>>, TError,{publisherId: string;nodeId: string;data: ClaimMyNodeRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof claimMyNode>>,
         TError,
-        {publisherId: string;nodeId: string;data: ClaimMyNodeBody},
+        {publisherId: string;nodeId: string;data: ClaimMyNodeRequest},
         TContext
       > => {
 
