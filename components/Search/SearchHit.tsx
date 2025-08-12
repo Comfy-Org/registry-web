@@ -97,7 +97,10 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 )}
             </div>
             {/* meta info */}
-            <p className="text-xs font-light text-nowrap mt-2 text-gray-400">
+            <p
+                className="text-xs font-light text-nowrap mt-2 text-gray-400"
+                dir="ltr"
+            >
                 <PublisherId publisherId={hit.publisher_id} />
                 {hit.latest_version && (
                     <span className="">
