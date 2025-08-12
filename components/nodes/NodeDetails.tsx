@@ -289,7 +289,7 @@ const NodeDetails = () => {
                                         hidden={isUnclaimed}
                                     >
                                         {[
-                                            <div dir="ltr">
+                                            <div key="publisher" dir="ltr">
                                                 {node.publisher?.id?.replace(
                                                     /^(?!$)/,
                                                     '@'
@@ -302,16 +302,16 @@ const NodeDetails = () => {
                                             ),
 
                                             node.latest_version?.createdAt &&
-                                            intlFormatDistance(
-                                                new Date(
-                                                    node.latest_version.createdAt
+                                                intlFormatDistance(
+                                                    new Date(
+                                                        node.latest_version.createdAt
+                                                    ),
+                                                    new Date(),
+                                                    {
+                                                        numeric: 'auto',
+                                                        locale: i18n.language,
+                                                    }
                                                 ),
-                                                new Date(),
-                                                {
-                                                    numeric: 'auto',
-                                                    locale: i18n.language,
-                                                }
-                                            ),
                                         ]
                                             .flatMap((e) => (e ? [e] : []))
                                             // same as .join(' | '), but with span element
@@ -319,12 +319,18 @@ const NodeDetails = () => {
                                                 (acc, x, i, a) => [
                                                     ...acc,
                                                     x,
-                                                    i < a.length - 1 && <span> | </span>,
+                                                    i < a.length - 1 && (
+                                                        <span
+                                                            key={`separator-${i}`}
+                                                        >
+                                                            {' '}
+                                                            |{' '}
+                                                        </span>
+                                                    ),
                                                 ],
                                                 [] as ReactNode[]
-                                            ).filter(
-                                                Boolean
-                                            )}
+                                            )
+                                            .filter(Boolean)}
                                     </p>
                                 </div>
                             </div>
@@ -433,13 +439,13 @@ const NodeDetails = () => {
                                         <p className="text-base font-normal text-gray-200">
                                             {isUnclaimed
                                                 ? t(
-                                                    "This node can only be installed via git, because it's unclaimed by any publisher"
-                                                )
+                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
+                                                  )
                                                 : !nodeVersions?.length
-                                                    ? t(
+                                                  ? t(
                                                         'This node can only be installed via git, because it has no versions published yet'
                                                     )
-                                                    : t(
+                                                  : t(
                                                         'This node can only be installed via git'
                                                     )}
                                             {node.repository && (
@@ -672,12 +678,12 @@ const NodeDetails = () => {
                                                 {t('Preempted Names')}:{' '}
                                                 <pre className="whitespace-pre-wrap text-xs">
                                                     {node.preempted_comfy_node_names &&
-                                                        node
-                                                            .preempted_comfy_node_names
-                                                            .length > 0
+                                                    node
+                                                        .preempted_comfy_node_names
+                                                        .length > 0
                                                         ? node.preempted_comfy_node_names.join(
-                                                            '\n'
-                                                        )
+                                                              '\n'
+                                                          )
                                                         : t('None')}
                                                 </pre>
                                             </span>
