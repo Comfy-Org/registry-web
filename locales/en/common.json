@@ -188,7 +188,6 @@
   "Manage Nodes": "Manage Nodes",
   "Manage Unclaimed Nodes": "Manage Unclaimed Nodes",
   "More": "More",
-  "Most recent version": "Most recent version",
   "N/A": "N/A",
   "Name": "Name",
   "New Publisher": "New Publisher",
@@ -378,7 +377,6 @@
   "Your Nodes": "Your Nodes",
   "Your nodes": "Your nodes",
   "approve": "approve",
-  "at": "at",
   "comma separated": "comma separated",
   "downloads": "downloads",
   "e.g.\\nCUDA\\nROCm\\nMetal\\nCPU": "e.g.\\nCUDA\\nROCm\\nMetal\\nCPU",
@@ -397,6 +395,5 @@
   "{{id}}@{{version}} Approved": "{{id}}@{{version}} Approved",
   "{{id}}@{{version}} Rejected": "{{id}}@{{version}} Rejected",
   "{{id}}@{{version}} Undone, back to {{status}}": "{{id}}@{{version}} Undone, back to {{status}}",
-  "{{nodeStatus}} Nodes": "{{nodeStatus}} Nodes",
-  "{{publisher}} | v{{version}} {{mostRecentLabel}}": "{{publisher}} | v{{version}} {{mostRecentLabel}}"
+  "{{nodeStatus}} Nodes": "{{nodeStatus}} Nodes"
 }
