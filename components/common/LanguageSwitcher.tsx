@@ -114,7 +114,15 @@ export default function LanguageSwitcher({
                             <>
                                 <span
                                     className={clsx(
-                                        'text-right border-r-2 border-gray-300  pr-2 '
+                                        'text-right border-gray-300',
+                                        {
+                                            'border-r-2 pr-2':
+                                                i18n.dir(currentLanguage) ===
+                                                'ltr',
+                                            'border-l-2 pl-2':
+                                                i18n.dir(currentLanguage) ===
+                                                'rtl',
+                                        }
                                     )}
                                 >
                                     {nameInThatLanguage}
