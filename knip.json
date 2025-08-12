@@ -1,12 +1,15 @@
 {
     "$schema": "https://unpkg.com/knip@latest/schema.json",
     "entry": [
-        "next.config.mjs",
+        "next.config.ts",
+        "middleware.ts",
         "pages/**/*.{js,jsx,ts,tsx}",
+        "app/**/*.{js,jsx,ts,tsx}",
         "components/**/*.{js,jsx,ts,tsx}",
         "src/**/*.{js,jsx,ts,tsx}",
         "utils/**/*.{js,jsx,ts,tsx}",
-        "scripts/**/*.{js,jsx,ts,tsx}"
+        "scripts/**/*.{js,jsx,ts,tsx}",
+        "orval.config.ts"
     ],
     "project": [
         "**/*.{js,jsx,ts,tsx}",
@@ -21,10 +24,10 @@
         "**/*.spec.{js,jsx,ts,tsx}",
         ".storybook/**/*"
     ],
-    "ignoreDependencies": ["@types/node"],
+    "ignoreDependencies": ["@types/node", "@algolia/autocomplete-shared"],
     "next": {
-        "config": ["next.config.mjs"],
-        "entry": ["pages/**/*.{js,jsx,ts,tsx}"]
+        "config": ["next.config.ts"],
+        "entry": ["pages/**/*.{js,jsx,ts,tsx}", "app/**/*.{js,jsx,ts,tsx}"]
     },
     "vitest": {
         "config": ["vitest.config.{js,ts,mjs}"]
