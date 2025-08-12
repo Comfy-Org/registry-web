@@ -1,8 +1,6 @@
 {
     "$schema": "https://unpkg.com/knip@latest/schema.json",
     "entry": [
-        "next.config.ts",
-        "middleware.ts",
         "pages/**/*.{js,jsx,ts,tsx}",
         "app/**/*.{js,jsx,ts,tsx}",
         "components/**/*.{js,jsx,ts,tsx}",
@@ -22,14 +20,19 @@
         "**/*.stories.{js,jsx,ts,tsx}",
         "**/*.test.{js,jsx,ts,tsx}",
         "**/*.spec.{js,jsx,ts,tsx}",
-        ".storybook/**/*"
+        ".storybook/**/*",
+        "next.config.ts",
+        "middleware.ts"
     ],
-    "ignoreDependencies": ["@types/node", "@algolia/autocomplete-shared"],
+    "ignoreDependencies": ["@algolia/autocomplete-shared"],
     "next": {
         "config": ["next.config.ts"],
         "entry": ["pages/**/*.{js,jsx,ts,tsx}", "app/**/*.{js,jsx,ts,tsx}"]
     },
     "vitest": {
         "config": ["vitest.config.{js,ts,mjs}"]
+    },
+    "storybook": {
+        "entry": ["src/stories/**/*.{js,jsx,ts,tsx}"]
     }
 }
