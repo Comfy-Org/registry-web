@@ -1,15 +1,15 @@
-import { fn } from '@storybook/test'
+import { vi } from 'vitest'
 
 // Mock the Firebase auth hooks for Storybook
-export const useSignInWithGoogle = fn().mockName('useSignInWithGoogle')
-export const useSignInWithGithub = fn().mockName('useSignInWithGithub')
-export const useSignOut = fn().mockName('useSignOut')
-export const useAuthState = fn().mockName('useAuthState')
+export const useSignInWithGoogle = vi.fn().mockName('useSignInWithGoogle')
+export const useSignInWithGithub = vi.fn().mockName('useSignInWithGithub')
+export const useSignOut = vi.fn().mockName('useSignOut')
+export const useAuthState = vi.fn().mockName('useAuthState')
 
 // Set default return values
-useSignInWithGoogle.mockReturnValue([fn(), undefined, false, undefined])
-useSignInWithGithub.mockReturnValue([fn(), undefined, false, undefined])
-useSignOut.mockReturnValue([fn(), false, undefined])
+useSignInWithGoogle.mockReturnValue([vi.fn(), undefined, false, undefined])
+useSignInWithGithub.mockReturnValue([vi.fn(), undefined, false, undefined])
+useSignOut.mockReturnValue([vi.fn(), false, undefined])
 useAuthState.mockReturnValue([null, false, undefined])
 
 console.log('mocking react-firebase-hooks/auth', {
