@@ -1,9 +1,9 @@
 import { mergeConfig } from 'vite'
 import type { StorybookConfig } from '@storybook/nextjs-vite'
-import path, { relative, resolve } from 'node:path'
-import fastGlob from 'fast-glob'
-import { time, timeEnd, timeLog } from 'node:console'
-const config: StorybookConfig = {
+import path from 'node:path'
+import { watch } from '@snomiao/glob-watch'
+
+export default defineConfig({
   stories: [
     '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
     '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
@@ -19,68 +19,63 @@ const config: StorybookConfig = {
   framework: '@storybook/nextjs-vite',
   staticDirs: ['../public', '../src/assets'],
   viteFinal: async (c) => {
-    // const mocks = await fastGlob('./src/**/*.mock.ts')
-    // console.log('Found mocks:', mocks)
-    const PATH = (p: string) => path.resolve(process.cwd(), p)
-
-    const cfg = {
-      ...c,
-      resolve: {
-        ...c.resolve,
-        alias: {
-          ...c.resolve?.alias,
-          '@': PATH('./'),
-        },
-      },
+    return mergeConfig(c, {
       server: {
-        ...c.server,
         allowedHosts: true,
+        hmr: { clientPort: 443 },
       },
-      plugins: [
-        {
-          name: 'mock-resolver',
-
-          enforce: 'pre',
-          resolveId(id, importer) {
-            const pathname = relative(process.cwd(), id)
-            console.log('Resolving ID:', pathname, 'from:', importer)
-            if (pathname === '@/src/hooks/useFirebaseUser') {
-              const resolved = PATH('./src/hooks/useFirebaseUser.mock.ts')
-              console.log('!!!! Redirecting to mock:', resolved)
-              return resolved
-            }
-          },
-        },
-        ...(c.plugins || []),
-      ],
-    }
-    const cfg2 = mergeConfig(c, {
-      server: { allowedHosts: true },
-      plugins: [
-        {
-          name: 'mock-resolver',
-          enforce: 'pre',
-          // This plugin resolves the useFirebaseUser hook to its mock version
-          resolveId(id, importer) {
-            const pathname = relative(
-              process.cwd(),
-              resolve(path.dirname(importer), id)
-            )
-            if (id.replace(/^(\.\.\/)+/, '') === 'src/hooks/useFirebaseUser') {
-              const resolved = PATH('./src/hooks/useFirebaseUser.mock.ts')
-              return resolved
-            }
-          },
-        },
-      ],
+      plugins: [createMockResolverPlugin()],
       resolve: {
         alias: {},
       },
     })
-
-    console.dir(cfg)
-    console.dir(cfg2)
-    return cfg2
   },
+})
+
+function defineConfig<T extends StorybookConfig>(v: T): T {
+  return v
 }
-export default config
+
+/**
+ * Creates a Vite plugin that automatically redirects imports from original files to their mock versions
+ * Scans for all .mock.ts files and creates redirect rules
+ */
+export async function createMockResolverPlugin() {
+  // Scan for all .mock.ts files
+  const mockMap = new Map<string, string>()
+  const glob = '**/*.mock.{ts,tsx}'
+  const id = (path: string) => path.replace(/\.mock(\.tsx?)$/, '')
+  const _destroy = await watch(
+    glob,
+    ({ added, deleted }) => {
+      added.forEach(({ path }) => {
+        mockMap.set(id(path), path)
+        console.log(`+ Mock ${path}`)
+      })
+      deleted.forEach(({ path }) => {
+        mockMap.delete(id(path))
+        console.log(`- Mock ${path}`)
+      })
+    },
+    {
+      cwd: process.cwd(),
+      ignore: ['node_modules/**'],
+      mode: 'fast-glob',
+    }
+  )
+
+  return {
+    name: 'mock-resolver',
+    enforce: 'pre' as const,
+    resolveId(id: string, importer?: string) {
+      // Normalize the import ID by removing relative path prefixes
+      const normalizedId = id.replace(/^(?:\.\.\/)+/, '')
+      if (mockMap.has(normalizedId)) {
+        const mockPath = mockMap.get(normalizedId)!
+        const resolvedPath = path.resolve(process.cwd(), mockPath)
+        console.log(`⚒️  Mocking ${mockPath} in ${importer || 'unknown'}`)
+        return resolvedPath
+      }
+    },
+  }
+}

@@ -1,6 +1,7 @@
 import ProfileDropdown from '@/components/Header/ProfileDropdown'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CAPI, handlers } from '@/src/mocks/handlers'
+import { handlers } from '@/src/mocks/handlers'
+import { CAPI } from '@/src/mocks/apibase'
 import { http, HttpResponse } from 'msw'
 import { User } from '@/src/api/generated'
 import { User as FirebaseUser } from 'firebase/auth'
@@ -16,10 +17,10 @@ const meta: Meta<typeof ProfileDropdown> = {
             handlers: handlers,
         },
     },
-    tags: ['autodocs'],
 }
 
 export default meta
+
 type Story = StoryObj<typeof ProfileDropdown>
 
 // Mock user data variations
