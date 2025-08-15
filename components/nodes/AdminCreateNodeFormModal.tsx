@@ -3,8 +3,9 @@ import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { HiPlus } from 'react-icons/hi'
+import { HiPlus, HiDownload } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { z } from 'zod'
@@ -47,6 +48,84 @@ const adminCreateNodeDefaultValues: Partial<
     license: '{file="LICENSE"}',
 }
 
+interface PyProjectData {
+    name?: string
+    description?: string
+    author?: string
+    license?: string
+}
+
+async function fetchGitHubRepoInfo(
+    repoUrl: string
+): Promise<PyProjectData | null> {
+    try {
+        // Parse GitHub URL to extract owner and repo
+        const urlMatch = repoUrl.match(
+            /github\.com\/([^\/]+)\/([^\/]+?)(?:\.git)?(?:\/|$)/
+        )
+        if (!urlMatch) {
+            throw new Error('Invalid GitHub URL format')
+        }
+
+        const [, owner, repo] = urlMatch
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/pyproject.toml`
+
+        const response = await fetch(apiUrl)
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('pyproject.toml not found in repository')
+            }
+            throw new Error(`GitHub API error: ${response.statusText}`)
+        }
+
+        const data = await response.json()
+        const content = atob(data.content)
+
+        // Basic TOML parsing for pyproject.toml
+        const projectSection =
+            content.match(/\[project\]([\s\S]*?)(?=\n\[|\n$|$)/)?.[1] || ''
+
+        const result: PyProjectData = {}
+
+        // Extract name
+        const nameMatch = projectSection.match(/name\s*=\s*["']([^"']+)["']/)
+        if (nameMatch) result.name = nameMatch[1]
+
+        // Extract description
+        const descMatch = projectSection.match(
+            /description\s*=\s*["']([^"']+)["']/
+        )
+        if (descMatch) result.description = descMatch[1]
+
+        // Extract author (from authors array or single author field)
+        const authorsMatch = projectSection.match(
+            /authors\s*=\s*\[([\s\S]*?)\]/
+        )
+        if (authorsMatch) {
+            const authorNameMatch = authorsMatch[1].match(
+                /name\s*=\s*["']([^"']+)["']/
+            )
+            if (authorNameMatch) result.author = authorNameMatch[1]
+        } else {
+            const authorMatch = projectSection.match(
+                /author\s*=\s*["']([^"']+)["']/
+            )
+            if (authorMatch) result.author = authorMatch[1]
+        }
+
+        // Extract license
+        const licenseMatch =
+            projectSection.match(/license\s*=\s*["']([^"']+)["']/) ||
+            content.match(/license\s*=\s*\{\s*text\s*=\s*["']([^"']+)["']/)
+        if (licenseMatch) result.license = licenseMatch[1]
+
+        return result
+    } catch (error) {
+        console.error('Error fetching GitHub repo info:', error)
+        throw error
+    }
+}
+
 export function AdminCreateNodeFormModal({
     open,
     onClose,
@@ -56,6 +135,8 @@ export function AdminCreateNodeFormModal({
 }) {
     const { t } = useNextTranslation()
     const qc = useQueryClient()
+    const [isFetching, setIsFetching] = useState(false)
+
     const mutation = useAdminCreateNode({
         mutation: {
             onError: (error) => {
@@ -83,6 +164,7 @@ export function AdminCreateNodeFormModal({
         formState: { errors },
         watch,
         reset,
+        setValue,
     } = useForm<Node>({
         resolver: zodResolver(adminCreateNodeSchema) as any,
         defaultValues: adminCreateNodeDefaultValues,
@@ -105,6 +187,38 @@ export function AdminCreateNodeFormModal({
             })
         })
     })
+
+    const handleFetchRepoInfo = async () => {
+        const repository = watch('repository')
+        if (!repository) {
+            toast.error(t('Please enter a repository URL first'))
+            return
+        }
+
+        setIsFetching(true)
+        try {
+            const repoData = await fetchGitHubRepoInfo(repository)
+            if (repoData) {
+                if (repoData.name) setValue('name', repoData.name)
+                if (repoData.description)
+                    setValue('description', repoData.description)
+                if (repoData.author) setValue('author', repoData.author)
+                if (repoData.license) setValue('license', repoData.license)
+
+                toast.success(t('Repository information fetched successfully'))
+            }
+        } catch (error) {
+            const errorMessage =
+                error instanceof Error ? error.message : 'Unknown error'
+            toast.error(
+                t('Failed to fetch repository information: {{error}}', {
+                    error: errorMessage,
+                })
+            )
+        } finally {
+            setIsFetching(false)
+        }
+    }
 
     const { data: allPublishers } = useListPublishers({
         query: { enabled: false },
@@ -145,6 +259,40 @@ export function AdminCreateNodeFormModal({
                     onSubmit={onSubmit}
                 >
                     <p className="text-white">{t('Add unclaimed node')}</p>
+
+                    <div>
+                        <Label htmlFor="repository">
+                            {t('Repository URL')}
+                        </Label>
+                        <div className="flex gap-2">
+                            <TextInput
+                                id="repository"
+                                {...register('repository')}
+                                placeholder="https://github.com/user/repo"
+                                className="flex-1"
+                            />
+                            <Button
+                                type="button"
+                                size="sm"
+                                onClick={handleFetchRepoInfo}
+                                disabled={isFetching}
+                                className="whitespace-nowrap"
+                            >
+                                <HiDownload className="mr-2 h-4 w-4" />
+                                {isFetching
+                                    ? t('Fetching...')
+                                    : t('Fetch Info')}
+                            </Button>
+                        </div>
+                        <span className="text-error">
+                            {errors.repository?.message}
+                        </span>
+                        <p className="text-xs text-gray-400 mt-1">
+                            {t(
+                                'Enter a GitHub repository URL and click "Fetch Info" to automatically fill in details from pyproject.toml'
+                            )}
+                        </p>
+                    </div>
 
                     <div>
                         <Label htmlFor="id">{t('ID')}</Label>
@@ -219,17 +367,6 @@ export function AdminCreateNodeFormModal({
                         <TextInput id="author" {...register('author')} />
                         <span className="text-error">
                             {errors.author?.message}
-                        </span>
-                    </div>
-
-                    <div>
-                        <Label htmlFor="repository">{t('Repository')}</Label>
-                        <TextInput
-                            id="repository"
-                            {...register('repository')}
-                        />
-                        <span className="text-error">
-                            {errors.repository?.message}
                         </span>
                     </div>
 
