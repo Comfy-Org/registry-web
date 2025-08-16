@@ -48,29 +48,22 @@ jobs:
                   exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
                   autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
 
-            # Comment on PR with Chromatic results
-            - name: Comment on PR
+            # Update PR comment with Chromatic results
+            - name: Update PR comment
               if: github.event_name == 'pull_request' && steps.chromatic.outputs.buildUrl
-              uses: actions/github-script@v6
+              uses: edumserrano/find-create-or-update-comment@v3
               with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  script: |
-                      const { issue: { number: issue_number }, repo: { owner, repo } } = context;
-                      const buildUrl = '${{ steps.chromatic.outputs.buildUrl }}';
-                      const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
-
-                      const message = `## 🎨 Chromatic Visual Testing Results
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body-includes: '<!-- chromatic-comment -->'
+                  comment-author: 'github-actions[bot]'
+                  body: |
+                      ## 🎨 Chromatic Visual Testing Results
+                      <!-- chromatic-comment -->
 
                       | Resource | URL |
                       | --- | --- |
-                      | 🔍 Build Results | [Chromatic Build](${buildUrl}) |
-                      | 📚 Storybook | [View Storybook](${storybookUrl}) |
+                      | 🔍 Build Results | [Chromatic Build](${{ steps.chromatic.outputs.buildUrl }}) |
+                      | 📚 Storybook | [View Storybook](${{ steps.chromatic.outputs.storybookUrl }}) |
 
-                      Check the visual changes and approve or request changes as needed.`;
-
-                      github.rest.issues.createComment({
-                        issue_number,
-                        owner,
-                        repo,
-                        body: message
-                      });
+                      Check the visual changes and approve or request changes as needed.
+                  edit-mode: replace
