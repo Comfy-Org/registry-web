@@ -48,8 +48,8 @@ jobs:
                   exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
                   autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
 
-            # Comment on PR with Chromatic results
-            - name: Comment on PR
+            # Update PR comment with Chromatic results
+            - name: Update PR comment
               if: github.event_name == 'pull_request' && steps.chromatic.outputs.buildUrl
               uses: actions/github-script@v6
               with:
@@ -60,6 +60,7 @@ jobs:
                       const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
 
                       const message = `## 🎨 Chromatic Visual Testing Results
+                      <!-- chromatic-comment -->
 
                       | Resource | URL |
                       | --- | --- |
@@ -68,9 +69,33 @@ jobs:
 
                       Check the visual changes and approve or request changes as needed.`;
 
-                      github.rest.issues.createComment({
+                      // Get existing comments
+                      const comments = await github.rest.issues.listComments({
                         issue_number,
                         owner,
                         repo,
-                        body: message
                       });
+
+                      // Find existing Chromatic comment
+                      const existingComment = comments.data.find(comment => 
+                        comment.user.type === 'Bot' && 
+                        comment.body.includes('<!-- chromatic-comment -->')
+                      );
+
+                      if (existingComment) {
+                        // Update existing comment
+                        await github.rest.issues.updateComment({
+                          comment_id: existingComment.id,
+                          owner,
+                          repo,
+                          body: message
+                        });
+                      } else {
+                        // Create new comment
+                        await github.rest.issues.createComment({
+                          issue_number,
+                          owner,
+                          repo,
+                          body: message
+                        });
+                      }
