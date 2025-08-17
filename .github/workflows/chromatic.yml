@@ -1,106 +1,76 @@
 name: Chromatic Visual Testing
 
 on:
-    push:
-        branches: [main, dev]
-    pull_request:
-        branches: [main, dev]
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
 
 permissions:
-    issues: write # Required for Chromatic to comment on PRs
-    pull-requests: write # Required for Chromatic to comment on PRs
-
+  issues: write # Required for Chromatic to comment on PRs
+  pull-requests: write # Required for Chromatic to comment on PRs
 jobs:
-    chromatic-deployment:
-        name: Deploy Storybook to Chromatic
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout the repository
-            - name: Checkout repository
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0 # Required for Chromatic to retrieve git history
+  chromatic-deployment:
+    name: Deploy Storybook to Chromatic
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Required for Chromatic to retrieve git history
 
-            # Setup Node.js
-            - name: Setup Node.js
-              uses: actions/setup-node@v3
-              with:
-                  node-version: '22'
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
 
-            # Install Bun
-            - name: Install Bun
-              run: npm install -g bun
+      # Install Bun
+      - name: Install Bun
+        run: npm install -g bun
 
-            # Notify storybook build start
-            - name: Get current time
-              id: current-time
-              run: echo "time=$(date -u '+%m/%d/%Y, %I:%M:%S %p')" >> $GITHUB_OUTPUT
-            - name: Comment PR - Build Started
-              if: github.event_name == 'pull_request'
-              uses: edumserrano/find-create-or-update-comment@v3
-              with:
-                  issue-number: ${{ github.event.pull_request.number }}
-                  body-includes: '<!-- STORYBOOK_BUILD_STATUS -->'
-                  comment-author: 'github-actions[bot]'
-                  edit-mode: append
-                  body: |
-                      <!-- STORYBOOK_BUILD_STATUS -->
-                      ## 🎨 Storybook Build Status
+      # Install dependencies
+      - name: Install dependencies
+        run: bun install
 
-                      🔄 **Building Storybook and running visual tests...**
+      # Build Storybook
+      - name: Build Storybook
+        run: bun run build-storybook
 
-                      ⏳ Build started at: ${{ steps.current-time.outputs.time }} UTC
+      # Publish to Chromatic
+      - name: Publish to Chromatic
+        id: chromatic
+        uses: chromaui/action@v1
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          storybookBuildDir: storybook-static
+          exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
+          autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
 
-                      ---
-                      *This comment will be updated when the build completes*
+      # Comment on PR with Chromatic results
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && steps.chromatic.outputs.buildUrl
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { issue: { number: issue_number }, repo: { owner, repo } } = context;
+            const buildUrl = '${{ steps.chromatic.outputs.buildUrl }}';
+            const storybookUrl = '${{ steps.chromatic.outputs.storybookUrl }}';
 
-            # Install dependencies
-            - name: Install dependencies
-              run: bun install
+            const message = `## 🎨 Chromatic Visual Testing Results
 
-            # Build Storybook
-            - name: Build Storybook
-              run: bun run build-storybook
+            | Resource | URL |
+            | --- | --- |
+            | 🔍 Build Results | [Chromatic Build](${buildUrl}) |
+            | 📚 Storybook | [View Storybook](${storybookUrl}) |
 
-            # Publish to Chromatic
-            - name: Publish to Chromatic
-              id: chromatic
-              uses: chromaui/action@v1
-              with:
-                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-                  storybookBuildDir: storybook-static
-                  exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
-                  autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
+            Check the visual changes and approve or request changes as needed.`;
 
-            - name: Get completion time
-              id: completion-time
-              run: echo "time=$(date -u '+%m/%d/%Y, %I:%M:%S %p')" >> $GITHUB_OUTPUT
-
-            - name: Comment PR - Build Complete
-              if: github.event_name == 'pull_request'
-              uses: edumserrano/find-create-or-update-comment@v3
-              with:
-                  issue-number: ${{ github.event.pull_request.number }}
-                  body-includes: '<!-- STORYBOOK_BUILD_STATUS -->'
-                  comment-author: 'github-actions[bot]'
-                  edit-mode: replace
-                  body: |
-                      <!-- STORYBOOK_BUILD_STATUS -->
-                      ## 🎨 Storybook Build Status
-
-                      ${{ steps.chromatic.outcome == 'success' && '✅' || '❌' }} **${{ steps.chromatic.outcome == 'success' && 'Build completed successfully!' || 'Build failed!' }}**
-
-                      ⏰ Completed at: ${{ steps.completion-time.outputs.time }} UTC
-
-                      ### 📊 Build Summary
-                      - **Components**: ${{ steps.chromatic.outputs.componentCount || '0' }}
-                      - **Stories**: ${{ steps.chromatic.outputs.testCount || '0' }}
-                      - **Visual changes**: ${{ steps.chromatic.outputs.changeCount || '0' }}
-                      - **Errors**: ${{ steps.chromatic.outputs.errorCount || '0' }}
-
-                      ### 🔗 Links
-                      ${{ steps.chromatic.outputs.buildUrl && format('- [📸 View Chromatic Build]({0})', steps.chromatic.outputs.buildUrl) || '' }}
-                      ${{ steps.chromatic.outputs.storybookUrl && format('- [📖 Preview Storybook]({0})', steps.chromatic.outputs.storybookUrl) || '' }}
-
-                      ---
-                      ${{ steps.chromatic.outcome == 'success' && '🎉 Your Storybook is ready for review!' || '⚠️ Please check the workflow logs for error details.' }}
+            github.rest.issues.createComment({
+              issue_number,
+              owner,
+              repo,
+              body: message
+            });
