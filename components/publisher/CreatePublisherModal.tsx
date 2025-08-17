@@ -73,8 +73,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
             show={open}
             onClose={onCloseModal}
             size="xl"
-            //@ts-ignore
-            theme={customThemeTModal}
+            theme={customThemeTModal as Modal['props']['theme']}
             popup
             dismissible
         >

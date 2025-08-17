@@ -72,8 +72,7 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
             size="md"
             onClose={onClose}
             popup
-            //@ts-ignore
-            theme={customThemeTModal}
+            theme={customThemeTModal as Modal['props']['theme']}
             dismissible
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">

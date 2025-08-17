@@ -60,8 +60,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                 size="sm"
                 onClose={onCloseModal}
                 popup
-                //@ts-ignore
-                theme={customThemeTModal}
+                theme={customThemeTModal as Modal['props']['theme']}
                 dismissible
             >
                 {/* <Modal.Header className="!bg-gray-800" /> */}

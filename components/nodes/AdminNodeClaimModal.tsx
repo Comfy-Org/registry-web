@@ -282,8 +282,7 @@ export function AdminNodeClaimModal({
             onClose={onClose}
             size="md"
             popup
-            //@ts-ignore
-            theme={customThemeTModal}
+            theme={customThemeTModal as Modal['props']['theme']}
             dismissible
         >
             <Modal.Header className="!bg-gray-800">

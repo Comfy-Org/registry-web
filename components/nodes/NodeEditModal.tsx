@@ -112,8 +112,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                 size="3xl"
                 onClose={onCloseEditModal}
                 popup
-                //@ts-ignore
-                theme={customThemeTModal}
+                theme={customThemeTModal as Modal['props']['theme']}
                 dismissible
             >
                 <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
