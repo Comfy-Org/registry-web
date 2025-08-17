@@ -1,6 +1,8 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import {
     useListAllNodeVersions,
+    useListAllNodes,
+    useAdminUpdateNodeVersion,
     NodeVersion,
     NodeVersionStatus,
 } from '@/src/api/generated'
@@ -25,6 +27,8 @@ import { useSearchParameter } from '@/src/hooks/useSearchParameter'
 import { NodeVersionStatusToReadable } from '@/src/mapper/nodeversion'
 import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
 import { usePage } from '@/components/hooks/usePage'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
 // This page allows admins to update node version compatibility fields
 export default withAdmin(NodeVersionCompatibilityAdmin)
@@ -47,6 +51,82 @@ function NodeVersionCompatibilityAdmin() {
         (...p) => p.filter((e) => NodeVersionStatus[e]) as NodeVersionStatus[],
         (v) => v || []
     )
+
+    const [isUpdatingAllVersions, setIsUpdatingAllVersions] = useState(false)
+    const queryClient = useQueryClient()
+    const { data: allNodes } = useListAllNodes()
+    const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
+
+    const updateAllNodeVersionsWithLatest = async () => {
+        if (!allNodes?.nodes) {
+            toast.error(t('No nodes found'))
+            return
+        }
+
+        setIsUpdatingAllVersions(true)
+        let successCount = 0
+        let errorCount = 0
+
+        try {
+            for (const node of allNodes.nodes) {
+                if (
+                    !node.latest_version ||
+                    !node.id ||
+                    !node.latest_version.version
+                ) {
+                    continue
+                }
+
+                const latestVersion = node.latest_version
+
+                try {
+                    await adminUpdateNodeVersion.mutateAsync({
+                        nodeId: node.id,
+                        versionNumber: latestVersion.version!,
+                        data: {
+                            supported_comfyui_frontend_version:
+                                latestVersion.supported_comfyui_frontend_version,
+                            supported_comfyui_version:
+                                latestVersion.supported_comfyui_version,
+                            supported_os: latestVersion.supported_os,
+                            supported_accelerators:
+                                latestVersion.supported_accelerators,
+                        },
+                    })
+                    successCount++
+                } catch (error) {
+                    errorCount++
+                    console.error(
+                        `Failed to update ${node.id}@${latestVersion.version}:`,
+                        error
+                    )
+                }
+            }
+
+            queryClient.invalidateQueries({
+                queryKey: ['useListAllNodeVersions'],
+            })
+
+            if (successCount > 0) {
+                toast.success(
+                    t('Updated {{count}} node versions successfully', {
+                        count: successCount,
+                    })
+                )
+            }
+            if (errorCount > 0) {
+                toast.error(
+                    t('Failed to update {{count}} node versions', {
+                        count: errorCount,
+                    })
+                )
+            }
+        } catch (error) {
+            toast.error(t('Failed to update node versions'))
+        } finally {
+            setIsUpdatingAllVersions(false)
+        }
+    }
 
     return (
         <div className="py-4 max-w-full relative dark">
@@ -180,6 +260,31 @@ function NodeVersionCompatibilityAdmin() {
                 </Button>
                 <Label>{t('Clear')}</Label>
             </form>
+
+            <div className="mb-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h3 className="text-lg font-medium text-yellow-800 dark:text-yellow-200">
+                            {t('Bulk Update Supported Versions')}
+                        </h3>
+                        <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                            {t(
+                                'One-Time Migration: Update all node versions with their latest supported ComfyUI versions, OS, and accelerators'
+                            )}
+                        </p>
+                    </div>
+                    <Button
+                        color="warning"
+                        onClick={updateAllNodeVersionsWithLatest}
+                        disabled={isUpdatingAllVersions}
+                        isProcessing={isUpdatingAllVersions}
+                    >
+                        {isUpdatingAllVersions
+                            ? t('Updating All Versions...')
+                            : t('Update All Node Versions')}
+                    </Button>
+                </div>
+            </div>
 
             <Suspense fallback={<Spinner />}>
                 <DataTable
