@@ -22,8 +22,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
             show={openModal}
             onClose={onCloseModal}
             size="xl"
-            //@ts-ignore
-            theme={customThemeTModal}
+            theme={customThemeTModal as Modal['props']['theme']}
         >
             <Modal.Header className="border-b border-gray-700">
                 {t('Create Publisher')}

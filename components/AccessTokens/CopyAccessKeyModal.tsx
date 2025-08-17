@@ -36,8 +36,7 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
             size="sm"
             onClose={onCloseModal}
             popup
-            //@ts-ignore
-            theme={customThemeTModal}
+            theme={customThemeTModal as Modal['props']['theme']}
             dismissible
         >
             <Modal.Body className="!bg-gray-800 p-8  md:px-7 md:py-7">
