@@ -72,15 +72,6 @@ jobs:
                   exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
                   autoAcceptChanges: ${{ github.ref == 'refs/heads/main' }} # Auto-accept changes on main branch
 
-            - name: Build Storybook and run Chromatic
-              id: chromatic
-              uses: chromaui/action@latest
-              with:
-                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-                  buildScriptName: build-storybook
-                  autoAcceptChanges: 'main' # Auto-accept changes on main branch
-                  exitOnceUploaded: true # Don't wait for UI tests to complete
-
             - name: Get completion time
               id: completion-time
               run: echo "time=$(date -u '+%m/%d/%Y, %I:%M:%S %p')" >> $GITHUB_OUTPUT
