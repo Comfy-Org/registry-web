@@ -1,10 +1,11 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import { Dropdown, DropdownItem } from 'flowbite-react'
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import Link, { LinkProps } from 'next/link'
+import { LocalizationContributeModal } from './LocalizationContributeModal'
 
 export default function LanguageSwitcher({
     className,
@@ -13,6 +14,7 @@ export default function LanguageSwitcher({
 } = {}) {
     const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
     const router = useRouter()
+    const [showContributeModal, setShowContributeModal] = useState(false)
 
     // _document.tsx sets the initial direction based on locale,
     // here we update document direction by locale without reloading the page
@@ -55,75 +57,56 @@ export default function LanguageSwitcher({
     )
 
     return (
-        <Dropdown
-            label={currentLanguageLabel}
-            color="gray"
-            size="xs"
-            dismissOnClick
-        >
-            {SUPPORTED_LANGUAGES.map((langCode) => {
-                const { nameInMyLanguage, nameInThatLanguage } =
-                    displayNames[langCode]
-                const isCurrent = langCode === currentLanguage
-                return (
-                    <DropdownItem
-                        key={langCode}
-                        className={clsx('grid grid-cols-2', {
-                            'font-bold': isCurrent,
-                        })}
-                        as={
-                            // forwardRef for allowing navigate using arrow-keys
-                            React.forwardRef(function LanguageLink(props, ref) {
-                                return (
-                                    <Link
-                                        {...props}
-                                        ref={
-                                            ref as React.Ref<HTMLAnchorElement>
-                                        }
-                                        onClick={(e) => {
-                                            // we need to use changeLanguage() to persist the language change
-                                            // and also update the cookie for server-side detection
-                                            e.preventDefault()
-                                            changeLanguage(langCode)
-                                        }}
-                                        locale={langCode}
-                                        href={router.asPath}
-                                        as={router.asPath}
-                                        replace
-                                    >
-                                        {props.children}
-                                    </Link>
-                                )
-                            }) as typeof Link
-                        }
-                    >
-                        {isCurrent ? (
-                            <span
-                                className={clsx('text-center col-span-2', {
-                                    'font-bold': isCurrent,
-                                })}
-                            >
-                                {nameInThatLanguage}
-                                {langCode === 'ar' && (
-                                    <span className="ml-1 text-xs text-gray-500">
-                                        (Beta)
-                                    </span>
-                                )}
-                            </span>
-                        ) : (
-                            <>
+        <>
+            <Dropdown
+                label={currentLanguageLabel}
+                color="gray"
+                size="xs"
+                dismissOnClick
+            >
+                {SUPPORTED_LANGUAGES.map((langCode) => {
+                    const { nameInMyLanguage, nameInThatLanguage } =
+                        displayNames[langCode]
+                    const isCurrent = langCode === currentLanguage
+                    return (
+                        <DropdownItem
+                            key={langCode}
+                            className={clsx('grid grid-cols-2', {
+                                'font-bold': isCurrent,
+                            })}
+                            as={
+                                // forwardRef for allowing navigate using arrow-keys
+                                React.forwardRef(
+                                    function LanguageLink(props, ref) {
+                                        return (
+                                            <Link
+                                                {...props}
+                                                ref={
+                                                    ref as React.Ref<HTMLAnchorElement>
+                                                }
+                                                onClick={(e) => {
+                                                    // we need to use changeLanguage() to persist the language change
+                                                    // and also update the cookie for server-side detection
+                                                    e.preventDefault()
+                                                    changeLanguage(langCode)
+                                                }}
+                                                locale={langCode}
+                                                href={router.asPath}
+                                                as={router.asPath}
+                                                replace
+                                            >
+                                                {props.children}
+                                            </Link>
+                                        )
+                                    }
+                                ) as typeof Link
+                            }
+                        >
+                            {isCurrent ? (
                                 <span
-                                    className={clsx(
-                                        'text-right border-gray-300',
-                                        {
-                                            'border-r-2 pr-2':
-                                                i18n.dir(currentLanguage) ===
-                                                'ltr',
-                                            'border-l-2 pl-2':
-                                                i18n.dir(currentLanguage) ===
-                                                'rtl',
-                                        }
-                                    )}
+                                    className={clsx('text-center col-span-2', {
+                                        'font-bold': isCurrent,
+                                    })}
                                 >
                                     {nameInThatLanguage}
                                     {langCode === 'ar' && (
@@ -132,15 +115,65 @@ export default function LanguageSwitcher({
                                         </span>
                                     )}
                                 </span>
+                            ) : (
+                                <>
+                                    <span
+                                        className={clsx(
+                                            'text-right border-gray-300',
+                                            {
+                                                'border-r-2 pr-2':
+                                                    i18n.dir(
+                                                        currentLanguage
+                                                    ) === 'ltr',
+                                                'border-l-2 pl-2':
+                                                    i18n.dir(
+                                                        currentLanguage
+                                                    ) === 'rtl',
+                                            }
+                                        )}
+                                    >
+                                        {nameInThatLanguage}
+                                        {langCode === 'ar' && (
+                                            <span className="ml-1 text-xs text-gray-500">
+                                                (Beta)
+                                            </span>
+                                        )}
+                                    </span>
 
-                                <span className={clsx('text-left pl-2')}>
-                                    {nameInMyLanguage}
-                                </span>
-                            </>
-                        )}
-                    </DropdownItem>
-                )
-            })}
-        </Dropdown>
+                                    <span className={clsx('text-left pl-2')}>
+                                        {nameInMyLanguage}
+                                    </span>
+                                </>
+                            )}
+                        </DropdownItem>
+                    )
+                })}
+                <DropdownItem
+                    className="border-t border-gray-600 mt-2 pt-2"
+                    onClick={() => setShowContributeModal(true)}
+                >
+                    <div className="flex items-center justify-center text-blue-400 hover:text-blue-300">
+                        <svg
+                            className="w-4 h-4 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                            />
+                        </svg>
+                        {t('Contribute')}
+                    </div>
+                </DropdownItem>
+            </Dropdown>
+            <LocalizationContributeModal
+                open={showContributeModal}
+                onClose={() => setShowContributeModal(false)}
+            />
+        </>
     )
 }
