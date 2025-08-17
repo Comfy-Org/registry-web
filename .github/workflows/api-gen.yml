@@ -12,35 +12,35 @@ name: Update API Type definitions
 #     workflow_dispatch:
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-    orval:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
-              with:
-                  fetch-depth: 0
-            # Set up Node.js environment
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '22'
-            - name: Install bun
-              run: npm install -g bun
-            - name: Install dependencies
-              run: bun i
-            - name: Update api definition
-              run: bun orval
+  orval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22"
+      - name: Install bun
+        run: npm install -g bun
+      - name: Install dependencies
+        run: bun i
+      - name: Update api definition
+        run: bun orval
 
-            # commit generated api
-            - name: Configure git
-              run: |
-                  # Setup for commiting using built-in token. See https://github.com/actions/checkout#push-a-commit-using-the-built-in-token
-                  git config user.name "github-actions[bot]"
-                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            - uses: stefanzweifel/git-auto-commit-action@v5
-              with:
-                  commit_message: 'chore: generate backend API static type'
+      # commit generated api
+      - name: Configure git
+        run: |
+          # Setup for commiting using built-in token. See https://github.com/actions/checkout#push-a-commit-using-the-built-in-token
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: generate backend API static type"
