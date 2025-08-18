@@ -4,9 +4,12 @@
         "plugin:storybook/recommended",
         "prettier" // Should be last to override eslint config.
     ],
-    "plugins": [],
+    "plugins": ["i18n-json"],
     "rules": {
         "prefer-template": "warn",
-        "jsx-a11y/alt-text": "off"
+        "jsx-a11y/alt-text": "off",
+        "i18n-json/valid-json": "error",
+        "i18n-json/sorted-keys": "warn",
+        "i18n-json/identical-keys": "error"
     }
 }
