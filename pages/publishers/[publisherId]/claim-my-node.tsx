@@ -397,6 +397,10 @@ function ClaimMyNodePage() {
         publisherId,
         router.query,
         githubUsername,
+        currentStage,
+        router,
+        t,
+        // verifyRepoPermissions is intentionally excluded to avoid re-renders
     ])
 
     const initiateGitHubOAuth = () => {
