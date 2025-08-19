@@ -11,6 +11,7 @@ import { update } from 'rambda'
 
 interface ExtractedKey {
     key: string
+    value: string
     file: string
 }
 
@@ -21,7 +22,10 @@ const LOCALES_DIR = path.join(ROOT_DIR, 'locales')
 const EN_LOCALE_FILE = path.join(LOCALES_DIR, 'en/common.json')
 
 // Regex to match t('key') patterns
-const TRANSLATION_KEY_REGEX = /\bt\(\s*(['"`])([\s\S]+?)\1/g
+const TRANSLATION_KEY_REGEX_WITH_DEFAULT_KEY =
+    /\bt\(\s*(['"`])([\s\S]+?)\1\s*?(?:,\s*?(['"`])([\s\S]+?)\3)?/g
+const TRANSLATION_KEY_REGEX_LEGACY = /\bt\(\s*(['"`])([\s\S]+?)\1/g
+const TRANSLATION_KEY_REGEX = TRANSLATION_KEY_REGEX_WITH_DEFAULT_KEY
 
 async function findTsxFiles(): Promise<string[]> {
     return glob('**/*.{ts,tsx}', {
@@ -53,12 +57,14 @@ async function extractKeysFromFile(filePath: string): Promise<ExtractedKey[]> {
         const matches = [...content.matchAll(TRANSLATION_KEY_REGEX)]
         matches.forEach((match) => {
             const key = match[2]
+            const defaultValue = match[4] // possibly undefined
             if (key.includes('${'))
                 throw new Error(
                     `Dynamic keys are not supported: ${key} in file ${filePath}`
                 )
             extractedKeys.push({
                 key,
+                value: defaultValue ?? key,
                 file: filePath,
             })
         })
@@ -116,7 +122,7 @@ async function writeJsonFile(
             {} as Record<string, string>
         )
 
-    await fs.writeFile(filePath, JSON.stringify(sorted, null, 2) + '\n')
+    await fs.writeFile(filePath, `${JSON.stringify(sorted, null, 2)}\n`)
 }
 
 async function getAvailableLanguages(): Promise<string[]> {
@@ -180,7 +186,7 @@ async function translateKeyToLanguage(
             },
             {
                 headers: {
-                    Authorization: `Bearer ` + process.env.OPENAI_API_KEY,
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
             }
@@ -201,20 +207,30 @@ async function translateKeyToLanguage(
     }
 }
 
-async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
+async function updateLocaleFiles(
+    uniqueKeys: {
+        key: string
+        count: number
+        files: string[]
+        value: string
+    }[]
+): Promise<void> {
     // Read existing English translations
     const existingEnTranslations = await readJsonFile(EN_LOCALE_FILE)
 
     // Find new and unused keys for English
-    const newKeysEn = uniqueKeys.filter((key) => !existingEnTranslations[key])
+    const newKeysEn = uniqueKeys.filter(
+        ({ key }) => !existingEnTranslations[key]
+    )
     const unusedKeysEn = Object.keys(existingEnTranslations).filter(
-        (key) => !uniqueKeys.includes(key)
+        // TODO: refactor to improve performance
+        (key) => !uniqueKeys.map((e) => e.key).includes(key)
     )
 
     // Update English translations
     const updatedEnTranslations = { ...existingEnTranslations }
-    newKeysEn.forEach((key) => {
-        updatedEnTranslations[key] = key
+    newKeysEn.forEach(({ key, value }) => {
+        updatedEnTranslations[key] = value
     })
     unusedKeysEn.forEach((key) => {
         delete updatedEnTranslations[key]
@@ -242,10 +258,11 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
 
         // Find new and unused keys for the current language
         const newKeysLang = uniqueKeys.filter(
-            (key) => !existingLangTranslations[key]
+            ({ key }) => !existingLangTranslations[key]
         )
         const unusedKeysLang = Object.keys(existingLangTranslations).filter(
-            (key) => !uniqueKeys.includes(key)
+            // TODO: refactor to improve performance
+            (key) => !uniqueKeys.map((e) => e.key).includes(key)
         )
 
         // Update translations for the current language
@@ -253,14 +270,14 @@ async function updateLocaleFiles(uniqueKeys: string[]): Promise<void> {
         unusedKeysLang.forEach((key) => {
             delete updatedLangTranslations[key]
         })
-        for (const key of newKeysLang) {
+        for (const ek of newKeysLang) {
             const translation = await translateKeyToLanguage(
-                key,
+                ek.value,
                 lang,
                 updatedLangTranslations
             )
-            updatedLangTranslations[key] = translation
-            console.log(`+ ${lang} ${key}: ${translation}`)
+            updatedLangTranslations[ek.key] = translation
+            console.log(`+ ${lang} ${ek.key}: ${translation}`)
             // write to json immediately to avoid losing progress if the script crashes
             await writeJsonFile(langFile, updatedLangTranslations)
         }
@@ -286,21 +303,39 @@ async function main() {
         console.log(`Found ${allKeys.length} translation key usages`)
 
         // Group keys and get unique ones
-        const groupedKeys: Record<string, { count: number; files: string[] }> =
-            {}
-        allKeys.forEach((key) => {
-            const relativePath = path.relative(ROOT_DIR, key.file)
-            if (!groupedKeys[key.key]) {
-                groupedKeys[key.key] = { count: 0, files: [] }
+        const groupedKeys: Record<
+            string,
+            { count: number; files: string[]; value: string }
+        > = {}
+        allKeys.forEach((ek) => {
+            const relativePath = path.relative(ROOT_DIR, ek.file)
+
+            if (!groupedKeys[ek.key]) {
+                groupedKeys[ek.key] = { count: 0, files: [], value: ek.value }
             }
-            groupedKeys[key.key].count++
-            if (!groupedKeys[key.key].files.includes(relativePath)) {
-                groupedKeys[key.key].files.push(relativePath)
+            groupedKeys[ek.key].count++
+            if (groupedKeys[ek.key].value !== ek.value) {
+                throw new Error(
+                    `Inconsistent translation key found: ${ek.key}, ${groupedKeys[ek.key].value} !== ${ek.value}`
+                )
+            }
+            if (!groupedKeys[ek.key].files.includes(relativePath)) {
+                groupedKeys[ek.key].files.push(relativePath)
             }
         })
 
         const uniqueKeys = Object.keys(groupedKeys)
         console.log(`Found ${uniqueKeys.length} unique translation keys`)
+
+        const uniqueKV = uniqueKeys.map((key) => {
+            const { count, files, value } = groupedKeys[key]
+            return {
+                key,
+                count,
+                value,
+                files,
+            }
+        })
 
         // Create output
         const output = {
@@ -317,7 +352,7 @@ async function main() {
         console.log(`Results written to ${OUTPUT_FILE}`)
 
         // Update locale files
-        await updateLocaleFiles(uniqueKeys)
+        await updateLocaleFiles(uniqueKV)
     } catch (error) {
         console.error(
             'Error extracting keys:',
