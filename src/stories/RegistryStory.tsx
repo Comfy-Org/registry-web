@@ -30,30 +30,28 @@ const RegistryStory: React.FC = () => {
 
                 <div className="wrapper mt-2 w-full">
                     <div className="p-4 border border-gray-700 rounded mt-4 bg-gray-800 text-white">
-                        <h3 className="text-xl font-bold">Example Node</h3>
-                        <p className="text-gray-400 mt-2">
-                            This is a placeholder for search results that would
-                            appear in the actual component.
-                        </p>
+                        <h3 className="text-xl font-bold">
+                            {t('Example_Node', 'Example Node')}
+                        </h3>
+                        <p className="text-gray-400 mt-2">{`${t('This_is_a_placeholder_for_search_results_that_would_appear_in_the_actual_component', 'This is a placeholder for search results that would appear in the actual component')}.`}</p>
                     </div>
                     <div className="p-4 border border-gray-700 rounded mt-4 bg-gray-800 text-white">
                         <h3 className="text-xl font-bold">
-                            Another Example Node
+                            {t('Another_Example_Node', 'Another Example Node')}
                         </h3>
-                        <p className="text-gray-400 mt-2">
-                            In the real application, these would be dynamically
-                            loaded from Algolia search.
-                        </p>
-                        <span>test catch ui change</span>
+                        <p className="text-gray-400 mt-2">{`${t('In_the_real_application_these_would_be_dynamically_loaded_from_Algolia_search', 'In the real application, these would be dynamically loaded from Algolia search')}.`}</p>
+                        <span>
+                            {t('test_catch_ui_change', 'test catch ui change')}
+                        </span>
                     </div>
                 </div>
 
                 <div className="pagination flex justify-center mt-6 mb-8">
                     <button className="px-4 py-2 bg-blue-600 text-white rounded mr-2">
-                        Previous
+                        {t('Previous', 'Previous')}
                     </button>
                     <button className="px-4 py-2 bg-blue-600 text-white rounded">
-                        Next
+                        {t('Next', 'Next')}
                     </button>
                 </div>
             </div>

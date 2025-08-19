@@ -21,7 +21,11 @@ type Story = StoryObj<typeof meta>
 
 export const Empty: Story = {
     args: {
-        children: <div className="h-[100px] w-full">Empty container</div>,
+        children: (
+            <div className="h-[100px] w-full">
+                {t('Empty_container', 'Empty container')}
+            </div>
+        ),
     },
 }
 
@@ -30,12 +34,9 @@ export const WithContent: Story = {
         children: (
             <div className="p-8 bg-gray-800 rounded-lg my-8">
                 <h1 className="text-2xl font-bold text-white mb-4">
-                    Sample Content
+                    {t('Sample_Content', 'Sample Content')}
                 </h1>
-                <p className="text-gray-300">
-                    This is an example of content inside the container
-                    component.
-                </p>
+                <p className="text-gray-300">{`${t('This_is_an_example_of_content_inside_the_container_component', 'This is an example of content inside the container component')}.`}</p>
             </div>
         ),
     },
@@ -45,9 +46,9 @@ export const WithMultipleItems: Story = {
     args: {
         children: (
             <>
-                <div className="p-4 bg-blue-500 rounded-lg my-4">Item 1</div>
-                <div className="p-4 bg-green-500 rounded-lg my-4">Item 2</div>
-                <div className="p-4 bg-red-500 rounded-lg my-4">Item 3</div>
+                <div className="p-4 bg-blue-500 rounded-lg my-4">{`${t('Item', 'Item')} 1`}</div>
+                <div className="p-4 bg-green-500 rounded-lg my-4">{`${t('Item', 'Item')} 2`}</div>
+                <div className="p-4 bg-red-500 rounded-lg my-4">{`${t('Item', 'Item')} 3`}</div>
             </>
         ),
     },

@@ -23,7 +23,13 @@ export function NodeStatusBadge({
             {NodeVersionStatusToReadable({
                 status: status as NodeVersionStatus,
             })}
-            {count != null ? <span> x{count}</span> : null}
+            {/* TODO: should be "x{{count}}" */}
+            {count != null ? (
+                <span>
+                    {` ${t('x', 'x')}`}
+                    {count}
+                </span>
+            ) : null}
         </Badge>
     )
 }

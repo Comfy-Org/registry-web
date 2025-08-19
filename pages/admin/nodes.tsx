@@ -441,7 +441,7 @@ function NodeList() {
                                         {node.status?.replace(
                                             'NodeStatus',
                                             ''
-                                        ) || 'Unknown'}
+                                        ) || t('Unknown', 'Unknown')}
                                     </span>
                                 </Table.Cell>
                                 <Table.Cell className="dark">

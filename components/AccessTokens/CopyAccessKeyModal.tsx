@@ -56,7 +56,9 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                         </p>
 
                         <div className="grid grid-cols-8 gap-2 w-full max-w-[23rem]">
-                            <label className="sr-only">Label</label>
+                            <label className="sr-only">
+                                {t('Label', 'Label')}
+                            </label>
                             <input
                                 id="npm-install"
                                 type="text"

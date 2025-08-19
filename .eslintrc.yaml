@@ -1,26 +1,24 @@
-{
-    "extends": [
-        "next/core-web-vitals",
-        "plugin:storybook/recommended",
-        "prettier" # Should be last to override eslint config.
-    ],
-    "plugins": [
-        "@spaced-out/i18n"
-    ],
-    "rules": {
-        "prefer-template": "warn",
-        "jsx-a11y/alt-text": "off",
-        "@spaced-out/i18n/no-static-labels": "error",
-        # gradually enable below
-        # "@spaced-out/i18n/missing-translation": "warn",
-        # "@spaced-out/i18n/invalid-translation-key-format": "error",
-        # "@spaced-out/i18n/no-react-i18next-import": "error",
-        # "@spaced-out/i18n/no-dynamic-labels": "error",
-        # "@spaced-out/i18n/i18n-enforce-makeKey-wrapper": "error",
+extends:
+  - next/core-web-vitals
+  - plugin:storybook/recommended
+  - prettier # Should be last to override eslint config.
 
-        # not used
-        # "@spaced-out/i18n/require-flow-pragma": "error",
-        # "@spaced-out/i18n/no-undef-no-flow": "error",
-        # "no-undef": "off", // Disable core rule when using no-undef-no-flow
-    }
-}
+plugins:
+  - "@spaced-out/i18n"
+
+rules:
+  prefer-template: warn
+  jsx-a11y/alt-text: "off"
+  "@spaced-out/i18n/no-static-labels": error
+  
+  # gradually enable below
+  # "@spaced-out/i18n/missing-translation": warn
+  # "@spaced-out/i18n/invalid-translation-key-format": error
+  # "@spaced-out/i18n/no-react-i18next-import": error
+  # "@spaced-out/i18n/no-dynamic-labels": error
+  # "@spaced-out/i18n/i18n-enforce-makeKey-wrapper": error
+
+  # not used
+  # "@spaced-out/i18n/require-flow-pragma": error
+  # "@spaced-out/i18n/no-undef-no-flow": error
+  # "no-undef": "off" # Disable core rule when using no-undef-no-flow
