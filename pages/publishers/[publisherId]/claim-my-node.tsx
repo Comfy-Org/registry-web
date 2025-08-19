@@ -400,7 +400,7 @@ function ClaimMyNodePage() {
         currentStage,
         router,
         t,
-        // verifyRepoPermissions is intentionally excluded to avoid re-renders
+        verifyRepoPermissions,
     ])
 
     const initiateGitHubOAuth = () => {
