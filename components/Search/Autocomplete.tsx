@@ -105,7 +105,10 @@ export default function Autocomplete({
                             return (
                                 <Fragment>
                                     <span className="aa-SourceHeaderTitle">
-                                        In other categories
+                                        {t(
+                                            'In_other_categories',
+                                            'In other categories'
+                                        )}
                                     </span>
                                     <span className="aa-SourceHeaderLine" />
                                 </Fragment>

@@ -76,8 +76,8 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                             {matchedNodes?.length ? (
                                 <>
                                     {matchedNodes?.length ?? 0}/
-                                    {hit.comfy_nodes?.length ?? 0} Nodes
-                                    matched:
+                                    {hit.comfy_nodes?.length ?? 0}
+                                    {` ${t('Nodes_matched', 'Nodes matched')}:`}
                                     {matchedNodes
                                         ?.map((e) =>
                                             e.value?.replace(/<\/?mark>/g, '**')
@@ -90,7 +90,10 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                                         ))}
                                 </>
                             ) : (
-                                <>{hit.comfy_nodes?.length ?? 0} Nodes</>
+                                <>
+                                    {hit.comfy_nodes?.length ?? 0}
+                                    {` ${t('Nodes', 'Nodes')}`}
+                                </>
                             )}
                         </Tooltip>
                     </div>
@@ -105,7 +108,10 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 {hit.latest_version && (
                     <span className="">
                         {' | '}
-                        <span>v{hit.latest_version}</span>
+                        <span>
+                            {t('v', 'v')}
+                            {hit.latest_version}
+                        </span>
                     </span>
                 )}
                 {hit.total_install && (

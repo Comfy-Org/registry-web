@@ -42,9 +42,7 @@ const withAdmin = (WrappedComponent) => {
 
         if (!user.isAdmin) {
             return (
-                <div className="text-white dark:text-white">
-                    403 Forbidden: You have no permission to this page.
-                </div>
+                <div className="text-white dark:text-white">{`403 ${t('Forbidden_You_have_no_permission_to_this_page', 'Forbidden: You have no permission to this page')}.`}</div>
             )
         }
 
