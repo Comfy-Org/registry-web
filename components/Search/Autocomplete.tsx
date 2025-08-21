@@ -20,6 +20,7 @@ import { usePagination, useSearchBox } from 'react-instantsearch'
 import { debounce } from '@algolia/autocomplete-shared'
 
 import { INSTANT_SEARCH_QUERY_SUGGESTIONS } from 'src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 import '@algolia/autocomplete-theme-classic'
 
@@ -42,6 +43,7 @@ export default function Autocomplete({
     const rootRef = useRef<HTMLElement | null>(null)
 
     const { query, refine: setQuery } = useSearchBox()
+    const { t } = useNextTranslation()
 
     const { refine: setPage } = usePagination()
 
@@ -120,7 +122,7 @@ export default function Autocomplete({
         })
 
         return [recentSearches, querySuggestions]
-    }, [searchClient])
+    }, [searchClient, t])
 
     useEffect(() => {
         if (!autocompleteContainer.current) {

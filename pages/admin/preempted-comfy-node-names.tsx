@@ -131,7 +131,9 @@ function PreemptedComfyNodeNamesAdminPage() {
                     {t('Nodes List')}
                 </h2>
                 <div className="text-sm text-gray-400 mb-2">
-                    {t('Total')}: {data?.total || 0} {t('nodes')}
+                    {t('Total: {{count}} nodes', 'Total: {{count}} nodes', {
+                        count: data?.total || 0,
+                    })}
                 </div>
 
                 <ul className="divide-y divide-gray-700">

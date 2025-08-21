@@ -25,7 +25,9 @@ export function NodeStatusBadge({
             {NodeVersionStatusToReadable({
                 status: status as NodeVersionStatus,
             })}
-            {count != null && <span>{t(`×{{count}}`, { count })}</span>}
+            {count != null && (
+                <span> {t('×{{count}}', '×{{count}}', { count })}</span>
+            )}
         </Badge>
     )
 }
