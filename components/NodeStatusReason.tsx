@@ -451,6 +451,7 @@ export function PrettieredJSON5({ children: raw }: { children: string }) {
 
 export function PrettieredYAML({ children: raw }: { children: string }) {
     const { ref, inView } = useInView()
+    const { t } = useNextTranslation()
 
     const parsedYaml = tryCatch(
         (raw: string) => yaml.stringify(yaml.parse(raw)),
@@ -518,6 +519,7 @@ export function PrettieredYamlDiffView({
     modified: string
 }) {
     const { ref, inView } = useInView()
+    const { t } = useNextTranslation()
 
     const parsedModified = tryCatch(
         (raw: string) => raw && yaml.stringify(yaml.parse(raw)),
