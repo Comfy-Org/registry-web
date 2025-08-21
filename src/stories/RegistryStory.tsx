@@ -1,11 +1,13 @@
 import GenericHeader from '@/components/common/GenericHeader'
 import React from 'react'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 /**
  * A simplified version of the Registry component for Storybook
  * This avoids dependency issues with Algolia and Next.js router
  */
 const RegistryStory: React.FC = () => {
+    const { t } = useNextTranslation()
     return (
         <div className="relative mt-8 bg-gray-900 lg:mt-20">
             <GenericHeader
@@ -31,17 +33,29 @@ const RegistryStory: React.FC = () => {
                 <div className="wrapper mt-2 w-full">
                     <div className="p-4 border border-gray-700 rounded mt-4 bg-gray-800 text-white">
                         <h3 className="text-xl font-bold">
-                            {t('Example_Node', 'Example Node')}
+                            {t('Example Node', 'Example Node')}
                         </h3>
-                        <p className="text-gray-400 mt-2">{`${t('This_is_a_placeholder_for_search_results_that_would_appear_in_the_actual_component', 'This is a placeholder for search results that would appear in the actual component')}.`}</p>
+                        <p className="text-gray-400 mt-2">
+                            {t(
+                                'This is a placeholder for search results that would appear in the actual component',
+                                'This is a placeholder for search results that would appear in the actual component'
+                            )}
+                            .
+                        </p>
                     </div>
                     <div className="p-4 border border-gray-700 rounded mt-4 bg-gray-800 text-white">
                         <h3 className="text-xl font-bold">
-                            {t('Another_Example_Node', 'Another Example Node')}
+                            {t('Another Example Node', 'Another Example Node')}
                         </h3>
-                        <p className="text-gray-400 mt-2">{`${t('In_the_real_application_these_would_be_dynamically_loaded_from_Algolia_search', 'In the real application, these would be dynamically loaded from Algolia search')}.`}</p>
+                        <p className="text-gray-400 mt-2">
+                            {t(
+                                'In the real application, these would be dynamically loaded from Algolia search',
+                                'In the real application, these would be dynamically loaded from Algolia search'
+                            )}
+                            .
+                        </p>
                         <span>
-                            {t('test_catch_ui_change', 'test catch ui change')}
+                            {t('test catch ui change', 'test catch ui change')}
                         </span>
                     </div>
                 </div>
