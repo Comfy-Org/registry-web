@@ -346,7 +346,9 @@ function NodeList() {
                                     setSelectedStatuses([statusValue])
                                 }
                             >
-                                {statusNames[status]} {t('Nodes')}
+                                {t('{{status}} Nodes', '{{status}} Nodes', {
+                                    status: statusNames[status],
+                                })}
                             </Button>
                         )
                     )}

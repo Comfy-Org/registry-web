@@ -356,7 +356,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             nv.status_reason
                                         ).data?.batchId && (
                                             <span className="ml-2 text-xs text-gray-500">
-                                                {`[${t('Batch', 'Batch')}:`}{' '}
+                                                [{t('Batch', 'Batch')}:
                                                 {
                                                     zStatusReason.safeParse(
                                                         nv.status_reason
@@ -374,7 +374,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             )}
             {!!problemsSummary?.length && (
                 <>
-                    <h4>{`${t('Problems_Summary', 'Problems Summary')}: `}</h4>
+                    <h4>{t('Problems Summary', 'Problems Summary')}: </h4>
                     <ol className="ml-4 overflow-x-auto">
                         {problemsSummary.map((e, i) => (
                             <li
@@ -419,7 +419,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             )}
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
-                    <summary>{`${t('Status_Reason', 'Status Reason')}: `}</summary>
+                    <summary>{t('Status Reason', 'Status Reason')}: </summary>
                     {fullfilledIssueList ? (
                         <PrettieredYamlDiffView
                             original={lastCode}
