@@ -346,7 +346,9 @@ function NodeList() {
                                     setSelectedStatuses([statusValue])
                                 }
                             >
-                                {statusNames[status]} {t('Nodes')}
+                                {t('{{status}} Nodes', '{{status}} Nodes', {
+                                    status: statusNames[status],
+                                })}
                             </Button>
                         )
                     )}
@@ -441,7 +443,7 @@ function NodeList() {
                                         {node.status?.replace(
                                             'NodeStatus',
                                             ''
-                                        ) || 'Unknown'}
+                                        ) || t('Unknown', 'Unknown')}
                                     </span>
                                 </Table.Cell>
                                 <Table.Cell className="dark">

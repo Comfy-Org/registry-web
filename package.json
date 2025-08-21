@@ -99,6 +99,7 @@
     "@babel/core": "7.19.3",
     "@chromatic-com/storybook": "^4.0.1",
     "@mdx-js/react": "2.1.4",
+    "@spaced-out/eslint-plugin-i18n": "^3.0.5",
     "@storybook/addon-docs": "^9.0.17",
     "@storybook/addon-vitest": "9.0.17",
     "@storybook/nextjs-vite": "^9.0.17",
