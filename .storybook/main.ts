@@ -5,11 +5,8 @@ import fastGlob from 'fast-glob'
 import { time, timeEnd, timeLog } from 'node:console'
 const config: StorybookConfig = {
   stories: [
-    '../app/**/*.mdx',
     '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../src/**/*.mdx',
     '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../components/**/*.mdx',
     '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
