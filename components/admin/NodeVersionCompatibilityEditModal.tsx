@@ -49,9 +49,13 @@ export default function NodeVersionCompatibilityEditModal({
     const queryClient = useQueryClient()
 
     // Fetch node information to get latest version
-    const { data: nodeData } = useGetNode(nodeVersion?.node_id || '', {
-        enabled: !!nodeVersion?.node_id && isOpen,
-    })
+    const { data: nodeData } = useGetNode(
+        nodeVersion?.node_id || '',
+        {},
+        {
+            query: { enabled: !!nodeVersion?.node_id && isOpen },
+        }
+    )
 
     const {
         control,
