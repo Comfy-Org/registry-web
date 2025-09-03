@@ -17,7 +17,7 @@ import { Alert, Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { Octokit } from 'octokit'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { FaGithub } from 'react-icons/fa'
 import { HiChevronLeft, HiCheckCircle, HiLocationMarker } from 'react-icons/hi'
@@ -157,83 +157,100 @@ function ClaimMyNodePage() {
     const isLoading = nodeLoading || publisherLoading || userLoading
 
     // Function to check if the user has admin access to the repository
-    const verifyRepoPermissions = async (
-        token: string,
-        owner: string,
-        repo: string,
-        nodeIdParam: string
-    ): Promise<{
-        hasPermission: boolean
-        userInfo?: { username: string }
-        errorMessage?: string
-    }> => {
-        try {
-            setPermissionCheckLoading(true)
-
-            // Initialize Octokit with the user's token
-            const octokit = new Octokit({
-                auth: token,
-            })
-
-            // Get GitHub user info first using Octokit REST API
-            let userInfo: { username: string } | undefined
+    const verifyRepoPermissions = useCallback(
+        async (
+            token: string,
+            owner: string,
+            repo: string,
+            nodeIdParam: string
+        ): Promise<{
+            hasPermission: boolean
+            userInfo?: { username: string }
+            errorMessage?: string
+        }> => {
             try {
-                const { data: userData } =
-                    await octokit.rest.users.getAuthenticated()
-                userInfo = {
-                    username: userData.login,
-                }
-                setGithubUsername(userData.login)
-            } catch (error) {
-                // If we can't get user data, set userInfo to undefined and allow retry
-                setGithubUsername(undefined)
-                return {
-                    hasPermission: false,
-                    userInfo: undefined,
-                    errorMessage: t(
-                        'Failed to get GitHub user information. Please try again.'
-                    ),
-                }
-            }
+                setPermissionCheckLoading(true)
 
-            // Check repository access
-            try {
-                // This will throw an error if the repository doesn't exist or user doesn't have access
-                const { data: repoData } = await octokit.rest.repos.get({
-                    owner,
-                    repo,
+                // Initialize Octokit with the user's token
+                const octokit = new Octokit({
+                    auth: token,
                 })
 
-                // If permissions is included and shows admin access, we have admin permission
-                if (repoData.permissions?.admin === true) {
+                // Get GitHub user info first using Octokit REST API
+                let userInfo: { username: string } | undefined
+                try {
+                    const { data: userData } =
+                        await octokit.rest.users.getAuthenticated()
+                    userInfo = {
+                        username: userData.login,
+                    }
+                    setGithubUsername(userData.login)
+                } catch (error) {
+                    // If we can't get user data, set userInfo to undefined and allow retry
+                    setGithubUsername(undefined)
                     return {
-                        hasPermission: true,
-                        userInfo,
+                        hasPermission: false,
+                        userInfo: undefined,
+                        errorMessage: t(
+                            'Failed to get GitHub user information. Please try again.'
+                        ),
                     }
                 }
 
-                // If we have basic access but need to verify specific permission level
+                // Check repository access
                 try {
-                    // Check collaborator permission level
-                    const { data: permissionData } =
-                        await octokit.rest.repos.getCollaboratorPermissionLevel(
-                            {
-                                owner,
-                                repo,
-                                username: userInfo.username,
-                            }
-                        )
+                    // This will throw an error if the repository doesn't exist or user doesn't have access
+                    const { data: repoData } = await octokit.rest.repos.get({
+                        owner,
+                        repo,
+                    })
 
-                    // Check if user has admin permission level
-                    const permission = permissionData.permission
-                    if (permission === 'admin') {
+                    // If permissions is included and shows admin access, we have admin permission
+                    if (repoData.permissions?.admin === true) {
                         return {
                             hasPermission: true,
                             userInfo,
                         }
                     }
-                } catch (permissionError) {
-                    // If we can't check specific permissions, we'll assume no admin access
+
+                    // If we have basic access but need to verify specific permission level
+                    try {
+                        // Check collaborator permission level
+                        const { data: permissionData } =
+                            await octokit.rest.repos.getCollaboratorPermissionLevel(
+                                {
+                                    owner,
+                                    repo,
+                                    username: userInfo.username,
+                                }
+                            )
+
+                        // Check if user has admin permission level
+                        const permission = permissionData.permission
+                        if (permission === 'admin') {
+                            return {
+                                hasPermission: true,
+                                userInfo,
+                            }
+                        }
+                    } catch (permissionError) {
+                        // If we can't check specific permissions, we'll assume no admin access
+                        return {
+                            hasPermission: false,
+                            userInfo,
+                            errorMessage: t(
+                                'You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
+                                {
+                                    username: userInfo.username,
+                                    owner,
+                                    repo,
+                                    nodeId: nodeIdParam,
+                                }
+                            ),
+                        }
+                    }
+
+                    // If we've reached here without a definitive answer, be conservative
                     return {
                         hasPermission: false,
                         userInfo,
@@ -247,46 +264,32 @@ function ClaimMyNodePage() {
                             }
                         ),
                     }
+                } catch (repoError) {
+                    // Repository not found or user doesn't have access
+                    return {
+                        hasPermission: false,
+                        userInfo,
+                        errorMessage: t(
+                            'Repository {{owner}}/{{repo}} not found or you do not have access to it.',
+                            { owner, repo }
+                        ),
+                    }
                 }
-
-                // If we've reached here without a definitive answer, be conservative
+            } catch (err: any) {
+                // Instead of throwing an error, return structured error info
                 return {
                     hasPermission: false,
-                    userInfo,
+                    userInfo: undefined,
                     errorMessage: t(
-                        'You (GitHub user: {{username}}) do not have admin permission to this repository ({{owner}}/{{repo}}, Node ID: {{nodeId}}). Only repository administrators can claim nodes.',
-                        {
-                            username: userInfo.username,
-                            owner,
-                            repo,
-                            nodeId: nodeIdParam,
-                        }
+                        'There was an unexpected error verifying your repository permissions. Please try again.'
                     ),
                 }
-            } catch (repoError) {
-                // Repository not found or user doesn't have access
-                return {
-                    hasPermission: false,
-                    userInfo,
-                    errorMessage: t(
-                        'Repository {{owner}}/{{repo}} not found or you do not have access to it.',
-                        { owner, repo }
-                    ),
-                }
+            } finally {
+                setPermissionCheckLoading(false)
             }
-        } catch (err: any) {
-            // Instead of throwing an error, return structured error info
-            return {
-                hasPermission: false,
-                userInfo: undefined,
-                errorMessage: t(
-                    'There was an unexpected error verifying your repository permissions. Please try again.'
-                ),
-            }
-        } finally {
-            setPermissionCheckLoading(false)
-        }
-    }
+        },
+        [t]
+    )
 
     useEffect(() => {
         // Initialize GitHub OAuth if node and publisher data is loaded
@@ -395,8 +398,10 @@ function ClaimMyNodePage() {
         user,
         nodeId,
         publisherId,
-        router.query,
-        githubUsername,
+        router,
+        currentStage,
+        t,
+        verifyRepoPermissions,
     ])
 
     const initiateGitHubOAuth = () => {
