@@ -5,6 +5,11 @@ import {
     useAdminUpdateNodeVersion,
     NodeVersion,
     NodeVersionStatus,
+    listAllNodes,
+    Node,
+    getNode,
+    useGetNode,
+    getGetNodeQueryOptions,
 } from '@/src/api/generated'
 import {
     Button,
@@ -16,6 +21,7 @@ import {
     Dropdown,
     Checkbox,
     Flowbite,
+    Tooltip,
 } from 'flowbite-react'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { useNextTranslation } from '@/src/hooks/i18n'
@@ -29,13 +35,18 @@ import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
 import { usePage } from '@/components/hooks/usePage'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
+import { useAsync, useAsyncFn, useMap } from 'react-use'
+import sflow, { pageFlow } from 'sflow'
+import DIE, { DIES } from 'phpdie'
 
 // This page allows admins to update node version compatibility fields
 export default withAdmin(NodeVersionCompatibilityAdmin)
 
 function NodeVersionCompatibilityAdmin() {
     const { t } = useNextTranslation()
-    const [page, setPage] = usePage()
+    const [_page, setPage] = usePage()
+
+    // search
     const [nodeId, setNodeId] = useSearchParameter<string | undefined>(
         'nodeId',
         (p) => p || undefined,
@@ -52,81 +63,43 @@ function NodeVersionCompatibilityAdmin() {
         (v) => v || []
     )
 
-    const [isUpdatingAllVersions, setIsUpdatingAllVersions] = useState(false)
-    const queryClient = useQueryClient()
-    const { data: allNodes } = useListAllNodes()
     const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
 
-    const updateAllNodeVersionsWithLatest = async () => {
-        if (!allNodes?.nodes) {
-            toast.error(t('No nodes found'))
-            return
-        }
-
-        setIsUpdatingAllVersions(true)
-        let successCount = 0
-        let errorCount = 0
-
-        try {
-            for (const node of allNodes.nodes) {
+    const [
+        updateAllNodeVersionsWithLatestState,
+        updateAllNodeVersionsWithLatest,
+    ] = useAsyncFn(async () => {
+        await pageFlow(1, async (page, limit = 100) => {
+            const data =
+                (await listAllNodes({ page, limit, latest: true })).nodes || []
+            return { data, next: data.length === limit ? page + 1 : null }
+        })
+            .flat()
+            .forEach(async (node) => {
                 if (
                     !node.latest_version ||
                     !node.id ||
                     !node.latest_version.version
-                ) {
-                    continue
-                }
+                )
+                    return
 
                 const latestVersion = node.latest_version
-
-                try {
-                    await adminUpdateNodeVersion.mutateAsync({
-                        nodeId: node.id,
-                        versionNumber: latestVersion.version!,
-                        data: {
-                            supported_comfyui_frontend_version:
-                                latestVersion.supported_comfyui_frontend_version,
-                            supported_comfyui_version:
-                                latestVersion.supported_comfyui_version,
-                            supported_os: latestVersion.supported_os,
-                            supported_accelerators:
-                                latestVersion.supported_accelerators,
-                        },
-                    })
-                    successCount++
-                } catch (error) {
-                    errorCount++
-                    console.error(
-                        `Failed to update ${node.id}@${latestVersion.version}:`,
-                        error
-                    )
-                }
-            }
-
-            queryClient.invalidateQueries({
-                queryKey: ['useListAllNodeVersions'],
+                await adminUpdateNodeVersion.mutateAsync({
+                    nodeId: node.id,
+                    versionNumber: latestVersion.version!,
+                    data: {
+                        supported_comfyui_frontend_version:
+                            latestVersion.supported_comfyui_frontend_version,
+                        supported_comfyui_version:
+                            latestVersion.supported_comfyui_version,
+                        supported_os: latestVersion.supported_os,
+                        supported_accelerators:
+                            latestVersion.supported_accelerators,
+                    },
+                })
             })
-
-            if (successCount > 0) {
-                toast.success(
-                    t('Updated {{count}} node versions successfully', {
-                        count: successCount,
-                    })
-                )
-            }
-            if (errorCount > 0) {
-                toast.error(
-                    t('Failed to update {{count}} node versions', {
-                        count: errorCount,
-                    })
-                )
-            }
-        } catch (error) {
-            toast.error(t('Failed to update node versions'))
-        } finally {
-            setIsUpdatingAllVersions(false)
-        }
-    }
+            .run()
+    }, [])
 
     return (
         <div className="py-4 max-w-full relative dark">
@@ -276,10 +249,12 @@ function NodeVersionCompatibilityAdmin() {
                     <Button
                         color="warning"
                         onClick={updateAllNodeVersionsWithLatest}
-                        disabled={isUpdatingAllVersions}
-                        isProcessing={isUpdatingAllVersions}
+                        disabled={updateAllNodeVersionsWithLatestState.loading}
+                        isProcessing={
+                            updateAllNodeVersionsWithLatestState.loading
+                        }
                     >
-                        {isUpdatingAllVersions
+                        {updateAllNodeVersionsWithLatestState.loading
                             ? t('Updating All Versions...')
                             : t('Update All Node Versions')}
                     </Button>
@@ -311,11 +286,12 @@ function DataTable({
 
     const { data, isLoading, isError, refetch } = useListAllNodeVersions({
         page: page,
-        pageSize: 12,
+        pageSize: 24,
         statuses,
         nodeId,
         // version, // TODO: implement version filtering in backend
     })
+
     const versions =
         data?.versions?.filter((v) =>
             !version ? true : v.version === version
@@ -328,6 +304,26 @@ function DataTable({
     )
     const editingNodeVersion =
         versions.find((v) => `${v.node_id}@${v.version}` === editing) || null
+
+    // fill node info <nodeId, node>
+    const [nodeInfoMap, nodeInfoMapActions] = useMap<Record<string, Node>>({})
+    const qc = useQueryClient()
+    useAsync(async () => {
+        return await sflow(versions || [])
+            .map(async (version) => {
+                const nodeId =
+                    version.node_id ||
+                    DIES(
+                        toast.error,
+                        `Missing node_id for node version ${JSON.stringify(version)}`
+                    )
+                const node = await qc.fetchQuery({
+                    ...getGetNodeQueryOptions(nodeId),
+                })
+                nodeInfoMapActions.set(nodeId, node)
+            })
+            .toArray()
+    }, [versions])
 
     if (isLoading)
         return (
@@ -361,6 +357,7 @@ function DataTable({
                     <Table.HeadCell className="sticky left-0 z-10 bg-gray-800">
                         {t('Node Version')}
                     </Table.HeadCell>
+                    <Table.HeadCell>{t('Latest Version')}</Table.HeadCell>
                     <Table.HeadCell>{t('ComfyUI Frontend')}</Table.HeadCell>
                     <Table.HeadCell>{t('ComfyUI')}</Table.HeadCell>
                     <Table.HeadCell>{t('OS')}</Table.HeadCell>
@@ -368,39 +365,127 @@ function DataTable({
                     <Table.HeadCell>{t('Actions')}</Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="max-w-full overflow-auto">
-                    {versions?.map((nv) => (
-                        <Table.Row key={nv.id}>
-                            <Table.Cell className="sticky left-0 z-10 bg-gray-800">
-                                {nv.node_id}@{nv.version}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {nv.supported_comfyui_frontend_version || ''}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {nv.supported_comfyui_version || ''}
-                            </Table.Cell>
-                            <Table.Cell>
-                                <code className="whitespace-pre overflow-auto">
-                                    {nv.supported_os?.join('\n') || ''}
-                                </code>
-                            </Table.Cell>
-                            <Table.Cell>
-                                <code className="whitespace-pre overflow-auto">
-                                    {nv.supported_accelerators?.join('\n') ||
+                    {versions?.map((nv) => {
+                        const node = nv.node_id ? nodeInfoMap[nv.node_id] : null
+                        const latestVersion = node?.latest_version
+                        const isLatest = latestVersion?.version === nv.version
+
+                        const compatibilityInfo = latestVersion ? (
+                            <div className="text-sm">
+                                <div className="font-semibold mb-2">
+                                    {t('Latest Version')}:{' '}
+                                    {latestVersion.version}
+                                </div>
+                                <div className="space-y-1">
+                                    <div>
+                                        <span className="font-medium">
+                                            {t('ComfyUI Frontend')}:
+                                        </span>{' '}
+                                        {latestVersion.supported_comfyui_frontend_version ||
+                                            t('Not specified')}
+                                    </div>
+                                    <div>
+                                        <span className="font-medium">
+                                            {t('ComfyUI')}:
+                                        </span>{' '}
+                                        {latestVersion.supported_comfyui_version ||
+                                            t('Not specified')}
+                                    </div>
+                                    <div>
+                                        <span className="font-medium">
+                                            {t('OS')}:
+                                        </span>{' '}
+                                        {latestVersion.supported_os?.join(
+                                            ', '
+                                        ) || t('Not specified')}
+                                    </div>
+                                    <div>
+                                        <span className="font-medium">
+                                            {t('Accelerators')}:
+                                        </span>{' '}
+                                        {latestVersion.supported_accelerators?.join(
+                                            ', '
+                                        ) || t('Not specified')}
+                                    </div>
+                                </div>
+                                {isLatest && (
+                                    <div className="mt-2 text-green-400 font-medium">
+                                        {t('This is the latest version')}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-sm">
+                                {t('Latest version information not available')}
+                            </div>
+                        )
+
+                        return (
+                            <Table.Row key={nv.id}>
+                                <Table.Cell className="sticky left-0 z-10 bg-gray-800">
+                                    {nv.node_id}@{nv.version}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {latestVersion ? (
+                                        <Tooltip
+                                            content={compatibilityInfo}
+                                            className="max-w-md"
+                                            placement="right"
+                                        >
+                                            <div className="cursor-help inline-flex items-center gap-2">
+                                                <span
+                                                    className={
+                                                        isLatest
+                                                            ? 'text-green-400 font-medium'
+                                                            : ''
+                                                    }
+                                                >
+                                                    {latestVersion.version}
+                                                </span>
+                                                {isLatest && (
+                                                    <span className="text-xs bg-green-600 px-2 py-0.5 rounded">
+                                                        {t('Latest')}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </Tooltip>
+                                    ) : (
+                                        <span className="text-gray-500">
+                                            {t('Loading...')}
+                                        </span>
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {nv.supported_comfyui_frontend_version ||
                                         ''}
-                                </code>
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Button
-                                    size="xs"
-                                    onClick={() => handleEdit(nv)}
-                                    color="primary"
-                                >
-                                    {t('Edit')}
-                                </Button>
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {nv.supported_comfyui_version || ''}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <code className="whitespace-pre overflow-auto">
+                                        {nv.supported_os?.join('\n') || ''}
+                                    </code>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <code className="whitespace-pre overflow-auto">
+                                        {nv.supported_accelerators?.join(
+                                            '\n'
+                                        ) || ''}
+                                    </code>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Button
+                                        size="xs"
+                                        onClick={() => handleEdit(nv)}
+                                        color="primary"
+                                    >
+                                        {t('Edit')}
+                                    </Button>
+                                </Table.Cell>
+                            </Table.Row>
+                        )
+                    })}
                 </Table.Body>
             </Table>
 
