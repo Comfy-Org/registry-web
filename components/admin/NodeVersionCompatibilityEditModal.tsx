@@ -23,6 +23,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import Link from 'next/link'
+import { DIES } from 'phpdie'
 
 interface FormData {
     supported_comfyui_frontend_version: string
@@ -110,10 +111,14 @@ export default function NodeVersionCompatibilityEditModal({
         try {
             await adminUpdateNodeVersion.mutateAsync({
                 nodeId:
-                    nodeVersion.node_id || DIEToast(t('Node ID is required')),
+                    nodeVersion.node_id ||
+                    DIES(toast.error.bind(toast), t('Node ID is required')),
                 versionNumber:
                     nodeVersion.version ||
-                    DIEToast(t('Node Version Number is required')),
+                    DIES(
+                        toast.error.bind(toast),
+                        t('Node Version Number is required')
+                    ),
                 data: {
                     supported_comfyui_frontend_version:
                         data.supported_comfyui_frontend_version,
@@ -216,7 +221,8 @@ export default function NodeVersionCompatibilityEditModal({
                                                 {t(
                                                     'Latest Version Compatibility Reference'
                                                 )}
-                                                : {'v' + nodeData.latest_version.version}
+                                                :{' '}
+                                                {`v${nodeData.latest_version.version}`}
                                             </div>
                                             <Button
                                                 size="xs"
@@ -438,9 +444,4 @@ export default function NodeVersionCompatibilityEditModal({
             </form>
         </Modal>
     )
-}
-
-function DIEToast(message: string): never {
-    toast.error(message)
-    throw new Error(message)
 }
