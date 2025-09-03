@@ -216,11 +216,7 @@ export default function NodeVersionCompatibilityEditModal({
                                                 {t(
                                                     'Latest Version Compatibility Reference'
                                                 )}
-                                                : v
-                                                {
-                                                    nodeData.latest_version
-                                                        .version
-                                                }
+                                                : {'v' + nodeData.latest_version.version}
                                             </div>
                                             <Button
                                                 size="xs"
