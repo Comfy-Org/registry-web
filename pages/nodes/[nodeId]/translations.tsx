@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import {
     Breadcrumb,
@@ -12,17 +12,19 @@ import {
 import { HiHome, HiSave, HiPlus, HiTrash } from 'react-icons/hi'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useGetNode, useCreateNodeTranslations } from '@/src/api/generated'
-import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES } from '@/src/constants'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import type {
     NodeTranslations,
     CreateNodeTranslationsBody,
 } from '@/src/api/generated'
 import withAuth from '@/components/common/HOC/withAuth'
 
-const NodeTranslationEditor = () => {
+export default withAuth(NodeTranslationEditor)
+
+function NodeTranslationEditor() {
     const router = useRouter()
-    const { nodeId } = router.query
-    const { t } = useNextTranslation()
+    const { nodeId } = router.query as { nodeId: string }
+    const { t, currentLanguage } = useNextTranslation()
 
     const [selectedLanguage, setSelectedLanguage] = useState<string>('en')
     const [translations, setTranslations] = useState<NodeTranslations>({})
@@ -30,22 +32,42 @@ const NodeTranslationEditor = () => {
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
+    // Memoize display names to avoid recreating Intl.DisplayNames instances on every render
+    const displayNames = useMemo(() => {
+        const currentLangDisplayNames = new Intl.DisplayNames(
+            [currentLanguage],
+            {
+                type: 'language',
+            }
+        )
+
+        return SUPPORTED_LANGUAGES.reduce(
+            (acc, langCode) => {
+                const thatLangDisplayNames = new Intl.DisplayNames([langCode], {
+                    type: 'language',
+                })
+
+                acc[langCode] = {
+                    nameInMyLanguage: currentLangDisplayNames.of(langCode),
+                    nameInThatLanguage: thatLangDisplayNames.of(langCode),
+                }
+                return acc
+            },
+            {} as Record<
+                string,
+                { nameInMyLanguage?: string; nameInThatLanguage?: string }
+            >
+        )
+    }, [currentLanguage])
+
     const {
         data: node,
         isLoading,
         error,
-    } = useGetNode(
-        nodeId as string,
-        { include_translations: true },
-        {
-            query: {
-                enabled: !!nodeId,
-            },
-        }
-    )
+    } = useGetNode(nodeId, { include_translations: true })
 
     const createTranslationsMutation = useCreateNodeTranslations()
-
+    // {[locale]: {[text]: 'translation'}}
     const existingTranslations = node?.translations || {}
 
     const handleLanguageChange = (language: string) => {
@@ -62,7 +84,7 @@ const NodeTranslationEditor = () => {
         return {
             ...existingTranslations[selectedLanguage],
             ...translations[selectedLanguage],
-        } as Record<string, string | string[]>
+        } as Record<string, unknown>
     }
 
     const updateTranslation = (field: string, value: string) => {
@@ -198,7 +220,6 @@ const NodeTranslationEditor = () => {
                     {errorMessage}
                 </Alert>
             )}
-
             <Card>
                 <div className="mb-4">
                     <label
@@ -212,13 +233,19 @@ const NodeTranslationEditor = () => {
                         value={selectedLanguage}
                         onChange={(e) => handleLanguageChange(e.target.value)}
                     >
-                        {SUPPORTED_LANGUAGES.map((lang) => (
-                            <option key={lang} value={lang}>
-                                {LANGUAGE_NAMES[lang]} ({lang})
-                            </option>
-                        ))}
+                        {SUPPORTED_LANGUAGES.map((lang) => {
+                            const { nameInMyLanguage, nameInThatLanguage } =
+                                displayNames[lang]
+                            return (
+                                <option key={lang} value={lang}>
+                                    {nameInThatLanguage} ({nameInMyLanguage})
+                                </option>
+                            )
+                        })}
                     </Select>
                 </div>
+
+                {JSON.stringify(existingTranslations)}
 
                 <div className="mb-4 border-b border-gray-200 dark:border-gray-700 pb-4">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -272,7 +299,11 @@ const NodeTranslationEditor = () => {
 
                             {field === 'description' ? (
                                 <Textarea
-                                    value={currentTranslations[field] || ''}
+                                    value={
+                                        (currentTranslations[
+                                            field
+                                        ] as string) || ''
+                                    }
                                     onChange={(e) =>
                                         updateTranslation(field, e.target.value)
                                     }
@@ -302,11 +333,11 @@ const NodeTranslationEditor = () => {
                             ] && (
                                 <p className="text-xs text-gray-500 mt-1">
                                     {t('Original')}:{' '}
-                                    {
+                                    {String(
                                         existingTranslations[selectedLanguage][
                                             field
-                                        ] as string
-                                    }
+                                        ]
+                                    )}
                                 </p>
                             )}
                         </div>
@@ -332,5 +363,3 @@ const NodeTranslationEditor = () => {
         </div>
     )
 }
-
-export default withAuth(NodeTranslationEditor)
