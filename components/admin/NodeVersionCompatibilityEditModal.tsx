@@ -1,10 +1,18 @@
 import React, { useEffect } from 'react'
-import { Modal, Button, TextInput, Label, Textarea } from 'flowbite-react'
+import {
+    Modal,
+    Button,
+    TextInput,
+    Label,
+    Textarea,
+    Alert,
+} from 'flowbite-react'
 import { useForm, Controller } from 'react-hook-form'
 import {
     NodeVersion,
     AdminUpdateNodeVersionBody,
     useAdminUpdateNodeVersion,
+    useGetNode,
 } from '@/src/api/generated'
 import {
     INVALIDATE_CACHE_OPTION,
@@ -15,6 +23,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 import { toast } from 'react-toastify'
 import { AxiosError } from 'axios'
 import Link from 'next/link'
+import { DIES } from 'phpdie'
 
 interface FormData {
     supported_comfyui_frontend_version: string
@@ -39,6 +48,15 @@ export default function NodeVersionCompatibilityEditModal({
     const { t } = useNextTranslation()
     const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
     const queryClient = useQueryClient()
+
+    // Fetch node information to get latest version
+    const { data: nodeData } = useGetNode(
+        nodeVersion?.node_id || '',
+        {},
+        {
+            query: { enabled: !!nodeVersion?.node_id && isOpen },
+        }
+    )
 
     const {
         control,
@@ -93,10 +111,14 @@ export default function NodeVersionCompatibilityEditModal({
         try {
             await adminUpdateNodeVersion.mutateAsync({
                 nodeId:
-                    nodeVersion.node_id || DIEToast(t('Node ID is required')),
+                    nodeVersion.node_id ||
+                    DIES(toast.error.bind(toast), t('Node ID is required')),
                 versionNumber:
                     nodeVersion.version ||
-                    DIEToast(t('Node Version Number is required')),
+                    DIES(
+                        toast.error.bind(toast),
+                        t('Node Version Number is required')
+                    ),
                 data: {
                     supported_comfyui_frontend_version:
                         data.supported_comfyui_frontend_version,
@@ -187,6 +209,132 @@ export default function NodeVersionCompatibilityEditModal({
                                 {nodeVersion.node_id}@{nodeVersion.version}
                             </div>
                         </div>
+
+                        {/* Latest Version Compatibility Info */}
+                        {nodeData?.latest_version &&
+                            nodeData.latest_version.version !==
+                                nodeVersion.version && (
+                                <Alert color="info" className="dark">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <div className="font-semibold">
+                                                {t(
+                                                    'Latest Version Compatibility Reference'
+                                                )}
+                                                :{' '}
+                                                {`v${nodeData.latest_version.version}`}
+                                            </div>
+                                            <Button
+                                                size="xs"
+                                                color="light"
+                                                onClick={() => {
+                                                    const latestVersion =
+                                                        nodeData.latest_version
+                                                    if (latestVersion) {
+                                                        reset({
+                                                            supported_comfyui_frontend_version:
+                                                                latestVersion.supported_comfyui_frontend_version ||
+                                                                '',
+                                                            supported_comfyui_version:
+                                                                latestVersion.supported_comfyui_version ||
+                                                                '',
+                                                            supported_os:
+                                                                latestVersion.supported_os?.join(
+                                                                    '\n'
+                                                                ) || '',
+                                                            supported_accelerators:
+                                                                latestVersion.supported_accelerators?.join(
+                                                                    '\n'
+                                                                ) || '',
+                                                        })
+                                                        toast.success(
+                                                            t(
+                                                                'Copied compatibility settings from latest version'
+                                                            )
+                                                        )
+                                                    }
+                                                }}
+                                            >
+                                                {t('Copy from Latest')}
+                                            </Button>
+                                        </div>
+                                        <div className="text-sm space-y-1">
+                                            {nodeData.latest_version
+                                                .supported_comfyui_frontend_version && (
+                                                <div>
+                                                    <span className="font-medium">
+                                                        {t('ComfyUI Frontend')}:
+                                                    </span>{' '}
+                                                    {
+                                                        nodeData.latest_version
+                                                            .supported_comfyui_frontend_version
+                                                    }
+                                                </div>
+                                            )}
+                                            {nodeData.latest_version
+                                                .supported_comfyui_version && (
+                                                <div>
+                                                    <span className="font-medium">
+                                                        {t('ComfyUI')}:
+                                                    </span>{' '}
+                                                    {
+                                                        nodeData.latest_version
+                                                            .supported_comfyui_version
+                                                    }
+                                                </div>
+                                            )}
+                                            {nodeData.latest_version
+                                                .supported_os &&
+                                                nodeData.latest_version
+                                                    .supported_os.length >
+                                                    0 && (
+                                                    <div>
+                                                        <span className="font-medium">
+                                                            {t('OS')}:
+                                                        </span>{' '}
+                                                        {nodeData.latest_version.supported_os.join(
+                                                            ', '
+                                                        )}
+                                                    </div>
+                                                )}
+                                            {nodeData.latest_version
+                                                .supported_accelerators &&
+                                                nodeData.latest_version
+                                                    .supported_accelerators
+                                                    .length > 0 && (
+                                                    <div>
+                                                        <span className="font-medium">
+                                                            {t('Accelerators')}:
+                                                        </span>{' '}
+                                                        {nodeData.latest_version.supported_accelerators.join(
+                                                            ', '
+                                                        )}
+                                                    </div>
+                                                )}
+                                        </div>
+                                        <div className="text-xs text-gray-600 dark:text-gray-400 mt-2">
+                                            {t(
+                                                'Consider using these values for better compatibility with the latest version'
+                                            )}
+                                        </div>
+                                    </div>
+                                </Alert>
+                            )}
+
+                        {nodeData?.latest_version &&
+                            nodeData.latest_version.version ===
+                                nodeVersion.version && (
+                                <Alert color="success" className="dark">
+                                    <div className="font-semibold">
+                                        {t('This is the latest version')}
+                                    </div>
+                                    <div className="text-sm mt-1">
+                                        {t(
+                                            'You are editing compatibility settings for the most recent version of this node'
+                                        )}
+                                    </div>
+                                </Alert>
+                            )}
 
                         <div>
                             <Label htmlFor="comfyui-frontend-version">
@@ -296,9 +444,4 @@ export default function NodeVersionCompatibilityEditModal({
             </form>
         </Modal>
     )
-}
-
-function DIEToast(message: string): never {
-    toast.error(message)
-    throw new Error(message)
 }

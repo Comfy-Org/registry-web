@@ -44,10 +44,7 @@ async function extractKeysFromFile(filePath: string): Promise<ExtractedKey[]> {
         const content = await fs.readFile(filePath, 'utf-8')
 
         // Only process files that use translation
-        if (
-            !content.includes('useNextTranslation') &&
-            !content.includes('{ t }')
-        ) {
+        if (!content.includes('useNextTranslation(')) {
             return []
         }
 

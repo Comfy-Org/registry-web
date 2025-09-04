@@ -1,27 +1,35 @@
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import { Dropdown, DropdownItem } from 'flowbite-react'
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
 import Link, { LinkProps } from 'next/link'
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({
+    className,
+}: {
+    className?: string
+} = {}) {
     const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
     const router = useRouter()
 
+    // _document.tsx sets the initial direction based on locale,
+    // here we update document direction by locale without reloading the page
+    const dir = i18n.resolvedLanguage && i18n.dir(i18n.resolvedLanguage)
+    useEffect(() => {
+        if (dir) document.documentElement.dir = dir
+    }, [dir])
+
     // Memoize display names to avoid recreating Intl.DisplayNames instances on every render
     const displayNames = useMemo(() => {
-        const currentLangDisplayNames = new Intl.DisplayNames(
-            [currentLanguage],
-            {
-                type: 'language',
-            }
-        )
+        const currentLangDisplayNames = new Intl.DisplayNames(currentLanguage, {
+            type: 'language',
+        })
 
         return SUPPORTED_LANGUAGES.reduce(
             (acc, langCode) => {
-                const thatLangDisplayNames = new Intl.DisplayNames([langCode], {
+                const thatLangDisplayNames = new Intl.DisplayNames(langCode, {
                     type: 'language',
                 })
 
@@ -38,13 +46,13 @@ export default function LanguageSwitcher() {
         )
     }, [currentLanguage])
 
-    const currentLanguageLabel = useMemo(() => {
-        return (
-            new Intl.DisplayNames([currentLanguage], {
+    const currentLanguageLabel = useMemo(
+        () =>
+            new Intl.DisplayNames(currentLanguage, {
                 type: 'language',
-            }).of(currentLanguage) || 'Language'
-        )
-    }, [currentLanguage])
+            }).of(currentLanguage) || 'Language',
+        [currentLanguage]
+    )
 
     return (
         <Dropdown
@@ -96,15 +104,33 @@ export default function LanguageSwitcher() {
                                 })}
                             >
                                 {nameInThatLanguage}
+                                {langCode === 'ar' && (
+                                    <span className="ml-1 text-xs text-gray-500">
+                                        (Beta)
+                                    </span>
+                                )}
                             </span>
                         ) : (
                             <>
                                 <span
                                     className={clsx(
-                                        'text-right border-r-2 border-gray-300  pr-2 '
+                                        'text-right border-gray-300',
+                                        {
+                                            'border-r-2 pr-2':
+                                                i18n.dir(currentLanguage) ===
+                                                'ltr',
+                                            'border-l-2 pl-2':
+                                                i18n.dir(currentLanguage) ===
+                                                'rtl',
+                                        }
                                     )}
                                 >
                                     {nameInThatLanguage}
+                                    {langCode === 'ar' && (
+                                        <span className="ml-1 text-xs text-gray-500">
+                                            (Beta)
+                                        </span>
+                                    )}
                                 </span>
 
                                 <span className={clsx('text-left pl-2')}>
