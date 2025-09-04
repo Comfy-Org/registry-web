@@ -328,9 +328,7 @@ function NodeTranslationEditor() {
                                 />
                             )}
 
-                            {existingTranslations[selectedLanguage]?.[
-                                field
-                            ] && (
+                            {existingTranslations[selectedLanguage]?.[field] ? (
                                 <p className="text-xs text-gray-500 mt-1">
                                     {t('Original')}:{' '}
                                     {String(
@@ -339,7 +337,7 @@ function NodeTranslationEditor() {
                                         ]
                                     )}
                                 </p>
-                            )}
+                            ) : null}
                         </div>
                     ))}
                 </div>
