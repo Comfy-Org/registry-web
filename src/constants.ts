@@ -15,7 +15,7 @@ export const LANGUAGE_STORAGE_KEY =
 // Language configuration
 export const DEFAULT_LANGUAGE = 'en'
 
-const LANGUAGE_NAMES = {
+export const LANGUAGE_NAMES = {
     en: 'English',
     zh: '中文',
     ja: '日本語',
