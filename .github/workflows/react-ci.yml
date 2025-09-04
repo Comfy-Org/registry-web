@@ -34,7 +34,8 @@ jobs:
         run: bunx sort-package-json
       - name: Build the Next.js Project
         run: bun run build
-      # commit prettier fixed code
+      # commit prettier fixed code (only on pull requests, not on push events)
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: github.event_name == 'pull_request'
         with:
           commit_message: "format: Apply prettier --fix changes"
