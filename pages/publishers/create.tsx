@@ -154,7 +154,7 @@ const CreatePublisher = () => {
                                     />
                                 </div>
 
-                                <div className="flex center gap-4">
+                                <div className="flex items-center justify-center gap-4">
                                     <Button
                                         type="button"
                                         onClick={() => router.back()}
