@@ -42,5 +42,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: github.event_name == 'pull_request'
         with:
           commit_message: "chore: generate backend API static type"
