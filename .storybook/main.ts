@@ -49,6 +49,7 @@ const config: StorybookConfig = {
               console.log('!!!! Redirecting to mock:', resolved)
               return resolved
             }
+            return null
           },
         },
         ...(c.plugins || []),
@@ -62,6 +63,7 @@ const config: StorybookConfig = {
           enforce: 'pre',
           // This plugin resolves the useFirebaseUser hook to its mock version
           resolveId(id, importer) {
+            if (!importer) return null
             const pathname = relative(
               process.cwd(),
               resolve(path.dirname(importer), id)
