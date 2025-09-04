@@ -8,7 +8,9 @@ import { FaDiscord, FaGithub } from 'react-icons/fa'
 import logoBluePng from '@/src/assets/images/logo_blue.png'
 import { useFromUrlParam } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
+import ThemeSwitcher from '../common/ThemeSwitcher'
 import ProfileDropdown from './ProfileDropdown'
+import { themeConfig } from '@/utils/themeConfig'
 
 interface HeaderProps {
     isLoggedIn?: boolean
@@ -32,9 +34,8 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
     return (
         <Navbar
             fluid
-            className="mx-auto p-8"
+            className={`mx-auto p-8 ${themeConfig.header.background}`}
             style={{
-                backgroundColor: 'rgb(17 24 39)',
                 paddingLeft: 0,
                 paddingRight: 0,
             }}
@@ -47,17 +48,23 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     height={36}
                     className="w-6 h-6 mr-3 sm:w-9 sm:h-9 rounded-lg"
                 />
-                <span className="self-center text-xl font-semibold text-white whitespace-nowrap">
+                <span
+                    className={`self-center text-xl font-semibold whitespace-nowrap ${themeConfig.header.text}`}
+                >
                     {t('Comfy Registry')}
                 </span>
             </Link>
-            <div className="flex items-center gap-2 bg-gray-900 md:order-2">
+            <div
+                className={`flex items-center gap-2 md:order-2 ${themeConfig.header.background}`}
+            >
                 {isLoggedIn ? (
                     <ProfileDropdown />
                 ) : (
                     <>
                         <Button onClick={handleLogIn} color="dark" size="xs">
-                            <span className="text-white text-xs md:text-base">
+                            <span
+                                className={`text-xs md:text-base ${themeConfig.header.text}`}
+                            >
                                 {t('Login')}
                             </span>
                         </Button>
@@ -78,7 +85,9 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     color="blue"
                     size="xs"
                 >
-                    <span className="text-white text-xs md:text-base">
+                    <span
+                        className={`text-xs md:text-base ${themeConfig.header.text}`}
+                    >
                         {t('Documentation')}
                     </span>
                 </Button>
@@ -90,6 +99,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     size="xs"
                 />
 
+                <ThemeSwitcher />
                 {/* place in the most-right to reduce ... when switching language  */}
                 <LanguageSwitcher />
             </div>
