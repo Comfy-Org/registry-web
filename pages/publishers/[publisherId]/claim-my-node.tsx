@@ -288,7 +288,7 @@ function ClaimMyNodePage() {
                 setPermissionCheckLoading(false)
             }
         },
-        [t]
+        [t, setPermissionCheckLoading]
     )
 
     useEffect(() => {
