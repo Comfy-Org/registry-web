@@ -402,8 +402,9 @@ export function NodeStatusReason(nv: NodeVersion) {
                                         {(e.file_path?.length ?? 0) > 18 + 2
                                             ? `…${e.file_path?.slice(-18)}`
                                             : e.file_path}
-                                        {t('L', 'L')}
-                                        {e.line_number}
+                                        {t('L{{number}}', 'L{{number}}', {
+                                            number: e.line_number,
+                                        })}
                                     </code>
                                 </div>
                                 <code className="flex-1 ml-4 whitespace-nowrap text">

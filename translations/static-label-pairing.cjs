@@ -1,4 +1,4 @@
-// Static label pairing configuration for @spaced-out/eslint-plugin-i18n
+// Static label pairing configuration for eslint-plugin-i18n-json
 // This file helps the plugin understand the relationship between static labels and their translations
 
 // Export the expected structure for the plugin to work properly
