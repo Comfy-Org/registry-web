@@ -38,20 +38,22 @@ jobs:
       - name: Build Storybook
         run: bun run build-storybook
 
-      # Publish to Chromatic (only on push to main)
+      # Publish to Chromatic (on push to main or PRs from *storybook* branches)
       - name: Publish to Chromatic
         id: chromatic
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          (github.event_name == 'pull_request' && contains(github.head_ref, 'storybook'))
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           storybookBuildDir: storybook-static
           exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
-          autoAcceptChanges: true # Auto-accept changes on main branch
+          autoAcceptChanges: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only auto-accept on main branch
 
-      # Comment on PR with Chromatic results (skipped since we don't publish on PRs)
+      # Comment on PR with Chromatic results (for storybook branches)
       - name: Comment on PR
-        if: false
+        if: github.event_name == 'pull_request' && contains(github.head_ref, 'storybook') && steps.chromatic.outputs.buildUrl
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
