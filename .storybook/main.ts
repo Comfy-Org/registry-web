@@ -1,8 +1,8 @@
 import { mergeConfig } from 'vite'
 import type { StorybookConfig } from '@storybook/nextjs-vite'
 import path from 'node:path'
-// @ts-ignore - JS module to avoid TypeScript compilation issues
-import { createMockResolverPlugin } from './mockResolverPlugin.js'
+// Dynamic import to avoid build-time issues
+let createMockResolverPlugin: any
 
 export default defineConfig({
   stories: [
@@ -20,12 +20,18 @@ export default defineConfig({
   framework: '@storybook/nextjs-vite',
   staticDirs: ['../public', '../src/assets'],
   viteFinal: async (c) => {
+    // Dynamically import the plugin to avoid build issues
+    if (!createMockResolverPlugin) {
+      const mockPlugin = await import('./mockResolverPlugin.js')
+      createMockResolverPlugin = mockPlugin.createMockResolverPlugin
+    }
+
     return mergeConfig(c, {
       server: {
         allowedHosts: true,
         hmr: { clientPort: 443 },
       },
-      plugins: [createMockResolverPlugin()],
+      plugins: [await createMockResolverPlugin()],
       resolve: {
         alias: {
           '@/src/hooks/useFirebaseUser': path.resolve(
