@@ -1,11 +1,11 @@
-const path = require('node:path')
-const { watch } = require('@snomiao/glob-watch')
+import path from 'node:path'
+import { watch } from '@snomiao/glob-watch'
 
 /**
  * Creates a Vite plugin that automatically redirects imports from original files to their mock versions
  * Scans for all .mock.ts files and creates redirect rules
  */
-async function createMockResolverPlugin() {
+export async function createMockResolverPlugin() {
   // Scan for all .mock.ts files
   const mockMap = new Map()
   const glob = '**/*.mock.{ts,tsx}'
@@ -45,5 +45,3 @@ async function createMockResolverPlugin() {
     },
   }
 }
-
-module.exports = { createMockResolverPlugin }
