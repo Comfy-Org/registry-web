@@ -169,7 +169,6 @@ const CreatePublisher = () => {
                                         type="submit"
                                         color="blue"
                                         size="sm"
-                                        onClick={handleSubmit}
                                         disabled={
                                             isLoadingValidation ||
                                             !!publisherValidationError

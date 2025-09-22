@@ -3,8 +3,12 @@ import '../styles/globals.css' // Import the global CSS file
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { initialize, mswLoader } from 'msw-storybook-addon'
 import '../src/firebase' // Initialize Firebase for Storybook
+import {
+  mockFirebaseUser,
+  useFirebaseUser,
+} from '@/src/hooks/useFirebaseUser.mock'
 
-const mswApp = initialize({
+const _mswApp = initialize({
   onUnhandledRequest: 'bypass',
 })
 
@@ -25,6 +29,9 @@ const preview: Preview = {
     docs: {
       toc: true,
     },
+  },
+  beforeEach: async () => {
+    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
   },
   loaders: [mswLoader],
   decorators: [
