@@ -356,7 +356,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             nv.status_reason
                                         ).data?.batchId && (
                                             <span className="ml-2 text-xs text-gray-500">
-                                                [Batch:{' '}
+                                                [{t('Batch', 'Batch')}:
                                                 {
                                                     zStatusReason.safeParse(
                                                         nv.status_reason
@@ -374,7 +374,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             )}
             {!!problemsSummary?.length && (
                 <>
-                    <h4>{'Problems Summary: '}</h4>
+                    <h4>{t('Problems Summary', 'Problems Summary')}: </h4>
                     <ol className="ml-4 overflow-x-auto">
                         {problemsSummary.map((e, i) => (
                             <li
@@ -402,7 +402,8 @@ export function NodeStatusReason(nv: NodeVersion) {
                                         {(e.file_path?.length ?? 0) > 18 + 2
                                             ? `…${e.file_path?.slice(-18)}`
                                             : e.file_path}
-                                        &nbsp;L{e.line_number}
+                                        {t('L', 'L')}
+                                        {e.line_number}
                                     </code>
                                 </div>
                                 <code className="flex-1 ml-4 whitespace-nowrap text">
@@ -418,7 +419,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             )}
             {!!code?.trim() && (
                 <details open={!problemsSummary}>
-                    <summary>{'Status Reason: '}</summary>
+                    <summary>{t('Status Reason', 'Status Reason')}: </summary>
                     {fullfilledIssueList ? (
                         <PrettieredYamlDiffView
                             original={lastCode}
@@ -450,6 +451,7 @@ export function PrettieredJSON5({ children: raw }: { children: string }) {
 
 export function PrettieredYAML({ children: raw }: { children: string }) {
     const { ref, inView } = useInView()
+    const { t } = useNextTranslation()
 
     const parsedYaml = tryCatch(
         (raw: string) => yaml.stringify(yaml.parse(raw)),
@@ -480,7 +482,7 @@ export function PrettieredYAML({ children: raw }: { children: string }) {
                         color={'gray'}
                     >
                         <MdEdit className="w-5 h-5" />
-                        Toggle Editor
+                        {t('Toggle_Editor', 'Toggle Editor')}
                     </Button>
                 </div>
             )}
@@ -517,6 +519,7 @@ export function PrettieredYamlDiffView({
     modified: string
 }) {
     const { ref, inView } = useInView()
+    const { t } = useNextTranslation()
 
     const parsedModified = tryCatch(
         (raw: string) => raw && yaml.stringify(yaml.parse(raw)),
@@ -559,7 +562,7 @@ export function PrettieredYamlDiffView({
                         color={'gray'}
                     >
                         <MdEdit className="w-5 h-5" />
-                        Toggle Editor
+                        {t('Toggle_Editor', 'Toggle Editor')}
                     </Button>
                 </div>
             )}

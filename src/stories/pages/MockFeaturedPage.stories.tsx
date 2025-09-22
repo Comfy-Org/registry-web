@@ -1,3 +1,4 @@
+/* eslint-disable @spaced-out/i18n/no-static-labels */
 import Container from '@/components/common/Container'
 import GenericHeader from '@/components/common/GenericHeader'
 import NodesCard from '@/components/nodes/NodesCard'

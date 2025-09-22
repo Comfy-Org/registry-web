@@ -398,8 +398,10 @@ function ClaimMyNodePage() {
         user,
         nodeId,
         publisherId,
-        router,
+        router.query,
+        githubUsername,
         currentStage,
+        router,
         t,
         verifyRepoPermissions,
     ])
@@ -497,7 +499,7 @@ function ClaimMyNodePage() {
                     {node
                         ? t('Claim Node: {{nodeName}}', { nodeName: node.name })
                         : t('Claim Node')}{' '}
-                    | Comfy Registry
+                    {`| ${t('Comfy_Registry', 'Comfy Registry')}`}
                 </title>
                 <meta
                     name="description"

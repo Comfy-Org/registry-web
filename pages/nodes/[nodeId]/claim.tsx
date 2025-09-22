@@ -77,7 +77,8 @@ function ClaimNodePage() {
             <div className="flex items-center justify-center h-screen">
                 <Head>
                     <title>
-                        {t('Loading Publisher Selection')} | Comfy Registry
+                        {t('Loading Publisher Selection')}
+                        {` | ${t('Comfy_Registry', 'Comfy Registry')}`}
                     </title>
                 </Head>
                 <Spinner size="xl" />
@@ -89,7 +90,10 @@ function ClaimNodePage() {
         return (
             <div className="container p-6 mx-auto h-[90vh] text-white">
                 <Head>
-                    <title>{t('Already Claimed')} | Comfy Registry</title>
+                    <title>
+                        {t('Already Claimed')}
+                        {` | ${t('Comfy_Registry', 'Comfy Registry')}`}
+                    </title>
                     <meta
                         name="description"
                         content={t(
@@ -127,7 +131,7 @@ function ClaimNodePage() {
                               nodeName: node.name,
                           })
                         : t('Select Publisher')}{' '}
-                    | Comfy Registry
+                    {`| ${t('Comfy_Registry', 'Comfy Registry')}`}
                 </title>
                 <meta
                     name="description"
