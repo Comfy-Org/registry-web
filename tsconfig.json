@@ -32,5 +32,5 @@
         ".next/types/**/*.ts",
         "sflow.d.ts"
     ],
-    "exclude": ["node_modules", "NativeApp"]
+    "exclude": ["node_modules", "NativeApp", ".storybook"]
 }

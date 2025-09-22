@@ -245,7 +245,7 @@ function ClaimNodePage() {
 
             {/* CreatePublisherModal */}
             <CreatePublisherModal
-                openModal={openCreatePublisherModal}
+                open={openCreatePublisherModal}
                 onCloseModal={handleCloseCreatePublisherModal}
                 onSuccess={handleCreatePublisherSuccess}
             />

@@ -398,8 +398,10 @@ function ClaimMyNodePage() {
         user,
         nodeId,
         publisherId,
-        router,
+        router.query,
+        githubUsername,
         currentStage,
+        router,
         t,
         verifyRepoPermissions,
     ])
