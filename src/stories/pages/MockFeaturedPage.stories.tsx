@@ -1,3 +1,4 @@
+/* eslint-disable @spaced-out/i18n/no-static-labels */
 import Container from '@/components/common/Container'
 import GenericHeader from '@/components/common/GenericHeader'
 import NodesCard from '@/components/nodes/NodesCard'
@@ -47,7 +48,7 @@ const PageLayout = () => {
 
                     <div className="mt-8">
                         <h2 className="text-xl font-bold text-white mb-4">
-                            {t('Popular_Nodes', 'Popular Nodes')}
+                            Popular Nodes
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {sampleNodes.map((node) => (
@@ -62,15 +63,19 @@ const PageLayout = () => {
 
                     <div className="mt-12 bg-gray-800 p-6 rounded-lg">
                         <h2 className="text-xl font-bold text-white mb-4">
-                            {t('Get_Started', 'Get Started')}
+                            Get Started
                         </h2>
-                        <p className="text-gray-300 mb-4">{`${t('Create_your_own_nodes_and_share_them_with_the_community_Join_the_growing_ecosystem_of_developers_creating_amazing_tools_for_Comfy', 'Create your own nodes and share them with the community. Join the growing ecosystem of developers creating amazing tools for Comfy')}.`}</p>
+                        <p className="text-gray-300 mb-4">
+                            Create your own nodes and share them with the
+                            community. Join the growing ecosystem of developers
+                            creating amazing tools for Comfy.
+                        </p>
                         <div className="flex gap-4">
                             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                                {t('Create_a_Node', 'Create a Node')}
+                                Create a Node
                             </button>
                             <button className="bg-gray-700 text-white px-4 py-2 rounded-lg">
-                                {t('Learn_More', 'Learn More')}
+                                Learn More
                             </button>
                         </div>
                     </div>
