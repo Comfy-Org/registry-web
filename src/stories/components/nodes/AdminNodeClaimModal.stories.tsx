@@ -67,25 +67,10 @@ const samplePublishers: Publisher[] = [
     },
 ]
 
-// Mock the API hooks
-const mockUseListPublishers = () => ({
-    data: samplePublishers,
-    isLoading: false,
-    error: null,
-})
-
-const mockUseUpdateNode = () => ({
-    mutateAsync: () => Promise.resolve(),
-    isPending: false,
-    error: null,
-})
-
-// Mock the API imports
-jest.mock('@/src/api/generated', () => ({
-    ...jest.requireActual('@/src/api/generated'),
-    useListPublishers: () => mockUseListPublishers(),
-    useUpdateNode: () => mockUseUpdateNode(),
-}))
+// Create mock data for the component
+// Note: In Storybook, we can't directly mock modules like we do with jest.
+// Instead, we'll use MSW (Mock Service Worker) or pass props directly
+// For this component, we'll need to set up MSW handlers in the stories
 
 export const Default: Story = {
     args: {
