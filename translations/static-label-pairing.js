@@ -1,1 +1,0 @@
-static-label-pairing.cjs
