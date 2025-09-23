@@ -132,8 +132,7 @@ export function AdminCreateNodeFormModal({
             size="md"
             onClose={onClose}
             popup
-            //@ts-ignore
-            theme={customThemeTModal}
+            theme={customThemeTModal as Modal['props']['theme']}
             dismissible={false}
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">

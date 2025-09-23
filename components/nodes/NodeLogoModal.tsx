@@ -12,8 +12,7 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                 size="2xl"
                 onClose={onCloseModal}
                 popup
-                //@ts-ignore
-                theme={customThemeTModal}
+                theme={customThemeTModal as Modal['props']['theme']}
                 dismissible
             >
                 <Modal.Header className="!bg-gray-800 px-8 py-8">
