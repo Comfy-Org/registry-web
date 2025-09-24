@@ -2,23 +2,20 @@ import React from 'react'
 import { NextPage } from 'next'
 import { Tabs, Card, Badge, Button } from 'flowbite-react'
 import { HiDatabase, HiLightningBolt, HiRefresh } from 'react-icons/hi'
-import RegistryWithDB from '@/components/registry/RegistryWithDB'
-import NodeDetailsWithDB from '@/components/nodes/NodeDetailsWithDB'
-import { useNodesLive, usePublishersLive } from '@/src/db/hooks'
-import { dbSync } from '@/src/db/sync'
-import { useComfyDB } from '@/src/db/provider'
+import { useNodesLive, usePublishersLive } from '@/src/db/hooks-v2'
+import { useComfyDB } from '@/src/db/provider-v2'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
 const TanStackDBDemo: NextPage = () => {
     const { t } = useNextTranslation()
-    const { db, isInitialized } = useComfyDB()
+    const { isInitialized } = useComfyDB()
     const liveNodes = useNodesLive({ limit: 5 })
     const livePublishers = usePublishersLive({ limit: 5 })
 
     const handleClearDB = async () => {
         if (confirm('This will clear all local TanStack DB data. Continue?')) {
-            await dbSync.clearAllCollections()
-            window.location.reload()
+            // In the simplified implementation, there's nothing to clear
+            console.log('Clear functionality would be implemented here')
         }
     }
 
@@ -120,7 +117,11 @@ const TanStackDBDemo: NextPage = () => {
                             real-time updates. Try opening this page in multiple
                             tabs and watch data sync automatically!
                         </p>
-                        <RegistryWithDB />
+                        <p className="text-gray-600">
+                            Registry with TanStack DB integration would be
+                            displayed here. See the Enhanced Demo tab for a
+                            working implementation.
+                        </p>
                     </div>
                 </Tabs.Item>
 
@@ -145,7 +146,7 @@ const TanStackDBDemo: NextPage = () => {
                                                 </h4>
                                                 <p className="text-sm text-gray-500">
                                                     Downloads:{' '}
-                                                    {node.total_downloads} |
+                                                    {node.downloads || 0} |
                                                     Rating:{' '}
                                                     {node.rating?.toFixed(1) ||
                                                         'N/A'}
@@ -153,12 +154,13 @@ const TanStackDBDemo: NextPage = () => {
                                             </div>
                                             <Badge
                                                 color={
-                                                    node.deprecated
+                                                    node.latest_version
+                                                        ?.deprecated
                                                         ? 'warning'
                                                         : 'success'
                                                 }
                                             >
-                                                {node.deprecated
+                                                {node.latest_version?.deprecated
                                                     ? 'Deprecated'
                                                     : 'Active'}
                                             </Badge>
@@ -185,13 +187,13 @@ const TanStackDBDemo: NextPage = () => {
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <h4 className="font-medium">
-                                                    {publisher.display_name}
+                                                    {publisher.name ||
+                                                        'Unknown Publisher'}
                                                 </h4>
                                                 <p className="text-sm text-gray-500">
-                                                    Nodes:{' '}
-                                                    {publisher.node_count} |
                                                     Members:{' '}
-                                                    {publisher.member_count}
+                                                    {publisher.members
+                                                        ?.length || 0}
                                                 </p>
                                             </div>
                                             {publisher.website && (

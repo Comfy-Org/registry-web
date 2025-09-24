@@ -72,8 +72,8 @@ const RegistryEnhanced: React.FC = () => {
 
     // Paginated nodes
     const paginatedNodes = useMemo(() => {
-        if (!displayNodes) return []
-        return displayNodes.slice(0, pageSize * page)
+        const nodes = Array.isArray(displayNodes) ? displayNodes : []
+        return nodes.slice(0, pageSize * page)
     }, [displayNodes, pageSize, page])
 
     const handleNodeClick = async (node: Node) => {
@@ -90,7 +90,9 @@ const RegistryEnhanced: React.FC = () => {
         setPage((prev) => prev + 1)
     }
 
-    const hasMore = displayNodes && paginatedNodes.length < displayNodes.length
+    const hasMore =
+        Array.isArray(displayNodes) &&
+        paginatedNodes.length < displayNodes.length
 
     if (!isInitialized) {
         return (
@@ -166,7 +168,7 @@ const RegistryEnhanced: React.FC = () => {
                         <HiLightningBolt className="mr-1" />
                         {t('Live Updates Active')}
                     </Badge>
-                    {displayNodes && (
+                    {Array.isArray(displayNodes) && (
                         <Badge color="info">
                             {t('{{count}} nodes found', {
                                 count: displayNodes.length,

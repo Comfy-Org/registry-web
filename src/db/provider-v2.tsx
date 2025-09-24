@@ -1,74 +1,42 @@
-import React, { createContext, useContext, useEffect, ReactNode } from 'react'
-import { DBProvider } from '@tanstack/react-db'
+import React, { useEffect, ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { initComfyDB, getComfyDB } from './client-v2'
-import type { ComfyDB } from './client-v2'
-
-interface ComfyDBContextValue {
-    db: ComfyDB
-    isInitialized: boolean
-}
-
-const ComfyDBContext = createContext<ComfyDBContextValue | null>(null)
+import { setQueryClient } from './collections'
 
 interface ComfyDBProviderProps {
     children: ReactNode
 }
 
+// Simple provider that initializes the query client for collections
 export function ComfyDBProvider({ children }: ComfyDBProviderProps) {
     const queryClient = useQueryClient()
-    const [isInitialized, setIsInitialized] = React.useState(false)
-    const [db, setDb] = React.useState<ComfyDB | null>(null)
 
     useEffect(() => {
-        const initDB = async () => {
-            try {
-                // Initialize the database with the query client
-                const database = initComfyDB(queryClient)
-
-                // Hydrate from persisted state
-                await database.hydrate()
-
-                setDb(database)
-                setIsInitialized(true)
-
-                console.log('TanStack DB initialized successfully')
-            } catch (error) {
-                console.error('Failed to initialize TanStack DB:', error)
-                setIsInitialized(true) // Continue even if initialization fails
-            }
-        }
-
-        initDB()
+        // Set the query client for collections to use
+        setQueryClient(queryClient)
+        console.log('TanStack DB collections initialized with QueryClient')
     }, [queryClient])
 
-    if (!db) {
-        return <div>Loading database...</div>
-    }
-
-    return (
-        <ComfyDBContext.Provider value={{ db, isInitialized }}>
-            <DBProvider database={db}>{children}</DBProvider>
-        </ComfyDBContext.Provider>
-    )
+    // No loading state needed - collections work directly
+    return <>{children}</>
 }
 
+// Backwards compatibility hooks (now just return static values)
 export function useComfyDB() {
-    const context = useContext(ComfyDBContext)
-    if (!context) {
-        throw new Error('useComfyDB must be used within a ComfyDBProvider')
+    return {
+        isInitialized: true,
+        collections: {
+            // These are now available as direct imports
+        },
     }
-    return context
 }
 
-// Hook to check if DB is ready
 export function useDBReady() {
-    const { isInitialized } = useComfyDB()
-    return isInitialized
+    return true
 }
 
-// Hook to access collections directly
 export function useCollections() {
-    const { db } = useComfyDB()
-    return db.collections
+    return {
+        // Collections are now direct imports, not accessed through context
+        // Components should import them directly from './collections'
+    }
 }

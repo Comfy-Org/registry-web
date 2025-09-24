@@ -15,8 +15,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 
 const TanStackDBEnhancedDemo: NextPage = () => {
     const { t } = useNextTranslation()
-    const { db, isInitialized } = useComfyDB()
-    const collections = useCollections()
+    const { isInitialized } = useComfyDB()
     const stats = useNodeStats()
 
     // Demo queries
@@ -26,7 +25,8 @@ const TanStackDBEnhancedDemo: NextPage = () => {
 
     const handleClearDB = () => {
         if (confirm('Clear all local TanStack DB data?')) {
-            db.clearAll()
+            // Collections handle their own clearing now
+            console.log('Clear functionality would be implemented here')
         }
     }
 
@@ -163,30 +163,33 @@ const TanStackDBEnhancedDemo: NextPage = () => {
                                     Recent Nodes (Live)
                                 </h3>
                                 <div className="space-y-2">
-                                    {recentNodes?.slice(0, 5).map((node) => (
-                                        <div
-                                            key={node.id}
-                                            className="p-3 bg-gray-50 rounded-lg"
-                                        >
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h4 className="font-medium">
-                                                        {node.name}
-                                                    </h4>
-                                                    <p className="text-sm text-gray-500">
-                                                        Downloads:{' '}
-                                                        {node.downloads || 0} |
-                                                        Rating:{' '}
-                                                        {node.rating?.toFixed(
-                                                            1
-                                                        ) || 'N/A'}
-                                                    </p>
+                                    {Array.isArray(recentNodes) &&
+                                        recentNodes.slice(0, 5).map((node) => (
+                                            <div
+                                                key={node.id}
+                                                className="p-3 bg-gray-50 rounded-lg"
+                                            >
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <h4 className="font-medium">
+                                                            {node.name}
+                                                        </h4>
+                                                        <p className="text-sm text-gray-500">
+                                                            Downloads:{' '}
+                                                            {node.downloads ||
+                                                                0}{' '}
+                                                            | Rating:{' '}
+                                                            {node.rating?.toFixed(
+                                                                1
+                                                            ) || 'N/A'}
+                                                        </p>
+                                                    </div>
+                                                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                                                 </div>
-                                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                                             </div>
-                                        </div>
-                                    ))}
-                                    {!recentNodes?.length && (
+                                        ))}
+                                    {(!Array.isArray(recentNodes) ||
+                                        recentNodes.length === 0) && (
                                         <p className="text-gray-500 text-center py-4">
                                             Loading nodes...
                                         </p>
@@ -201,35 +204,40 @@ const TanStackDBEnhancedDemo: NextPage = () => {
                                     Top Rated Nodes (Live)
                                 </h3>
                                 <div className="space-y-2">
-                                    {topRatedNodes?.slice(0, 5).map((node) => (
-                                        <div
-                                            key={node.id}
-                                            className="p-3 bg-gray-50 rounded-lg"
-                                        >
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h4 className="font-medium">
-                                                        {node.name}
-                                                    </h4>
-                                                    <p className="text-sm text-gray-500">
-                                                        Rating:{' '}
-                                                        {node.rating?.toFixed(
-                                                            1
-                                                        ) || 'N/A'}{' '}
-                                                        | Downloads:{' '}
-                                                        {node.downloads || 0}
-                                                    </p>
+                                    {Array.isArray(topRatedNodes) &&
+                                        topRatedNodes
+                                            .slice(0, 5)
+                                            .map((node) => (
+                                                <div
+                                                    key={node.id}
+                                                    className="p-3 bg-gray-50 rounded-lg"
+                                                >
+                                                    <div className="flex justify-between items-start">
+                                                        <div>
+                                                            <h4 className="font-medium">
+                                                                {node.name}
+                                                            </h4>
+                                                            <p className="text-sm text-gray-500">
+                                                                Rating:{' '}
+                                                                {node.rating?.toFixed(
+                                                                    1
+                                                                ) || 'N/A'}{' '}
+                                                                | Downloads:{' '}
+                                                                {node.downloads ||
+                                                                    0}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center">
+                                                            <span className="text-yellow-400">
+                                                                ★
+                                                            </span>
+                                                            <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse ml-2"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div className="flex items-center">
-                                                    <span className="text-yellow-400">
-                                                        ★
-                                                    </span>
-                                                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse ml-2"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                    {!topRatedNodes?.length && (
+                                            ))}
+                                    {(!Array.isArray(topRatedNodes) ||
+                                        topRatedNodes.length === 0) && (
                                         <p className="text-gray-500 text-center py-4">
                                             Loading nodes...
                                         </p>
@@ -243,34 +251,38 @@ const TanStackDBEnhancedDemo: NextPage = () => {
                             <h3 className="text-xl font-semibold mb-3 flex items-center">
                                 <HiDatabase className="mr-2 text-blue-500" />
                                 Live Search: &quot;image&quot; + Rating 4+ (
-                                {searchResults?.length || 0} results)
+                                {Array.isArray(searchResults)
+                                    ? searchResults.length
+                                    : 0}{' '}
+                                results)
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {searchResults?.slice(0, 6).map((node) => (
-                                    <div
-                                        key={node.id}
-                                        className="p-3 bg-gray-50 rounded-lg"
-                                    >
-                                        <h4 className="font-medium">
-                                            {node.name}
-                                        </h4>
-                                        <p className="text-sm text-gray-500">
-                                            {node.description?.substring(
-                                                0,
-                                                100
-                                            )}
-                                            ...
-                                        </p>
-                                        <div className="flex justify-between items-center mt-2">
-                                            <span className="text-xs text-gray-400">
-                                                Rating:{' '}
-                                                {node.rating?.toFixed(1)} |
-                                                Downloads: {node.downloads}
-                                            </span>
-                                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                                {Array.isArray(searchResults) &&
+                                    searchResults.slice(0, 6).map((node) => (
+                                        <div
+                                            key={node.id}
+                                            className="p-3 bg-gray-50 rounded-lg"
+                                        >
+                                            <h4 className="font-medium">
+                                                {node.name}
+                                            </h4>
+                                            <p className="text-sm text-gray-500">
+                                                {node.description?.substring(
+                                                    0,
+                                                    100
+                                                )}
+                                                ...
+                                            </p>
+                                            <div className="flex justify-between items-center mt-2">
+                                                <span className="text-xs text-gray-400">
+                                                    Rating:{' '}
+                                                    {node.rating?.toFixed(1)} |
+                                                    Downloads: {node.downloads}
+                                                </span>
+                                                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
                             </div>
                         </Card>
                     </div>
