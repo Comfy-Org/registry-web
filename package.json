@@ -44,6 +44,7 @@
     "@snomiao/glob-watch": "^0.2.1",
     "@storybook/test": "^8.6.14",
     "@tanstack/db": "^0.3.2",
+    "@tanstack/query-db-collection": "^0.2.20",
     "@tanstack/query-sync-storage-persister": "^5.86.0",
     "@tanstack/react-db": "^0.1.21",
     "@tanstack/react-query": "^5.86.0",

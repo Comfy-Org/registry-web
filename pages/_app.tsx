@@ -12,7 +12,7 @@ import '../styles/globals.css'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { request } from 'http'
 import { DIE } from 'phpdie'
-import { ComfyDBProvider } from '@/src/db/provider'
+import { ComfyDBProvider } from '@/src/db/provider-v2'
 import { setupDBSyncInterceptor } from '@/src/db/interceptor'
 
 // Setup TanStack DB sync interceptor
