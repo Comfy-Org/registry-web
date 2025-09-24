@@ -80,23 +80,31 @@ const NodeDetailsWithDB = () => {
     const { updateNode } = useNodeMutation()
 
     // Still use React Query for initial data fetch and sync with DB
-    const { data: apiNode, isLoading: nodeLoading } = useGetNode(nodeId, {
-        // @ts-ignore
-        ...REQUEST_OPTIONS_NO_CACHE,
-    })
+    const { data: apiNode, isLoading: nodeLoading } = useGetNode(
+        nodeId,
+        undefined,
+        {
+            query: {
+                enabled: !!nodeId,
+                refetchOnMount: true,
+                refetchOnWindowFocus: false,
+                staleTime: 0,
+            },
+        }
+    )
 
     const { data: apiVersions, isLoading: versionsLoading } =
         useListNodeVersions(
             nodeId,
             {
-                limit: 50,
-                status: NodeVersionStatus.active,
+                statuses: [NodeVersionStatus.NodeVersionStatusActive],
             },
             {
                 query: {
                     enabled: !!nodeId,
-                    // @ts-ignore
-                    ...REQUEST_OPTIONS_NO_CACHE,
+                    refetchOnMount: true,
+                    refetchOnWindowFocus: false,
+                    staleTime: 0,
                 },
             }
         )
@@ -118,14 +126,14 @@ const NodeDetailsWithDB = () => {
     }, [apiNode, isInitialized, nodeId])
 
     useEffect(() => {
-        if (apiVersions?.data && isInitialized) {
-            dbSync.syncNodeVersions(apiVersions.data)
+        if (apiVersions && isInitialized) {
+            dbSync.syncNodeVersions(apiVersions)
         }
     }, [apiVersions, isInitialized])
 
     // Use live data if available, fallback to API data
     const node = liveNode || apiNode
-    const versions = liveVersions?.length > 0 ? liveVersions : apiVersions?.data
+    const versions = liveVersions?.length > 0 ? liveVersions : apiVersions
 
     const {
         data: userData,
@@ -133,21 +141,19 @@ const NodeDetailsWithDB = () => {
         isLoading: userLoading,
     } = useGetUser()
 
-    const { data: publishers } = useListPublishersForUser(
-        userData?.id ?? '',
-        {},
-        {
-            query: {
-                enabled: userLoaded,
-            },
-        }
-    )
+    const { data: publishers } = useListPublishersForUser({
+        query: {
+            enabled: userLoaded,
+        },
+    })
 
     const { data: permission } = useGetPermissionOnPublisherNodes(
-        node?.publisher?.id ?? '',
+        (apiNode as any)?.publisher?.id ?? '',
+        nodeId ?? '',
         {
             query: {
-                enabled: node?.publisher?.id !== undefined,
+                enabled:
+                    (apiNode as any)?.publisher?.id !== undefined && !!nodeId,
             },
         }
     )
@@ -158,18 +164,18 @@ const NodeDetailsWithDB = () => {
     }
 
     const handleDownload = async (version: NodeVersion) => {
-        if (!version.download_url) {
+        if (!(version as any).download_url) {
             console.error('No download URL available for this version')
             return
         }
 
         const filename = `${node?.name}_v${version.version}.tar.gz`
-        await downloadFile(version.download_url, filename)
+        await downloadFile((version as any).download_url, filename)
 
         // Track download activity with optimistic update
-        if (node) {
+        if (node && node.id) {
             await updateNode(node.id, {
-                total_downloads: (node.total_downloads || 0) + 1,
+                total_downloads: ((node as any).total_downloads || 0) + 1,
             })
 
             const userId = sessionStorage.getItem('userId')
@@ -227,8 +233,8 @@ const NodeDetailsWithDB = () => {
     }
 
     const canEdit =
-        permission?.write === true ||
-        publishers?.data?.some(
+        (permission as any)?.write === true ||
+        (publishers as any)?.data?.some(
             (p: any) => p.id === UNCLAIMED_ADMIN_PUBLISHER_ID
         )
 
@@ -238,10 +244,10 @@ const NodeDetailsWithDB = () => {
                 {/* Node Header with Live Updates */}
                 <div className="flex justify-between items-start mb-4">
                     <div className="flex items-start gap-4">
-                        {node.icon ? (
+                        {(node as any).icon ? (
                             <Image
-                                src={node.icon}
-                                alt={node.name}
+                                src={(node as any).icon}
+                                alt={node.name || 'Node'}
                                 width={64}
                                 height={64}
                                 className="rounded-lg"
@@ -249,7 +255,7 @@ const NodeDetailsWithDB = () => {
                         ) : (
                             <Image
                                 src={nodesLogo}
-                                alt={node.name}
+                                alt={node.name || 'Node'}
                                 width={64}
                                 height={64}
                                 className="rounded-lg"
@@ -265,19 +271,21 @@ const NodeDetailsWithDB = () => {
                                 </p>
                             )}
                             <div className="flex items-center gap-2 mt-2">
-                                <NodeStatusBadge deprecated={node.deprecated} />
+                                <NodeStatusBadge
+                                    status={(node as any).status}
+                                />
                                 {/* Live download count */}
                                 <span className="text-sm text-gray-500">
                                     {formatDownloadCount(
-                                        node.total_downloads || 0
+                                        (node as any).total_downloads || 0
                                     )}{' '}
                                     {t('downloads')}
                                 </span>
                                 {/* Live rating */}
-                                {node.rating && (
+                                {(node as any).rating && (
                                     <span className="text-sm text-gray-500">
-                                        ⭐ {node.rating.toFixed(1)} (
-                                        {node.rating_count})
+                                        ⭐ {(node as any).rating.toFixed(1)} (
+                                        {(node as any).rating_count})
                                     </span>
                                 )}
                             </div>
@@ -321,10 +329,7 @@ const NodeDetailsWithDB = () => {
                     <h2 className="text-xl font-semibold mb-2">
                         {t('Installation')}
                     </h2>
-                    <CopyableCodeBlock
-                        code={`comfy node install ${node.id}`}
-                        onCopy={handleInstall}
-                    />
+                    <CopyableCodeBlock code={`comfy node install ${node.id}`} />
                 </div>
 
                 {/* Live Versions List */}
@@ -410,24 +415,29 @@ const NodeDetailsWithDB = () => {
             {/* Modals */}
             {isEditModalOpen && (
                 <NodeEditModal
-                    isOpen={isEditModalOpen}
-                    onClose={() => setIsEditModal(false)}
-                    node={node}
+                    openEditModal={isEditModalOpen}
+                    onCloseEditModal={() => setIsEditModal(false)}
+                    nodeData={node as any}
+                    publisherId={(apiNode as any)?.publisher?.id || ''}
                 />
             )}
             {isDeleteModalOpen && (
                 <NodeDeleteModal
-                    isOpen={isDeleteModalOpen}
+                    openDeleteModal={isDeleteModalOpen}
                     onClose={() => setIsDeleteModalOpen(false)}
-                    node={node}
+                    nodeId={node.id || ''}
+                    publisherId={(apiNode as any)?.publisher?.id}
                 />
             )}
             {selectedVersion && (
                 <NodeVDrawer
-                    isOpen={isDrawerOpen}
-                    onClose={() => setIsDrawerOpen(false)}
-                    version={selectedVersion}
-                    nodeName={node.name}
+                    isDrawerOpen={isDrawerOpen}
+                    toggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)}
+                    nodeId={node.id || ''}
+                    versionNumber={selectedVersion.version || ''}
+                    onUpdate={() => {}}
+                    canEdit={canEdit}
+                    publisherId={(apiNode as any)?.publisher?.id}
                 />
             )}
         </div>

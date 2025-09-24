@@ -57,8 +57,7 @@ const RegistryWithDB: React.FC = () => {
     const { data: apiData, isLoading: apiLoading } = useListAllNodes(
         {
             limit: 100,
-            offset: 0,
-            deprecated: filters.deprecated ?? undefined,
+            page: 1,
         },
         {
             query: {
@@ -69,10 +68,10 @@ const RegistryWithDB: React.FC = () => {
 
     // Sync API data to TanStack DB
     useEffect(() => {
-        if (apiData?.data && isInitialized) {
-            dbSync.syncNodes(apiData.data).then(() => {
+        if (apiData?.nodes && isInitialized) {
+            dbSync.syncNodes(apiData.nodes).then(() => {
                 console.log(
-                    `Synced ${apiData.data.length} nodes to TanStack DB`
+                    `Synced ${apiData.nodes?.length || 0} nodes to TanStack DB`
                 )
             })
         }

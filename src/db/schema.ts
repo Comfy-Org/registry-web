@@ -40,7 +40,7 @@ export const NodeVersionSchema = z.object({
     node_id: z.string(),
     version: z.string(),
     changelog: z.string().optional(),
-    dependencies: z.record(z.string()).optional(),
+    dependencies: z.record(z.string(), z.any()).optional(),
     download_url: z.string().optional(),
     comfyui_versions: z.array(z.string()).default([]),
     created_at: z.string(),
@@ -67,7 +67,7 @@ export const AuditLogSchema = z.object({
     action: z.string(),
     entity_type: z.string(),
     entity_id: z.string().optional(),
-    metadata: z.record(z.any()).optional(),
+    metadata: z.record(z.string(), z.any()).optional(),
     created_at: z.string(),
     ip_address: z.string().optional(),
 })
@@ -79,7 +79,7 @@ export const UserActivitySchema = z.object({
     node_id: z.string().optional(),
     publisher_id: z.string().optional(),
     created_at: z.string(),
-    metadata: z.record(z.any()).optional(),
+    metadata: z.record(z.string(), z.any()).optional(),
 })
 
 // Type exports

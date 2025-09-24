@@ -23,6 +23,7 @@ export function useNodesLive(options?: {
             result.sort((a, b) => {
                 const aVal = a[options.orderBy as keyof Node]
                 const bVal = b[options.orderBy as keyof Node]
+                if (aVal === undefined || bVal === undefined) return 0
                 if (aVal > bVal) return -1
                 if (aVal < bVal) return 1
                 return 0
@@ -30,7 +31,8 @@ export function useNodesLive(options?: {
         }
 
         setNodes(result)
-    }, [options?.where, options?.orderBy, options?.limit])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(options)])
 
     return nodes
 }
@@ -87,6 +89,7 @@ export function usePublishersLive(options?: {
             result.sort((a, b) => {
                 const aVal = a[options.orderBy as keyof Publisher]
                 const bVal = b[options.orderBy as keyof Publisher]
+                if (aVal === undefined || bVal === undefined) return 0
                 if (aVal > bVal) return -1
                 if (aVal < bVal) return 1
                 return 0
@@ -94,7 +97,8 @@ export function usePublishersLive(options?: {
         }
 
         setPublishers(result)
-    }, [options?.where, options?.orderBy, options?.limit])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(options)])
 
     return publishers
 }
