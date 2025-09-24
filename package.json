@@ -43,7 +43,9 @@
     "@next/mdx": "12.3.1",
     "@snomiao/glob-watch": "^0.2.1",
     "@storybook/test": "^8.6.14",
+    "@tanstack/db": "^0.3.2",
     "@tanstack/query-sync-storage-persister": "^5.86.0",
+    "@tanstack/react-db": "^0.1.21",
     "@tanstack/react-query": "^5.86.0",
     "@tanstack/react-query-persist-client": "^5.86.0",
     "@tsconfig/next": "^2.0.3",
@@ -98,7 +100,7 @@
     "sharp": "^0.34.3",
     "styled-jsx": "^5.1.7",
     "yaml": "^2.8.1",
-    "zod": "^3.25.76"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@babel/core": "7.19.3",

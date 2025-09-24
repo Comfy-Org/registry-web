@@ -12,6 +12,13 @@ import '../styles/globals.css'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { request } from 'http'
 import { DIE } from 'phpdie'
+import { ComfyDBProvider } from '@/src/db/provider'
+import { setupDBSyncInterceptor } from '@/src/db/interceptor'
+
+// Setup TanStack DB sync interceptor
+if (typeof window !== 'undefined') {
+    setupDBSyncInterceptor()
+}
 
 // Add an interceptor to attach the Firebase JWT token to every request
 // Put in _app.tsx because this only works in react-dom environment
@@ -114,11 +121,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <FlowBiteThemeProvider>
-                <Layout>
-                    <Component {...pageProps} />
-                </Layout>
-            </FlowBiteThemeProvider>
+            <ComfyDBProvider>
+                <FlowBiteThemeProvider>
+                    <Layout>
+                        <Component {...pageProps} />
+                    </Layout>
+                </FlowBiteThemeProvider>
+            </ComfyDBProvider>
         </QueryClientProvider>
     )
 }
