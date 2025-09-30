@@ -18,20 +18,34 @@ function CategoriesPage() {
         page: page || 1,
         limit: limit,
 
-        sort: ['category'],
+        sort: ['name'],
     })
 
-    const categoriesData = useMemo(() => {
+    const tagsData = useMemo(() => {
         if (!nodesData?.nodes) return []
 
-        const categoryMap = new Map<string, number>()
+        const tagMap = new Map<string, number>()
         nodesData.nodes.forEach((node) => {
-            const category = node.category || 'Uncategorized'
-            categoryMap.set(category, (categoryMap.get(category) || 0) + 1)
+            // Use tags array instead of category
+            if (node.tags && node.tags.length > 0) {
+                node.tags.forEach((tag) => {
+                    tagMap.set(tag, (tagMap.get(tag) || 0) + 1)
+                })
+            } else if (node.category) {
+                // Fallback to category if tags are not available
+                const category = node.category || 'Uncategorized'
+                tagMap.set(category, (tagMap.get(category) || 0) + 1)
+            } else {
+                // If neither tags nor category are available
+                tagMap.set(
+                    'Uncategorized',
+                    (tagMap.get('Uncategorized') || 0) + 1
+                )
+            }
         })
 
-        return Array.from(categoryMap.entries())
-            .map(([category, count]) => ({ category, count }))
+        return Array.from(tagMap.entries())
+            .map(([tag, count]) => ({ tag, count }))
             .sort((a, b) => b.count - a.count)
     }, [nodesData?.nodes])
 
@@ -47,12 +61,12 @@ function CategoriesPage() {
                     {t('Admin Dashboard')}
                 </Breadcrumb.Item>
                 <Breadcrumb.Item href="#" className="dark">
-                    {t('Category Management')}
+                    {t('Tag Management')}
                 </Breadcrumb.Item>
             </Breadcrumb>
 
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
-                {t('Category Management')}
+                {t('Tag Management')}
             </h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -64,23 +78,23 @@ function CategoriesPage() {
                     <Card className="bg-gray-800 border-gray-700">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-xl font-semibold text-gray-200">
-                                {t('Node Categories Overview')}
+                                {t('Node Tags Overview')}
                             </h2>
                             <Badge color="info" icon={HiOutlineCollection}>
-                                {categoriesData.length} {t('categories')}
+                                {tagsData.length} {t('tags')}
                             </Badge>
                         </div>
 
                         <div className="space-y-4">
-                            {categoriesData.map(({ category, count }) => (
+                            {tagsData.map(({ tag, count }) => (
                                 <div
-                                    key={category}
+                                    key={tag}
                                     className="flex items-center justify-between p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
                                 >
                                     <div className="flex items-center space-x-3">
                                         <HiOutlineCollection className="h-5 w-5 text-blue-400" />
                                         <span className="text-lg font-medium text-gray-200">
-                                            {category}
+                                            {tag}
                                         </span>
                                     </div>
                                     <Badge color="purple" size="sm">
@@ -90,11 +104,11 @@ function CategoriesPage() {
                             ))}
                         </div>
 
-                        {categoriesData.length === 0 && (
+                        {tagsData.length === 0 && (
                             <div className="text-center py-8">
                                 <HiOutlineCollection className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                                 <p className="text-gray-400">
-                                    {t('No categories found')}
+                                    {t('No tags found')}
                                 </p>
                             </div>
                         )}
