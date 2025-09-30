@@ -49,7 +49,7 @@ interface FormData {
     policy: ComfyNodePolicy
 }
 
-function ComfyNodeEditModal({
+export function ComfyNodeEditModal({
     isOpen,
     onClose,
     comfyNode,
