@@ -282,6 +282,7 @@
   "Released": "تم الإصدار",
   "Repository": "مستودع",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "لم يتم العثور على المستودع {{owner}}/{{repo}} أو ليس لديك إمكانية الوصول إليه.",
+  "Request support for new languages": "طلب دعم لغات جديدة",
   "Review Flagged Versions": "مراجعة الإصدارات التي تم وضع علامة عليها",
   "Review Node Versions": "مراجعة إصدارات العقدة",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG، PNG، JPG أو GIF (بحد أقصى 800×400 بكسل)",
