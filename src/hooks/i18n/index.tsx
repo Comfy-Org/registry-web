@@ -15,6 +15,25 @@ import useCookieValue from 'react-use-cookie'
 import { useAsyncData } from 'use-async'
 import { useLocalStorage } from 'react-use'
 
+// Type definitions for Chrome's experimental Translator API
+interface TranslatorAPI {
+    create(options: {
+        sourceLanguage: string
+        targetLanguage: string
+    }): Promise<TranslatorInstance>
+}
+
+interface TranslatorInstance {
+    translateStreaming(text: string): AsyncIterable<string>
+}
+
+declare global {
+    interface Window {
+        Translator?: TranslatorAPI
+    }
+    var Translator: TranslatorAPI | undefined
+}
+
 const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
     .use(
@@ -57,7 +76,7 @@ i18n.init({
         if (typeof globalThis.Translator === 'undefined') return
 
         // Create a translator instance
-        const Translator = globalThis.Translator as any
+        const Translator = globalThis.Translator as TranslatorAPI
         const translator = await Translator.create({
             sourceLanguage: 'en',
             targetLanguage: lng,
@@ -100,7 +119,8 @@ export const useDynamicTranslate = () => {
     // 3. not available in china
     //
     const [available, availableState] = useAsyncData(async () => {
-        const Translator = globalThis.Translator as any
+        if (typeof globalThis.Translator === 'undefined') return null
+        const Translator = globalThis.Translator as TranslatorAPI
         const translator = await Translator.create({
             sourceLanguage: 'en',
             targetLanguage: currentLanguage,
