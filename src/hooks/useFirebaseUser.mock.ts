@@ -24,6 +24,7 @@ export const mockFirebaseUser = {
     providerId: 'google',
 } satisfies FirebaseUser // Using 'as any' to avoid having to mock the entire Firebase User interface
 
-export const useFirebaseUser = vi.fn(actual.useFirebaseUser)
+export const useFirebaseUser = vi
+    .fn(actual.useFirebaseUser)
     .mockName('useFirebaseUser')
     .mockReturnValue([mockFirebaseUser, false, undefined])
