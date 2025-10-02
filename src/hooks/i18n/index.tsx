@@ -1,5 +1,4 @@
 import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
-import hotMemo from 'hot-memo'
 import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
@@ -25,57 +24,69 @@ const i18n = i18next
         )
     )
     .use(initReactI18next)
-    .init({
-        fallbackLng: 'en',
-        supportedLngs: SUPPORTED_LANGUAGES,
-        defaultNS: 'common',
-        fallbackNS: 'common',
 
-        // not needed for react as it escapes by default
-        interpolation: { escapeValue: false },
+i18n.init({
+    fallbackLng: 'en',
+    supportedLngs: SUPPORTED_LANGUAGES,
+    defaultNS: 'common',
+    fallbackNS: 'common',
 
-        // use ssr-side detection in middleware
-        detection: {
-            order: ['htmlTag'],
-            caches: [],
-        },
+    // not needed for react as it escapes by default
+    interpolation: { escapeValue: false },
 
-        react: {
-            bindI18nStore: 'added', // notify react to rerender when a new key is added
-        },
+    // use ssr-side detection in middleware
+    detection: {
+        order: ['htmlTag'],
+        caches: [],
+    },
 
-        saveMissing: true,
-        missingKeyNoValueFallbackToKey: true,
-        missingKeyHandler: async (lngs, ns, key) => {
-            const lng = i18next.language
-            console.log(lngs, i18next.language, key)
-            console.log(
-                `Missing translation for key "${key}" in language "${lng}"`
-            )
-            // (Experimental) Try use broswer Translator API to handle missing keys
-            // If the Translator API is not available, just return the key
-            if (typeof globalThis.Translator === 'undefined') return
+    react: {
+        bindI18nStore: 'added', // notify react to rerender when a new key is added
+    },
 
-            // Create a translator instance
-            const Translator = globalThis.Translator as any
-            const translator = await Translator.create({
-                sourceLanguage: 'en',
-                targetLanguage: lng,
-            }).catch(() => null)
-            if (!translator) return
+    // Support dynamic translation
+    saveMissing: true,
+    missingKeyNoValueFallbackToKey: true,
+    missingKeyHandler: async (lngs, ns, key) => {
+        const lng = i18next.language
+        console.log(lngs, i18next.language, key)
+        console.log(`Missing translation for key "${key}" in language "${lng}"`)
 
-            // Translate the key
-            let tr = ''
-            for await (const chunk of translator.translateStreaming(key)) {
-                tr += chunk
-            }
-            console.log(`Translated "${key}" to "${tr}" in language "${lng}"`)
-            // add to i18next resources
-            // how to trigger a re-render in components that use this key?
-            i18next.addResource(lng, ns, key, tr)
-            i18next.emit('added', lng, ns, key, tr)
-        },
-    })
+        // (Experimental) Try use browser Translator API to handle missing keys
+        // If the Translator API is not available, just return the key
+        if (typeof globalThis.Translator === 'undefined') return
+
+        // Create a translator instance
+        const Translator = globalThis.Translator as any
+        const translator = await Translator.create({
+            sourceLanguage: 'en',
+            targetLanguage: lng,
+        }).catch(() => null)
+        if (!translator) return
+
+        // Translate the key
+        let tr = ''
+        for await (const chunk of translator.translateStreaming(key)) {
+            tr += chunk
+        }
+        console.log(`Translated "${key}" to "${tr}" in language "${lng}"`)
+        // add to i18next resources
+        // how to trigger a re-render in components that use this key?
+        i18next.addResource(lng, ns, key, tr)
+        i18next.emit('added', lng, ns, key, tr)
+
+        // TODO: use ChatGPT to handle missing keys if browser Translator API is not available
+        //
+    },
+})
+
+export const useDynamicTranslateEnabled = () => {
+    const [enabled, setEnabled] = useLocalStorage(
+        'DynamicTranslate',
+        false // default disabled, click the globe icon to enable across the site
+    )
+    return { enabled, setEnabled }
+}
 
 export const useDynamicTranslate = () => {
     const { currentLanguage, t } = useNextTranslation('dynamic')
@@ -86,7 +97,7 @@ export const useDynamicTranslate = () => {
     // cons:
     // 1. requires network access to the browser's translation service
     // 2. not able to use in server-side rendering
-    // 3. not avaliable in china
+    // 3. not available in china
     //
     const [available, availableState] = useAsyncData(async () => {
         const Translator = globalThis.Translator as any
@@ -97,24 +108,28 @@ export const useDynamicTranslate = () => {
         return translator
     })
 
-    const [enabled, setEnabled] = useLocalStorage(
-        'DynamicTranslate',
-        false // default disabled, click the globe icon to enable across the site
-    )
+    const { enabled, setEnabled } = useDynamicTranslateEnabled()
     const dt = useCallback(
         (key?: string) => {
             if (!key) return key
             if (!available) return key
-            return <>{enabled ? <>{t(key)}</> : <>{key}</>}</>
+            return enabled ? t(key) : key
         },
         [enabled, available, t]
     )
-    const Switcher = () => (
+
+    return { available, enabled, setEnabled, dt }
+}
+
+export const DynamicTranslateSwitcher = () => {
+    const { available, enabled, setEnabled } = useDynamicTranslate()
+    if (!available) return null
+    return (
         <span
             role="img"
             aria-label="translate"
             onClick={() => {
-                setEnabled((e) => !e)
+                setEnabled(!enabled) // toggle the translation statey
             }}
         >
             {
@@ -122,8 +137,6 @@ export const useDynamicTranslate = () => {
             }
         </span>
     )
-
-    return { available, Switcher, enabled, setEnabled, dt }
 }
 /**
  * Custom hook for translations in the Comfy Registry
