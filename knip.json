@@ -24,7 +24,12 @@
         "next.config.ts",
         "middleware.ts"
     ],
-    "ignoreDependencies": ["@algolia/autocomplete-shared", "sflow", "phpdie"],
+    "ignoreDependencies": [
+        "@algolia/autocomplete-shared",
+        "sflow",
+        "phpdie",
+        "@snomiao/glob-watch"
+    ],
     "next": {
         "config": ["next.config.ts"],
         "entry": ["pages/**/*.{js,jsx,ts,tsx}", "app/**/*.{js,jsx,ts,tsx}"]
