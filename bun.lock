@@ -36,7 +36,6 @@
         "firebase": "^10.14.1",
         "flowbite": "^2.5.2",
         "flowbite-react": "0.7.5",
-        "hot-memo": "^1.1.1",
         "i18n-extract": "^0.6.7",
         "i18next": "^25.5.0",
         "i18next-browser-languagedetector": "^8.2.0",
@@ -1703,8 +1702,6 @@
     "hogan.js": ["hogan.js@3.0.2", "", { "dependencies": { "mkdirp": "0.3.0", "nopt": "1.0.10" }, "bin": { "hulk": "./bin/hulk" } }, "sha512-RqGs4wavGYJWE07t35JQccByczmNUXQT0E12ZYV1VKYu5UiAU9lsos/yBAcf840+zrUQQxgVduCR5/B8nNtibg=="],
 
     "hosted-git-info": ["hosted-git-info@2.8.9", "", {}, "sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw=="],
-
-    "hot-memo": ["hot-memo@1.1.1", "", { "peerDependencies": { "typescript": "^5.8.3" } }, "sha512-8TULZu9TwNkwn/RONYrb08ieJC4saLgrpZg6XJi/H/tXONKFfXraMx7I+D8+FCcF77EYInlSYNn2jMVl9p/Uvg=="],
 
     "htm": ["htm@3.1.1", "", {}, "sha512-983Vyg8NwUE7JkZ6NmOqpCZ+sh1bKv2iYTlUkzlWmA5JD2acKoxd4KVxbMmxX/85mtfdnDmTFoNKcg5DGAvxNQ=="],
 

@@ -62,7 +62,6 @@
     "firebase": "^10.14.1",
     "flowbite": "^2.5.2",
     "flowbite-react": "0.7.5",
-    "hot-memo": "^1.1.1",
     "i18n-extract": "^0.6.7",
     "i18next": "^25.5.0",
     "i18next-browser-languagedetector": "^8.2.0",
