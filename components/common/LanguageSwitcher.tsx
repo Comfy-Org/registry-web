@@ -1,4 +1,4 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useNextTranslation, useDynamicTranslate } from '@/src/hooks/i18n'
 import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import { Dropdown, DropdownItem } from 'flowbite-react'
 import React, { useMemo, useEffect, useState } from 'react'
@@ -13,6 +13,11 @@ export default function LanguageSwitcher({
     className?: string
 } = {}) {
     const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation()
+    const {
+        available: dynamicTranslateAvailable,
+        enabled: dynamicTranslateEnabled,
+        setEnabled: setDynamicTranslateEnabled,
+    } = useDynamicTranslate()
     const router = useRouter()
     const [showContributeModal, setShowContributeModal] = useState(false)
 
@@ -148,6 +153,36 @@ export default function LanguageSwitcher({
                         </DropdownItem>
                     )
                 })}
+                {dynamicTranslateAvailable && (
+                    <DropdownItem
+                        className="border-t border-gray-200 mt-2 pt-2"
+                        onClick={(e) => {
+                            e.preventDefault()
+                            setDynamicTranslateEnabled(!dynamicTranslateEnabled)
+                        }}
+                    >
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center">
+                                <span className="mr-2">🔄</span>
+                                <span>{t('Dynamic Translation')}</span>
+                                <span className="ml-1 text-xs text-gray-500">
+                                    (Beta)
+                                </span>
+                            </div>
+                            <input
+                                type="checkbox"
+                                checked={dynamicTranslateEnabled}
+                                onChange={() =>
+                                    setDynamicTranslateEnabled(
+                                        !dynamicTranslateEnabled
+                                    )
+                                }
+                                className="form-checkbox h-4 w-4 text-blue-600"
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                        </div>
+                    </DropdownItem>
+                )}
                 <DropdownItem
                     className="border-t border-gray-600 mt-2 pt-2"
                     onClick={() => setShowContributeModal(true)}
