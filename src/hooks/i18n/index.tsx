@@ -121,23 +121,6 @@ export const useDynamicTranslate = () => {
     return { available, enabled, setEnabled, dt }
 }
 
-export const DynamicTranslateSwitcher = () => {
-    const { available, enabled, setEnabled } = useDynamicTranslate()
-    if (!available) return null
-    return (
-        <span
-            role="img"
-            aria-label="translate"
-            onClick={() => {
-                setEnabled(!enabled) // toggle the translation statey
-            }}
-        >
-            {
-                enabled ? '🔄' : '🌐' // use a different icon to indicate translation is disabled
-            }
-        </span>
-    )
-}
 /**
  * Custom hook for translations in the Comfy Registry
  * @param namespace - The namespace to use for translations (defaults to 'common')

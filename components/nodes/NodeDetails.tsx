@@ -1,8 +1,4 @@
-import {
-    DynamicTranslateSwitcher,
-    useDynamicTranslate,
-    useNextTranslation,
-} from '@/src/hooks/i18n'
+import { useDynamicTranslate, useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
@@ -483,7 +479,6 @@ const NodeDetails = () => {
                                     {t('Description')}
                                 </h2>
                                 <p className="text-base font-normal text-gray-200">
-                                    <DynamicTranslateSwitcher />
                                     {dt(node.description)}
                                 </p>
                             </div>
