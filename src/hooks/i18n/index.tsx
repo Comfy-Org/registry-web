@@ -4,7 +4,6 @@ import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
-import { forEach } from 'rambda'
 import {
     createContext,
     useCallback,
