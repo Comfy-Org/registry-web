@@ -582,7 +582,8 @@ function DataTable({
                                                     qc.invalidateQueries({
                                                         queryKey:
                                                             getGetNodeVersionQueryKey(
-                                                                node.id!
+                                                                node.id!,
+                                                                nv.version!
                                                             ),
                                                     })
                                                     qc.invalidateQueries({
