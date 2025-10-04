@@ -540,7 +540,7 @@ function ComfyNodesManage() {
                                                         ? getPolicyBadgeColor(
                                                               comfyNode.policy
                                                           )
-                                                        : 'default'
+                                                        : 'gray'
                                                 }
                                                 size="sm"
                                             >
