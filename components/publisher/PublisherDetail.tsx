@@ -64,7 +64,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error('Failed to update publisher')
                 },
                 onSuccess: () => {
@@ -231,7 +231,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                                         tokenId: tokenId,
                                     },
                                     {
-                                        onError: (error) => {
+                                        onError: (_error) => {
                                             toast.error(
                                                 'Failed to delete token'
                                             )
@@ -272,7 +272,7 @@ function getFirstMemberName(publisher: Publisher): string | undefined {
     // Check if the publisher has members and the first member has a user and name
     if (publisher.members && publisher.members.length > 0) {
         const firstMember = publisher.members[0]
-        if (firstMember.user && firstMember.user.name) {
+        if (firstMember.user?.name) {
             return firstMember.user.name
         }
     }

@@ -36,7 +36,7 @@ export default function CustomSearchPagination(props: UsePaginationProps) {
     )
 }
 
-function isModifierClick(event: React.MouseEvent) {
+function _isModifierClick(event: React.MouseEvent) {
     const isMiddleClick = event.button === 1
     return Boolean(
         isMiddleClick ||

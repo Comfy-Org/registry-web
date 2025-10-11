@@ -5,7 +5,6 @@ import {
     Button,
     Checkbox,
     Dropdown,
-    Flowbite,
     Label,
     Spinner,
     Table,
@@ -13,8 +12,8 @@ import {
     Tooltip,
 } from 'flowbite-react'
 import router from 'next/router'
-import DIE, { DIES } from 'phpdie'
-import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import { DIES } from 'phpdie'
+import { Suspense, useMemo } from 'react'
 import { HiHome } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import { useAsync, useAsyncFn, useMap } from 'react-use'
@@ -23,7 +22,6 @@ import NodeVersionCompatibilityEditModal from '@/components/admin/NodeVersionCom
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { usePage } from '@/components/hooks/usePage'
-import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
 import {
     adminUpdateNode,
     getGetNodeQueryKey,
@@ -33,17 +31,12 @@ import {
     getListAllNodesQueryOptions,
     getListAllNodeVersionsQueryKey,
     getListNodeVersionsQueryKey,
-    getNode,
-    listAllNodes,
     type Node,
     type NodeVersion,
     NodeVersionStatus,
     useAdminUpdateNode,
     useAdminUpdateNodeVersion,
-    useGetNode,
-    useListAllNodes,
     useListAllNodeVersions,
-    useUpdateNode,
 } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useSearchParameter } from '@/src/hooks/useSearchParameter'
@@ -73,8 +66,8 @@ function NodeVersionCompatibilityAdmin() {
         (v) => v || []
     )
 
-    const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
-    const adminUpdateNode = useAdminUpdateNode()
+    const _adminUpdateNodeVersion = useAdminUpdateNodeVersion()
+    const _adminUpdateNode = useAdminUpdateNode()
 
     const qc = useQueryClient()
     const [
@@ -126,7 +119,7 @@ function NodeVersionCompatibilityAdmin() {
     useAsync(async () => {
         if (nodeId) return
         const ac = new AbortController()
-        const i = 0
+        const _i = 0
         await pageFlow(1, async (page, limit = 100) => {
             ac.signal.aborted && DIES(toast.error, 'aborted')
             const data =
@@ -163,7 +156,7 @@ function NodeVersionCompatibilityAdmin() {
                 return { nodeId: node.id, isOutdated, node }
             })
             .filter()
-            .log((x, i) => i)
+            .log((_x, i) => i)
             .log()
             .toArray()
             .then((e) => {
@@ -181,8 +174,8 @@ function NodeVersionCompatibilityAdmin() {
                 )
                 console.log(async () => {
                     outdatedList.map(async (x) => {
-                        const node = x.node
-                        const isOutdated = x.isOutdated
+                        const _node = x.node
+                        const _isOutdated = x.isOutdated
                         // Do something with the outdated node
                         console.log(`${x.nodeId} is outdated`)
                     })

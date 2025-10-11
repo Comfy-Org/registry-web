@@ -20,7 +20,7 @@ export default function PublisherSpan({
     className = '',
     onClick,
 }: PublisherSpanProps) {
-    const router = useRouter()
+    const _router = useRouter()
 
     const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
         if (onClick) {

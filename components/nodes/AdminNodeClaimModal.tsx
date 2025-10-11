@@ -9,7 +9,6 @@ import {
     shouldInvalidate,
 } from '@/components/cache-control'
 import {
-    getGetNodeQueryKey,
     getListNodesForPublisherV2QueryKey,
     getSearchNodesQueryKey,
     type Node,
@@ -268,7 +267,7 @@ export function AdminNodeClaimModal({
                 publisherId: UNCLAIMED_ADMIN_PUBLISHER_ID,
                 data: { publisher: selectedPublisher },
             })
-        } catch (error) {
+        } catch (_error) {
             // Error is handled in the mutation's onError
             toast.error(
                 t('An unexpected error occurred while claiming the node.')

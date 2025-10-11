@@ -1,8 +1,7 @@
+import * as fs from 'node:fs/promises'
+import path from 'node:path'
 import axios from 'axios'
-import * as fs from 'fs/promises'
 import { glob } from 'glob'
-import path from 'path'
-import { update } from 'rambda'
 import { SUPPORTED_LANGUAGES } from '@/src/constants'
 
 /**
@@ -119,7 +118,7 @@ async function writeJsonFile(
     await fs.writeFile(filePath, `${JSON.stringify(sorted, null, 2)}\n`)
 }
 
-async function getAvailableLanguages(): Promise<string[]> {
+async function _getAvailableLanguages(): Promise<string[]> {
     try {
         const dirEntries = await fs.readdir(LOCALES_DIR, {
             withFileTypes: true,

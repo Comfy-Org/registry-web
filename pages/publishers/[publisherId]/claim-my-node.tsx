@@ -7,7 +7,6 @@
  */
 
 import { useQueryClient } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import { Alert, Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -18,10 +17,7 @@ import { HiCheckCircle, HiChevronLeft, HiLocationMarker } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import {
-    getGetNodeQueryKey,
-    getGetNodeQueryOptions,
     getListNodesForPublisherV2QueryKey,
-    getListNodesForPublisherV2QueryOptions,
     getSearchNodesQueryKey,
     useClaimMyNode,
     useGetNode,
@@ -34,11 +30,7 @@ import {
     shouldInvalidate,
 } from '@/components/cache-control'
 import withAuth from '@/components/common/HOC/withAuth'
-import {
-    GithubUserSpan,
-    NodeSpan,
-    PublisherSpan,
-} from '@/components/common/Spans'
+import { NodeSpan, PublisherSpan } from '@/components/common/Spans'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
 // Define the possible stages of the claim process
@@ -56,7 +48,7 @@ function ClaimMyNodePage() {
     const { publisherId, nodeId } = router.query
     const [currentStage, setCurrentStage] =
         useState<ClaimStage>('info_confirmation')
-    const [isVerifying, setIsVerifying] = useState(false)
+    const [_isVerifying, setIsVerifying] = useState(false)
     const [isVerified, setIsVerified] = useState(false)
     const [githubToken, setGithubToken] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
@@ -64,7 +56,7 @@ function ClaimMyNodePage() {
     const [githubUsername, setGithubUsername] = useState<string | undefined>(
         undefined
     )
-    const [claimCompletedAt, setClaimCompletedAt] = useState<Date | null>(null)
+    const [_claimCompletedAt, setClaimCompletedAt] = useState<Date | null>(null)
 
     // Get the node, claiming publisher, and current user
     const { data: node, isLoading: nodeLoading } = useGetNode(
@@ -186,7 +178,7 @@ function ClaimMyNodePage() {
                         username: userData.login,
                     }
                     setGithubUsername(userData.login)
-                } catch (error) {
+                } catch (_error) {
                     // If we can't get user data, set userInfo to undefined and allow retry
                     setGithubUsername(undefined)
                     return {
@@ -234,7 +226,7 @@ function ClaimMyNodePage() {
                                 userInfo,
                             }
                         }
-                    } catch (permissionError) {
+                    } catch (_permissionError) {
                         // If we can't check specific permissions, we'll assume no admin access
                         return {
                             hasPermission: false,
@@ -265,7 +257,7 @@ function ClaimMyNodePage() {
                             }
                         ),
                     }
-                } catch (repoError) {
+                } catch (_repoError) {
                     // Repository not found or user doesn't have access
                     return {
                         hasPermission: false,
@@ -276,7 +268,7 @@ function ClaimMyNodePage() {
                         ),
                     }
                 }
-            } catch (err: any) {
+            } catch (_err: any) {
                 // Instead of throwing an error, return structured error info
                 return {
                     hasPermission: false,
@@ -415,7 +407,7 @@ function ClaimMyNodePage() {
 
         // Extract repo information
         const repoUrl = node.repository
-        const repoMatch = repoUrl!.match(/github\.com\/([^/]+)\/([^/]+)/)
+        const repoMatch = repoUrl?.match(/github\.com\/([^/]+)\/([^/]+)/)
         if (!repoMatch) {
             setError(t('Invalid GitHub repository URL format.'))
             setIsVerifying(false)

@@ -18,7 +18,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     const isReservedPath = /^\/(auth|api|_error|_app|_document)/.test(
         router.pathname
     )
-    const [user, loading, error] = useFirebaseUser()
+    const [user, loading, _error] = useFirebaseUser()
 
     React.useEffect(() => {
         if (user) {

@@ -173,7 +173,8 @@ export default function SearchRankingEditModal({
                                             1,
                                             Math.min(
                                                 10,
-                                                parseInt(e.target.value) || 1
+                                                parseInt(e.target.value, 10) ||
+                                                    1
                                             )
                                         )
                                     )

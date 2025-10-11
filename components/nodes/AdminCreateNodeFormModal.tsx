@@ -75,7 +75,7 @@ export function AdminCreateNodeFormModal({
         },
     })
 
-    const router = useRouter()
+    const _router = useRouter()
     const {
         register,
         handleSubmit,
@@ -99,7 +99,7 @@ export function AdminCreateNodeFormModal({
             )
 
             // Invalidate the nodes list to refresh the data (non-cached endpoint)
-            const publisherId = node.publisher!.id!
+            const publisherId = node.publisher?.id!
             qc.invalidateQueries({
                 queryKey: getListNodesForPublisherV2QueryKey(publisherId),
             })

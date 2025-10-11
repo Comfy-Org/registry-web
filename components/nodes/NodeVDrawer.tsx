@@ -73,7 +73,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error(
                         t('Could not update version. Please try again.')
                     )

@@ -1,5 +1,5 @@
 import { isAxiosError } from 'axios'
-import { Button, Card, Modal, TextInput } from 'flowbite-react'
+import { Button, Modal, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
@@ -43,7 +43,7 @@ const CreatePublisherModal: React.FC<CreatePublisherModalProps> = ({
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error(
                         t('Could not create publisher. Please try again.')
                     )

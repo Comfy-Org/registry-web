@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
@@ -9,10 +8,7 @@ import { type ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
-import {
-    REQUEST_OPTIONS_NO_CACHE,
-    UNCLAIMED_ADMIN_PUBLISHER_ID,
-} from 'src/constants'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import {
     type NodeVersion,
     NodeVersionStatus,
@@ -380,7 +376,7 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )} */}
-                                {node.downloads != 0 && (
+                                {node.downloads !== 0 && (
                                     <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
                                         <svg
                                             className="w-6 h-6"
@@ -435,43 +431,41 @@ const NodeDetails = () => {
                                     )}
                             </div>
                             <div className="mt-5 mb-10">
-                                <>
-                                    {isUnclaimed || !nodeVersions?.length ? (
-                                        <p className="text-base font-normal text-gray-200">
-                                            {isUnclaimed
-                                                ? t(
-                                                      "This node can only be installed via git, because it's unclaimed by any publisher"
-                                                  )
-                                                : !nodeVersions?.length
-                                                  ? t(
-                                                        'This node can only be installed via git, because it has no versions published yet'
-                                                    )
-                                                  : t(
-                                                        'This node can only be installed via git'
-                                                    )}
-                                            {node.repository && (
-                                                <CopyableCodeBlock
-                                                    code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
-                                                />
-                                            )}
-                                        </p>
-                                    ) : (
-                                        <CopyableCodeBlock
-                                            code={`comfy node install ${nodeId}`}
-                                        />
-                                    )}
+                                {isUnclaimed || !nodeVersions?.length ? (
+                                    <p className="text-base font-normal text-gray-200">
+                                        {isUnclaimed
+                                            ? t(
+                                                  "This node can only be installed via git, because it's unclaimed by any publisher"
+                                              )
+                                            : !nodeVersions?.length
+                                              ? t(
+                                                    'This node can only be installed via git, because it has no versions published yet'
+                                                )
+                                              : t(
+                                                    'This node can only be installed via git'
+                                                )}
+                                        {node.repository && (
+                                            <CopyableCodeBlock
+                                                code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
+                                            />
+                                        )}
+                                    </p>
+                                ) : (
+                                    <CopyableCodeBlock
+                                        code={`comfy node install ${nodeId}`}
+                                    />
+                                )}
 
-                                    {isUnclaimed && user && (
-                                        // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
-                                        <Button
-                                            color="blue"
-                                            className="mt-4 font-bold"
-                                            onClick={handleClaimNode}
-                                        >
-                                            {t('Claim my node')}
-                                        </Button>
-                                    )}
-                                </>
+                                {isUnclaimed && user && (
+                                    // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                                    <Button
+                                        color="blue"
+                                        className="mt-4 font-bold"
+                                        onClick={handleClaimNode}
+                                    >
+                                        {t('Claim my node')}
+                                    </Button>
+                                )}
                             </div>
                             <div>
                                 <h2 className="mb-2 text-lg font-bold">
@@ -509,7 +503,6 @@ const NodeDetails = () => {
                                                 onClick={() =>
                                                     selectVersion(version)
                                                 }
-                                                tabIndex={0}
                                             >
                                                 {t('More')}
                                             </div>
@@ -655,57 +648,54 @@ const NodeDetails = () => {
                                 )}
 
                                 {/* Preempted Comfy Node Names management section */}
-                                <>
-                                    <Label
-                                        className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
-                                        htmlFor="edit-preempted-comfy-node-names"
-                                    >
-                                        <button
-                                            className="mr-2 flex items-center justify-center"
-                                            id="edit-preempted-comfy-node-names"
-                                            onClick={() => {
-                                                setIsPreemptedComfyNodeNamesEditModalOpen(
-                                                    true
-                                                )
-                                                analytic.track(
-                                                    'Edit Preempted Comfy Node Names'
-                                                )
-                                            }}
-                                        >
-                                            <MdEdit className="w-4 h-4 text-white" />
-                                        </button>
-                                        <div className="flex items-center">
-                                            <span>
-                                                {t('Preempted Names')}:{' '}
-                                                <pre className="whitespace-pre-wrap text-xs">
-                                                    {node.preempted_comfy_node_names &&
-                                                    node
-                                                        .preempted_comfy_node_names
-                                                        .length > 0
-                                                        ? node.preempted_comfy_node_names.join(
-                                                              '\n'
-                                                          )
-                                                        : t('None')}
-                                                </pre>
-                                            </span>
-                                        </div>
-                                    </Label>
-                                    <PreemptedComfyNodeNamesEditModal
-                                        nodeId={nodeId}
-                                        defaultPreemptedComfyNodeNames={
-                                            node.preempted_comfy_node_names ||
-                                            []
-                                        }
-                                        open={
-                                            isPreemptedComfyNodeNamesEditModalOpen
-                                        }
-                                        onClose={() =>
+
+                                <Label
+                                    className="flex-shrink-0 px-4 py-2 text-white rounded whitespace-nowrap text-[16px] flex items-center justify-between"
+                                    htmlFor="edit-preempted-comfy-node-names"
+                                >
+                                    <button
+                                        className="mr-2 flex items-center justify-center"
+                                        id="edit-preempted-comfy-node-names"
+                                        onClick={() => {
                                             setIsPreemptedComfyNodeNamesEditModalOpen(
-                                                false
+                                                true
                                             )
-                                        }
-                                    />
-                                </>
+                                            analytic.track(
+                                                'Edit Preempted Comfy Node Names'
+                                            )
+                                        }}
+                                    >
+                                        <MdEdit className="w-4 h-4 text-white" />
+                                    </button>
+                                    <div className="flex items-center">
+                                        <span>
+                                            {t('Preempted Names')}:{' '}
+                                            <pre className="whitespace-pre-wrap text-xs">
+                                                {node.preempted_comfy_node_names &&
+                                                node.preempted_comfy_node_names
+                                                    .length > 0
+                                                    ? node.preempted_comfy_node_names.join(
+                                                          '\n'
+                                                      )
+                                                    : t('None')}
+                                            </pre>
+                                        </span>
+                                    </div>
+                                </Label>
+                                <PreemptedComfyNodeNamesEditModal
+                                    nodeId={nodeId}
+                                    defaultPreemptedComfyNodeNames={
+                                        node.preempted_comfy_node_names || []
+                                    }
+                                    open={
+                                        isPreemptedComfyNodeNamesEditModalOpen
+                                    }
+                                    onClose={() =>
+                                        setIsPreemptedComfyNodeNamesEditModalOpen(
+                                            false
+                                        )
+                                    }
+                                />
                             </>
                         )}
                     </div>

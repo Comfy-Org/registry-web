@@ -6,8 +6,6 @@ import {
     HiOutlineAdjustments,
     HiOutlineClipboardCheck,
     HiOutlineCollection,
-    HiOutlineDuplicate,
-    HiOutlineSupport,
 } from 'react-icons/hi'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import withAdmin from '@/components/common/HOC/authAdmin'
@@ -15,7 +13,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAdmin(AdminDashboard)
 function AdminDashboard() {
-    const router = useRouter()
+    const _router = useRouter()
     const { t } = useNextTranslation()
 
     return (

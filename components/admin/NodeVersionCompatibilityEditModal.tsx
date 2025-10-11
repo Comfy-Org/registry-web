@@ -10,7 +10,7 @@ import {
 } from 'flowbite-react'
 import Link from 'next/link'
 import { DIES } from 'phpdie'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import {
@@ -18,7 +18,6 @@ import {
     shouldInvalidate,
 } from '@/components/cache-control'
 import {
-    AdminUpdateNodeVersionBody,
     type NodeVersion,
     useAdminUpdateNodeVersion,
     useGetNode,

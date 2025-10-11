@@ -91,7 +91,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                             toast.error(t('Failed to update node'))
                         }
                     },
-                    onError: (error, variables, context) => {
+                    onError: (error, _variables, _context) => {
                         if (error instanceof AxiosError) {
                             const axiosError: AxiosError<ErrorResponse, any> =
                                 error

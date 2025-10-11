@@ -253,7 +253,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                         </h4>
                         <ul className="ml-4 flex gap-2 overflow-x-auto">
                             {Object.entries(
-                                nodeVersions!.reduce(
+                                nodeVersions?.reduce(
                                     (acc, nv) => {
                                         acc[nv.status!] =
                                             (acc[nv.status!] || 0) + 1

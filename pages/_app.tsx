@@ -9,8 +9,7 @@ import app from '@/src/firebase'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
-import { AxiosRequestConfig, type AxiosResponse } from 'axios'
-import { request } from 'http'
+import type { AxiosResponse } from 'axios'
 import { DIE } from 'phpdie'
 
 // Add an interceptor to attach the Firebase JWT token to every request
@@ -60,10 +59,10 @@ AXIOS_INSTANCE.interceptors.response.use(
         const pathname = new URL(req.url, baseURL).pathname
 
         const isCreateMethod = ['POST'].includes(
-            req.method!.toUpperCase() ?? ''
+            req.method?.toUpperCase() ?? ''
         )
         const isEditMethod = ['PUT', 'PATCH', 'DELETE'].includes(
-            req.method!.toUpperCase() ?? ''
+            req.method?.toUpperCase() ?? ''
         )
 
         if (isCreateMethod) {

@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { Dropdown, DropdownItem } from 'flowbite-react'
-import Link, { LinkProps } from 'next/link'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { SUPPORTED_LANGUAGES } from '@/src/constants'

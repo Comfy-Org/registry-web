@@ -39,7 +39,7 @@ function NodeList() {
     // Handle page from URL
     React.useEffect(() => {
         if (router.query.page) {
-            setPage(parseInt(router.query.page as string))
+            setPage(parseInt(router.query.page as string, 10))
         }
     }, [router.query.page])
 
@@ -91,7 +91,7 @@ function NodeList() {
             ? undefined
             : ({
                   status: Object.entries(statusFlags)
-                      .filter(([status, s]) => statuses.includes(s))
+                      .filter(([_status, s]) => statuses.includes(s))
                       .map(([status]) => status),
               } as any)
         const search = new URLSearchParams({

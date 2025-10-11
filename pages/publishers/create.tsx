@@ -36,7 +36,7 @@ const CreatePublisher = () => {
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error(
                         t('Could not create publisher. Please try again.')
                     )
@@ -115,13 +115,8 @@ const CreatePublisher = () => {
                                         }
                                         helperText={
                                             <>
-                                                {isLoadingValidation && (
-                                                    <>
-                                                        {t(
-                                                            'Checking username...'
-                                                        )}
-                                                    </>
-                                                )}
+                                                {isLoadingValidation &&
+                                                    t('Checking username...')}
                                                 {!isLoadingValidation &&
                                                     publisherValidationError && (
                                                         <>

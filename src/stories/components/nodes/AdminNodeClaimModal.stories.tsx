@@ -50,7 +50,7 @@ const sampleNode: Node = {
 }
 
 // Sample publishers data
-const samplePublishers: Publisher[] = [
+const _samplePublishers: Publisher[] = [
     {
         id: 'publisher-1',
         name: 'ComfyUI Publisher',

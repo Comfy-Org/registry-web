@@ -35,7 +35,7 @@ const Nodes: React.FC = () => {
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error(t('Failed to update publisher'))
                 },
                 onSuccess: () => {
