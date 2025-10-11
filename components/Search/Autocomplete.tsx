@@ -3,7 +3,6 @@ import type { AutocompleteOptions } from '@algolia/autocomplete-js'
 import { autocomplete } from '@algolia/autocomplete-js'
 import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
 import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
-// @ts-expect-error
 import { debounce } from '@algolia/autocomplete-shared'
 import type { SearchClient } from 'algoliasearch/lite'
 import {
@@ -73,9 +72,11 @@ export default function Autocomplete({
             searchClient,
             indexName: INSTANT_SEARCH_QUERY_SUGGESTIONS,
             getSearchParams() {
-                return recentSearches.data!.getAlgoliaSearchParams({
-                    hitsPerPage: 6,
-                })
+                return (
+                    recentSearches.data?.getAlgoliaSearchParams({
+                        hitsPerPage: 6,
+                    }) || { hitsPerPage: 6 }
+                )
             },
             transformSource({ source }) {
                 return {

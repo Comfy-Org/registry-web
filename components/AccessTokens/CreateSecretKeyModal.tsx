@@ -1,6 +1,6 @@
 import { Button, Modal, TextInput } from 'flowbite-react'
 import type React from 'react'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { toast } from 'react-toastify'
 import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
 import { useCreatePersonalAccessToken } from '@/src/api/generated'
@@ -21,6 +21,8 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
     publisherId,
 }) => {
     const { t } = useNextTranslation()
+    const nameId = useId()
+    const descriptionId = useId()
     const [showSecondModal, setShowSecondModal] = useState(false)
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
@@ -39,7 +41,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error(t('Failed to create secret key'))
                 },
                 onSuccess: () => {
@@ -61,7 +63,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                 size="sm"
                 onClose={onCloseModal}
                 popup
-                //@ts-expect-error
+                // @ts-expect-error - customThemeTModal type mismatch
                 theme={customThemeTModal}
                 dismissible
             >
@@ -73,11 +75,14 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                         </h3>
                         <form className="mt-4 space-y-4 lg:space-y-6">
                             <div>
-                                <label className="block mb-1 text-xs font-bold text-white">
+                                <label
+                                    htmlFor={nameId}
+                                    className="block mb-1 text-xs font-bold text-white"
+                                >
                                     {t('Name')}
                                 </label>
                                 <TextInput
-                                    id="name"
+                                    id={nameId}
                                     placeholder={t('E.g. janedoe55')}
                                     // required
                                     theme={customThemeTextInput}
@@ -88,7 +93,10 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                                 />
                             </div>
                             <div>
-                                <label className="block mb-1 text-xs font-bold text-white">
+                                <label
+                                    htmlFor={descriptionId}
+                                    className="block mb-1 text-xs font-bold text-white"
+                                >
                                     {t('Description')}{' '}
                                     <span className="text-gray-400">
                                         {t('Optional')}
@@ -97,7 +105,7 @@ export const CreateSecretKeyModal: React.FC<CreateSecretKeyModalProps> = ({
                                 <TextInput
                                     sizing="sm"
                                     theme={customThemeTextInput}
-                                    id="displayName"
+                                    id={descriptionId}
                                     placeholder="E.g. Jane Doe "
                                     // required
                                     type="text"

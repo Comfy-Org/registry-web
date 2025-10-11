@@ -1,6 +1,5 @@
 import { Avatar, Dropdown } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import React from 'react'
 import { HiChevronDown } from 'react-icons/hi'
 import { useGetUser } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
@@ -10,7 +9,7 @@ import { useLogout } from '../AuthUI/Logout'
 export default function ProfileDropdown() {
     const router = useRouter()
     const { t } = useNextTranslation()
-    const [onSignOut, isSignoutLoading, error] = useLogout()
+    const [onSignOut, _isSignoutLoading, _error] = useLogout()
     const { data: user } = useGetUser()
 
     // // debug

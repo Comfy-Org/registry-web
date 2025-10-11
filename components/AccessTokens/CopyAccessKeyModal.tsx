@@ -1,5 +1,6 @@
 import { Button, Modal } from 'flowbite-react'
 import type React from 'react'
+import { useId } from 'react'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
@@ -15,14 +16,18 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
     accessToken,
 }) => {
     const { t } = useNextTranslation()
+    const inputId = useId()
+    const defaultMessageId = useId()
+    const successMessageId = useId()
+
     const handleSubmit = (event) => {
         event.preventDefault()
     }
     // Copy a string to the clipboard
     const copyToClipboard = (accessToken: string) => {
         navigator.clipboard.writeText(accessToken).then(() => {
-            const successMessage = document.getElementById('success-message')
-            const defaultMessage = document.getElementById('default-message')
+            const successMessage = document.getElementById(successMessageId)
+            const defaultMessage = document.getElementById(defaultMessageId)
             if (successMessage && defaultMessage) {
                 successMessage.classList.remove('hidden')
                 defaultMessage.classList.add('hidden')
@@ -36,7 +41,7 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
             size="sm"
             onClose={onCloseModal}
             popup
-            //@ts-expect-error
+            // @ts-expect-error - customThemeTModal type mismatch
             theme={customThemeTModal}
             dismissible
         >
@@ -56,9 +61,11 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                         </p>
 
                         <div className="grid grid-cols-8 gap-2 w-full max-w-[23rem]">
-                            <label className="sr-only">Label</label>
+                            <label htmlFor={inputId} className="sr-only">
+                                Label
+                            </label>
                             <input
-                                id="npm-install"
+                                id={inputId}
                                 type="text"
                                 className="col-span-6 size-10 bg-gray-50 border text-sm rounded-lg block w-full p-2.5bg-gray-700 border-gray-600 placeholder-gray-400 text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 value={accessToken}
@@ -69,15 +76,16 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                                 }}
                             />
                             <button
+                                type="button"
                                 onClick={() => copyToClipboard(accessToken)}
-                                data-copy-to-clipboard-target="npm-install"
+                                data-copy-to-clipboard-target={inputId}
                                 className="col-span-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 items-center inline-flex justify-center"
                             >
-                                <span id="default-message " className="text-xs">
+                                <span id={defaultMessageId} className="text-xs">
                                     {t('Copy')}
                                 </span>
                                 <span
-                                    id="success-message"
+                                    id={successMessageId}
                                     className="items-center hidden "
                                 >
                                     <svg

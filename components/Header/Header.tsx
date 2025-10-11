@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import type React from 'react'
-import { FaDiscord, FaGithub } from 'react-icons/fa'
+import { FaDiscord } from 'react-icons/fa'
 import logoBluePng from '@/src/assets/images/logo_blue.png'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useFromUrlParam } from '../common/HOC/useFromUrl'
@@ -15,15 +15,11 @@ interface HeaderProps {
     title?: string
 }
 
-const GithubIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <FaGithub {...props} className="text-xl" />
-)
-
 const DiscordIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <FaDiscord {...props} className="text-xl" />
 )
 
-const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
+const Header: React.FC<HeaderProps> = ({ isLoggedIn }) => {
     const router = useRouter()
     const { t } = useNextTranslation()
     const fromUrlParam = useFromUrlParam()
@@ -71,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                 )}
                 <Button
                     href={
-                        router.locale && router.locale.startsWith('zh')
+                        router.locale?.startsWith('zh')
                             ? 'https://docs.comfy.org/zh-CN'
                             : 'https://docs.comfy.org/registry/overview'
                     }

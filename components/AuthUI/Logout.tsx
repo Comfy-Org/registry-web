@@ -32,7 +32,7 @@ export function useLogout() {
 
 const Logout = () => {
     const { t } = useNextTranslation()
-    const [onLogout, loading, error] = useLogout()
+    const [onLogout, loading, _error] = useLogout()
     return (
         <div className="flex items-center justify-center min-h-screen ">
             <section className="p-4">

@@ -3,7 +3,7 @@ import type { StorybookConfig } from '@storybook/nextjs-vite'
 import { mergeConfig } from 'vite'
 
 // Dynamic import to avoid build-time issues
-let createMockResolverPlugin: any
+let createMockResolverPlugin: unknown
 
 export default defineConfig({
   stories: [

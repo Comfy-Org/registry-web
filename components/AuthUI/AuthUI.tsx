@@ -17,7 +17,7 @@ import app from '../../src/firebase'
 import { useFromUrl } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
 
-const AuthUI: React.FC<{}> = ({}) => {
+const AuthUI: React.FC<Record<string, never>> = ({}) => {
     const { t } = useNextTranslation()
     const router = useRouter()
     const auth = getAuth(app)

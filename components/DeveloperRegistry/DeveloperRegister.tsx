@@ -1,4 +1,3 @@
-import React from 'react'
 import DrCard from './DrCard'
 import DrHeader from './DrHeader'
 

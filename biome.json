@@ -5,6 +5,10 @@
         "clientKind": "git",
         "useIgnoreFile": true
     },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+    },
     "formatter": {
         "enabled": true,
         "indentStyle": "space",
@@ -13,7 +17,29 @@
     "linter": {
         "enabled": true,
         "rules": {
-            "recommended": true
+            "recommended": true,
+            "a11y": {
+                "useButtonType": "warn",
+                "noLabelWithoutControl": "warn",
+                "noSvgWithoutTitle": "off",
+                "useKeyWithClickEvents": "warn",
+                "noNoninteractiveElementToInteractiveRole": "warn",
+                "noStaticElementInteractions": "warn"
+            },
+            "correctness": {
+                "useUniqueElementIds": "warn",
+                "noEmptyPattern": "off",
+                "useExhaustiveDependencies": "off"
+            },
+            "style": {
+                "noNonNullAssertion": "warn"
+            },
+            "complexity": {
+                "noBannedTypes": "off"
+            },
+            "suspicious": {
+                "noArrayIndexKey": "warn"
+            }
         }
     },
     "javascript": {

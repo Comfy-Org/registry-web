@@ -117,7 +117,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                 size="3xl"
                 onClose={onCloseEditModal}
                 popup
-                //@ts-expect-error
+                // @ts-expect-error - customThemeTModal type mismatch
                 theme={customThemeTModal}
                 dismissible
             >
@@ -145,7 +145,6 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                     />
                                 </div>
                                 <TextInput
-                                    //@ts-expect-error
                                     theme={customThemeTextInput}
                                     id="name"
                                     placeholder={t('Node name')}
