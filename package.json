@@ -9,7 +9,7 @@
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
     "dev": "next dev",
     "fix": "next lint --fix .",
-    "fmt": "prettier --write .",
+    "fmt": "bunx @biomejs/biome check --fix",
     "format": "npx prettier --check .",
     "format-fix": "npx prettier --write .",
     "i18n": "bun scripts/scan-i18n.ts",

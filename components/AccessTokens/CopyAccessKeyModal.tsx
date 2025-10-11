@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal } from 'flowbite-react'
-import React from 'react'
+import type React from 'react'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type CopyAccessTokenModalProps = {
     openModal: boolean
@@ -36,7 +36,7 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
             size="sm"
             onClose={onCloseModal}
             popup
-            //@ts-ignore
+            //@ts-expect-error
             theme={customThemeTModal}
             dismissible
         >

@@ -1,4 +1,4 @@
-import { CustomFlowbiteTheme } from 'flowbite-react'
+import type { CustomFlowbiteTheme } from 'flowbite-react'
 export const customThemeTModal: CustomFlowbiteTheme = {
     root: {
         base: 'fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full rounded-lg',
@@ -48,7 +48,7 @@ export const customThemeTModal: CustomFlowbiteTheme = {
         },
     },
     footer: {
-        //@ts-ignore
+        //@ts-expect-error
         base: 'flex items-center space-x-2 rounded-b border-gray-200 p-6 border-gray-600',
         popup: 'border-t',
     },
@@ -106,7 +106,7 @@ export const CustomThemeTextArea = {
 }
 
 export const CustomThemePagination: CustomFlowbiteTheme = {
-    //@ts-ignore
+    //@ts-expect-error
     base: '',
     layout: {
         table: {

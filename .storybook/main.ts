@@ -1,6 +1,7 @@
-import { mergeConfig } from 'vite'
-import type { StorybookConfig } from '@storybook/nextjs-vite'
 import path from 'node:path'
+import type { StorybookConfig } from '@storybook/nextjs-vite'
+import { mergeConfig } from 'vite'
+
 // Dynamic import to avoid build-time issues
 let createMockResolverPlugin: any
 

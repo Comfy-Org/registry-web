@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Spinner } from 'flowbite-react'
-import React from 'react'
-import { PersonalAccessToken } from '@/src/api/generated'
+import type React from 'react'
+import type { PersonalAccessToken } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type PersonAccessTokenTableProps = {
     accessTokens: PersonalAccessToken[]

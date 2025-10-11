@@ -1,5 +1,5 @@
+import type React from 'react'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import React from 'react'
 
 const FilterRegistry: React.FC = () => {
     const { t } = useNextTranslation()

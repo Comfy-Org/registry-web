@@ -1,17 +1,18 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import {
-    Publisher,
+    type Publisher,
     useDeletePersonalAccessToken,
     useGetPermissionOnPublisher,
     useListNodesForPublisherV2,
     useListPersonalAccessTokens,
     useUpdatePublisher,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 import EditPublisherModal from '../publisher/EditPublisherModal'

@@ -1,20 +1,22 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 import { Button, Spinner } from 'flowbite-react'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
-import {
-    NodeVersion,
-    useGetNodeVersion,
-    useUpdateNodeVersion,
-} from '@/src/api/generated'
 import {
     INVALIDATE_CACHE_OPTION,
     shouldInvalidate,
 } from '@/components/cache-control'
-import { useQueryClient } from '@tanstack/react-query'
+import {
+    type NodeVersion,
+    useGetNodeVersion,
+    useUpdateNodeVersion,
+} from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { FormatRelativeDate } from './NodeDetails'
 import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
+
 type NodeVDrawerProps = {
     isDrawerOpen: boolean
     toggleDrawer: () => void

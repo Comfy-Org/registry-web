@@ -12,7 +12,7 @@ export function NodeLogoModal({ openLogoModal, onCloseModal }) {
                 size="2xl"
                 onClose={onCloseModal}
                 popup
-                //@ts-ignore
+                //@ts-expect-error
                 theme={customThemeTModal}
                 dismissible
             >

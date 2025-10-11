@@ -1,11 +1,11 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { http, HttpResponse } from 'msw'
-import { Node, Publisher } from '@/src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { User as FirebaseUser } from 'firebase/auth'
-import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import type { User as FirebaseUser } from 'firebase/auth'
+import { HttpResponse, http } from 'msw'
 import ClaimNodePage from '@/pages/nodes/[nodeId]/claim'
+import type { Node, Publisher } from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
 
 const meta: Meta<typeof ClaimNodePage> = {
     title: 'Pages/ClaimNodePage',

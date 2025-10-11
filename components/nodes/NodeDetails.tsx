@@ -1,15 +1,20 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
+import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { ReactNode, useState } from 'react'
+import type React from 'react'
+import { type ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
-    NodeVersion,
+    REQUEST_OPTIONS_NO_CACHE,
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+} from 'src/constants'
+import {
+    type NodeVersion,
     NodeVersionStatus,
     useGetNode,
     useGetPermissionOnPublisherNodes,
@@ -17,11 +22,8 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import {
-    UNCLAIMED_ADMIN_PUBLISHER_ID,
-    REQUEST_OPTIONS_NO_CACHE,
-} from 'src/constants'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
@@ -29,7 +31,6 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
-import { intlFormatDistance } from 'date-fns'
 
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
@@ -78,7 +79,7 @@ export function formatDownloadCount(count: number): string {
     if (unitIndex === 0) return count.toString()
 
     // Calculate the formatted number with one decimal place
-    const formattedNum = (count / Math.pow(unitSize, unitIndex)).toFixed(1)
+    const formattedNum = (count / unitSize ** unitIndex).toFixed(1)
 
     // Remove .0 if it exists
     const cleanNum = formattedNum.endsWith('.0')

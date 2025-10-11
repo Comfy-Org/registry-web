@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import GenericHeader from '@/components/common/GenericHeader'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof GenericHeader> = {
     title: 'Components/Common/GenericHeader',

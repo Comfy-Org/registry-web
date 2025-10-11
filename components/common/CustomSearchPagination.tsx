@@ -1,8 +1,8 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Pagination as FlowbitePagination } from 'flowbite-react'
-import React from 'react'
-import { usePagination, UsePaginationProps } from 'react-instantsearch'
+import type React from 'react'
+import { type UsePaginationProps, usePagination } from 'react-instantsearch'
 import { CustomThemePagination } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default function CustomSearchPagination(props: UsePaginationProps) {
     const {

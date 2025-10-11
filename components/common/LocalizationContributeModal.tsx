@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal } from 'flowbite-react'
-import React from 'react'
+import type React from 'react'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type LocalizationContributeModalProps = {
     open: boolean
@@ -27,7 +27,7 @@ export const LocalizationContributeModal: React.FC<
             size="md"
             onClose={onClose}
             popup
-            //@ts-ignore
+            //@ts-expect-error
             theme={customThemeTModal}
             dismissible
         >

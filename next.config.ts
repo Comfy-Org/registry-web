@@ -1,5 +1,5 @@
 import mdx from '@next/mdx'
-import { NextConfig } from 'next'
+import type { NextConfig } from 'next'
 import { SUPPORTED_LANGUAGES } from './src/constants'
 
 const withMDX = mdx({

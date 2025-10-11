@@ -1,4 +1,4 @@
-import Axios, { AxiosRequestConfig } from 'axios'
+import Axios, { type AxiosRequestConfig } from 'axios'
 import qs from 'qs'
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL

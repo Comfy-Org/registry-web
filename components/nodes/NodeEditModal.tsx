@@ -1,21 +1,26 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import type React from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import {
-    INVALIDATE_CACHE_OPTION,
-    shouldInvalidate,
-} from '@/components/cache-control'
-import { useQueryClient } from '@tanstack/react-query'
-import { ErrorResponse, Node, useUpdateNode } from '@/src/api/generated'
 import {
     CustomThemeTextArea,
     customThemeTextInput,
     customThemeTModal,
 } from 'utils/comfyTheme'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
+import {
+    type ErrorResponse,
+    type Node,
+    useUpdateNode,
+} from '@/src/api/generated'
 import nodesLogo from '@/src/assets/images/nodelogo2.png'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type NodeEditModalProps = {
     openEditModal: boolean
@@ -112,7 +117,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                 size="3xl"
                 onClose={onCloseEditModal}
                 popup
-                //@ts-ignore
+                //@ts-expect-error
                 theme={customThemeTModal}
                 dismissible
             >
@@ -140,7 +145,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                                     />
                                 </div>
                                 <TextInput
-                                    //@ts-ignore
+                                    //@ts-expect-error
                                     theme={customThemeTextInput}
                                     id="name"
                                     placeholder={t('Node name')}

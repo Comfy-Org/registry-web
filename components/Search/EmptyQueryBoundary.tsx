@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 import { useInstantSearch } from 'react-instantsearch'
 
 type EmptyQueryBoundaryProps = {

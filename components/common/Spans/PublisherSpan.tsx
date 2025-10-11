@@ -5,7 +5,7 @@
  */
 import { Tooltip } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 
 interface PublisherSpanProps {
     publisherId: string
