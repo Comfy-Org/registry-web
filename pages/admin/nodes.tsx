@@ -27,6 +27,7 @@ import {
     useGetUser,
     useAdminUpdateNode,
 } from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 
 function NodeList() {
     const { t } = useNextTranslation()
@@ -239,7 +240,7 @@ function NodeList() {
                 nodeId: unclaimingNode.id,
                 data: {
                     ...unclaimingNode,
-                    publisher: undefined,
+                    publisher_id: UNCLAIMED_ADMIN_PUBLISHER_ID,
                 },
             })
 
