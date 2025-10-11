@@ -240,7 +240,9 @@ function NodeList() {
                 nodeId: unclaimingNode.id,
                 data: {
                     ...unclaimingNode,
-                    publisher_id: UNCLAIMED_ADMIN_PUBLISHER_ID,
+                    publisher: {
+                        id: UNCLAIMED_ADMIN_PUBLISHER_ID,
+                    },
                 },
             })
 
