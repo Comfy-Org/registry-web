@@ -1,6 +1,6 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import type React from 'react'
 import Container from '@/components/common/Container'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import React from 'react'
 
 // Define proper type for component props
 interface ContainerProps {

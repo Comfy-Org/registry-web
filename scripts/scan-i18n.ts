@@ -1,9 +1,8 @@
-import { SUPPORTED_LANGUAGES } from '@/src/constants'
+import * as fs from 'node:fs/promises'
+import path from 'node:path'
 import axios from 'axios'
-import * as fs from 'fs/promises'
 import { glob } from 'glob'
-import path from 'path'
-import { update } from 'rambda'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
 
 /**
  * Simplified i18n translation key extractor
@@ -28,8 +27,8 @@ async function findTsxFiles(): Promise<string[]> {
         cwd: ROOT_DIR,
         ignore: [
             '**/node_modules/**',
-            '**/\.git/**',
-            '**/\.next/**',
+            '**/.git/**',
+            '**/.next/**',
             '**/dist/**',
             '**/build/**',
             '**/public/**',
@@ -116,10 +115,10 @@ async function writeJsonFile(
             {} as Record<string, string>
         )
 
-    await fs.writeFile(filePath, JSON.stringify(sorted, null, 2) + '\n')
+    await fs.writeFile(filePath, `${JSON.stringify(sorted, null, 2)}\n`)
 }
 
-async function getAvailableLanguages(): Promise<string[]> {
+async function _getAvailableLanguages(): Promise<string[]> {
     try {
         const dirEntries = await fs.readdir(LOCALES_DIR, {
             withFileTypes: true,
@@ -180,7 +179,7 @@ async function translateKeyToLanguage(
             },
             {
                 headers: {
-                    Authorization: `Bearer ` + process.env.OPENAI_API_KEY,
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
             }

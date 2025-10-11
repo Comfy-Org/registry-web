@@ -7,8 +7,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import analytic from 'src/analytic/analytic'
 import { useNextTranslation } from '../src/hooks/i18n'
 import { useFirebaseUser } from '../src/hooks/useFirebaseUser'
-import Header from './Header/Header'
 import Container from './common/Container'
+import Header from './Header/Header'
 
 export default function Layout({ children }: React.PropsWithChildren) {
     const router = useRouter()
@@ -18,7 +18,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
     const isReservedPath = /^\/(auth|api|_error|_app|_document)/.test(
         router.pathname
     )
-    const [user, loading, error] = useFirebaseUser()
+    const [user, loading, _error] = useFirebaseUser()
 
     React.useEffect(() => {
         if (user) {

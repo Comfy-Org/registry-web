@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import Image from 'next/image'
-import React from 'react'
-import { NodeVersion } from '@/src/api/generated'
+import type React from 'react'
+import type { NodeVersion } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface RegistryCard {
     name?: string
@@ -83,7 +83,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
                             </p>
                         )} */}
 
-                        {rating != 0 && (
+                        {rating !== 0 && (
                             <div className="flex justify-center text-center align-center">
                                 <svg
                                     className="w-4 h-4 text-white"

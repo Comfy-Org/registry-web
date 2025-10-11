@@ -1,21 +1,21 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import { Button, Label, Modal } from 'flowbite-react'
-import { FormEventHandler, useEffect, useState } from 'react'
+import { type FormEventHandler, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useNextTranslation } from 'src/hooks/i18n'
 import {
-    Error,
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
+import {
+    type Error,
     getGetNodeQueryKey,
     getSearchNodesQueryKey,
-    Node,
+    type Node,
     useGetNode,
     useUpdateNode,
 } from '@/src/api/generated'
-import {
-    shouldInvalidate,
-    INVALIDATE_CACHE_OPTION,
-} from '@/components/cache-control'
-import { useNextTranslation } from 'src/hooks/i18n'
 
 export default function PreemptedComfyNodeNamesEditModal({
     open,

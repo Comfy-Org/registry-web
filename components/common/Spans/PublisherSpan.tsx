@@ -5,7 +5,7 @@
  */
 import { Tooltip } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 
 interface PublisherSpanProps {
     publisherId: string
@@ -20,7 +20,7 @@ export default function PublisherSpan({
     className = '',
     onClick,
 }: PublisherSpanProps) {
-    const router = useRouter()
+    const _router = useRouter()
 
     const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
         if (onClick) {

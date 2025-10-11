@@ -1,13 +1,13 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { HttpResponse, http } from 'msw'
 import ProfileDropdown from '@/components/Header/ProfileDropdown'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { handlers } from '@/src/mocks/handlers'
-import { CAPI } from '@/src/mocks/apibase'
-import { http, HttpResponse } from 'msw'
-import { User } from '@/src/api/generated'
+import type { User } from '@/src/api/generated'
 import {
-    useFirebaseUser,
     mockFirebaseUser,
+    useFirebaseUser,
 } from '@/src/hooks/useFirebaseUser.mock'
+import { CAPI } from '@/src/mocks/apibase'
+import { handlers } from '@/src/mocks/handlers'
 
 const meta = {
     title: 'Components/Header/ProfileDropdown',

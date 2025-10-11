@@ -1,5 +1,5 @@
+import type React from 'react'
 import GenericHeader from '@/components/common/GenericHeader'
-import React from 'react'
 
 /**
  * A simplified version of the Registry component for Storybook

@@ -1,17 +1,18 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import {
-    Publisher,
+    type Publisher,
     useDeletePersonalAccessToken,
     useGetPermissionOnPublisher,
     useListNodesForPublisherV2,
     useListPersonalAccessTokens,
     useUpdatePublisher,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 import EditPublisherModal from '../publisher/EditPublisherModal'
@@ -63,7 +64,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error('Failed to update publisher')
                 },
                 onSuccess: () => {
@@ -230,7 +231,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                                         tokenId: tokenId,
                                     },
                                     {
-                                        onError: (error) => {
+                                        onError: (_error) => {
                                             toast.error(
                                                 'Failed to delete token'
                                             )
@@ -271,7 +272,7 @@ function getFirstMemberName(publisher: Publisher): string | undefined {
     // Check if the publisher has members and the first member has a user and name
     if (publisher.members && publisher.members.length > 0) {
         const firstMember = publisher.members[0]
-        if (firstMember.user && firstMember.user.name) {
+        if (firstMember.user?.name) {
             return firstMember.user.name
         }
     }

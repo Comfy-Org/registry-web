@@ -1,16 +1,15 @@
-import { AXIOS_INSTANCE } from '@/src/api/mutator/axios-instance'
-import app from '@/src/firebase'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { getAuth } from 'firebase/auth'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
+import { AXIOS_INSTANCE } from '@/src/api/mutator/axios-instance'
+import app from '@/src/firebase'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { request } from 'http'
+import type { AxiosResponse } from 'axios'
 import { DIE } from 'phpdie'
 
 // Add an interceptor to attach the Firebase JWT token to every request
@@ -60,10 +59,10 @@ AXIOS_INSTANCE.interceptors.response.use(
         const pathname = new URL(req.url, baseURL).pathname
 
         const isCreateMethod = ['POST'].includes(
-            req.method!.toUpperCase() ?? ''
+            req.method?.toUpperCase() ?? ''
         )
         const isEditMethod = ['PUT', 'PATCH', 'DELETE'].includes(
-            req.method!.toUpperCase() ?? ''
+            req.method?.toUpperCase() ?? ''
         )
 
         if (isCreateMethod) {

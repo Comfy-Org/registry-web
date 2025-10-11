@@ -6,7 +6,7 @@
             > * Displays a GitHub username with hover information and click navigation to GitHub profile
  */
 import { Tooltip } from 'flowbite-react'
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 
 interface GithubUserSpanProps {
     username: string

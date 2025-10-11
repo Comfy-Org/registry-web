@@ -12,15 +12,15 @@ const INTEGRITY_CHECKSUM = '4db4a41e972cec1b64cc569c66952d82'
 const IS_MOCKED_RESPONSE = Symbol('isMockedResponse')
 const activeClientIds = new Set()
 
-addEventListener('install', function () {
+addEventListener('install', () => {
   self.skipWaiting()
 })
 
-addEventListener('activate', function (event) {
+addEventListener('activate', (event) => {
   event.waitUntil(self.clients.claim())
 })
 
-addEventListener('message', async function (event) {
+addEventListener('message', async (event) => {
   const clientId = Reflect.get(event.source || {}, 'id')
 
   if (!clientId || !self.clients) {
@@ -88,7 +88,7 @@ addEventListener('message', async function (event) {
   }
 })
 
-addEventListener('fetch', function (event) {
+addEventListener('fetch', (event) => {
   const requestInterceptedAt = Date.now()
 
   // Bypass navigation requests.
@@ -289,7 +289,7 @@ function sendToClient(client, message, transferrables = []) {
     const channel = new MessageChannel()
 
     channel.port1.onmessage = (event) => {
-      if (event.data && event.data.error) {
+      if (event.data?.error) {
         return reject(event.data.error)
       }
 

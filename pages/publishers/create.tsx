@@ -1,13 +1,13 @@
-import withAuth from '@/components/common/HOC/withAuth'
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { isAxiosError } from 'axios'
 import { Breadcrumb, Button, Card, TextInput } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { HiHome } from 'react-icons/hi'
 import React, { useState } from 'react'
-import { customThemeTextInput } from 'utils/comfyTheme'
+import { HiHome } from 'react-icons/hi'
 import { toast } from 'react-toastify'
+import { customThemeTextInput } from 'utils/comfyTheme'
+import withAuth from '@/components/common/HOC/withAuth'
 import { useCreatePublisher, useValidatePublisher } from '@/src/api/generated'
-import { isAxiosError } from 'axios'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 const CreatePublisher = () => {
     const router = useRouter()
@@ -36,7 +36,7 @@ const CreatePublisher = () => {
                 },
             },
             {
-                onError: (error) => {
+                onError: (_error) => {
                     toast.error(
                         t('Could not create publisher. Please try again.')
                     )
@@ -115,13 +115,8 @@ const CreatePublisher = () => {
                                         }
                                         helperText={
                                             <>
-                                                {isLoadingValidation && (
-                                                    <>
-                                                        {t(
-                                                            'Checking username...'
-                                                        )}
-                                                    </>
-                                                )}
+                                                {isLoadingValidation &&
+                                                    t('Checking username...')}
                                                 {!isLoadingValidation &&
                                                     publisherValidationError && (
                                                         <>

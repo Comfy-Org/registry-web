@@ -1,10 +1,10 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { getAuth } from 'firebase/auth'
 import { Button } from 'flowbite-react'
 import { useEffect } from 'react'
 import { useSignOut } from 'react-firebase-hooks/auth'
 import { toast } from 'react-toastify'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import app from '../../src/firebase'
 
 export function useLogout() {
@@ -32,7 +32,7 @@ export function useLogout() {
 
 const Logout = () => {
     const { t } = useNextTranslation()
-    const [onLogout, loading, error] = useLogout()
+    const [onLogout, loading, _error] = useLogout()
     return (
         <div className="flex items-center justify-center min-h-screen ">
             <section className="p-4">

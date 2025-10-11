@@ -1,18 +1,5 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
-import { NodeStatusBadge } from '@/components/NodeStatusBadge'
-import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
-import { parseJsonSafe } from '@/components/parseJsonSafe'
-import {
-    shouldInvalidate,
-    INVALIDATE_CACHE_OPTION,
-} from '@/components/cache-control'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { generateBatchId } from '@/utils/batchUtils'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
-import MailtoNodeVersionModal from '@/components/MailtoNodeVersionModal'
 import {
     Breadcrumb,
     Button,
@@ -32,15 +19,28 @@ import { FaGithub } from 'react-icons/fa'
 import { HiBan, HiCheck, HiHome, HiReply } from 'react-icons/hi'
 import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import MailtoNodeVersionModal from '@/components/MailtoNodeVersionModal'
+import { NodeStatusBadge } from '@/components/NodeStatusBadge'
+import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
+import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { parseJsonSafe } from '@/components/parseJsonSafe'
 import {
     getNode,
-    NodeVersion,
+    type NodeVersion,
     NodeVersionStatus,
     useAdminUpdateNodeVersion,
     useGetUser,
     useListAllNodeVersions,
 } from '@/src/api/generated'
-import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { generateBatchId } from '@/utils/batchUtils'
 
 function NodeVersionList({}) {
     const { t } = useNextTranslation()
@@ -61,7 +61,7 @@ function NodeVersionList({}) {
     // todo: optimize this, use fallback value instead of useEffect
     React.useEffect(() => {
         if (router.query.page) {
-            setPage(parseInt(router.query.page as string))
+            setPage(parseInt(router.query.page as string, 10))
         }
     }, [router.query.page])
 
@@ -111,7 +111,7 @@ function NodeVersionList({}) {
             ? undefined
             : ({
                   filter: Object.entries(flags)
-                      .filter(([flag, s]) => status.includes(s))
+                      .filter(([_flag, s]) => status.includes(s))
                       .map(([flag]) => flag),
               } as any)
         const search = new URLSearchParams({
@@ -202,8 +202,8 @@ function NodeVersionList({}) {
         })
         await updateNodeVersionMutation.mutateAsync(
             {
-                nodeId: nv.node_id!.toString(),
-                versionNumber: nv.version!.toString(),
+                nodeId: nv.node_id?.toString(),
+                versionNumber: nv.version?.toString(),
                 data: { status, status_reason: JSON.stringify(reason) },
             },
             {
@@ -211,7 +211,7 @@ function NodeVersionList({}) {
                     // Cache-busting invalidation for cached endpoints
                     queryClient.fetchQuery(
                         shouldInvalidate.getListNodeVersionsQueryOptions(
-                            nv.node_id!.toString(),
+                            nv.node_id?.toString(),
                             undefined,
                             INVALIDATE_CACHE_OPTION
                         )
@@ -239,7 +239,7 @@ function NodeVersionList({}) {
     }
 
     // For batch operations that include batchId in the status reason
-    const onApproveBatch = async (
+    const _onApproveBatch = async (
         nv: NodeVersion,
         message: string,
         batchId: string
@@ -276,8 +276,8 @@ function NodeVersionList({}) {
 
         await updateNodeVersionMutation.mutateAsync(
             {
-                nodeId: nv.node_id!.toString(),
-                versionNumber: nv.version!.toString(),
+                nodeId: nv.node_id?.toString(),
+                versionNumber: nv.version?.toString(),
                 data: {
                     status: NodeVersionStatus.NodeVersionStatusActive,
                     status_reason: JSON.stringify(reason),
@@ -302,7 +302,7 @@ function NodeVersionList({}) {
         )
     }
 
-    const onRejectBatch = async (
+    const _onRejectBatch = async (
         nv: NodeVersion,
         message: string,
         batchId: string
@@ -339,8 +339,8 @@ function NodeVersionList({}) {
 
         await updateNodeVersionMutation.mutateAsync(
             {
-                nodeId: nv.node_id!.toString(),
-                versionNumber: nv.version!.toString(),
+                nodeId: nv.node_id?.toString(),
+                versionNumber: nv.version?.toString(),
                 data: {
                     status: NodeVersionStatus.NodeVersionStatusBanned,
                     status_reason: JSON.stringify(reason),
@@ -351,7 +351,7 @@ function NodeVersionList({}) {
                     // Cache-busting invalidation for cached endpoints
                     queryClient.fetchQuery(
                         shouldInvalidate.getListNodeVersionsQueryOptions(
-                            nv.node_id!.toString(),
+                            nv.node_id?.toString(),
                             undefined,
                             INVALIDATE_CACHE_OPTION
                         )
@@ -534,8 +534,8 @@ function NodeVersionList({}) {
 
         await updateNodeVersionMutation.mutateAsync(
             {
-                nodeId: nv.node_id!.toString(),
-                versionNumber: nv.version!.toString(),
+                nodeId: nv.node_id?.toString(),
+                versionNumber: nv.version?.toString(),
                 data: {
                     status: prevStatus,
                     status_reason: JSON.stringify(statusReason),
@@ -546,7 +546,7 @@ function NodeVersionList({}) {
                     // Cache-busting invalidation for cached endpoints
                     queryClient.fetchQuery(
                         shouldInvalidate.getListNodeVersionsQueryOptions(
-                            nv.node_id!.toString(),
+                            nv.node_id?.toString(),
                             undefined,
                             INVALIDATE_CACHE_OPTION
                         )
@@ -612,7 +612,7 @@ function NodeVersionList({}) {
         const batchId = generateBatchId(selectedKeys)
 
         // Format the reason with the batch ID if applicable
-        let reason =
+        const reason =
             batchReason ||
             (batchAction in defaultBatchReasons
                 ? prompt(t('Reason'), t(defaultBatchReasons[batchAction]))
@@ -1081,7 +1081,7 @@ function NodeVersionList({}) {
 
                                         e.preventDefault()
                                         nextElement.focus()
-                                        nextElement.parentElement!.parentElement!.scrollIntoView(
+                                        nextElement.parentElement?.parentElement?.scrollIntoView(
                                             {
                                                 behavior: 'smooth',
                                                 block: 'start',
@@ -1140,7 +1140,9 @@ function NodeVersionList({}) {
                                                 toast.error(
                                                     t(
                                                         'Error getting node {{id}} repository',
-                                                        { id: nv.node_id }
+                                                        {
+                                                            id: nv.node_id,
+                                                        }
                                                     )
                                                 )
                                             })

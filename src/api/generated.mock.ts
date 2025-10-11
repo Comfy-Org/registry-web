@@ -1,4 +1,4 @@
-import { Publisher } from '@/src/api/generated'
+import type { Publisher } from '@/src/api/generated'
 
 // Sample publishers data for mocking
 const samplePublishers: Publisher[] = [

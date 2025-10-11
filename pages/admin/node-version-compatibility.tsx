@@ -1,53 +1,46 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import clsx from 'clsx'
 import {
-    useListAllNodeVersions,
-    useListAllNodes,
-    useAdminUpdateNodeVersion,
-    NodeVersion,
-    NodeVersionStatus,
-    listAllNodes,
-    Node,
-    getNode,
-    useGetNode,
-    useAdminUpdateNode,
-    getGetNodeQueryOptions,
-    useUpdateNode,
-    adminUpdateNode,
-    getListAllNodesQueryOptions,
-    getGetNodeQueryKey,
-    getListAllNodesQueryKey,
-    getListAllNodeVersionsQueryKey,
-    getGetNodeVersionQueryKey,
-    getListNodeVersionsQueryKey,
-} from '@/src/api/generated'
-import {
+    Breadcrumb,
     Button,
-    Table,
-    TextInput,
+    Checkbox,
+    Dropdown,
     Label,
     Spinner,
-    Breadcrumb,
-    Dropdown,
-    Checkbox,
-    Flowbite,
+    Table,
+    TextInput,
     Tooltip,
 } from 'flowbite-react'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import router from 'next/router'
+import { DIES } from 'phpdie'
+import { Suspense, useMemo } from 'react'
 import { HiHome } from 'react-icons/hi'
-import NodeVersionCompatibilityEditModal from '@/components/admin/NodeVersionCompatibilityEditModal'
-import { CustomPagination } from '@/components/common/CustomPagination'
-import { useSearchParameter } from '@/src/hooks/useSearchParameter'
-import { NodeVersionStatusToReadable } from '@/src/mapper/nodeversion'
-import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
-import { usePage } from '@/components/hooks/usePage'
-import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { useAsync, useAsyncFn, useMap } from 'react-use'
 import sflow, { pageFlow } from 'sflow'
-import DIE, { DIES } from 'phpdie'
-import clsx from 'clsx'
+import NodeVersionCompatibilityEditModal from '@/components/admin/NodeVersionCompatibilityEditModal'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { usePage } from '@/components/hooks/usePage'
+import {
+    adminUpdateNode,
+    getGetNodeQueryKey,
+    getGetNodeQueryOptions,
+    getGetNodeVersionQueryKey,
+    getListAllNodesQueryKey,
+    getListAllNodesQueryOptions,
+    getListAllNodeVersionsQueryKey,
+    getListNodeVersionsQueryKey,
+    type Node,
+    type NodeVersion,
+    NodeVersionStatus,
+    useAdminUpdateNode,
+    useAdminUpdateNodeVersion,
+    useListAllNodeVersions,
+} from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { useSearchParameter } from '@/src/hooks/useSearchParameter'
+import { NodeVersionStatusToReadable } from '@/src/mapper/nodeversion'
 
 // This page allows admins to update node version compatibility fields
 export default withAdmin(NodeVersionCompatibilityAdmin)
@@ -73,8 +66,8 @@ function NodeVersionCompatibilityAdmin() {
         (v) => v || []
     )
 
-    const adminUpdateNodeVersion = useAdminUpdateNodeVersion()
-    const adminUpdateNode = useAdminUpdateNode()
+    const _adminUpdateNodeVersion = useAdminUpdateNodeVersion()
+    const _adminUpdateNode = useAdminUpdateNode()
 
     const qc = useQueryClient()
     const [
@@ -124,9 +117,9 @@ function NodeVersionCompatibilityAdmin() {
         return () => ac.abort()
     }, [])
     useAsync(async () => {
-        if (!!nodeId) return
+        if (nodeId) return
         const ac = new AbortController()
-        let i = 0
+        const _i = 0
         await pageFlow(1, async (page, limit = 100) => {
             ac.signal.aborted && DIES(toast.error, 'aborted')
             const data =
@@ -163,7 +156,7 @@ function NodeVersionCompatibilityAdmin() {
                 return { nodeId: node.id, isOutdated, node }
             })
             .filter()
-            .log((x, i) => i)
+            .log((_x, i) => i)
             .log()
             .toArray()
             .then((e) => {
@@ -171,9 +164,7 @@ function NodeVersionCompatibilityAdmin() {
                 console.log(`got ${e.length} results`)
                 // outdated
                 console.log(
-                    `got ${
-                        e.filter((x) => x.isOutdated).length
-                    } outdated results`
+                    `got ${e.filter((x) => x.isOutdated).length} outdated results`
                 )
 
                 const outdatedList = e.filter((x) => x.isOutdated)
@@ -183,8 +174,8 @@ function NodeVersionCompatibilityAdmin() {
                 )
                 console.log(async () => {
                     outdatedList.map(async (x) => {
-                        const node = x.node
-                        const isOutdated = x.isOutdated
+                        const _node = x.node
+                        const _isOutdated = x.isOutdated
                         // Do something with the outdated node
                         console.log(`${x.nodeId} is outdated`)
                     })

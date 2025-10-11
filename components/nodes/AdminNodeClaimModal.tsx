@@ -1,24 +1,23 @@
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
 import { useEffect, useState } from 'react'
 import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
 import { toast } from 'react-toastify'
-import {
-    Node,
-    Publisher,
-    useListPublishers,
-    useUpdateNode,
-    getGetNodeQueryKey,
-    getListNodesForPublisherV2QueryKey,
-    getSearchNodesQueryKey,
-} from '@/src/api/generated'
+import { customThemeTModal } from 'utils/comfyTheme'
 import {
     INVALIDATE_CACHE_OPTION,
     shouldInvalidate,
 } from '@/components/cache-control'
-import { customThemeTModal } from 'utils/comfyTheme'
+import {
+    getListNodesForPublisherV2QueryKey,
+    getSearchNodesQueryKey,
+    type Node,
+    type Publisher,
+    useListPublishers,
+    useUpdateNode,
+} from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { PublisherId } from '../Search/PublisherId'
 
 interface NodeClaimModalProps {
@@ -268,7 +267,7 @@ export function AdminNodeClaimModal({
                 publisherId: UNCLAIMED_ADMIN_PUBLISHER_ID,
                 data: { publisher: selectedPublisher },
             })
-        } catch (error) {
+        } catch (_error) {
             // Error is handled in the mutation's onError
             toast.error(
                 t('An unexpected error occurred while claiming the node.')
@@ -282,7 +281,7 @@ export function AdminNodeClaimModal({
             onClose={onClose}
             size="md"
             popup
-            //@ts-ignore
+            //@ts-expect-error
             theme={customThemeTModal}
             dismissible
         >

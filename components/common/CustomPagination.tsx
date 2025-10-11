@@ -5,7 +5,7 @@ export function CustomPagination({ currentPage, onPageChange, totalPages }) {
     return (
         <div className="flex mt-2 sm:justify-center">
             <FlowbitePagination
-                //@ts-ignore
+                //@ts-expect-error
                 theme={CustomThemePagination}
                 currentPage={currentPage}
                 totalPages={totalPages}

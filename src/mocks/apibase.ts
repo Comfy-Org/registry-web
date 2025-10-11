@@ -4,7 +4,7 @@ export const CAPI = (path: `/${string}`) => {
 }
 
 // TODO: add algolia search handler...
-export const ALGO = (path: `/${string}`) => {
+export const ALGO = (_path: `/${string}`) => {
     // algolia
     throw 'WIP'
 }

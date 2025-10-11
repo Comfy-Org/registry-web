@@ -1,9 +1,9 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Pagination } from 'flowbite-react'
 import Link from 'next/link'
 import * as React from 'react'
-import { Publisher, useListNodesForPublisherV2 } from '@/src/api/generated'
 import { CustomThemePagination } from 'utils/comfyTheme'
+import { type Publisher, useListNodesForPublisherV2 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import NodesCard from '../nodes/NodesCard'
 
 type PublisherNodesProps = {
@@ -59,7 +59,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
             </div>
 
             <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
-                {data?.nodes?.map((node, index) => (
+                {data?.nodes?.map((node, _index) => (
                     <NodesCard
                         key={node.id}
                         node={node}

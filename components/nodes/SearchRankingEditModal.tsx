@@ -1,21 +1,21 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import { Button, Label, Modal } from 'flowbite-react'
-import { FormEventHandler, useEffect, useState } from 'react'
+import { type FormEventHandler, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import {
-    Error,
-    getGetNodeQueryKey,
-    getSearchNodesQueryKey,
-    Node,
-    useGetNode,
-    useUpdateNode,
-} from '@/src/api/generated'
+import { useNextTranslation } from 'src/hooks/i18n'
 import {
     INVALIDATE_CACHE_OPTION,
     shouldInvalidate,
 } from '@/components/cache-control'
-import { useNextTranslation } from 'src/hooks/i18n'
+import {
+    type Error,
+    getGetNodeQueryKey,
+    getSearchNodesQueryKey,
+    type Node,
+    useGetNode,
+    useUpdateNode,
+} from '@/src/api/generated'
 
 export default function SearchRankingEditModal({
     open,
@@ -173,7 +173,8 @@ export default function SearchRankingEditModal({
                                             1,
                                             Math.min(
                                                 10,
-                                                parseInt(e.target.value) || 1
+                                                parseInt(e.target.value, 10) ||
+                                                    1
                                             )
                                         )
                                     )

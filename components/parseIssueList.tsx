@@ -5,7 +5,7 @@ export function parseIssueList(statusReasonJson: any) {
         statusReasonJson?.flatMap?.((i) => {
             // Unwind matches if present
             if (i.matches) {
-                return i.matches.flatMap((match, matchIndex) =>
+                return i.matches.flatMap((match, _matchIndex) =>
                     match.strings.flatMap((string) =>
                         string.instances.map((instance) => ({
                             ...i,

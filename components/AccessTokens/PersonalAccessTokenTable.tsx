@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Spinner } from 'flowbite-react'
-import React from 'react'
-import { PersonalAccessToken } from '@/src/api/generated'
+import type React from 'react'
+import type { PersonalAccessToken } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type PersonAccessTokenTableProps = {
     accessTokens: PersonalAccessToken[]
@@ -58,7 +58,7 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
                                 </tr>
                             </thead>
                             <tbody className="bg-gray-600">
-                                {accessTokens.map((token, i) => {
+                                {accessTokens.map((token) => {
                                     return (
                                         <tr key={token.id}>
                                             <td className="px-4 py-3 text-left">
@@ -69,6 +69,7 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
                                             </td>
                                             <td className="px-4 py-3 text-right">
                                                 <button
+                                                    type="button"
                                                     className="text-red-500 hover:text-red-700 "
                                                     onClick={() =>
                                                         deleteToken(

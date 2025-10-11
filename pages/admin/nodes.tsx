@@ -1,16 +1,13 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
     Breadcrumb,
     Button,
+    Label,
     Modal,
     Spinner,
     Table,
     TextInput,
-    Label,
 } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -19,13 +16,16 @@ import React, { useState } from 'react'
 import { HiHome, HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import {
-    Node,
+    type Node,
     NodeStatus,
+    useGetUser,
     useListAllNodes,
     useUpdateNode,
-    useGetUser,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 function NodeList() {
     const { t } = useNextTranslation()
@@ -39,7 +39,7 @@ function NodeList() {
     // Handle page from URL
     React.useEffect(() => {
         if (router.query.page) {
-            setPage(parseInt(router.query.page as string))
+            setPage(parseInt(router.query.page as string, 10))
         }
     }, [router.query.page])
 
@@ -91,7 +91,7 @@ function NodeList() {
             ? undefined
             : ({
                   status: Object.entries(statusFlags)
-                      .filter(([status, s]) => statuses.includes(s))
+                      .filter(([_status, s]) => statuses.includes(s))
                       .map(([status]) => status),
               } as any)
         const search = new URLSearchParams({

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import analytic from 'src/analytic/analytic'
 
 /**
@@ -32,10 +32,15 @@ export const GET = async (request: NextRequest) => {
         }
 
         // Decode state parameter to get original request data
-        let stateData
+        let stateData: {
+            redirectUri: string
+            nodeId: string
+            publisherId: string
+            repo: string
+        }
         try {
             stateData = JSON.parse(Buffer.from(state, 'base64').toString())
-        } catch (error) {
+        } catch (_error) {
             return NextResponse.json(
                 { error: 'Invalid state parameter' },
                 { status: 400 }
@@ -118,7 +123,7 @@ export const GET = async (request: NextRequest) => {
         return NextResponse.redirect(
             `${redirectUri}${separator}token=${encodeURIComponent(accessToken)}`
         )
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             { error: 'Internal Server Error' },
             { status: 500 }

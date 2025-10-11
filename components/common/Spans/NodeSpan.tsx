@@ -5,7 +5,7 @@
  */
 import { Tooltip } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { MouseEvent } from 'react'
+import type { MouseEvent } from 'react'
 
 interface NodeSpanProps {
     nodeId: string
@@ -20,7 +20,7 @@ export default function NodeSpan({
     className = '',
     onClick,
 }: NodeSpanProps) {
-    const router = useRouter()
+    const _router = useRouter()
 
     const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
         if (onClick) {

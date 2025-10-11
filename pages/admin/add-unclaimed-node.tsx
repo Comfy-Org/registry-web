@@ -1,9 +1,9 @@
-import withAdmin from '@/components/common/HOC/authAdmin'
-import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAdmin(AddUnclaimedNodePage)
 

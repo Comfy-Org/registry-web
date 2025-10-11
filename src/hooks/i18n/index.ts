@@ -1,12 +1,12 @@
-import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
 import { initReactI18next, useTranslation } from 'react-i18next'
 import reactUseCookie from 'react-use-cookie'
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 
-const i18n = i18next
+const _i18n = i18next
     .use(I18nextBrowserLanguageDetector)
     .use(
         i18nextResourcesToBackend(
@@ -42,7 +42,7 @@ export function useNextTranslation(namespace = 'common') {
     const locale = router.locale || router.defaultLocale || 'en'
 
     // Use a cookie to store the user's language preference
-    const [cookieLocale, setCookieLocale] = reactUseCookie(
+    const [_cookieLocale, setCookieLocale] = reactUseCookie(
         LANGUAGE_STORAGE_KEY,
         ''
     )

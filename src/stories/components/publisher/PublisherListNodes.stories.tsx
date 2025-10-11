@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import PublisherListNodes from '@/components/publisher/PublisherListNodes'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof PublisherListNodes> = {
     title: 'Components/Publisher/PublisherListNodes',

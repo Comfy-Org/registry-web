@@ -1,10 +1,10 @@
-import { http, HttpResponse } from 'msw'
+import { HttpResponse, http } from 'msw'
 import {
-    ListNodesForPublisherV2200,
-    NodeStatus,
-    PublisherStatus,
+    type ListNodesForPublisherV2200,
     type Node,
+    NodeStatus,
     type Publisher,
+    PublisherStatus,
     type User,
 } from '../api/generated'
 import { CAPI } from './apibase'
@@ -158,8 +158,8 @@ export const handlers = [
     // Nodes endpoints
     http.get(CAPI('/nodes'), ({ request }) => {
         const url = new URL(request.url)
-        const limit = parseInt(url.searchParams.get('limit') || '10')
-        const offset = parseInt(url.searchParams.get('offset') || '0')
+        const limit = parseInt(url.searchParams.get('limit') || '10', 10)
+        const offset = parseInt(url.searchParams.get('offset') || '0', 10)
         const searchTerm = url.searchParams.get('search') || ''
 
         let filteredNodes = mockNodes
@@ -237,7 +237,7 @@ export const handlers = [
         }
 
         const url = new URL(request.url)
-        const statuses = url.searchParams.getAll('statuses')
+        const _statuses = url.searchParams.getAll('statuses')
 
         const mockVersions = [
             {
@@ -273,8 +273,8 @@ export const handlers = [
     http.get(
         CAPI('/publishers/:publisherId/nodes/:nodeId/permissions'),
         ({ params }) => {
-            const publisherId = params.publisherId as string
-            const nodeId = params.nodeId as string
+            const _publisherId = params.publisherId as string
+            const _nodeId = params.nodeId as string
 
             // Mock permissions - canEdit true for demo purposes
             return HttpResponse.json({

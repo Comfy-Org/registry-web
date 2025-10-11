@@ -7,7 +7,7 @@ import { useFromUrlParam } from './useFromUrl'
 const withAuth = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
-        const [user, loading, error] = useFirebaseUser()
+        const [user, loading, _error] = useFirebaseUser()
         const fromUrlParam = useFromUrlParam()
 
         useEffect(() => {

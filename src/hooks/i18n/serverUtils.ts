@@ -1,5 +1,5 @@
 import { parse } from 'accept-language-parser'
-import { SUPPORTED_LANGUAGES, DEFAULT_LANGUAGE } from '../../constants'
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from '../../constants'
 
 /**
  * Detects the preferred language from the Accept-Language HTTP header

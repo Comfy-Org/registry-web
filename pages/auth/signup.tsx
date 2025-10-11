@@ -1,11 +1,7 @@
-import React from 'react'
+import type React from 'react'
 import SignIn from '../../components/AuthUI/AuthUI'
 
 const SignUpPage: React.FC = () => {
-    return (
-        <>
-            <SignIn />
-        </>
-    )
+    return <SignIn />
 }
 export default SignUpPage

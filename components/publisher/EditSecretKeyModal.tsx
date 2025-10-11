@@ -1,6 +1,6 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, TextInput } from 'flowbite-react'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export function EditSecretKeyModal({ openModal, onCloseModal }) {
     const { t } = useNextTranslation()
@@ -11,7 +11,7 @@ export function EditSecretKeyModal({ openModal, onCloseModal }) {
             onClose={onCloseModal}
             popup
             dismissible
-            //@ts-ignore
+            //@ts-expect-error
             theme={customThemeTModal}
         >
             <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8">
