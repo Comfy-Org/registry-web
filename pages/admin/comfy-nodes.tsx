@@ -442,7 +442,7 @@ function ComfyNodesManage() {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-4 w-full">
             <Breadcrumb className="py-4">
                 <Breadcrumb.Item href="/" icon={HiHome} className="dark">
                     {t('Home')}
@@ -500,18 +500,30 @@ function ComfyNodesManage() {
                         )}
                     </div>
 
-                    <div className="overflow-x-auto">
-                        <Table>
-                            <Table.Head>
-                                <Table.HeadCell>{t('Name')}</Table.HeadCell>
-                                <Table.HeadCell>{t('Category')}</Table.HeadCell>
-                                <Table.HeadCell>{t('Function')}</Table.HeadCell>
-                                <Table.HeadCell>
+                    <div className="overflow-x-auto w-full">
+                        <Table className="dark">
+                            <Table.Head className="dark:bg-gray-700">
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
+                                    {t('Name')}
+                                </Table.HeadCell>
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
+                                    {t('Category')}
+                                </Table.HeadCell>
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
+                                    {t('Function')}
+                                </Table.HeadCell>
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
                                     {t('Description')}
                                 </Table.HeadCell>
-                                <Table.HeadCell>{t('Policy')}</Table.HeadCell>
-                                <Table.HeadCell>{t('Flags')}</Table.HeadCell>
-                                <Table.HeadCell>{t('Actions')}</Table.HeadCell>
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
+                                    {t('Policy')}
+                                </Table.HeadCell>
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
+                                    {t('Flags')}
+                                </Table.HeadCell>
+                                <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
+                                    {t('Actions')}
+                                </Table.HeadCell>
                             </Table.Head>
                             <Table.Body className="divide-y">
                                 {data.comfy_nodes.map((comfyNode) => (
