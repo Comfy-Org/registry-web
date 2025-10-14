@@ -1,11 +1,11 @@
-import { Button, Modal, Card, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
-import { customThemeTModal, customThemeTextInput } from 'utils/comfyTheme'
-import { useNextTranslation } from 'src/hooks/i18n'
-import { useRouter } from 'next/router'
-import { toast } from 'react-toastify'
-import { useCreatePublisher, useValidatePublisher } from '@/src/api/generated'
 import { isAxiosError } from 'axios'
+import { Button, Card, Modal, TextInput } from 'flowbite-react'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import { useNextTranslation } from 'src/hooks/i18n'
+import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
+import { useCreatePublisher, useValidatePublisher } from '@/src/api/generated'
 
 type CreatePublisherModalProps = {
     open: boolean

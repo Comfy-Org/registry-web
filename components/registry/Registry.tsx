@@ -1,15 +1,14 @@
-import Autocomplete from '@/components/Search/Autocomplete'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import algoliasearch from 'algoliasearch/lite'
 import singletonRouter from 'next/router'
 import React from 'react'
 import { Configure, Hits, InstantSearch } from 'react-instantsearch'
 import { createInstantSearchRouterNext } from 'react-instantsearch-router-nextjs'
+import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
+import Autocomplete from '@/components/Search/Autocomplete'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import CustomSearchPagination from '../common/CustomSearchPagination'
 import GenericHeader from '../common/GenericHeader'
 import Hit from '../Search/SearchHit'
-
-import { INSTANT_SEARCH_INDEX_NAME } from 'src/constants'
 
 // Initialize Algolia search client
 const searchClient = algoliasearch(

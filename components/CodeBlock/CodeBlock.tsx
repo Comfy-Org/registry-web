@@ -1,6 +1,6 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useState } from 'react'
 import { IoIosInformationCircle } from 'react-icons/io'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 const CopyableCodeBlock = ({ code }) => {
     const { t } = useNextTranslation()

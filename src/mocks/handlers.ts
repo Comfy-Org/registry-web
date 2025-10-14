@@ -1,10 +1,10 @@
-import { http, HttpResponse } from 'msw'
+import { HttpResponse, http } from 'msw'
 import {
     ListNodesForPublisherV2200,
-    NodeStatus,
-    PublisherStatus,
     type Node,
+    NodeStatus,
     type Publisher,
+    PublisherStatus,
     type User,
 } from '../api/generated'
 import { CAPI } from './apibase'
