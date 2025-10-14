@@ -1,8 +1,8 @@
-import withAuth from '@/components/common/HOC/withAuth'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
+import withAuth from '@/components/common/HOC/withAuth'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function PublisherNodeList() {

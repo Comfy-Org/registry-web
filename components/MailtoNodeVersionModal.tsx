@@ -1,3 +1,6 @@
+import { Button, Modal, Spinner } from 'flowbite-react'
+import Link from 'next/link'
+import { FaGithub } from 'react-icons/fa'
 import {
     NodeVersion,
     Publisher,
@@ -5,9 +8,6 @@ import {
     useGetPublisher,
 } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { Button, Modal, Spinner } from 'flowbite-react'
-import Link from 'next/link'
-import { FaGithub } from 'react-icons/fa'
 
 export default function MailtoNodeVersionModal({
     nodeVersion: nv,

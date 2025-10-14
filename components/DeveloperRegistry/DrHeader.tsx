@@ -1,5 +1,5 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 const DrHeader = () => {
     const { t } = useNextTranslation()

@@ -1,9 +1,9 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useCreatePersonalAccessToken } from '@/src/api/generated'
 import { customThemeTextInput, customThemeTModal } from 'utils/comfyTheme'
+import { useCreatePersonalAccessToken } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { CopyAccessTokenModal } from './CopyAccessKeyModal'
 
 type CreateSecretKeyModalProps = {

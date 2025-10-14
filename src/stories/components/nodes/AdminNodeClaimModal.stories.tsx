@@ -1,7 +1,8 @@
-import { AdminNodeClaimModal } from '@/components/nodes/AdminNodeClaimModal'
-import { Node, Publisher } from '@/src/api/generated'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { AdminNodeClaimModal } from '@/components/nodes/AdminNodeClaimModal'
+import { Node, Publisher } from '@/src/api/generated'
+
 // Mock function for actions
 
 const meta: Meta<typeof AdminNodeClaimModal> = {

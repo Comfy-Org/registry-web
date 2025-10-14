@@ -1,6 +1,6 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import NodeStatusBadge from '@/components/nodes/NodeStatusBadge'
 import { NodeStatus } from '@/src/api/generated'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 // Create a wrapper component to provide necessary context
 const meta: Meta<typeof NodeStatusBadge> = {
