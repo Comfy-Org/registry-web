@@ -1,12 +1,12 @@
-import withAdmin from '@/components/common/HOC/authAdmin'
+import { Badge, Breadcrumb, Card } from 'flowbite-react'
+import React, { useMemo, useState } from 'react'
+import { HiHome, HiOutlineCollection } from 'react-icons/hi'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import { usePage } from '@/components/hooks/usePage'
 import { useListAllNodes } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { Breadcrumb, Card, Badge } from 'flowbite-react'
-import { HiHome, HiOutlineCollection } from 'react-icons/hi'
-import React, { useMemo, useState } from 'react'
 
 export default withAdmin(CategoriesPage)
 function CategoriesPage() {
