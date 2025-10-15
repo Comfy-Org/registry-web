@@ -1,5 +1,5 @@
-import Header from '@/components/Header/Header'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import Header from '@/components/Header/Header'
 
 const meta: Meta<typeof Header> = {
     title: 'Components/Header/Header',

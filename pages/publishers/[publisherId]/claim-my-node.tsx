@@ -5,6 +5,34 @@
  *
  * @author: snomiao <snomiao@gmail.com>
  */
+
+import { useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
+import { Alert, Button, Spinner } from 'flowbite-react'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { Octokit } from 'octokit'
+import { useCallback, useEffect, useState } from 'react'
+import { FaGithub } from 'react-icons/fa'
+import { HiCheckCircle, HiChevronLeft, HiLocationMarker } from 'react-icons/hi'
+import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
+import {
+    getGetNodeQueryKey,
+    getGetNodeQueryOptions,
+    getListNodesForPublisherV2QueryKey,
+    getListNodesForPublisherV2QueryOptions,
+    getSearchNodesQueryKey,
+    useClaimMyNode,
+    useGetNode,
+    useGetPublisher,
+    useGetUser,
+} from 'src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import withAuth from '@/components/common/HOC/withAuth'
 import {
     GithubUserSpan,
@@ -12,33 +40,6 @@ import {
     PublisherSpan,
 } from '@/components/common/Spans'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { useQueryClient } from '@tanstack/react-query'
-import { Alert, Button, Spinner } from 'flowbite-react'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { Octokit } from 'octokit'
-import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-import { FaGithub } from 'react-icons/fa'
-import { HiChevronLeft, HiCheckCircle, HiLocationMarker } from 'react-icons/hi'
-import analytic from 'src/analytic/analytic'
-import {
-    useClaimMyNode,
-    useGetNode,
-    useGetPublisher,
-    useGetUser,
-    getGetNodeQueryKey,
-    getListNodesForPublisherV2QueryKey,
-    getSearchNodesQueryKey,
-    getGetNodeQueryOptions,
-    getListNodesForPublisherV2QueryOptions,
-} from 'src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
-import { AxiosError } from 'axios'
-import {
-    INVALIDATE_CACHE_OPTION,
-    shouldInvalidate,
-} from '@/components/cache-control'
 
 // Define the possible stages of the claim process
 type ClaimStage =
@@ -398,8 +399,10 @@ function ClaimMyNodePage() {
         user,
         nodeId,
         publisherId,
-        router,
+        router.query,
+        githubUsername,
         currentStage,
+        router,
         t,
         verifyRepoPermissions,
     ])
