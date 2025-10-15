@@ -1,16 +1,15 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import {
     Publisher,
     useListPublishersForUser,
     useUpdatePublisher,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import GenericHeader from '../common/GenericHeader'
-import PublisherNodes from './PublisherNodes'
-
-import { toast } from 'react-toastify'
 import EditPublisherModal from './EditPublisherModal'
+import PublisherNodes from './PublisherNodes'
 
 const Nodes: React.FC = () => {
     const { t } = useNextTranslation()

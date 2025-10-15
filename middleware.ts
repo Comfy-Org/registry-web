@@ -1,9 +1,9 @@
+import { NextRequest, NextResponse } from 'next/server'
 import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 import {
     detectLanguageFromHeader,
     isRedirectExcludedUrl,
 } from '@/src/hooks/i18n/serverUtils'
-import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * Middleware to handle server-side language detection and redirection

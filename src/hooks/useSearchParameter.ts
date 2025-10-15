@@ -5,7 +5,8 @@ import { useCallback } from 'react'
 export function useSearchParameter<T>(
     key: string,
     toValue: (...parameter: string[]) => T,
-    toParameter: (value: T) => string | string[]
+    toParameter: (value: T) => string | string[],
+    { history = 'push' }: { history?: 'push' | 'replace' } = {}
 ): [T, (value: T | ((prevValue: T) => T)) => void] {
     const router = useRouter()
 
@@ -28,7 +29,7 @@ export function useSearchParameter<T>(
                 ...omit([key], router.query),
                 [key]: toParameter(resolvedValue),
             }
-            router.push(
+            ;(history === 'push' ? router.push : router.replace)(
                 {
                     pathname: router.pathname,
                     query: query,

@@ -1,6 +1,6 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import NodesCard from '@/components/nodes/NodesCard'
 import { Node } from '@/src/api/generated'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { handlers } from '@/src/mocks/handlers'
 
 const meta: Meta<typeof NodesCard> = {

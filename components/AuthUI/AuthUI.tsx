@@ -1,4 +1,3 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { getAuth } from 'firebase/auth'
 import { Button, Card } from 'flowbite-react'
 import Image from 'next/image'
@@ -12,10 +11,11 @@ import {
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import logoBluePng from '@/src/assets/images/logo_blue.png'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import app from '../../src/firebase'
 import { useFromUrl } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
-import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 
 const AuthUI: React.FC<{}> = ({}) => {
     const { t } = useNextTranslation()

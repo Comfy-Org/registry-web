@@ -1,12 +1,12 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { Button, Modal } from 'flowbite-react'
 import React from 'react'
 import { toast } from 'react-toastify'
-import { useDeleteNodeVersion } from '@/src/api/generated'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useDeleteNodeVersion } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '../cache-control'
-import { useQueryClient } from '@tanstack/react-query'
 
 type NodeVersionDeleteModalProps = {
     openDeleteModal: boolean
@@ -41,7 +41,9 @@ export const NodeVersionDeleteModal: React.FC<NodeVersionDeleteModalProps> = ({
                 onError: (error) => {
                     if (error instanceof AxiosError) {
                         toast.error(
-                            `${t('Failed to delete version')}. ${error.response?.data?.message}`
+                            t('Failed to delete version: {{message}}', {
+                                message: error.response?.data?.message,
+                            })
                         )
                     } else {
                         toast.error(t('Failed to delete version'))

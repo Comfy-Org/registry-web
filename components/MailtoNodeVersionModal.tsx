@@ -1,3 +1,6 @@
+import { Button, Modal, Spinner } from 'flowbite-react'
+import Link from 'next/link'
+import { FaGithub } from 'react-icons/fa'
 import {
     NodeVersion,
     Publisher,
@@ -5,9 +8,6 @@ import {
     useGetPublisher,
 } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { Button, Modal, Spinner } from 'flowbite-react'
-import Link from 'next/link'
-import { FaGithub } from 'react-icons/fa'
 
 export default function MailtoNodeVersionModal({
     nodeVersion: nv,
@@ -33,7 +33,7 @@ export default function MailtoNodeVersionModal({
 
     const newIssueLink = !node?.repository
         ? 'javascript:'
-        : `${node.repository}/issues/new?title=${encodeURIComponent(`Issue with Node Version ${nv?.node_id}@${nv?.version}`)}&body=${encodeURIComponent(`Node Version: ${nv?.node_id}@${nv?.version}\n\nPlease describe the issue or request you have regarding this node version.`)}`
+        : `${node.repository}/issues/new?title=${encodeURIComponent(t('Issue with Node Version {{nodeId}}@{{version}}', { nodeId: nv?.node_id, version: nv?.version }))}&body=${encodeURIComponent(t('Node Version: {{nodeId}}@{{version}}\n\nPlease describe the issue or request you have regarding this node version.', { nodeId: nv?.node_id, version: nv?.version }))}`
 
     if (!nv) return null
 

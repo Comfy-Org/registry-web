@@ -1,13 +1,17 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
+import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
+import {
+    REQUEST_OPTIONS_NO_CACHE,
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+} from 'src/constants'
 import {
     NodeVersion,
     NodeVersionStatus,
@@ -17,11 +21,8 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import {
-    UNCLAIMED_ADMIN_PUBLISHER_ID,
-    REQUEST_OPTIONS_NO_CACHE,
-} from 'src/constants'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
@@ -29,6 +30,7 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
+
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
     const date = new Date(dateString)
@@ -87,7 +89,7 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const { t } = useNextTranslation()
+    const { t, i18n } = useNextTranslation()
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
@@ -283,22 +285,52 @@ const NodeDetails = () => {
                                     </h1>
 
                                     <p
-                                        className="text-[18px] pt-2 text-gray-300"
+                                        className="text-[18px] pt-2 text-gray-300 space-x-2"
                                         hidden={isUnclaimed}
                                     >
-                                        {node.publisher?.id?.replace(
-                                            /^(?!$)/,
-                                            '@'
-                                        )}
-                                        {node.latest_version && (
-                                            <span>
-                                                {!!node.publisher?.id && ` | `}
-                                                {`v${node.latest_version?.version}`}
-                                                <span className="pl-3 text-gray-400">
-                                                    {t('Most recent version')}
-                                                </span>
-                                            </span>
-                                        )}
+                                        {[
+                                            <div key="publisher" dir="ltr">
+                                                {node.publisher?.id?.replace(
+                                                    /^(?!$)/,
+                                                    '@'
+                                                )}
+                                            </div>,
+
+                                            node.latest_version?.version?.replace(
+                                                /^(?!$)/,
+                                                'v'
+                                            ),
+
+                                            node.latest_version?.createdAt &&
+                                                intlFormatDistance(
+                                                    new Date(
+                                                        node.latest_version.createdAt
+                                                    ),
+                                                    new Date(),
+                                                    {
+                                                        numeric: 'auto',
+                                                        locale: i18n.language,
+                                                    }
+                                                ),
+                                        ]
+                                            .flatMap((e) => (e ? [e] : []))
+                                            // same as .join(' | '), but with span element
+                                            .reduce(
+                                                (acc, x, i, a) => [
+                                                    ...acc,
+                                                    x,
+                                                    i < a.length - 1 && (
+                                                        <span
+                                                            key={`separator-${i}`}
+                                                        >
+                                                            {' '}
+                                                            |{' '}
+                                                        </span>
+                                                    ),
+                                                ],
+                                                [] as ReactNode[]
+                                            )
+                                            .filter(Boolean)}
                                     </p>
                                 </div>
                             </div>

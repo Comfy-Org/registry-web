@@ -1,6 +1,6 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import PublisherStatusBadge from '@/components/publisher/PublisherStatusBadge'
 import { PublisherStatus } from '@/src/api/generated'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 const meta: Meta<typeof PublisherStatusBadge> = {
     title: 'Components/Publisher/PublisherStatusBadge',
