@@ -11,13 +11,16 @@ const ThemeIcon = ({
     theme: Theme
     actualTheme: 'light' | 'dark'
 }) => {
-    if (theme === 'auto') {
-        return <HiDesktopComputer className="w-4 h-4" />
+    const icons = {
+        auto: <HiDesktopComputer className="w-4 h-4" />,
+        light: <HiSun className="w-4 h-4" />,
+        dark: <HiMoon className="w-4 h-4" />,
+    } satisfies Record<Theme, React.ReactNode>
+
+    if (theme in icons) {
+        return icons[theme]
     }
-    if (theme === 'light') {
-        return <HiSun className="w-4 h-4" />
-    }
-    return <HiMoon className="w-4 h-4" />
+    throw new Error(`Unknown theme: ${theme}`)
 }
 
 export default function ThemeSwitcher() {
@@ -48,6 +51,15 @@ export default function ThemeSwitcher() {
 
     const currentOption = themeOptions.find((option) => option.value === theme)
 
+    // Handle double-click to toggle between light and dark themes
+    const handleDoubleClick = () => {
+        if (actualTheme === 'light') {
+            setTheme('dark')
+        } else {
+            setTheme('light')
+        }
+    }
+
     return (
         <Dropdown
             label=""
@@ -56,6 +68,7 @@ export default function ThemeSwitcher() {
                     type="button"
                     className="inline-flex items-center justify-center p-2 w-8 h-8 text-sm text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                     aria-label="Toggle theme"
+                    onDoubleClick={handleDoubleClick}
                 >
                     <ThemeIcon theme={theme} actualTheme={actualTheme} />
                 </button>

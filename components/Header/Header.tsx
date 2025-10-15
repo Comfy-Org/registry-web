@@ -61,16 +61,22 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                     <ProfileDropdown />
                 ) : (
                     <>
-                        <Button onClick={handleLogIn} color="dark" size="xs">
-                            <span
-                                className={`text-xs md:text-base ${themeConfig.header.text}`}
-                            >
+                        <Button
+                            onClick={handleLogIn}
+                            size="xs"
+                            className={`${themeConfig.button.login} border-0`}
+                        >
+                            <span className="text-xs md:text-base">
                                 {t('Login')}
                             </span>
                         </Button>
 
-                        <Button onClick={handleSignUp} color="blue" size="xs">
-                            <span className="text-xs md:text-base">
+                        <Button
+                            onClick={handleSignUp}
+                            size="xs"
+                            className={`${themeConfig.button.signup} border-0`}
+                        >
+                            <span className="text-xs md:text-base text-white">
                                 {t('Signup')}
                             </span>
                         </Button>
@@ -82,12 +88,10 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
                             ? 'https://docs.comfy.org/zh-CN'
                             : 'https://docs.comfy.org/registry/overview'
                     }
-                    color="blue"
                     size="xs"
+                    className={`${themeConfig.button.documentation} border-0`}
                 >
-                    <span
-                        className={`text-xs md:text-base ${themeConfig.header.text}`}
-                    >
+                    <span className="text-xs md:text-base text-white">
                         {t('Documentation')}
                     </span>
                 </Button>

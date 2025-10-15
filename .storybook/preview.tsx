@@ -38,6 +38,17 @@ const preview: Preview = {
     },
   ],
   globalTypes: {
+    theme: {
+      description: 'Theme for the components',
+      toolbar: {
+        icon: 'paintbrush',
+        items: [
+          { value: 'dark', right: '🌙', title: 'Dark' }, // default
+          { value: 'light', right: '☀️', title: 'Light' },
+          { value: 'system', right: '🖥️', title: 'System' },
+        ],
+      },
+    },
     locale: {
       description: 'Internationalization locale',
       toolbar: {

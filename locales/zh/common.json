@@ -179,7 +179,7 @@
   "Invalid repository URL format": "无效的仓库URL格式",
   "Issue with Node Version {{nodeId}}@{{version}}": "节点版本 {{nodeId}}@{{version}} 的问题",
   "License": "许可证",
-  "Light": "轻量级",
+  "Light": "浅色",
   "Live": "直播",
   "Loading Publisher Selection": "加载发布者选择",
   "Logging out...": "正在登出...",

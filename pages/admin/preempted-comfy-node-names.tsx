@@ -1,13 +1,17 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { formatDownloadCount } from '@/components/nodes/NodeDetails'
+import {
+    UnifiedBreadcrumb,
+    createHomeBreadcrumb,
+    createAdminDashboardBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import PreemptedComfyNodeNamesEditModal from '@/components/nodes/PreemptedComfyNodeNamesEditModal'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { Breadcrumb, Button, Spinner, TextInput } from 'flowbite-react'
+import { Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { HiHome } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
 import { Node, useSearchNodes } from '@/src/api/generated'
 import { useRouterQuery } from 'src/hooks/useRouterQuery'
@@ -23,6 +27,13 @@ function PreemptedComfyNodeNamesAdminPage() {
     // Extract and parse query parameters directly
     const page = Number(query.page || 1)
     const searchQuery = String(query.search || '')
+
+    // Create breadcrumb items
+    const breadcrumbItems = [
+        createHomeBreadcrumb(t, router),
+        createAdminDashboardBreadcrumb(t, router),
+        { href: '', label: t('Preempted ComfyUI Node Names') },
+    ]
 
     // Fetch all nodes with pagination - searchQuery being undefined is handled properly
     const { data, isLoading, isError } = useSearchNodes({
@@ -78,36 +89,11 @@ function PreemptedComfyNodeNamesAdminPage() {
     return (
         <div className="p-4">
             <div className="py-4">
-                <Breadcrumb>
-                    <Breadcrumb.Item
-                        href="/"
-                        icon={HiHome}
-                        onClick={(e) => {
-                            e.preventDefault()
-                            router.push('/')
-                        }}
-                        className="dark"
-                    >
-                        {t('Home')}
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item
-                        href="/admin"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            router.push('/admin')
-                        }}
-                        className="dark"
-                    >
-                        {t('Admin Dashboard')}
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item className="dark">
-                        {t('Preempted Comfy Node Names')}
-                    </Breadcrumb.Item>
-                </Breadcrumb>
+                <UnifiedBreadcrumb items={breadcrumbItems} />
             </div>
 
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
-                {t('Preempted Comfy Node Names Management')}
+                {t('Preempted ComfyUI Node Names')}
             </h1>
             {/* Search form */}
             <form

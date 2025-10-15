@@ -1,11 +1,13 @@
 import withAdmin from '@/components/common/HOC/authAdmin'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { Breadcrumb } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import UnifiedBreadcrumb, {
+    createHomeBreadcrumb,
+    createAdminDashboardBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import {
-    HiHome,
     HiOutlineAdjustments,
     HiOutlineClipboardCheck,
     HiOutlineCollection,
@@ -18,16 +20,14 @@ function AdminDashboard() {
     const router = useRouter()
     const { t } = useNextTranslation()
 
+    const breadcrumbItems = [
+        createHomeBreadcrumb(t),
+        createAdminDashboardBreadcrumb(t, true), // 当前页面
+    ]
+
     return (
         <div className="p-4">
-            <Breadcrumb className="py-4">
-                <Breadcrumb.Item href="/" icon={HiHome} className="dark">
-                    {t('Home')}
-                </Breadcrumb.Item>
-                <Breadcrumb.Item href="#" className="dark">
-                    {t('Admin Dashboard')}
-                </Breadcrumb.Item>
-            </Breadcrumb>
+            <UnifiedBreadcrumb items={breadcrumbItems} />
 
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 {t('Admin Dashboard')}

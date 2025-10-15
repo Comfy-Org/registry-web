@@ -37,12 +37,12 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
     )?.filter((e) => (e.matchedWords as string[])?.length)
     return (
         <Link
-            className="flex flex-col bg-gray-800 rounded-lg h-full dark:border-gray-700 p-4 shadow-md"
+            className="flex flex-col bg-gray-100 dark:bg-gray-800 rounded-lg h-full border border-gray-300 dark:border-gray-700 p-4 shadow-md"
             href={`/nodes/${hit.id}`}
             rel="noopener noreferrer"
         >
             <div className="flex flex-col flex-grow">
-                <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
+                <h6 className="mb-2 text-base font-bold tracking-tight text-black dark:text-white break-words">
                     <Snippet hit={hit} attribute="name" />
                 </h6>
 
@@ -50,7 +50,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 <Markdown
                     components={{
                         p: ({ children }) => (
-                            <p className="mb-1 text-xs font-light text-white mt-2 overflow-hidden text-ellipsis line-clamp-2">
+                            <p className="mb-1 text-xs font-light text-black dark:text-white mt-2 overflow-hidden text-ellipsis line-clamp-2">
                                 {children}
                             </p>
                         ),
@@ -64,7 +64,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
 
                 {/* nodes */}
                 {hit.comfy_nodes?.length && (
-                    <div className="mb-1 text-xs font-light text-white mt-2 flex-row flex gap-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div className="mb-1 text-xs font-light text-black dark:text-white mt-2 flex-row flex gap-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
                         <Tooltip
                             content={
                                 <pre className="max-w-[20em] max-h-[8em] overflow-auto whitespace-pre-wrap break-all">
@@ -98,7 +98,7 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
             </div>
             {/* meta info */}
             <p
-                className="text-xs font-light text-nowrap mt-2 text-gray-400"
+                className="text-xs font-light text-nowrap mt-2 text-gray-600 dark:text-gray-400"
                 dir="ltr"
             >
                 <PublisherId publisherId={hit.publisher_id} />

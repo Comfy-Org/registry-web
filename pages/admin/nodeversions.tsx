@@ -1,5 +1,10 @@
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+    UnifiedBreadcrumb,
+    createHomeBreadcrumb,
+    createAdminDashboardBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
 import { NodeStatusBadge } from '@/components/NodeStatusBadge'
 import { NodeStatusReason, zStatusReason } from '@/components/NodeStatusReason'
@@ -14,7 +19,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import MailtoNodeVersionModal from '@/components/MailtoNodeVersionModal'
 import {
-    Breadcrumb,
     Button,
     Checkbox,
     Label,
@@ -29,7 +33,7 @@ import pMap from 'p-map'
 import { omit } from 'rambda'
 import React, { useRef, useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
-import { HiBan, HiCheck, HiHome, HiReply } from 'react-icons/hi'
+import { HiBan, HiCheck, HiReply } from 'react-icons/hi'
 import { MdFolderZip, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import {
@@ -54,6 +58,13 @@ function NodeVersionList({}) {
     const [batchReason, setBatchReason] = useState<string>('')
     const { data: user } = useGetUser()
     const lastCheckedRef = useRef<string | null>(null)
+
+    // Create breadcrumb items
+    const breadcrumbItems = [
+        createHomeBreadcrumb(t, router),
+        createAdminDashboardBreadcrumb(t, router),
+        { href: '', label: t('Node Versions') },
+    ]
 
     // Contact button, send issues or email to node version publisher
     const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null)
@@ -767,32 +778,9 @@ function NodeVersionList({}) {
     }
     return (
         <div>
-            <Breadcrumb className="py-4 px-4">
-                <Breadcrumb.Item
-                    href="/"
-                    icon={HiHome}
-                    onClick={(e) => {
-                        e.preventDefault()
-                        router.push('/')
-                    }}
-                    className="dark"
-                >
-                    {t('Home')}
-                </Breadcrumb.Item>
-                <Breadcrumb.Item
-                    href="/admin"
-                    onClick={(e) => {
-                        e.preventDefault()
-                        router.push('/admin')
-                    }}
-                    className="dark"
-                >
-                    {t('Admin Dashboard')}
-                </Breadcrumb.Item>
-                <Breadcrumb.Item className="dark">
-                    {t('Review Node Versions')}
-                </Breadcrumb.Item>
-            </Breadcrumb>
+            <div className="py-4 px-4">
+                <UnifiedBreadcrumb items={breadcrumbItems} />
+            </div>
             <BatchOperationBar />
             {/* Batch operation modal */}
             <Modal

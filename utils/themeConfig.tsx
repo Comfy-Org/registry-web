@@ -5,62 +5,102 @@ export const themeConfig = {
     modal: {
         overlay: 'bg-gray-900/50 dark:bg-gray-900/80',
         content: 'bg-white dark:bg-gray-800',
-        inner: 'bg-gray-50 dark:bg-gray-200',
+        inner: 'bg-white dark:bg-gray-200',
         body: 'bg-white dark:bg-gray-100',
         header: {
             border: 'border-gray-200 dark:border-gray-600',
-            title: 'text-gray-900 dark:text-white',
+            title: 'text-black dark:text-white',
         },
         close: {
-            base: 'text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white',
+            base: 'text-black hover:bg-gray-100 hover:text-black dark:hover:bg-gray-600 dark:hover:text-white',
         },
         footer: {
             border: 'border-gray-200 dark:border-gray-600',
         },
     },
     textInput: {
-        base: 'border-gray-300 bg-white text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500',
-        addon: 'border-gray-300 bg-gray-200 text-gray-900 dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200',
-        icon: 'text-gray-500 dark:text-gray-400',
+        base: 'border-gray-300 bg-white text-black dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200 focus:border-blue-500 focus:ring-blue-500',
+        addon: 'border-gray-300 bg-white text-black dark:border-gray-500 dark:bg-gray-600 dark:text-gray-200',
+        icon: 'text-black dark:text-gray-400',
     },
     textArea: {
-        base: 'border-gray-300 bg-white text-gray-900 placeholder-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500',
+        base: 'border-gray-300 bg-white text-black placeholder-black dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500',
     },
     pagination: {
-        text: 'text-gray-700 dark:text-gray-400',
-        span: 'text-gray-900 dark:text-white',
-        button: 'border-gray-300 bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+        text: 'text-black dark:text-gray-400',
+        span: 'text-black dark:text-white',
+        button: 'border-gray-300 bg-white text-black hover:bg-gray-100 hover:text-black dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
         active: 'bg-cyan-50 text-cyan-600 hover:bg-cyan-100 hover:text-cyan-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white',
     },
     header: {
         background: 'bg-white dark:bg-gray-900',
-        text: 'text-gray-900 dark:text-white',
+        text: 'text-black dark:text-white',
         border: 'border-gray-200 dark:border-gray-700',
     },
     navbar: {
         background: 'bg-white dark:bg-gray-900',
-        item: 'text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white',
+        item: 'text-black hover:text-gray-700 dark:text-gray-300 dark:hover:text-white',
     },
     dropdown: {
         background: 'bg-white dark:bg-gray-800',
-        item: 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+        item: 'text-black hover:bg-gray-200 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white',
         border: 'border-gray-200 dark:border-gray-600',
     },
     body: {
-        background: 'bg-gray-50 dark:bg-gray-900',
-        text: 'text-gray-900 dark:text-white',
+        background: 'bg-white dark:bg-gray-900',
+        text: 'text-black dark:text-white',
     },
     card: {
         background: 'bg-white dark:bg-gray-800',
         border: 'border-gray-200 dark:border-gray-700',
-        text: 'text-gray-900 dark:text-white',
+        text: 'text-black dark:text-white',
     },
     button: {
         primary:
             'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600',
         secondary:
-            'bg-gray-200 hover:bg-gray-300 text-gray-900 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white',
-        ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700',
+            'bg-white hover:bg-gray-700 text-black hover:text-white dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white',
+        ghost: 'text-black hover:text-white hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700',
+        login: 'bg-gray-100 hover:bg-gray-200 text-black dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white',
+        documentation:
+            'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600',
+        signup: 'bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600',
+    },
+    // Additional component backgrounds
+    content: {
+        primary: 'bg-white dark:bg-gray-800',
+        secondary: 'bg-white dark:bg-gray-700',
+        tertiary: 'bg-white dark:bg-gray-600',
+    },
+    table: {
+        header: 'bg-white dark:bg-gray-800',
+        cell: 'bg-white dark:bg-gray-800',
+        stripe: 'bg-white dark:bg-gray-900',
+    },
+    form: {
+        background: 'bg-white dark:bg-gray-800',
+        border: 'border-gray-200 dark:border-gray-700',
+    },
+    navigation: {
+        background: 'bg-white dark:bg-gray-800',
+        text: 'text-black dark:text-white',
+    },
+    admin: {
+        panel: 'bg-white dark:bg-gray-800',
+        sticky: 'bg-white dark:bg-gray-800',
+    },
+    nodeDetails: {
+        background: 'bg-gray-100 dark:bg-gray-900',
+        text: 'text-black dark:text-white',
+        card: 'bg-gray-200 dark:bg-gray-700',
+        cardBorder: 'border-gray-300 dark:border-gray-500',
+        cardText: 'text-black dark:text-gray-200',
+        metaText: 'text-gray-600 dark:text-gray-400',
+    },
+    breadcrumb: {
+        item: 'text-black hover:text-gray-700 dark:text-gray-300 dark:hover:text-white',
+        link: '!text-black hover:!text-gray-700 dark:!text-gray-300 dark:hover:!text-white no-underline',
+        separator: 'text-gray-500 dark:text-gray-400',
     },
 }
 
@@ -157,13 +197,13 @@ export const customThemeTextInput = {
             },
             colors: {
                 gray: themeConfig.textInput.base,
-                info: 'border-blue-500 bg-blue-50 text-blue-900 focus:border-blue-500 focus:ring-blue-500 dark:border-blue-400 dark:bg-blue-100',
+                info: 'border-blue-500 bg-white text-black focus:border-blue-500 focus:ring-blue-500 dark:border-blue-400 dark:bg-blue-100',
                 failure:
-                    'border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100',
+                    'border-red-500 bg-white text-black focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100',
                 warning:
-                    'border-yellow-500 bg-yellow-50 text-yellow-900 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100',
+                    'border-yellow-500 bg-white text-black focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100',
                 success:
-                    'border-green-500 bg-green-50 text-green-900 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100',
+                    'border-green-500 bg-white text-black focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100',
             },
         },
     },
@@ -173,13 +213,13 @@ export const CustomThemeTextArea = {
     base: 'block w-full rounded-lg border text-sm disabled:cursor-not-allowed disabled:opacity-50',
     colors: {
         gray: themeConfig.textArea.base,
-        info: 'border-blue-500 bg-blue-50 text-blue-900 placeholder-blue-700 focus:border-blue-500 focus:ring-blue-500 dark:border-blue-400 dark:bg-blue-100 dark:placeholder-blue-600',
+        info: 'border-blue-500 bg-white text-black placeholder-black focus:border-blue-500 focus:ring-blue-500 dark:border-blue-400 dark:bg-blue-100 dark:placeholder-blue-600',
         failure:
-            'border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:placeholder-red-600',
+            'border-red-500 bg-white text-black placeholder-black focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:placeholder-red-600',
         warning:
-            'border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:placeholder-yellow-600',
+            'border-yellow-500 bg-white text-black placeholder-black focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:placeholder-yellow-600',
         success:
-            'border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:placeholder-green-600',
+            'border-green-500 bg-white text-black placeholder-black focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:placeholder-green-600',
     },
     withShadow: {
         on: 'shadow-sm',
@@ -200,17 +240,33 @@ export const CustomThemePagination: CustomFlowbiteTheme = {
         base: 'xs:mt-0 mt-2 inline-flex items-center -space-x-px',
         showIcon: 'inline-flex',
         previous: {
-            base: `ml-0 rounded-l-lg border px-3 py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-gray-700 ${themeConfig.pagination.button}`,
+            base: `ml-0 rounded-l-lg border px-3 py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-black ${themeConfig.pagination.button}`,
             icon: 'h-5 w-5',
         },
         next: {
-            base: `rounded-r-lg border px-3 py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-gray-700 ${themeConfig.pagination.button}`,
+            base: `rounded-r-lg border px-3 py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-black ${themeConfig.pagination.button}`,
             icon: 'h-5 w-5',
         },
         selector: {
-            base: `w-12 border py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-gray-700 ${themeConfig.pagination.button}`,
+            base: `w-12 border py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-black ${themeConfig.pagination.button}`,
             active: themeConfig.pagination.active,
             disabled: 'cursor-not-allowed opacity-50',
         },
+    },
+}
+
+export const CustomThemeBreadcrumb = {
+    root: {
+        base: '',
+        list: 'flex items-center',
+    },
+    item: {
+        base: '',
+        chevron: `mx-1 h-4 w-4 ${themeConfig.breadcrumb.separator}`,
+        href: {
+            off: `ml-1 text-sm font-medium ${themeConfig.breadcrumb.item} md:ml-2`,
+            on: `ml-1 text-sm font-medium ${themeConfig.breadcrumb.link} md:ml-2`,
+        },
+        icon: 'mr-2 h-4 w-4',
     },
 }

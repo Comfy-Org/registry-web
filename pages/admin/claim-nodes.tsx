@@ -3,9 +3,14 @@ import withAdmin from '@/components/common/HOC/authAdmin'
 import UnclaimedNodeCard from '@/components/nodes/UnclaimedNodeCard'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
-import { Breadcrumb, Button, Spinner } from 'flowbite-react'
+import { Button, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
-import { HiHome, HiPlus } from 'react-icons/hi'
+import { HiPlus } from 'react-icons/hi'
+import UnifiedBreadcrumb, {
+    createHomeBreadcrumb,
+    createAdminDashboardBreadcrumb,
+    createUnclaimedNodesBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import {
     getListNodesForPublisherQueryKey,
     useListNodesForPublisherV2,
@@ -22,6 +27,12 @@ function ClaimNodesPage() {
     const currentPage = router.query.page
         ? parseInt(router.query.page as string, 10)
         : 1
+
+    const breadcrumbItems = [
+        createHomeBreadcrumb(t),
+        createAdminDashboardBreadcrumb(t),
+        createUnclaimedNodesBreadcrumb(t),
+    ]
 
     const handlePageChange = (page: number) => {
         // Update URL with new page parameter
@@ -64,32 +75,7 @@ function ClaimNodesPage() {
     return (
         <div className="p-4">
             <div className="mb-6">
-                <Breadcrumb className="py-4">
-                    <Breadcrumb.Item
-                        href="/"
-                        icon={HiHome}
-                        onClick={(e) => {
-                            e.preventDefault()
-                            router.push('/')
-                        }}
-                        className="dark"
-                    >
-                        {t('Home')}
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item
-                        href="/admin"
-                        onClick={(e) => {
-                            e.preventDefault()
-                            router.push('/admin')
-                        }}
-                        className="dark"
-                    >
-                        {t('Admin Dashboard')}
-                    </Breadcrumb.Item>
-                    <Breadcrumb.Item className="dark">
-                        {t('Unclaimed Nodes')}
-                    </Breadcrumb.Item>
-                </Breadcrumb>
+                <UnifiedBreadcrumb items={breadcrumbItems} />
 
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-gray-200">
