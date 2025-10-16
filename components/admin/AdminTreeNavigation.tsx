@@ -58,6 +58,12 @@ export default function AdminTreeNavigation({
                     icon: HiOutlineCollection,
                     href: '/admin/add-unclaimed-node',
                 },
+                {
+                    id: 'tag-management',
+                    label: t('Tag Management'),
+                    icon: HiOutlineCollection,
+                    href: '/admin/tags',
+                },
             ],
         },
         {

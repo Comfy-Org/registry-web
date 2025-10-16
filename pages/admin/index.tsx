@@ -32,7 +32,6 @@ function AdminDashboard() {
             <h1 className="text-2xl font-bold text-gray-200 mb-6">
                 {t('Admin Dashboard')}
             </h1>
-
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 <div className="lg:col-span-1">
                     <AdminTreeNavigation />
@@ -71,6 +70,13 @@ function AdminDashboard() {
                             >
                                 <HiOutlineCollection className="h-8 w-8 mr-3" />
                                 <span>{t('Manage All Nodes')}</span>
+                            </Link>
+                            <Link
+                                href="/admin/tags"
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg p-4 flex items-center transition-colors"
+                            >
+                                <HiOutlineCollection className="h-8 w-8 mr-3" />
+                                <span>{t('Tag Management')}</span>
                             </Link>
                         </div>
                     </div>
