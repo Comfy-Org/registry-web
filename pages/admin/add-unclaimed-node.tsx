@@ -17,9 +17,9 @@ function AddUnclaimedNodePage() {
 
     // Create breadcrumb items
     const breadcrumbItems = [
-        createHomeBreadcrumb(t, router),
-        createAdminDashboardBreadcrumb(t, router),
-        createUnclaimedNodesBreadcrumb(t, router),
+        createHomeBreadcrumb(t),
+        createAdminDashboardBreadcrumb(t),
+        createUnclaimedNodesBreadcrumb(t),
         { href: '', label: t('Add Unclaimed Node') },
     ]
 

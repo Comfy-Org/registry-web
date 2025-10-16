@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { FC, SVGProps } from 'react'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
-import { CustomThemeBreadcrumb, themeConfig } from '@/utils/themeConfig'
+import { themeConfig } from '@/utils/themeConfig'
 
 interface BreadcrumbItem {
     label: string
     href?: string
-    onClick?: () => void
-    icon?: React.ComponentType<any>
+    onClick?: (e: React.MouseEvent) => void
+    icon?: FC<SVGProps<SVGSVGElement>>
     isActive?: boolean
 }
 
@@ -24,10 +24,7 @@ const UnifiedBreadcrumb: React.FC<UnifiedBreadcrumbProps> = ({
     const router = useRouter()
 
     return (
-        <Breadcrumb
-            className={`py-4 ${className}`}
-            theme={CustomThemeBreadcrumb}
-        >
+        <Breadcrumb className={`py-4 ${className}`}>
             {items.map((item, index) => (
                 <Breadcrumb.Item
                     key={index}
@@ -45,6 +42,7 @@ const UnifiedBreadcrumb: React.FC<UnifiedBreadcrumbProps> = ({
     )
 }
 
+export { UnifiedBreadcrumb }
 export default UnifiedBreadcrumb
 
 export const createHomeBreadcrumb = (t: (key: string) => string) => ({

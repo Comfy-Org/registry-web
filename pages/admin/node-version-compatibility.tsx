@@ -63,12 +63,12 @@ function NodeVersionCompatibilityAdmin() {
     const [nodeId, setNodeId] = useSearchParameter<string | undefined>(
         'nodeId',
         (p) => p || undefined,
-        (v) => v || undefined
+        (v) => v || ''
     )
     const [version, setVersion] = useSearchParameter<string | undefined>(
         'version',
         (p) => p || undefined,
-        (v) => v || undefined
+        (v) => v || ''
     )
     const [statuses, setStatuses] = useSearchParameter<NodeVersionStatus[]>(
         'status',
@@ -198,8 +198,8 @@ function NodeVersionCompatibilityAdmin() {
 
     // Create breadcrumb items
     const breadcrumbItems = [
-        createHomeBreadcrumb(t, router),
-        createAdminDashboardBreadcrumb(t, router),
+        createHomeBreadcrumb(t),
+        createAdminDashboardBreadcrumb(t),
         { href: '', label: t('Node Version Compatibility') },
     ]
     return (

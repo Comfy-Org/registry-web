@@ -35,8 +35,8 @@ function NodeList() {
 
     // Create breadcrumb items
     const breadcrumbItems = [
-        createHomeBreadcrumb(t, router),
-        createAdminDashboardBreadcrumb(t, router),
+        createHomeBreadcrumb(t),
+        createAdminDashboardBreadcrumb(t),
         { href: '', label: t('Nodes') },
     ]
 
