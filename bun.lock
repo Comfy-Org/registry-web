@@ -15,6 +15,7 @@
         "@mdx-js/loader": "^3.1.1",
         "@monaco-editor/react": "^4.7.0",
         "@next/mdx": "12.3.1",
+        "@snomiao/glob-watch": "^0.2.1",
         "@tanstack/query-sync-storage-persister": "^5.86.0",
         "@tanstack/react-query": "^5.86.0",
         "@tanstack/react-query-persist-client": "^5.86.0",
@@ -507,6 +508,8 @@
     "@next/eslint-plugin-next": ["@next/eslint-plugin-next@12.3.1", "", { "dependencies": { "glob": "7.1.7" } }, "sha512-sw+lTf6r6P0j+g/n9y4qdWWI2syPqZx+uc0+B/fRENqfR3KpSid6MIKqc9gNwGhJASazEQ5b3w8h4cAET213jw=="],
 
     "@next/mdx": ["@next/mdx@12.3.1", "", { "peerDependencies": { "@mdx-js/loader": ">=0.15.0", "@mdx-js/react": "*" } }, "sha512-b7G3CsAwyD/8Eo6uDjCCqNwEi68LTyo/JYPC0N2Yu3yl/iveMDCi03ME+9JsnFPr3DcjmGSKc1ioiYM4dJUkTg=="],
+
+    "@snomiao/glob-watch": ["@snomiao/glob-watch@0.2.1", "", { "dependencies": { "fast-glob": "^3.3.3", "micromatch": "^4.0.8" } }, "sha512-eV3GtMRVnbFUwTI0SZ/oU4c8+iRUmcp3yf2rJRtTgSZI4a421TLXiXWqjN+a3X3OperlMyiJR6pooxfYqiyj/Q=="],
 
     "@next/swc-darwin-arm64": ["@next/swc-darwin-arm64@15.0.3", "", { "os": "darwin", "cpu": "arm64" }, "sha512-s3Q/NOorCsLYdCKvQlWU+a+GeAd3C8Rb3L1YnetsgwXzhc3UTWrtQpB/3eCjFOdGUj5QmXfRak12uocd1ZiiQw=="],
 
