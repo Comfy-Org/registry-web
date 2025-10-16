@@ -21,10 +21,10 @@ const GenericHeader: React.FC<Props> = ({
 }) => {
     return (
         <>
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-black dark:text-white sm:text-4xl">
                 {title}
             </h1>
-            <p className="pt-2 pb-4 font-light text-gray-500 text-lg dark:text-gray-400">
+            <p className="pt-2 pb-4 font-light text-gray-700 text-lg dark:text-gray-400">
                 {subTitle}
             </p>
             <Link href={buttonLink}>
