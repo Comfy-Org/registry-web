@@ -1,56 +1,56 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react'
-import {
-    useListAllNodeVersions,
-    useListAllNodes,
-    useAdminUpdateNodeVersion,
-    NodeVersion,
-    NodeVersionStatus,
-    listAllNodes,
-    Node,
-    getNode,
-    useGetNode,
-    useAdminUpdateNode,
-    getGetNodeQueryOptions,
-    useUpdateNode,
-    adminUpdateNode,
-    getListAllNodesQueryOptions,
-    getGetNodeQueryKey,
-    getListAllNodesQueryKey,
-    getListAllNodeVersionsQueryKey,
-    getGetNodeVersionQueryKey,
-    getListNodeVersionsQueryKey,
-} from '@/src/api/generated'
+import { useQueryClient } from '@tanstack/react-query'
+import clsx from 'clsx'
 import {
     Button,
-    Table,
-    TextInput,
+    Checkbox,
+    Dropdown,
+    Flowbite,
     Label,
     Spinner,
-    Dropdown,
-    Checkbox,
-    Flowbite,
+    Table,
+    TextInput,
     Tooltip,
 } from 'flowbite-react'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import {
-    UnifiedBreadcrumb,
-    createHomeBreadcrumb,
-    createAdminDashboardBreadcrumb,
-} from '@/components/common/UnifiedBreadcrumb'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import router from 'next/router'
-import NodeVersionCompatibilityEditModal from '@/components/admin/NodeVersionCompatibilityEditModal'
-import { CustomPagination } from '@/components/common/CustomPagination'
-import { useSearchParameter } from '@/src/hooks/useSearchParameter'
-import { NodeVersionStatusToReadable } from '@/src/mapper/nodeversion'
-import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
-import { usePage } from '@/components/hooks/usePage'
-import { useQueryClient } from '@tanstack/react-query'
+import DIE, { DIES } from 'phpdie'
+import React, { Suspense, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useAsync, useAsyncFn, useMap } from 'react-use'
 import sflow, { pageFlow } from 'sflow'
-import DIE, { DIES } from 'phpdie'
-import clsx from 'clsx'
+import NodeVersionCompatibilityEditModal from '@/components/admin/NodeVersionCompatibilityEditModal'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+    createAdminDashboardBreadcrumb,
+    createHomeBreadcrumb,
+    UnifiedBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
+import { usePage } from '@/components/hooks/usePage'
+import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
+import {
+    adminUpdateNode,
+    getGetNodeQueryKey,
+    getGetNodeQueryOptions,
+    getGetNodeVersionQueryKey,
+    getListAllNodesQueryKey,
+    getListAllNodesQueryOptions,
+    getListAllNodeVersionsQueryKey,
+    getListNodeVersionsQueryKey,
+    getNode,
+    listAllNodes,
+    Node,
+    NodeVersion,
+    NodeVersionStatus,
+    useAdminUpdateNode,
+    useAdminUpdateNodeVersion,
+    useGetNode,
+    useListAllNodes,
+    useListAllNodeVersions,
+    useUpdateNode,
+} from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { useSearchParameter } from '@/src/hooks/useSearchParameter'
+import { NodeVersionStatusToReadable } from '@/src/mapper/nodeversion'
 
 // This page allows admins to update node version compatibility fields
 export default withAdmin(NodeVersionCompatibilityAdmin)

@@ -1,6 +1,6 @@
-import React, { FC, SVGProps } from 'react'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
+import React, { FC, SVGProps } from 'react'
 import { HiHome } from 'react-icons/hi'
 import { themeConfig } from '@/utils/themeConfig'
 

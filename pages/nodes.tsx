@@ -1,11 +1,11 @@
-import withAuth from '@/components/common/HOC/withAuth'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useRouter } from 'next/router'
-import PublisherListNodes from '../components/publisher/PublisherListNodes'
+import withAuth from '@/components/common/HOC/withAuth'
 import UnifiedBreadcrumb, {
     createHomeBreadcrumb,
     createNodesBreadcrumb,
 } from '@/components/common/UnifiedBreadcrumb'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function PublisherNodeList() {
     const router = useRouter()

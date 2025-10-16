@@ -1,9 +1,9 @@
 import React, {
     createContext,
+    useCallback,
     useContext,
     useEffect,
     useState,
-    useCallback,
 } from 'react'
 
 export type Theme = 'light' | 'dark' | 'auto'

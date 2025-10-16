@@ -1,11 +1,11 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useRouter } from 'next/router'
-import NodeDetails from '../../components/nodes/NodeDetails'
 import UnifiedBreadcrumb, {
-    createHomeBreadcrumb,
     createAllNodesBreadcrumb,
+    createHomeBreadcrumb,
     createNodeDetailBreadcrumb,
 } from '@/components/common/UnifiedBreadcrumb'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import NodeDetails from '../../components/nodes/NodeDetails'
 
 const NodeView = () => {
     const router = useRouter()

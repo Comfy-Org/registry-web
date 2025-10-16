@@ -1,20 +1,20 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import {
-    UnifiedBreadcrumb,
-    createHomeBreadcrumb,
-    createAdminDashboardBreadcrumb,
-} from '@/components/common/UnifiedBreadcrumb'
-import { formatDownloadCount } from '@/components/nodes/NodeDetails'
-import SearchRankingEditModal from '@/components/nodes/SearchRankingEditModal'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { MdEdit } from 'react-icons/md'
-import { Node, useSearchNodes } from '@/src/api/generated'
 import { useRouterQuery } from 'src/hooks/useRouterQuery'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+    createAdminDashboardBreadcrumb,
+    createHomeBreadcrumb,
+    UnifiedBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
+import { formatDownloadCount } from '@/components/nodes/NodeDetails'
+import SearchRankingEditModal from '@/components/nodes/SearchRankingEditModal'
+import { Node, useSearchNodes } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 function SearchRankingAdminPage() {
     const { t } = useNextTranslation()

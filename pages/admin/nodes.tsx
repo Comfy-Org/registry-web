@@ -1,14 +1,6 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import {
-    UnifiedBreadcrumb,
-    createHomeBreadcrumb,
-    createAdminDashboardBreadcrumb,
-} from '@/components/common/UnifiedBreadcrumb'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
-import { Button, Modal, Spinner, Table, TextInput, Label } from 'flowbite-react'
+import { Button, Label, Modal, Spinner, Table, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { omit } from 'rambda'
@@ -16,13 +8,21 @@ import React, { useState } from 'react'
 import { HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+    createAdminDashboardBreadcrumb,
+    createHomeBreadcrumb,
+    UnifiedBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import {
     Node,
     NodeStatus,
+    useGetUser,
     useListAllNodes,
     useUpdateNode,
-    useGetUser,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 function NodeList() {
     const { t } = useNextTranslation()

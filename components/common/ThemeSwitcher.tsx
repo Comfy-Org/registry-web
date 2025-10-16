@@ -1,8 +1,8 @@
-import React from 'react'
 import { Dropdown, DropdownItem } from 'flowbite-react'
-import { useTheme, Theme } from '@/src/hooks/useTheme'
+import React from 'react'
+import { HiDesktopComputer, HiMoon, HiSun } from 'react-icons/hi'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { HiSun, HiMoon, HiDesktopComputer } from 'react-icons/hi'
+import { Theme, useTheme } from '@/src/hooks/useTheme'
 
 const ThemeIcon = ({
     theme,

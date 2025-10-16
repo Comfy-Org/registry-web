@@ -6,11 +6,11 @@ import React from 'react'
 import { FaDiscord, FaGithub } from 'react-icons/fa'
 import logoBluePng from '@/src/assets/images/logo_blue.png'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { themeConfig } from '@/utils/themeConfig'
 import { useFromUrlParam } from '../common/HOC/useFromUrl'
 import LanguageSwitcher from '../common/LanguageSwitcher'
 import ThemeSwitcher from '../common/ThemeSwitcher'
 import ProfileDropdown from './ProfileDropdown'
-import { themeConfig } from '@/utils/themeConfig'
 
 interface HeaderProps {
     isLoggedIn?: boolean

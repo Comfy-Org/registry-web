@@ -5,8 +5,8 @@ import { HiChevronDown } from 'react-icons/hi'
 import { useGetUser } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
-import { useLogout } from '../AuthUI/Logout'
 import { themeConfig } from '@/utils/themeConfig'
+import { useLogout } from '../AuthUI/Logout'
 
 export default function ProfileDropdown() {
     const router = useRouter()
