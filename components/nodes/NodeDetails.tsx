@@ -594,6 +594,38 @@ const NodeDetails = () => {
 
                         {canEdit && (
                             <Button
+                                className="flex-shrink-0 px-4 flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
+                                onClick={() => {
+                                    analytic.track('Edit Node Translations')
+                                    router.push(`/nodes/${nodeId}/i18n`)
+                                }}
+                            >
+                                <svg
+                                    className="w-5 h-5 mr-2 text-white"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="24"
+                                    height="24"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4.848 2.771A49.144 49.144 0 0 1 12 2.25c2.43 0 4.817.178 7.152.52 1.978.292 3.348 2.024 3.348 3.97v6.02c0 1.946-1.37 3.678-3.348 3.97a48.901 48.901 0 0 1-7.152.52c-2.43 0-4.817-.178-7.152-.52C3.37 16.238 2 14.506 2 12.56V6.54c0-1.946 1.37-3.678 3.348-3.97ZM6.75 8.25a.75.75 0 0 1 .75-.75h9a.75.75 0 0 1 0 1.5h-9a.75.75 0 0 1-.75-.75Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H7.5Z"
+                                    />
+                                </svg>
+                                <span>{t('Edit translations')}</span>
+                                {warningForAdminEdit && (
+                                    <>&nbsp;{t('(admin)')}</>
+                                )}
+                            </Button>
+                        )}
+
+                        {canEdit && (
+                            <Button
                                 className="flex-shrink-0 px-4 flex items-center text-red-300 border-red-300 fill-red-300 bg-gray-700 rounded whitespace-nowrap text-[16px]"
                                 onClick={() => setIsDeleteModalOpen(true)}
                             >
