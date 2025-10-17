@@ -1,23 +1,23 @@
-import { useState, useMemo } from 'react'
-import { useRouter } from 'next/router'
 import {
-    Breadcrumb,
-    Card,
-    Button,
-    TextInput,
-    Textarea,
-    Select,
     Alert,
+    Breadcrumb,
+    Button,
+    Card,
+    Select,
+    Textarea,
+    TextInput,
 } from 'flowbite-react'
-import { HiHome, HiSave, HiPlus, HiTrash } from 'react-icons/hi'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { useGetNode, useCreateNodeTranslations } from '@/src/api/generated'
-import { SUPPORTED_LANGUAGES } from '@/src/constants'
-import type {
-    NodeTranslations,
-    CreateNodeTranslationsBody,
-} from '@/src/api/generated'
+import { useRouter } from 'next/router'
+import { useMemo, useState } from 'react'
+import { HiHome, HiPlus, HiSave, HiTrash } from 'react-icons/hi'
 import withAuth from '@/components/common/HOC/withAuth'
+import type {
+    CreateNodeTranslationsBody,
+    NodeTranslations,
+} from '@/src/api/generated'
+import { useCreateNodeTranslations, useGetNode } from '@/src/api/generated'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAuth(NodeTranslationEditor)
 
