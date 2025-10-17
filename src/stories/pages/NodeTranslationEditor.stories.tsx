@@ -89,6 +89,17 @@ export const Default: Story = {
                         isApproved: true,
                     })
                 }),
+                http.get(
+                    CAPI(
+                        '/publishers/test-publisher/nodes/test-node/permissions'
+                    ),
+                    () => {
+                        return HttpResponse.json({
+                            canEdit: true,
+                            canDelete: true,
+                        })
+                    }
+                ),
             ],
         },
     },
@@ -152,6 +163,17 @@ export const WithExistingTranslations: Story = {
                         isApproved: true,
                     })
                 }),
+                http.get(
+                    CAPI(
+                        '/publishers/test-publisher/nodes/test-node/permissions'
+                    ),
+                    () => {
+                        return HttpResponse.json({
+                            canEdit: true,
+                            canDelete: true,
+                        })
+                    }
+                ),
             ],
         },
     },
@@ -243,6 +265,17 @@ export const SaveError: Story = {
                         isApproved: true,
                     })
                 }),
+                http.get(
+                    CAPI(
+                        '/publishers/test-publisher/nodes/test-node/permissions'
+                    ),
+                    () => {
+                        return HttpResponse.json({
+                            canEdit: true,
+                            canDelete: true,
+                        })
+                    }
+                ),
             ],
         },
     },
@@ -279,6 +312,17 @@ export const NoTranslations: Story = {
                         isApproved: true,
                     })
                 }),
+                http.get(
+                    CAPI(
+                        '/publishers/test-publisher/nodes/test-node/permissions'
+                    ),
+                    () => {
+                        return HttpResponse.json({
+                            canEdit: true,
+                            canDelete: true,
+                        })
+                    }
+                ),
             ],
         },
     },
