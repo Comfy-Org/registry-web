@@ -309,7 +309,7 @@ function NodeTranslationEditor() {
                                     }
                                     rows={3}
                                     placeholder={t(
-                                        `Enter ${field} translation...`
+                                        'Enter field translation...'
                                     )}
                                 />
                             ) : (
@@ -323,7 +323,7 @@ function NodeTranslationEditor() {
                                         updateTranslation(field, e.target.value)
                                     }
                                     placeholder={t(
-                                        `Enter ${field} translation...`
+                                        'Enter field translation...'
                                     )}
                                 />
                             )}

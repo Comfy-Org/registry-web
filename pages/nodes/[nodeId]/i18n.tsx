@@ -11,7 +11,12 @@ import {
 } from 'flowbite-react'
 import { HiHome, HiSave, HiPlus, HiTrash } from 'react-icons/hi'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { useGetNode, useCreateNodeTranslations } from '@/src/api/generated'
+import {
+    useGetNode,
+    useCreateNodeTranslations,
+    useGetPermissionOnPublisherNodes,
+    useGetUser,
+} from '@/src/api/generated'
 import { SUPPORTED_LANGUAGES, LANGUAGE_NAMES } from '@/src/constants'
 import type {
     NodeTranslations,
@@ -43,6 +48,22 @@ const NodeTranslationEditor = () => {
             },
         }
     )
+
+    const publisherId = String(node?.publisher?.id || '')
+
+    const { data: permissions } = useGetPermissionOnPublisherNodes(
+        publisherId,
+        nodeId as string,
+        {
+            query: {
+                enabled: !!nodeId && !!publisherId,
+            },
+        }
+    )
+
+    const { data: user } = useGetUser()
+    const isAdmin = user?.isAdmin
+    const canEdit = isAdmin || permissions?.canEdit
 
     const createTranslationsMutation = useCreateNodeTranslations()
 
@@ -131,6 +152,18 @@ const NodeTranslationEditor = () => {
         return (
             <div className="p-4">
                 <Alert color="failure">{t('Failed to load node data')}</Alert>
+            </div>
+        )
+    }
+
+    if (!canEdit) {
+        return (
+            <div className="p-4">
+                <Alert color="warning">
+                    {t(
+                        'You do not have permission to edit translations for this node.'
+                    )}
+                </Alert>
             </div>
         )
     }
@@ -278,7 +311,7 @@ const NodeTranslationEditor = () => {
                                     }
                                     rows={3}
                                     placeholder={t(
-                                        `Enter ${field} translation...`
+                                        'Enter field translation...'
                                     )}
                                 />
                             ) : (
@@ -292,7 +325,7 @@ const NodeTranslationEditor = () => {
                                         updateTranslation(field, e.target.value)
                                     }
                                     placeholder={t(
-                                        `Enter ${field} translation...`
+                                        'Enter field translation...'
                                     )}
                                 />
                             )}
