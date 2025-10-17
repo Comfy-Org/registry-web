@@ -2,9 +2,31 @@ import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
+import { useCallback } from 'react'
 import { initReactI18next, useTranslation } from 'react-i18next'
+import { useLocalStorage } from 'react-use'
 import reactUseCookie from 'react-use-cookie'
+import { useAsyncData } from 'use-async'
 import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
+
+// Type definitions for Chrome's experimental Translator API
+interface TranslatorAPI {
+    create(options: {
+        sourceLanguage: string
+        targetLanguage: string
+    }): Promise<TranslatorInstance>
+}
+
+interface TranslatorInstance {
+    translateStreaming(text: string): AsyncIterable<string>
+}
+
+declare global {
+    interface Window {
+        Translator?: TranslatorAPI
+    }
+    var Translator: TranslatorAPI | undefined
+}
 
 const i18n = i18next
     .use(I18nextBrowserLanguageDetector)
@@ -15,21 +37,99 @@ const i18n = i18next
         )
     )
     .use(initReactI18next)
-    .init({
-        fallbackLng: 'en',
-        supportedLngs: SUPPORTED_LANGUAGES,
-        defaultNS: 'common',
-        fallbackNS: 'common',
 
-        // not needed for react as it escapes by default
-        interpolation: { escapeValue: false },
+i18n.init({
+    fallbackLng: 'en',
+    supportedLngs: SUPPORTED_LANGUAGES,
+    defaultNS: 'common',
+    fallbackNS: 'common',
 
-        // use ssr-side detection in middleware
-        detection: {
-            order: ['htmlTag'],
-            caches: [],
-        },
+    // not needed for react as it escapes by default
+    interpolation: { escapeValue: false },
+
+    // use ssr-side detection in middleware
+    detection: {
+        order: ['htmlTag'],
+        caches: [],
+    },
+
+    react: {
+        bindI18nStore: 'added', // notify react to rerender when a new key is added
+    },
+
+    // Support dynamic translation
+    saveMissing: true,
+    missingKeyNoValueFallbackToKey: true,
+    missingKeyHandler: async (lngs, ns, key) => {
+        const lng = i18next.language
+        console.log(`Missing translation for key "${key}" in language "${lng}"`)
+
+        // (Experimental) Try use browser Translator API to handle missing keys
+        // If the Translator API is not available, just return the key
+        if (typeof globalThis.Translator === 'undefined') return
+
+        // Create a translator instance
+        const Translator = globalThis.Translator as TranslatorAPI
+        const translator = await Translator.create({
+            sourceLanguage: 'en',
+            targetLanguage: lng,
+        }).catch(() => null)
+        if (!translator) return
+
+        // Translate the key
+        let tr = ''
+        for await (const chunk of translator.translateStreaming(key)) {
+            tr += chunk
+        }
+        console.log(`Translated "${key}" to "${tr}" in language "${lng}"`)
+        // add to i18next resources
+        // how to trigger a re-render in components that use this key?
+        i18next.addResource(lng, ns, key, tr)
+        i18next.emit('added', lng, ns, key, tr)
+    },
+})
+
+export const useDynamicTranslateEnabled = () => {
+    const [enabled, setEnabled] = useLocalStorage(
+        'DynamicTranslate',
+        false // default disabled, click the globe icon to enable across the site
+    )
+    return { enabled, setEnabled }
+}
+
+export const useDynamicTranslate = () => {
+    const { currentLanguage, t } = useNextTranslation('dynamic')
+
+    // try experimental dynamic translation
+    //
+    // 2025-07-27 currently, only chrome 138+ supports the Translator API
+    // cons:
+    // 1. requires network access to the browser's translation service
+    // 2. not able to use in server-side rendering
+    // 3. not available in china
+    //
+    const [available, availableState] = useAsyncData(async () => {
+        if (typeof globalThis.Translator === 'undefined') return null
+        const Translator = globalThis.Translator as TranslatorAPI
+        const translator = await Translator.create({
+            sourceLanguage: 'en',
+            targetLanguage: currentLanguage,
+        }).catch(() => null)
+        return translator
     })
+
+    const { enabled, setEnabled } = useDynamicTranslateEnabled()
+    const dt = useCallback(
+        (key?: string) => {
+            if (!key) return key
+            if (!available) return key
+            return enabled ? t(key) : key
+        },
+        [enabled, available, t]
+    )
+
+    return { available, enabled, setEnabled, dt }
+}
 
 /**
  * Custom hook for translations in the Comfy Registry
