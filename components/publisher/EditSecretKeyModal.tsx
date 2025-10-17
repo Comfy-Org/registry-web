@@ -1,6 +1,6 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, TextInput } from 'flowbite-react'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export function EditSecretKeyModal({ openModal, onCloseModal }) {
     const { t } = useNextTranslation()

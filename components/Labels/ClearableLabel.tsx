@@ -1,5 +1,5 @@
+import { Button, FloatingLabel } from 'flowbite-react'
 import React from 'react'
-import { FloatingLabel, Button } from 'flowbite-react'
 import { MdClear } from 'react-icons/md'
 
 export const ClearableLabel: React.FC<{
