@@ -1,10 +1,10 @@
-import withAuth from '@/components/common/HOC/withAuth'
-import PublisherDetail from '@/components/publisher/PublisherDetail'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb, Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
+import withAuth from '@/components/common/HOC/withAuth'
+import PublisherDetail from '@/components/publisher/PublisherDetail'
 import { useGetPublisher } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 function PublisherDetails() {
     const router = useRouter()

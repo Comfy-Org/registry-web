@@ -1,7 +1,11 @@
 import type { BaseItem } from '@algolia/autocomplete-core'
 import type { AutocompleteOptions } from '@algolia/autocomplete-js'
+import { autocomplete } from '@algolia/autocomplete-js'
+import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
+import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
+// @ts-ignore
+import { debounce } from '@algolia/autocomplete-shared'
 import type { SearchClient } from 'algoliasearch/lite'
-
 import {
     createElement,
     Fragment,
@@ -11,13 +15,7 @@ import {
     useState,
 } from 'react'
 import { createRoot, Root } from 'react-dom/client'
-
-import { autocomplete } from '@algolia/autocomplete-js'
-import { createQuerySuggestionsPlugin } from '@algolia/autocomplete-plugin-query-suggestions'
-import { createLocalStorageRecentSearchesPlugin } from '@algolia/autocomplete-plugin-recent-searches'
 import { usePagination, useSearchBox } from 'react-instantsearch'
-// @ts-ignore
-import { debounce } from '@algolia/autocomplete-shared'
 
 import { INSTANT_SEARCH_QUERY_SUGGESTIONS } from 'src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'

@@ -1,7 +1,7 @@
 import { Badge } from 'flowbite-react'
-import { NodeVersionStatus } from '@/src/api/generated'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { NodeVersionStatus } from '@/src/api/generated'
 
 export function NodeStatusBadge({
     status,

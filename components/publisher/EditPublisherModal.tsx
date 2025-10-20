@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal, TextInput } from 'flowbite-react'
 import React from 'react'
 import { Publisher } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type EditPublisherModalProps = {
     openModal: boolean

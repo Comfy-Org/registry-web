@@ -1,6 +1,6 @@
-import GenericHeader from '@/components/common/GenericHeader'
 import React from 'react'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import GenericHeader from '@/components/common/GenericHeader'
 
 /**
  * A simplified version of the Registry component for Storybook

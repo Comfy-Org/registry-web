@@ -1,12 +1,12 @@
-import NodeDetails from '@/components/nodes/NodeDetails'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { handlers } from '@/src/mocks/handlers'
-import { CAPI } from '@/src/mocks/apibase'
-import { http, HttpResponse } from 'msw'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { Node, NodeStatus, PublisherStatus } from '@/src/api/generated'
 import { User as FirebaseUser } from 'firebase/auth'
+import { HttpResponse, http } from 'msw'
+import NodeDetails from '@/components/nodes/NodeDetails'
+import { Node, NodeStatus, PublisherStatus } from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import { CAPI } from '@/src/mocks/apibase'
+import { handlers } from '@/src/mocks/handlers'
 
 const meta: Meta<typeof NodeDetails> = {
     title: 'Components/Nodes/NodeDetails',

@@ -1,9 +1,9 @@
-import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import axios from 'axios'
 import * as fs from 'fs/promises'
 import { glob } from 'glob'
 import path from 'path'
 import { update } from 'rambda'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
 
 /**
  * Simplified i18n translation key extractor
