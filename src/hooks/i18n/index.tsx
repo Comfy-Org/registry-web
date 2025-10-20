@@ -1,4 +1,3 @@
-import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
@@ -11,9 +10,10 @@ import {
     useState,
 } from 'react'
 import { initReactI18next, useTranslation } from 'react-i18next'
+import { useLocalStorage } from 'react-use'
 import useCookieValue from 'react-use-cookie'
 import { useAsyncData } from 'use-async'
-import { useLocalStorage } from 'react-use'
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 
 // Type definitions for Chrome's experimental Translator API
 interface TranslatorAPI {

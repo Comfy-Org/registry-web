@@ -1,4 +1,3 @@
-import { useDynamicTranslate, useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
@@ -23,6 +22,7 @@ import {
     useListPublishersForUser,
 } from '@/src/api/generated'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
+import { useDynamicTranslate, useNextTranslation } from '@/src/hooks/i18n'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
