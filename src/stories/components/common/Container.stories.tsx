@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import React from 'react'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import Container from '@/components/common/Container'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 // Define proper type for component props
 interface ContainerProps {

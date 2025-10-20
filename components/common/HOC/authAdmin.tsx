@@ -2,9 +2,9 @@ import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useGetUser } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import { useFromUrlParam } from './useFromUrl'
-import { useNextTranslation } from '@/src/hooks/i18n'
 
 /**
  * Admin dashboard HOC
