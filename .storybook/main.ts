@@ -7,9 +7,11 @@ let createMockResolverPlugin: any
 
 export default defineConfig({
   stories: [
-    '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    // Pages and their stories
+    '../pages/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    // Components and their co-located stories
     '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    // Documentation pages
     '../src/stories/**/*.mdx',
   ],
   addons: [

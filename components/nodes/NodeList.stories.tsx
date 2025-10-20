@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import RegistryStory from './RegistryStory'
+import RegistryStory from '@/src/stories/RegistryStory'
 
 /**
  * Since the actual NodeList component from pages/index.tsx just renders the Registry component
