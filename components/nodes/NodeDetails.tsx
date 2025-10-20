@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
-import { MdEdit, MdOpenInNew, MdInstallDesktop } from 'react-icons/md'
+import { MdEdit, MdInstallDesktop, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     REQUEST_OPTIONS_NO_CACHE,
