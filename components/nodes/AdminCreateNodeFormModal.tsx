@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiPlus, HiDownload } from 'react-icons/hi'
 import { toast } from 'react-toastify'
+import TOML from 'smol-toml'
 import { customThemeTModal } from 'utils/comfyTheme'
 import { z } from 'zod'
 import {
@@ -79,45 +80,65 @@ async function fetchGitHubRepoInfo(
         }
 
         const data = await response.json()
+        // Validate encoding and base64 content
+        if (data.encoding !== 'base64') {
+            throw new Error(
+                `Unexpected encoding for pyproject.toml: ${data.encoding}`
+            )
+        }
+        // Basic base64 validation regex (allows padding)
+        const base64Regex =
+            /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/
+        if (!base64Regex.test(data.content)) {
+            throw new Error('Invalid base64 content in pyproject.toml')
+        }
         const content = atob(data.content)
 
-        // Basic TOML parsing for pyproject.toml
-        const projectSection =
-            content.match(/\[project\]([\s\S]*?)(?=\n\[|\n$|$)/)?.[1] || ''
+        // Parse TOML using proper TOML library
+        const parsed = TOML.parse(content)
 
         const result: PyProjectData = {}
 
-        // Extract name
-        const nameMatch = projectSection.match(/name\s*=\s*["']([^"']+)["']/)
-        if (nameMatch) result.name = nameMatch[1]
+        // Extract project metadata
+        if (parsed.project && typeof parsed.project === 'object') {
+            const project = parsed.project as any
 
-        // Extract description
-        const descMatch = projectSection.match(
-            /description\s*=\s*["']([^"']+)["']/
-        )
-        if (descMatch) result.description = descMatch[1]
+            // Extract name
+            if (typeof project.name === 'string') {
+                result.name = project.name
+            }
 
-        // Extract author (from authors array or single author field)
-        const authorsMatch = projectSection.match(
-            /authors\s*=\s*\[([\s\S]*?)\]/
-        )
-        if (authorsMatch) {
-            const authorNameMatch = authorsMatch[1].match(
-                /name\s*=\s*["']([^"']+)["']/
-            )
-            if (authorNameMatch) result.author = authorNameMatch[1]
-        } else {
-            const authorMatch = projectSection.match(
-                /author\s*=\s*["']([^"']+)["']/
-            )
-            if (authorMatch) result.author = authorMatch[1]
+            // Extract description
+            if (typeof project.description === 'string') {
+                result.description = project.description
+            }
+
+            // Extract author (from authors array or single author field)
+            if (Array.isArray(project.authors) && project.authors.length > 0) {
+                const firstAuthor = project.authors[0]
+                if (
+                    typeof firstAuthor === 'object' &&
+                    typeof firstAuthor.name === 'string'
+                ) {
+                    result.author = firstAuthor.name
+                }
+            } else if (typeof project.author === 'string') {
+                result.author = project.author
+            }
+
+            // Extract license
+            if (typeof project.license === 'string') {
+                result.license = project.license
+            } else if (
+                typeof project.license === 'object' &&
+                project.license !== null
+            ) {
+                const license = project.license as any
+                if (typeof license.text === 'string') {
+                    result.license = license.text
+                }
+            }
         }
-
-        // Extract license
-        const licenseMatch =
-            projectSection.match(/license\s*=\s*["']([^"']+)["']/) ||
-            content.match(/license\s*=\s*\{\s*text\s*=\s*["']([^"']+)["']/)
-        if (licenseMatch) result.license = licenseMatch[1]
 
         return result
     } catch (error) {

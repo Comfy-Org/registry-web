@@ -94,6 +94,7 @@
         "react-use-cookie": "^1.6.1",
         "sflow": "^1.24.5",
         "sharp": "^0.34.3",
+        "smol-toml": "^1.4.2",
         "styled-jsx": "^5.1.7",
         "yaml": "^2.8.1",
         "zod": "^3.25.76"
