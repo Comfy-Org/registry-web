@@ -7,11 +7,9 @@ let createMockResolverPlugin: any
 
 export default defineConfig({
     stories: [
-        // Pages and their stories
-        '../pages/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-        // Components and their co-located stories
+        '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
         '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-        // Documentation pages
+        '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
         '../src/stories/**/*.mdx',
     ],
     addons: [
@@ -21,7 +19,7 @@ export default defineConfig({
         '@storybook/addon-vitest',
     ],
     framework: '@storybook/nextjs-vite',
-    staticDirs: ['../public', '../src/assets'],
+    staticDirs: ['../src/assets'],
     viteFinal: async (c) => {
         // Dynamically import the plugin to avoid build issues
         if (!createMockResolverPlugin) {
