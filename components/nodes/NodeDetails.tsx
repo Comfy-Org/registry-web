@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
-import { MdEdit, MdOpenInNew } from 'react-icons/md'
+import { MdEdit, MdOpenInNew, MdInstallDesktop } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
     REQUEST_OPTIONS_NO_CACHE,
@@ -560,6 +560,59 @@ const NodeDetails = () => {
                                 }}
                             >
                                 <a>{t('Download Latest')}</a>
+                            </Button>
+                        )}
+
+                        {/* Quick Install Button */}
+                        {!isUnclaimed && nodeVersions?.length && (
+                            <Button
+                                className="flex-shrink-0 px-4 text-white bg-green-600 rounded whitespace-nowrap text-[16px]"
+                                onClick={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => {
+                                    e.preventDefault()
+                                    const comfyUrl = `comfy://install-custom-node/${nodeId}`
+
+                                    try {
+                                        // Try to open the comfy:// protocol
+                                        const newWindow = window.open(
+                                            comfyUrl,
+                                            '_blank'
+                                        )
+
+                                        // Check if the window was blocked or failed to open
+                                        setTimeout(() => {
+                                            if (
+                                                !newWindow ||
+                                                newWindow.closed ||
+                                                typeof newWindow.closed ===
+                                                    'undefined'
+                                            ) {
+                                                // Show fallback message if ComfyUI Desktop isn't available
+                                                alert(
+                                                    t(
+                                                        'Install Latest ComfyUI Desktop Application'
+                                                    )
+                                                )
+                                            }
+                                        }, 500)
+
+                                        analytic.track('Quick Install Node')
+                                    } catch (error) {
+                                        // Fallback if protocol handler fails
+                                        alert(
+                                            t(
+                                                'Install Latest ComfyUI Desktop Application'
+                                            )
+                                        )
+                                        analytic.track(
+                                            'Quick Install Node Failed'
+                                        )
+                                    }
+                                }}
+                            >
+                                <MdInstallDesktop className="w-5 h-5 mr-2" />
+                                {t('Quick Install')}
                             </Button>
                         )}
 
