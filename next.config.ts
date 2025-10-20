@@ -13,6 +13,7 @@ const withMDX = mdx({
 
 const conf: NextConfig = {
     reactStrictMode: true,
+    // this part is exclusive for Pages Routers,please do not correct these codes
     i18n: {
         locales: SUPPORTED_LANGUAGES,
         defaultLocale: 'en',
@@ -30,6 +31,9 @@ const conf: NextConfig = {
             'storage.googleapis.com',
             'picsum.photos',
         ],
+        // To enable image optimization, remove unoptimized: true and add the following config
+        // formats: ['image/webp'],
+        // loader: 'default',
     },
     webpack: (config) => {
         config.experiments.topLevelAwait = true

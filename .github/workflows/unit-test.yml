@@ -1,20 +1,20 @@
 name: Chromatic Visual Testing
 
 on:
-    push:
-        branches: [main, dev, staging]
-    pull_request:
-        branches: [main, dev, staging]
+  push:
+    branches: [main, dev, staging]
+  pull_request:
+    branches: [main, dev, staging]
 
 jobs:
-    unit-test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - name: Set up Node.js
-              uses: actions/setup-node@v2
-              with:
-                  node-version: '22'
-            - run: npm i -g bun
-            - run: bun i
-            - run: bun run test
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22"
+      - run: npm i -g bun
+      - run: bun i
+      - run: bun run test

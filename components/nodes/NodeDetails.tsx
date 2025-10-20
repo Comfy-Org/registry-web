@@ -1,13 +1,17 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
+import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
+import {
+    REQUEST_OPTIONS_NO_CACHE,
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+} from 'src/constants'
 import {
     NodeVersion,
     NodeVersionStatus,
@@ -17,11 +21,8 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import {
-    UNCLAIMED_ADMIN_PUBLISHER_ID,
-    REQUEST_OPTIONS_NO_CACHE,
-} from 'src/constants'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
@@ -29,6 +30,7 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
+
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
     const date = new Date(dateString)
@@ -87,7 +89,7 @@ export function formatDownloadCount(count: number): string {
 }
 
 const NodeDetails = () => {
-    const { t } = useNextTranslation()
+    const { t, i18n } = useNextTranslation()
     // state for drawer and modals
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
@@ -283,22 +285,52 @@ const NodeDetails = () => {
                                     </h1>
 
                                     <p
-                                        className="text-[18px] pt-2 text-gray-300"
+                                        className="text-[18px] pt-2 text-gray-300 space-x-2"
                                         hidden={isUnclaimed}
                                     >
-                                        {node.publisher?.id?.replace(
-                                            /^(?!$)/,
-                                            '@'
-                                        )}
-                                        {node.latest_version && (
-                                            <span>
-                                                {!!node.publisher?.id && ` | `}
-                                                {`v${node.latest_version?.version}`}
-                                                <span className="pl-3 text-gray-400">
-                                                    {t('Most recent version')}
-                                                </span>
-                                            </span>
-                                        )}
+                                        {[
+                                            <div key="publisher" dir="ltr">
+                                                {node.publisher?.id?.replace(
+                                                    /^(?!$)/,
+                                                    '@'
+                                                )}
+                                            </div>,
+
+                                            node.latest_version?.version?.replace(
+                                                /^(?!$)/,
+                                                'v'
+                                            ),
+
+                                            node.latest_version?.createdAt &&
+                                                intlFormatDistance(
+                                                    new Date(
+                                                        node.latest_version.createdAt
+                                                    ),
+                                                    new Date(),
+                                                    {
+                                                        numeric: 'auto',
+                                                        locale: i18n.language,
+                                                    }
+                                                ),
+                                        ]
+                                            .flatMap((e) => (e ? [e] : []))
+                                            // same as .join(' | '), but with span element
+                                            .reduce(
+                                                (acc, x, i, a) => [
+                                                    ...acc,
+                                                    x,
+                                                    i < a.length - 1 && (
+                                                        <span
+                                                            key={`separator-${i}`}
+                                                        >
+                                                            {' '}
+                                                            |{' '}
+                                                        </span>
+                                                    ),
+                                                ],
+                                                [] as ReactNode[]
+                                            )
+                                            .filter(Boolean)}
                                     </p>
                                 </div>
                             </div>
@@ -317,8 +349,8 @@ const NodeDetails = () => {
                                         >
                                             <path
                                                 stroke="currentColor"
-                                                stroke-linecap="round"
-                                                stroke-width="2"
+                                                strokeLinecap="round"
+                                                strokeWidth="2"
                                                 d="M4.37 7.657c2.063.528 2.396 2.806 3.202 3.87 1.07 1.413 2.075 1.228 3.192 2.644 1.805 2.289 1.312 5.705 1.312 6.705M20 15h-1a4 4 0 0 0-4 4v1M8.587 3.992c0 .822.112 1.886 1.515 2.58 1.402.693 2.918.351 2.918 2.334 0 .276 0 2.008 1.972 2.008 2.026.031 2.026-1.678 2.026-2.008 0-.65.527-.9 1.177-.9H20M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                                             />
                                         </svg>
@@ -337,7 +369,7 @@ const NodeDetails = () => {
                                         >
                                             <path
                                                 stroke="currentColor"
-                                                stroke-width="2"
+                                                strokeWidth="2"
                                                 d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.119c.214.858-.71 1.552-1.474 1.106l-3.913-2.281a1 1 0 0 0-1.008 0L7.583 20.8c-.764.446-1.688-.248-1.474-1.106l1.03-4.119A1 1 0 0 0 6.8 14.56l-3.33-2.723c-.698-.571-.342-1.702.557-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"
                                             />
                                         </svg>
@@ -360,9 +392,9 @@ const NodeDetails = () => {
                                         >
                                             <path
                                                 stroke="currentColor"
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                stroke-width="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
                                                 d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"
                                             />
                                         </svg>
@@ -374,6 +406,32 @@ const NodeDetails = () => {
                                         </span>
                                     </p>
                                 )}
+                                {node.github_stars != null &&
+                                    node.github_stars > 0 && (
+                                        <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
+                                            <svg
+                                                className="w-6 h-6"
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    stroke="currentColor"
+                                                    stroke-width="2"
+                                                    d="M11.083 5.104c.35-.8 1.485-.8 1.834 0l1.752 4.022a1 1 0 0 0 .84.597l4.463.342c.9.069 1.255 1.2.556 1.771l-3.33 2.723a1 1 0 0 0-.337 1.016l1.03 4.119c.214.858-.71 1.552-1.474 1.106l-3.913-2.281a1 1 0 0 0-1.008 0L7.583 20.8c-.764.446-1.688-.248-1.474-1.106l1.03-4.119A1 1 0 0 0 6.8 14.56l-3.33-2.723c-.698-.571-.342-1.702.557-1.771l4.462-.342a1 1 0 0 0 .84-.597l1.753-4.022Z"
+                                                />
+                                            </svg>
+                                            <span className="ml-4 text-[18px]">
+                                                {formatDownloadCount(
+                                                    node.github_stars || 0
+                                                )}{' '}
+                                                {t('GitHub stars')}
+                                            </span>
+                                        </p>
+                                    )}
                             </div>
                             <div className="mt-5 mb-10">
                                 <>
@@ -442,18 +500,18 @@ const NodeDetails = () => {
                                                     }
                                                 />
                                             </p>
-                                            <p className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
+                                            <div className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                                                 {version.changelog}
-                                                <div
-                                                    className="text-sm font-normal text-blue-500 cursor-pointer"
-                                                    onClick={() =>
-                                                        selectVersion(version)
-                                                    }
-                                                    tabIndex={0}
-                                                >
-                                                    {t('More')}
-                                                </div>
-                                            </p>
+                                            </div>
+                                            <div
+                                                className="text-sm font-normal text-blue-500 cursor-pointer"
+                                                onClick={() =>
+                                                    selectVersion(version)
+                                                }
+                                                tabIndex={0}
+                                            >
+                                                {t('More')}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

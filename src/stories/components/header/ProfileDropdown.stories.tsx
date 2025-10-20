@@ -1,12 +1,15 @@
-import ProfileDropdown from '@/components/Header/ProfileDropdown'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CAPI, handlers } from '@/src/mocks/handlers'
-import { http, HttpResponse } from 'msw'
+import { HttpResponse, http } from 'msw'
+import ProfileDropdown from '@/components/Header/ProfileDropdown'
 import { User } from '@/src/api/generated'
-import { User as FirebaseUser } from 'firebase/auth'
-import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import {
+    mockFirebaseUser,
+    useFirebaseUser,
+} from '@/src/hooks/useFirebaseUser.mock'
+import { CAPI } from '@/src/mocks/apibase'
+import { handlers } from '@/src/mocks/handlers'
 
-const meta: Meta<typeof ProfileDropdown> = {
+const meta = {
     title: 'Components/Header/ProfileDropdown',
     component: ProfileDropdown,
     parameters: {
@@ -16,11 +19,11 @@ const meta: Meta<typeof ProfileDropdown> = {
             handlers: handlers,
         },
     },
-    tags: ['autodocs'],
-}
+} satisfies Meta<typeof ProfileDropdown>
 
 export default meta
-type Story = StoryObj<typeof ProfileDropdown>
+
+type Story = StoryObj<typeof meta>
 
 // Mock user data variations
 const regularUser: User = {
@@ -39,27 +42,6 @@ const adminUser: User = {
     isApproved: true,
 }
 
-// Mock Firebase user data
-const mockFirebaseUser = {
-    uid: 'firebase-user-123',
-    email: 'john.doe@example.com',
-    displayName: 'John Doe',
-    photoURL: 'https://picsum.photos/40/40',
-    emailVerified: true,
-    isAnonymous: false,
-    metadata: {},
-    providerData: [],
-    refreshToken: '',
-    tenantId: null,
-    delete: async () => undefined,
-    getIdToken: async () => '',
-    getIdTokenResult: async () => ({}) as any,
-    reload: async () => undefined,
-    toJSON: () => ({}),
-    phoneNumber: null,
-    providerId: 'google',
-} satisfies FirebaseUser // Using 'as any' to avoid having to mock the entire Firebase User interface
-
 export const RegularUser: Story = {
     parameters: {
         msw: {
@@ -69,7 +51,7 @@ export const RegularUser: Story = {
             ],
         },
     },
-    beforeEach: () => {
+    async beforeEach() {
         // Mock Firebase user as logged in
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
@@ -84,7 +66,7 @@ export const AdminUser: Story = {
             ],
         },
     },
-    beforeEach: () => {
+    async beforeEach() {
         // Mock Firebase user as admin
         useFirebaseUser.mockReturnValue([
             {
@@ -112,7 +94,7 @@ export const UnapprovedUser: Story = {
             ],
         },
     },
-    beforeEach: () => {
+    async beforeEach() {
         // Mock Firebase user as unapproved
         useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
@@ -129,7 +111,7 @@ export const LoggedOut: Story = {
             ],
         },
     },
-    beforeEach: () => {
+    async beforeEach() {
         // Mock Firebase user as logged out
         useFirebaseUser.mockReturnValue([null, false, undefined])
     },

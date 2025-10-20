@@ -1,15 +1,15 @@
-import withAuth from '@/components/common/HOC/withAuth'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Spinner } from 'flowbite-react'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import { useGetNode, useListPublishersForUser } from 'src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
+import withAuth from '@/components/common/HOC/withAuth'
 import CreatePublisherModal from '@/components/publisher/CreatePublisherModal'
-import Link from 'next/link'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAuth(ClaimNodePage)
 
@@ -172,13 +172,11 @@ function ClaimNodePage() {
                     {t('Select a Publisher')}
                 </h2>
                 <p className="text-gray-300 mb-6">
-                    {t(
-                        'Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository'
-                    )}
                     {node?.repository ? (
                         <>
-                            {' '}
-                            {t('at')}{' '}
+                            {t(
+                                'Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository at'
+                            )}{' '}
                             <Link
                                 href={node.repository}
                                 target="_blank"
@@ -189,7 +187,9 @@ function ClaimNodePage() {
                             </Link>
                         </>
                     ) : (
-                        ` ${t('to claim this node.')}`
+                        t(
+                            'Choose which publisher account you want to use to claim this node.'
+                        )
                     )}
                 </p>
 
@@ -245,7 +245,7 @@ function ClaimNodePage() {
 
             {/* CreatePublisherModal */}
             <CreatePublisherModal
-                openModal={openCreatePublisherModal}
+                open={openCreatePublisherModal}
                 onCloseModal={handleCloseCreatePublisherModal}
                 onSuccess={handleCreatePublisherSuccess}
             />

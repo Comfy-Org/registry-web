@@ -1,4 +1,3 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { ShortNumber } from '@lytieuphong/short-number'
 import { Tooltip } from 'flowbite-react'
 import type {
@@ -8,10 +7,12 @@ import type {
 } from 'instantsearch.js'
 import Link from 'next/link'
 import React from 'react'
-import { HiDownload } from 'react-icons/hi'
+import { HiDownload, HiStar } from 'react-icons/hi'
 import { Snippet } from 'react-instantsearch'
 import Markdown from 'react-markdown'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { PublisherId } from './PublisherId'
+
 interface NodeHit {
     id: string
     name: string
@@ -19,6 +20,7 @@ interface NodeHit {
     publisher_id: string
     total_install: number
     latest_version: string
+    github_stars?: number
 
     comfy_nodes?: string[]
 }
@@ -96,7 +98,10 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                 )}
             </div>
             {/* meta info */}
-            <p className="text-xs font-light text-nowrap mt-2 text-gray-400">
+            <p
+                className="text-xs font-light text-nowrap mt-2 text-gray-400"
+                dir="ltr"
+            >
                 <PublisherId publisherId={hit.publisher_id} />
                 {hit.latest_version && (
                     <span className="">
@@ -112,6 +117,16 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
                             title={t('Installs')}
                         />{' '}
                         {ShortNumber(hit.total_install)}
+                    </span>
+                )}
+                {hit.github_stars && hit.github_stars > 0 && (
+                    <span className="">
+                        {' | '}
+                        <HiStar
+                            className="inline h-3 w-3"
+                            title={t('GitHub Stars')}
+                        />{' '}
+                        {ShortNumber(hit.github_stars)}
                     </span>
                 )}
             </p>

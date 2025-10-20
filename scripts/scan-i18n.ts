@@ -1,9 +1,9 @@
-import { SUPPORTED_LANGUAGES } from '@/src/constants'
 import axios from 'axios'
 import * as fs from 'fs/promises'
 import { glob } from 'glob'
 import path from 'path'
 import { update } from 'rambda'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
 
 /**
  * Simplified i18n translation key extractor
@@ -44,10 +44,7 @@ async function extractKeysFromFile(filePath: string): Promise<ExtractedKey[]> {
         const content = await fs.readFile(filePath, 'utf-8')
 
         // Only process files that use translation
-        if (
-            !content.includes('useNextTranslation') &&
-            !content.includes('{ t }')
-        ) {
+        if (!content.includes('useNextTranslation(')) {
             return []
         }
 
@@ -119,7 +116,7 @@ async function writeJsonFile(
             {} as Record<string, string>
         )
 
-    await fs.writeFile(filePath, JSON.stringify(sorted, null, 2) + '\n')
+    await fs.writeFile(filePath, `${JSON.stringify(sorted, null, 2)}\n`)
 }
 
 async function getAvailableLanguages(): Promise<string[]> {
@@ -183,7 +180,7 @@ async function translateKeyToLanguage(
             },
             {
                 headers: {
-                    Authorization: `Bearer ` + process.env.OPENAI_API_KEY,
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
                     'Content-Type': 'application/json',
                 },
             }
