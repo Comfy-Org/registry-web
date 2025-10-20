@@ -156,8 +156,7 @@ export default function LanguageSwitcher({
                 {dynamicTranslateAvailable && (
                     <DropdownItem
                         className="border-t border-gray-200 mt-2 pt-2"
-                        onClick={(e) => {
-                            e.preventDefault()
+                        onClick={() => {
                             setDynamicTranslateEnabled(!dynamicTranslateEnabled)
                         }}
                     >

@@ -1,13 +1,19 @@
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
 import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
-import { useCallback } from 'react'
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useState,
+} from 'react'
 import { initReactI18next, useTranslation } from 'react-i18next'
-import { useLocalStorage } from 'react-use'
-import reactUseCookie from 'react-use-cookie'
+import useCookieValue from 'react-use-cookie'
 import { useAsyncData } from 'use-async'
-import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
+import { useLocalStorage } from 'react-use'
 
 // Type definitions for Chrome's experimental Translator API
 interface TranslatorAPI {
@@ -62,6 +68,7 @@ i18n.init({
     missingKeyNoValueFallbackToKey: true,
     missingKeyHandler: async (lngs, ns, key) => {
         const lng = i18next.language
+        console.log(lngs, i18next.language, key)
         console.log(`Missing translation for key "${key}" in language "${lng}"`)
 
         // (Experimental) Try use browser Translator API to handle missing keys
@@ -86,6 +93,9 @@ i18n.init({
         // how to trigger a re-render in components that use this key?
         i18next.addResource(lng, ns, key, tr)
         i18next.emit('added', lng, ns, key, tr)
+
+        // TODO: use ChatGPT to handle missing keys if browser Translator API is not available
+        //
     },
 })
 
@@ -141,8 +151,13 @@ export function useNextTranslation(namespace = 'common') {
     const router = useRouter()
     const locale = router.locale || router.defaultLocale || 'en'
 
-    // Use a cookie to store the user's language preference
-    const [cookieLocale, setCookieLocale] = reactUseCookie(
+    if (i18next.language !== locale) {
+        // Set the i18next language to the current locale if it differs
+        i18next.changeLanguage(locale)
+    }
+
+    // Use a cookie to store the user's language preference, for server-side detection
+    const [cookieLocale, setCookieLocale] = useCookieValue(
         LANGUAGE_STORAGE_KEY,
         ''
     )
