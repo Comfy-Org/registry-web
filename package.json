@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "next build & bun run build-storybook",
+        "build": "concurrently \"next build\" \"bun run build-storybook\"",
         "build-storybook": "storybook build -o public/_storybook",
         "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
         "dev": "next dev",
@@ -122,6 +122,7 @@
         "@vitest/coverage-v8": "^3.2.4",
         "autoprefixer": "10.4.12",
         "chromatic": "^13.2.0",
+        "concurrently": "^9.2.1",
         "eslint": "8.56.0",
         "eslint-config-next": "12.3.1",
         "eslint-config-prettier": "^9.1.2",
