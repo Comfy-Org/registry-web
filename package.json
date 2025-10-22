@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "concurrently \"next build\" \"bun run build-storybook\"",
-        "build-storybook": "storybook build -o public/_storybook",
+        "build-storybook": "storybook build -o public/_storybook && node scripts/fix-storybook-paths.js",
         "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
         "dev": "next dev",
         "fix": "next lint --fix .",
