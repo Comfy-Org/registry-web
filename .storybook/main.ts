@@ -28,6 +28,7 @@ export default defineConfig({
     }
 
     return mergeConfig(c, {
+      base: configType === 'PRODUCTION' ? '/_storybook/' : c.base,
       server: {
         allowedHosts: true,
         hmr: { clientPort: 443 },
