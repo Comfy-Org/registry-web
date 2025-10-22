@@ -2,8 +2,8 @@ name: Update API Type definitions
 
 on:
   schedule:
-    # Every day at midnight UTC, update the API type definitions from staging backend
-    - cron: '0 0 * * *'
+    # Every Monday at midnight UTC, update the API type definitions from staging backend
+    - cron: '0 0 * * 1'
   workflow_dispatch:
     inputs:
       backend_url:
@@ -70,39 +70,34 @@ jobs:
             git diff --stat src/api/generated.ts
           fi
 
-      - name: Close old API update PRs
+      - name: Check for existing API update PR
         if: steps.changes.outputs.has_changes == 'true'
+        id: existing_pr
         uses: actions/github-script@v7
         with:
+          result-encoding: string
           script: |
             const { data: prs } = await github.rest.pulls.list({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              head: `${context.repo.owner}:api-update-`,
+              head: `${context.repo.owner}:chore-update-comfy-api`,
               sort: 'created',
               direction: 'desc'
             });
-            
-            // Close old API update PRs (keep only the 2 most recent)
-            const oldPrs = prs.filter(pr => pr.head.ref.startsWith('api-update-')).slice(2);
-            
-            for (const pr of oldPrs) {
-              await github.rest.pulls.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: pr.number,
-                state: 'closed'
+
+            const existingPr = prs.find(pr => pr.head.ref === 'chore-update-comfy-api');
+
+            if (existingPr) {
+              console.log(`Found existing PR #${existingPr.number}: ${existingPr.title}`);
+              return JSON.stringify({
+                exists: true,
+                number: existingPr.number,
+                url: existingPr.html_url
               });
-              
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: pr.number,
-                body: '🤖 Automatically closed due to newer API update PR being created.'
-              });
-              
-              console.log(`Closed old PR #${pr.number}: ${pr.title}`);
+            } else {
+              console.log('No existing API update PR found');
+              return JSON.stringify({ exists: false });
             }
 
       - name: Generate diff summary for PR
@@ -121,45 +116,45 @@ jobs:
           git diff --stat src/api/generated.ts >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request
+      - name: Create or Update Pull Request
         if: steps.changes.outputs.has_changes == 'true'
         id: create_pr
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: update API type definitions from upstream"
-          title: "🤖 Update API Type Definitions - ${{ github.run_number }}"
+          title: "Chore: Update Comfy-API"
           body: |
             ## 🔄 Automated API Update
-            
+
             This PR contains automatically generated changes to the API client based on the latest OpenAPI specification from the backend.
-            
-            **Source**: `${{ env.NEXT_PUBLIC_BACKEND_URL }}/openapi`  
-            **Trigger**: ${{ github.event_name }}  
-            **Generated**: ${{ github.run_id }}  
-            **Timestamp**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-            
+
+            **Source**: `${{ env.NEXT_PUBLIC_BACKEND_URL }}/openapi`
+            **Trigger**: ${{ github.event_name }}
+            **Generated**: ${{ github.run_id }}
+            **Last Updated**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
             ${{ steps.diff_summary.outputs.DIFF_SUMMARY }}
-            
+
             ## ✅ Automated Checks
             - [x] OpenAPI spec successfully fetched
             - [x] API types generated without errors
             - [x] Changes detected and committed
-            
+
             ## 🧪 Manual Test Plan
             - [ ] Verify the generated types compile correctly: `bun run build`
             - [ ] Run linting: `bun run lint`
             - [ ] Test critical API endpoints in development
             - [ ] Check for any breaking changes in method signatures
-            
+
             ## 🔗 Related Links
             - [Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             - [OpenAPI Spec](${{ env.NEXT_PUBLIC_BACKEND_URL }}/openapi)
-            
+
             ---
             🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          branch: api-update-${{ github.run_number }}
-          delete-branch: true
+          branch: chore-update-comfy-api
+          delete-branch: false
           draft: false
           labels: |
             api
@@ -191,25 +186,42 @@ jobs:
         with:
           script: |
             const prNumber = ${{ steps.create_pr.outputs.pull-request-number }};
+            const existingPrData = JSON.parse('${{ steps.existing_pr.outputs.result }}');
+            const isUpdate = existingPrData.exists;
+            
             if (prNumber) {
+              const updateType = isUpdate ? '🔄 **Updated**' : '🆕 **Created**';
+              const updateTime = new Date().toISOString();
+              
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: prNumber,
                 body: `## 🔍 Automated Validation Results
                 
+                ${updateType} - ${updateTime}
+                
                 ✅ **Build**: Generated types compile successfully  
                 ✅ **Linting**: Code style validation passed  
                 ✅ **Dependencies**: All imports resolved correctly  
                 
-                This PR is ready for review! 🚀`
+                ${isUpdate ? '🔄 PR has been updated with the latest API changes!' : 'This PR is ready for review! 🚀'}
+                
+                **Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
               });
             }
 
       - name: Comment on success
         if: steps.changes.outputs.has_changes == 'true'
         run: |
-          echo "✅ API update PR created successfully"
+          EXISTING_PR=$(echo '${{ steps.existing_pr.outputs.result }}' | jq -r .exists)
+          if [ "$EXISTING_PR" = "true" ]; then
+            echo "✅ API update PR updated successfully"
+            echo "🔄 Force-pushed to existing PR branch: chore-update-comfy-api"
+          else
+            echo "✅ API update PR created successfully"
+            echo "🆕 New PR created on branch: chore-update-comfy-api"
+          fi
           echo "🔗 PR #${{ steps.create_pr.outputs.pull-request-number }}"
           echo "🔗 URL: ${{ steps.create_pr.outputs.pull-request-url }}"
 
