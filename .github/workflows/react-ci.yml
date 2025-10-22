@@ -45,5 +45,6 @@ jobs:
         if: steps.verify_diff.outputs.changed == 'true'
         with:
           commit_message: "format: Apply prettier --fix changes"
+          commit_options: "--no-verify"
         env:
           HUSKY: 0
