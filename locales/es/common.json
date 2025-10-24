@@ -361,7 +361,7 @@
   "Unable to get user email, please reload and try again": "No se puede obtener el correo electrónico del usuario, por favor recargue e intente de nuevo",
   "Unable to save: missing node or publisher information": "No se puede guardar: falta información del nodo o del editor.",
   "Unable to unclaim: missing node information": "No se puede cancelar la reclamación: falta información del nodo.",
-  "Unable to verify repository permissions. Please try again.": "无法验证仓库权限。请再试一次。",
+  "Unable to verify repository permissions. Please try again.": "No se pueden verificar los permisos del repositorio. Por favor, inténtelo de nuevo.",
   "Unclaim Node": "Cancelar reclamación de nodo",
   "Unclaim node": "Cancelar reclamación de nodo",
   "Unclaimed": "No reclamado",
