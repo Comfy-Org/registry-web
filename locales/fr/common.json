@@ -361,7 +361,7 @@
   "Unable to get user email, please reload and try again": "Impossible d'obtenir l'email de l'utilisateur, veuillez recharger et réessayer",
   "Unable to save: missing node or publisher information": "Impossible de sauvegarder : informations sur le nœud ou l'éditeur manquantes",
   "Unable to unclaim: missing node information": "Impossible d'annuler la revendication : informations sur le nœud manquantes",
-  "Unable to verify repository permissions. Please try again.": "无法验证仓库权限。请再试一次。",
+  "Unable to verify repository permissions. Please try again.": "Impossible de vérifier les autorisations du dépôt. Veuillez réessayer.",
   "Unclaim Node": "Annuler la revendication du nœud",
   "Unclaim node": "Annuler la revendication du nœud",
   "Unclaimed": "Non réclamé",
