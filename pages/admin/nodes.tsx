@@ -707,8 +707,7 @@ function NodeList() {
                             )}
                         </div>
                         <div className="text-yellow-500 text-sm">
-                            ⚠️{' '}
-                            {t('This action cannot be undone automatically.')}
+                            ⚠️ {t('This action cannot be undone automatically.')}
                         </div>
                     </div>
                 </Modal.Body>
