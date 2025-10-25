@@ -5,10 +5,10 @@ import {
     HiHome,
     HiOutlineAdjustments,
     HiOutlineClipboardCheck,
+    HiOutlineCog,
     HiOutlineCollection,
     HiOutlineDuplicate,
     HiOutlineSupport,
-    HiOutlineCog,
 } from 'react-icons/hi'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import withAdmin from '@/components/common/HOC/authAdmin'
