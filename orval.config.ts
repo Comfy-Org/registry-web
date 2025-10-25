@@ -1,7 +1,10 @@
 import { existsSync } from 'fs'
+import dotenv from 'dotenv'
 
 // load backend url from .env.local and .env, not necessary if you use bun
-if (!globalThis.Bun) require('dotenv').config({ path: ['.env.local', '.env'] })
+if (!globalThis.Bun) {
+    dotenv.config({ path: ['.env.local', '.env'] })
+}
 
 /**
  * @type {import('orval').ConfigExternal}
