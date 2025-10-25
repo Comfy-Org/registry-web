@@ -1,4 +1,3 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { DiffEditor, Editor } from '@monaco-editor/react'
 import { compareBy } from 'comparing'
 import { Button } from 'flowbite-react'
@@ -14,15 +13,16 @@ import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import { useInView } from 'react-intersection-observer'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
+import yaml from 'yaml'
+import { z } from 'zod'
 import {
     NodeVersion,
     NodeVersionStatus,
     useGetNode,
     useListNodeVersions,
 } from '@/src/api/generated'
-import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
-import yaml from 'yaml'
-import { z } from 'zod'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { NodeStatusBadge } from './NodeStatusBadge'
 import { parseIssueList } from './parseIssueList'
 import { parseJsonSafe } from './parseJsonSafe'
@@ -297,7 +297,9 @@ export function NodeStatusReason(nv: NodeVersion) {
                                             : ''
                                     }`}
                                     title={`${nv.version} ${NodeVersionStatusToReadable(
-                                        { status: nv.status }
+                                        {
+                                            status: nv.status,
+                                        }
                                     )} ${
                                         zStatusReason.safeParse(
                                             nv.status_reason
@@ -332,7 +334,9 @@ export function NodeStatusReason(nv: NodeVersion) {
                                     <code
                                         className="text-gray-400 whitespace-nowrap flex-1"
                                         title={`${nv.version} ${NodeVersionStatusToReadable(
-                                            { status: nv.status }
+                                            {
+                                                status: nv.status,
+                                            }
                                         )} ${
                                             zStatusReason.safeParse(
                                                 nv.status_reason

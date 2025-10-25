@@ -3,6 +3,11 @@ import { AxiosError } from 'axios'
 import { Button, Label, Modal } from 'flowbite-react'
 import { FormEventHandler, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { useNextTranslation } from 'src/hooks/i18n'
+import {
+    INVALIDATE_CACHE_OPTION,
+    shouldInvalidate,
+} from '@/components/cache-control'
 import {
     Error,
     getGetNodeQueryKey,
@@ -11,11 +16,6 @@ import {
     useGetNode,
     useUpdateNode,
 } from '@/src/api/generated'
-import {
-    INVALIDATE_CACHE_OPTION,
-    shouldInvalidate,
-} from '@/components/cache-control'
-import { useNextTranslation } from 'src/hooks/i18n'
 
 export default function SearchRankingEditModal({
     open,

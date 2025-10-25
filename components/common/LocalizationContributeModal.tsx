@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button, Modal } from 'flowbite-react'
 import React from 'react'
 import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type LocalizationContributeModalProps = {
     open: boolean

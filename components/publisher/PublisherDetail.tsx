@@ -1,4 +1,3 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -12,6 +11,7 @@ import {
     useListPersonalAccessTokens,
     useUpdatePublisher,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
 import EditPublisherModal from '../publisher/EditPublisherModal'

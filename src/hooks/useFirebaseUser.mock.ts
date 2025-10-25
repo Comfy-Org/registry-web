@@ -1,5 +1,6 @@
 import { fn } from '@storybook/test'
 import * as actual from './useFirebaseUser'
+
 export * from './useFirebaseUser'
 
 // Mock Firebase user data

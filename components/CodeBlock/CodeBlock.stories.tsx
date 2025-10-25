@@ -1,5 +1,5 @@
-import CopyableCodeBlock from '@/components/CodeBlock/CodeBlock'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import CopyableCodeBlock from '@/components/CodeBlock/CodeBlock'
 
 const meta: Meta<typeof CopyableCodeBlock> = {
     title: 'Components/CodeBlock',

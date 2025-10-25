@@ -1,12 +1,12 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { HttpResponse, http } from 'msw'
 import PublisherDetail from '@/components/publisher/PublisherDetail'
 import {
+    PersonalAccessToken,
     Publisher,
     PublisherStatus,
-    PersonalAccessToken,
 } from '@/src/api/generated'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { CAPI, handlers } from '@/src/mocks/handlers'
-import { http, HttpResponse } from 'msw'
 
 const meta: Meta<typeof PublisherDetail> = {
     title: 'Components/Publisher/PublisherDetail',

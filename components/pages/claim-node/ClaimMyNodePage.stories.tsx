@@ -1,13 +1,13 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fn } from '@storybook/test'
-import { http, HttpResponse } from 'msw'
-import { Node, Publisher, User } from '@/src/api/generated'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { User as FirebaseUser } from 'firebase/auth'
+import { HttpResponse, http } from 'msw'
 import ClaimMyNodePage from '@/pages/publishers/[publisherId]/claim-my-node'
+import { Node, Publisher, User } from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { CAPI } from '@/src/mocks/apibase'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import { CAPI } from '@/src/mocks/apibase'
 
 // Mock next/router
 const mockRouter = {

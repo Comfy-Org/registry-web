@@ -1,6 +1,3 @@
-import withAdmin from '@/components/common/HOC/authAdmin'
-import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -13,6 +10,9 @@ import {
     HiOutlineSupport,
     HiOutlineCog,
 } from 'react-icons/hi'
+import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAdmin(AdminDashboard)
 function AdminDashboard() {

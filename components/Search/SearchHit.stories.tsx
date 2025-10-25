@@ -1,6 +1,6 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import Hit from '@/components/Search/SearchHit'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 // Note: The Snippet component from react-instantsearch is handled in the component
 // For Storybook, we're providing the complete mock hit structure

@@ -1,16 +1,13 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
     Breadcrumb,
     Button,
+    Label,
     Modal,
     Spinner,
     Table,
     TextInput,
-    Label,
 } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -19,20 +16,26 @@ import React, { useState } from 'react'
 import { HiHome, HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import {
     Node,
     NodeStatus,
+    useGetUser,
     useListAllNodes,
     useUpdateNode,
-    useGetUser,
 } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 function NodeList() {
     const { t } = useNextTranslation()
     const router = useRouter()
     const [page, setPage] = React.useState<number>(1)
     const [editingNode, setEditingNode] = useState<Node | null>(null)
-    const [editFormData, setEditFormData] = useState({ tags: '', category: '' })
+    const [editFormData, setEditFormData] = useState({
+        tags: '',
+        category: '',
+    })
     const queryClient = useQueryClient()
     const { data: user } = useGetUser()
 
