@@ -1,7 +1,10 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.3.0/schema.json",
     "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-    "files": { "ignoreUnknown": false },
+    "files": {
+        "ignoreUnknown": false,
+        "maxSize": 2097152
+    },
     "formatter": {
         "enabled": true,
         "formatWithErrors": false,
@@ -25,7 +28,8 @@
             "!NativeApp/.expo-shared/*",
             "!public/*",
             "!NativeApp/eas.json",
-            "!src/api/generated.ts"
+            "!src/api/generated.ts",
+            "!styles/globals.css"
         ]
     },
     "linter": {
@@ -40,7 +44,8 @@
             "**/.storybook",
             "!./worktrees",
             "!NativeApp/*",
-            "!src/api/generated.ts"
+            "!src/api/generated.ts",
+            "!styles/globals.css"
         ]
     },
     "javascript": {
@@ -57,8 +62,22 @@
         }
     },
     "html": { "formatter": { "selfCloseVoidElements": "always" } },
+    "css": {
+        "parser": {
+            "cssModules": false,
+            "allowWrongLineComments": true,
+            "tailwindDirectives": true
+        }
+    },
     "assist": {
         "enabled": true,
         "actions": { "source": { "organizeImports": "on" } }
-    }
+    },
+    "overrides": [
+        {
+            "includes": ["styles/globals.css"],
+            "linter": { "enabled": false },
+            "formatter": { "enabled": false }
+        }
+    ]
 }
