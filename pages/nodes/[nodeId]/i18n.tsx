@@ -82,11 +82,20 @@ const NodeTranslationEditor = () => {
         }
     }
 
-    const getCurrentTranslations = () => {
+    const getCurrentTranslations = (): Record<string, string | string[]> => {
         return {
             ...existingTranslations[selectedLanguage],
             ...translations[selectedLanguage],
         } as Record<string, string | string[]>
+    }
+
+    const getFieldValue = (
+        translations: Record<string, string | string[]>,
+        field: string
+    ): string => {
+        const value = translations[field]
+        if (Array.isArray(value)) return value.join(', ')
+        return value || ''
     }
 
     const updateTranslation = (field: string, value: string) => {
@@ -302,8 +311,9 @@ const NodeTranslationEditor = () => {
 
                             {field === 'description' ? (
                                 <Textarea
-                                    value={String(
-                                        currentTranslations[field] || ''
+                                    value={getFieldValue(
+                                        currentTranslations,
+                                        field
                                     )}
                                     onChange={(e) =>
                                         updateTranslation(field, e.target.value)
@@ -315,8 +325,9 @@ const NodeTranslationEditor = () => {
                                 />
                             ) : (
                                 <TextInput
-                                    value={String(
-                                        currentTranslations[field] || ''
+                                    value={getFieldValue(
+                                        currentTranslations,
+                                        field
                                     )}
                                     onChange={(e) =>
                                         updateTranslation(field, e.target.value)
@@ -330,10 +341,11 @@ const NodeTranslationEditor = () => {
                             {existingTranslations[selectedLanguage]?.[field] ? (
                                 <p className="text-xs text-gray-500 mt-1">
                                     {t('Original')}:{' '}
-                                    {String(
-                                        existingTranslations[selectedLanguage][
-                                            field
-                                        ]
+                                    {getFieldValue(
+                                        existingTranslations[
+                                            selectedLanguage
+                                        ] as Record<string, string | string[]>,
+                                        field
                                     )}
                                 </p>
                             ) : null}
