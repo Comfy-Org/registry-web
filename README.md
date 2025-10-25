@@ -60,6 +60,17 @@ pnpm run chromatic
 
 See [docs/chromatic-setup.md](docs/chromatic-setup.md) for more details on our Chromatic CI/CD integration.
 
+### Workflows & Automation
+
+#### Update PR Branches
+
+We provide a GitHub Actions workflow to automatically update open PR branches with the latest changes from `main`. This is useful for:
+- Keeping long-running PRs up-to-date
+- Reducing merge conflicts
+- Repository maintenance
+
+See [docs/update-pr-branches.md](docs/update-pr-branches.md) for detailed usage instructions.
+
 ### Generate Code Stub based on OpenAPI Spec
 
 Start the dev server.
