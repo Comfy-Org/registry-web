@@ -24,7 +24,7 @@ function AdminDashboard() {
                 <Breadcrumb.Item href="/" icon={HiHome} className="dark">
                     {t('Home')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item href="#" className="dark">
+                <Breadcrumb.Item className="dark">
                     {t('Admin Dashboard')}
                 </Breadcrumb.Item>
             </Breadcrumb>

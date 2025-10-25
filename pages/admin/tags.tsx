@@ -133,7 +133,7 @@ function CategoriesPage() {
                 <Breadcrumb.Item href="/admin" className="dark">
                     {t('Admin Dashboard')}
                 </Breadcrumb.Item>
-                <Breadcrumb.Item href="#" className="dark">
+                <Breadcrumb.Item className="dark">
                     {t('Tag Management')}
                 </Breadcrumb.Item>
             </Breadcrumb>
