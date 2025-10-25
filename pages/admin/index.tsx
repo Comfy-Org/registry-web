@@ -8,10 +8,10 @@ import {
     HiHome,
     HiOutlineAdjustments,
     HiOutlineClipboardCheck,
+    HiOutlineCog,
     HiOutlineCollection,
     HiOutlineDuplicate,
     HiOutlineSupport,
-    HiOutlineCog,
 } from 'react-icons/hi'
 
 export default withAdmin(AdminDashboard)

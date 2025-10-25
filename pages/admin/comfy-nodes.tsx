@@ -1,31 +1,31 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
-import withAdmin from '@/components/common/HOC/authAdmin'
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
 import {
+    Badge,
     Breadcrumb,
     Button,
+    Label,
     Modal,
+    Select,
     Spinner,
     Table,
-    TextInput,
-    Label,
     Textarea,
-    Select,
-    Badge,
+    TextInput,
 } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { HiHome, HiPencil, HiSearch } from 'react-icons/hi'
 import { toast } from 'react-toastify'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import {
+    ComfyNode,
+    ComfyNodePolicy,
+    ComfyNodeUpdateRequest,
     useListAllComfyNodes,
     useUpdateComfyNode,
-    ComfyNode,
-    ComfyNodeUpdateRequest,
-    ComfyNodePolicy,
 } from '@/src/api/generated'
-import { useForm, Controller } from 'react-hook-form'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface ComfyNodeEditModalProps {
     isOpen: boolean

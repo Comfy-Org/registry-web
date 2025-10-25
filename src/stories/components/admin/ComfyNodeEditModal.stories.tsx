@@ -1,10 +1,9 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { useState } from 'react'
 import { Button } from 'flowbite-react'
-import { ComfyNode, ComfyNodePolicy } from '@/src/api/generated'
-
+import { useState } from 'react'
 // Import the modal component directly from the page file
 import { ComfyNodeEditModal } from '@/pages/admin/comfy-nodes'
+import { ComfyNode, ComfyNodePolicy } from '@/src/api/generated'
 
 // Mock ComfyNode data
 const mockComfyNode: ComfyNode = {

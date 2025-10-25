@@ -1,5 +1,5 @@
-import { existsSync } from 'fs'
 import dotenv from 'dotenv'
+import { existsSync } from 'fs'
 
 // load backend url from .env.local and .env, not necessary if you use bun
 if (!globalThis.Bun) {

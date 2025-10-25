@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Button, Badge, Table } from 'flowbite-react'
+import { Badge, Button, Table } from 'flowbite-react'
 import { HiPencil } from 'react-icons/hi'
 import { ComfyNode, ComfyNodePolicy } from '@/src/api/generated'
 
