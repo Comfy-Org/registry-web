@@ -2,8 +2,11 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Breadcrumb, Card } from 'flowbite-react'
 import { HiHome } from 'react-icons/hi'
 import CreatePublisherFormContent from '@/components/publisher/CreatePublisherFormContent'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 const CreatePublisherPageLayout = () => {
+    const { t } = useNextTranslation()
+
     const handleSuccess = (username: string) => {
         console.log('Publisher created successfully:', username)
         // In a real scenario, this would navigate to the publisher page
