@@ -38,6 +38,8 @@ jobs:
       # Build Storybook
       - name: Build Storybook
         run: bun run build-storybook
+        env:
+          CHROMATIC: true
 
       # Publish to Chromatic (on push to main or PRs from *storybook* branches)
       - name: Publish to Chromatic
@@ -48,7 +50,7 @@ jobs:
         uses: chromaui/action@v1
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          storybookBuildDir: storybook-static
+          storybookBuildDir: public/_storybook
           exitZeroOnChanges: true # Optional: Exit with success status even if there are UI changes
           autoAcceptChanges: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} # Only auto-accept on main branch
 
