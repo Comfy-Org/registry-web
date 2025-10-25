@@ -86,7 +86,7 @@ jobs:
               direction: 'desc'
             });
 
-            const existingPr = prs.find(pr => pr.head.ref === 'chore-update-comfy-api');
+            const existingPr = prs.length > 0 ? prs[0] : null;
 
             if (existingPr) {
               console.log(`Found existing PR #${existingPr.number}: ${existingPr.title}`);
