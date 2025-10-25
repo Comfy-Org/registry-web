@@ -219,10 +219,14 @@ export default function NodeVersionCompatibilityEditModal({
                                         <div className="flex items-center justify-between">
                                             <div className="font-semibold">
                                                 {t(
-                                                    'Latest Version Compatibility Reference'
+                                                    'Latest Version Compatibility Reference: v{{version}}',
+                                                    {
+                                                        version:
+                                                            nodeData
+                                                                .latest_version
+                                                                .version,
+                                                    }
                                                 )}
-                                                :{' '}
-                                                {`v${nodeData.latest_version.version}`}
                                             </div>
                                             <Button
                                                 size="xs"

@@ -2,6 +2,7 @@ import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useGetUser } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import { useFromUrlParam } from './useFromUrl'
 
@@ -17,6 +18,7 @@ const withAdmin = (WrappedComponent) => {
     const HOC = (props: JSX.IntrinsicAttributes) => {
         const router = useRouter()
         const fromUrlParam = useFromUrlParam()
+        const { t } = useNextTranslation()
 
         // if firebaseUser is signed out, redirect to login page
         const [firebaseUser, firebaseUserLoading] = useFirebaseUser()
@@ -43,7 +45,12 @@ const withAdmin = (WrappedComponent) => {
         if (!user.isAdmin) {
             return (
                 <div className="text-white dark:text-white">
-                    403 Forbidden: You have no permission to this page.
+                    403{' '}
+                    {t(
+                        'Forbidden: You have no permission to this page',
+                        'Forbidden: You have no permission to this page'
+                    )}
+                    .
                 </div>
             )
         }

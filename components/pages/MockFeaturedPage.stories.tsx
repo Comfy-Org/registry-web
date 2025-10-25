@@ -1,3 +1,4 @@
+/* eslint-disable @spaced-out/i18n/no-static-labels */
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import Container from '@/components/common/Container'
 import GenericHeader from '@/components/common/GenericHeader'

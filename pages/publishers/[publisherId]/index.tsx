@@ -21,7 +21,7 @@ function PublisherDetails() {
     }
 
     if (!data || isError) {
-        return <div>Not found</div>
+        return <div>{t('Not_found', 'Not found')}</div>
     }
 
     return (

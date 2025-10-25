@@ -83,7 +83,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     if (publisher === undefined || publisher.id === undefined) {
         return (
             <div className="container p-6 mx-auto h-[90vh] text-white">
-                Not Found
+                {t('Not_Found', 'Not Found')}
             </div>
         )
     }
