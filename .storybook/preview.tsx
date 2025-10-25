@@ -2,10 +2,18 @@ import type { Preview } from '@storybook/nextjs-vite'
 import '../styles/globals.css' // Import the global CSS file
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { initialize, mswLoader } from 'msw-storybook-addon'
+import '../src/firebase' // Initialize Firebase for Storybook
+import {
+  mockFirebaseUser,
+  useFirebaseUser,
+} from '@/src/hooks/useFirebaseUser.mock'
 
 initialize({
   onUnhandledRequest: 'bypass',
 })
+
+const languageName = (lang: string) =>
+  new Intl.DisplayNames(lang, { type: 'language' }).of(lang)
 
 const preview: Preview = {
   parameters: {
@@ -18,6 +26,12 @@ const preview: Preview = {
     msw: {
       handlers: [],
     },
+    docs: {
+      toc: true,
+    },
+  },
+  beforeEach: async () => {
+    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
   },
   loaders: [mswLoader],
   decorators: [
@@ -54,12 +68,12 @@ const preview: Preview = {
       toolbar: {
         icon: 'globe',
         items: [
-          { value: 'en', right: '🇺🇸', title: 'English' },
-          { value: 'es', right: '🇪🇸', title: 'Español' },
-          { value: 'fr', right: '🇫🇷', title: 'Français' },
-          { value: 'ja', right: '🇯🇵', title: '日本語' },
-          { value: 'kr', right: '🇰🇷', title: '한국어' },
-          { value: 'zh', right: '🇨🇳', title: '中文' },
+          { value: 'en', right: '🇺🇸', title: languageName('en') },
+          { value: 'es', right: '🇪🇸', title: languageName('es') },
+          { value: 'fr', right: '🇫🇷', title: languageName('fr') },
+          { value: 'ja', right: '🇯🇵', title: languageName('ja') },
+          { value: 'kr', right: '🇰🇷', title: languageName('kr') },
+          { value: 'zh', right: '🇨🇳', title: languageName('zh') },
         ],
       },
     },
@@ -67,6 +81,7 @@ const preview: Preview = {
   initialGlobals: {
     locale: 'en',
   },
+  tags: ['autodocs'],
 }
 
 export default preview
