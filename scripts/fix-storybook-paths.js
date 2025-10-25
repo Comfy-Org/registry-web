@@ -2,6 +2,12 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 
+// Skip path fixing when building for Chromatic
+if (process.env.CHROMATIC === 'true') {
+    console.log('⊘ Skipping path fixes for Chromatic build')
+    process.exit(0)
+}
+
 const storybookDir = 'public/_storybook'
 const iframeHtmlPath = join(process.cwd(), storybookDir, 'iframe.html')
 const indexHtmlPath = join(process.cwd(), storybookDir, 'index.html')

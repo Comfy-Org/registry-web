@@ -28,7 +28,11 @@ export default defineConfig({
         }
 
         return mergeConfig(c, {
-            base: configType === 'PRODUCTION' ? '/_storybook/' : c.base,
+            // Only set custom base path for production builds (not for Chromatic)
+            base:
+                configType === 'PRODUCTION' && process.env.CHROMATIC !== 'true'
+                    ? '/_storybook/'
+                    : c.base,
             server: {
                 allowedHosts: true,
                 hmr: { clientPort: 443 },

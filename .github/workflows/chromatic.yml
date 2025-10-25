@@ -37,6 +37,8 @@ jobs:
       # Build Storybook
       - name: Build Storybook
         run: bun run build-storybook
+        env:
+          CHROMATIC: true
 
       # Publish to Chromatic (on push to main or PRs from *storybook* branches)
       - name: Publish to Chromatic
