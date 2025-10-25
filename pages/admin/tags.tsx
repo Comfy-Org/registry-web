@@ -19,7 +19,12 @@ import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { usePage } from '@/components/hooks/usePage'
-import { Node, useListAllNodes, useUpdateNode } from '@/src/api/generated'
+import {
+    Node,
+    useAdminUpdateNode,
+    useListAllNodes,
+    useUpdateNode,
+} from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default withAdmin(CategoriesPage)
@@ -35,6 +40,7 @@ function CategoriesPage() {
     })
     const queryClient = useQueryClient()
     const updateNodeMutation = useUpdateNode()
+    const adminUpdateNodeMutation = useAdminUpdateNode()
 
     // Search filter
     const queryForNodeId = Array.isArray(router.query.nodeId)
@@ -82,31 +88,68 @@ function CategoriesPage() {
     }
 
     const handleSave = async () => {
-        if (!editingNode || !editingNode.publisher?.id) {
-            toast.error(
-                t('Unable to save: missing node or publisher information')
-            )
+        if (!editingNode) {
+            toast.error(t('Unable to save: missing node information'))
             return
         }
 
-        const updatedNode: Node = {
-            ...editingNode,
-            tags: editFormData.tags
-                .split(',')
-                .map((tag) => tag.trim())
-                .filter((tag) => tag.length > 0),
-            tags_admin: editFormData.tags_admin
-                .split(',')
-                .map((tag) => tag.trim())
-                .filter((tag) => tag.length > 0),
-        }
+        const newTags = editFormData.tags
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0)
+        const newAdminTags = editFormData.tags_admin
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0)
+
+        const originalTags = editingNode.tags || []
+        const originalAdminTags = editingNode.tags_admin || []
+
+        // Check if admin tags changed
+        const adminTagsChanged =
+            JSON.stringify(originalAdminTags.sort()) !==
+            JSON.stringify(newAdminTags.sort())
+
+        // Check if regular tags changed
+        const tagsChanged =
+            JSON.stringify(originalTags.sort()) !==
+            JSON.stringify(newTags.sort())
 
         try {
-            await updateNodeMutation.mutateAsync({
-                publisherId: editingNode.publisher.id,
-                nodeId: editingNode.id!,
-                data: updatedNode,
-            })
+            // If admin tags changed, use admin endpoint
+            if (adminTagsChanged) {
+                const updatedNode: Node = {
+                    ...editingNode,
+                    tags: newTags,
+                    tags_admin: newAdminTags,
+                }
+
+                await adminUpdateNodeMutation.mutateAsync({
+                    nodeId: editingNode.id!,
+                    data: updatedNode,
+                })
+            }
+            // If only regular tags changed, use regular endpoint
+            else if (tagsChanged) {
+                if (!editingNode.publisher?.id) {
+                    toast.error(
+                        t('Unable to save: missing publisher information')
+                    )
+                    return
+                }
+
+                const updatedNode: Node = {
+                    ...editingNode,
+                    tags: newTags,
+                    tags_admin: newAdminTags,
+                }
+
+                await updateNodeMutation.mutateAsync({
+                    publisherId: editingNode.publisher.id,
+                    nodeId: editingNode.id!,
+                    data: updatedNode,
+                })
+            }
 
             toast.success(t('Node updated successfully'))
             closeEditModal()
@@ -400,9 +443,13 @@ function CategoriesPage() {
                 <Modal.Footer className="dark">
                     <Button
                         onClick={handleSave}
-                        disabled={updateNodeMutation.isPending}
+                        disabled={
+                            updateNodeMutation.isPending ||
+                            adminUpdateNodeMutation.isPending
+                        }
                     >
-                        {updateNodeMutation.isPending ? (
+                        {updateNodeMutation.isPending ||
+                        adminUpdateNodeMutation.isPending ? (
                             <Spinner size="sm" />
                         ) : (
                             t('Save')
