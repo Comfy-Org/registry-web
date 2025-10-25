@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { AdminCreateNodeFormModal } from './AdminCreateNodeFormModal'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
+import { AdminCreateNodeFormModal } from './AdminCreateNodeFormModal'
 
 const meta = {
     title: 'Components/Nodes/AdminCreateNodeFormModal',
@@ -50,7 +50,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 // Story wrapper component to handle modal state
-function ModalWrapper(args: React.ComponentProps<typeof AdminCreateNodeFormModal>) {
+function ModalWrapper(
+    args: React.ComponentProps<typeof AdminCreateNodeFormModal>
+) {
     const [open, setOpen] = useState(true)
 
     return (
