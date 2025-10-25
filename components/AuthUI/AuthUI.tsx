@@ -1,5 +1,5 @@
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { Button, Card, TextInput, Label } from 'flowbite-react'
+import { Button, Card, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
