@@ -116,6 +116,11 @@ jobs:
           git diff --stat src/api/generated.ts >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Get current timestamp
+        if: steps.changes.outputs.has_changes == 'true'
+        id: timestamp
+        run: echo "current=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
+
       - name: Create or Update Pull Request
         if: steps.changes.outputs.has_changes == 'true'
         id: create_pr
@@ -132,7 +137,7 @@ jobs:
             **Source**: `${{ env.NEXT_PUBLIC_BACKEND_URL }}/openapi`
             **Trigger**: ${{ github.event_name }}
             **Generated**: ${{ github.run_id }}
-            **Last Updated**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            **Last Updated**: ${{ steps.timestamp.outputs.current }}
 
             ${{ steps.diff_summary.outputs.DIFF_SUMMARY }}
 
@@ -175,7 +180,7 @@ jobs:
           # Run linting
           bun run lint || {
             echo "❌ Linting failed - running auto-fix"
-            bun run fix
+            bun run fix || exit 1
           }
           
           echo "✅ Generated API types are valid"
