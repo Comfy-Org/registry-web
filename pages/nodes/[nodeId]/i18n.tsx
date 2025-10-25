@@ -24,6 +24,9 @@ import {
 import { LANGUAGE_NAMES, SUPPORTED_LANGUAGES } from '@/src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
+const DEFAULT_FIELDS = ['name', 'description', 'category', 'tags'] as const
+const SUCCESS_MESSAGE_TIMEOUT_MS = 3000
+
 const NodeTranslationEditor = () => {
     const router = useRouter()
     const { nodeId } = router.query
@@ -129,7 +132,7 @@ const NodeTranslationEditor = () => {
             })
             setSuccessMessage(t('Translation saved successfully!'))
             setErrorMessage('')
-            setTimeout(() => setSuccessMessage(''), 3000)
+            setTimeout(() => setSuccessMessage(''), SUCCESS_MESSAGE_TIMEOUT_MS)
         } catch (err) {
             setErrorMessage(t('Failed to save translation'))
             setSuccessMessage('')
@@ -170,10 +173,7 @@ const NodeTranslationEditor = () => {
 
     const currentTranslations = getCurrentTranslations()
     const allFields = new Set([
-        'name',
-        'description',
-        'category',
-        'tags',
+        ...DEFAULT_FIELDS,
         ...Object.keys(currentTranslations),
     ])
 
@@ -287,12 +287,9 @@ const NodeTranslationEditor = () => {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     {field}
                                 </label>
-                                {![
-                                    'name',
-                                    'description',
-                                    'category',
-                                    'tags',
-                                ].includes(field) && (
+                                {!DEFAULT_FIELDS.includes(
+                                    field as (typeof DEFAULT_FIELDS)[number]
+                                ) && (
                                     <Button
                                         size="xs"
                                         color="failure"
@@ -305,7 +302,9 @@ const NodeTranslationEditor = () => {
 
                             {field === 'description' ? (
                                 <Textarea
-                                    value={currentTranslations[field] || ''}
+                                    value={String(
+                                        currentTranslations[field] || ''
+                                    )}
                                     onChange={(e) =>
                                         updateTranslation(field, e.target.value)
                                     }
@@ -316,11 +315,9 @@ const NodeTranslationEditor = () => {
                                 />
                             ) : (
                                 <TextInput
-                                    value={
-                                        (currentTranslations[
-                                            field
-                                        ] as string) || ''
-                                    }
+                                    value={String(
+                                        currentTranslations[field] || ''
+                                    )}
                                     onChange={(e) =>
                                         updateTranslation(field, e.target.value)
                                     }
