@@ -1,3 +1,13 @@
+# Update PR Branches to Latest Main
+#
+# This workflow allows maintainers to update open PR branches with the latest changes from main.
+#
+# Usage:
+#   - Via GitHub UI: Actions tab → Update PR Branches to Latest Main → Run workflow
+#   - Via CLI: gh workflow run update-pr-branches.yml [-f pr_numbers="220,224"] [-f dry_run=true]
+#
+# See docs/update-pr-branches.md for detailed documentation.
+
 name: Update PR Branches to Latest Main
 
 on:
