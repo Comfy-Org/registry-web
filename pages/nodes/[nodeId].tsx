@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Breadcrumb } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import NodeDetails from '../../components/nodes/NodeDetails'
 
 const NodeView = () => {

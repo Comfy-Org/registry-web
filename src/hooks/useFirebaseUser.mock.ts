@@ -1,6 +1,7 @@
 import { vi } from 'vitest'
 import { User as FirebaseUser } from 'firebase/auth'
 import * as actual from './useFirebaseUser'
+
 export * from './useFirebaseUser'
 
 // Mock Firebase user data

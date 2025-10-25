@@ -1,10 +1,10 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { Button } from 'flowbite-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { HiPencil } from 'react-icons/hi'
 import { Node } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { PublisherId } from '../Search/PublisherId'
 import { AdminNodeClaimModal } from './AdminNodeClaimModal'
 

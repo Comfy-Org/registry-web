@@ -1,10 +1,10 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { SUPPORTED_LANGUAGES } from '@/src/constants'
-import { Dropdown, DropdownItem } from 'flowbite-react'
-import React, { useMemo, useEffect, useState } from 'react'
 import clsx from 'clsx'
-import { useRouter } from 'next/router'
+import { Dropdown, DropdownItem } from 'flowbite-react'
 import Link, { LinkProps } from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useEffect, useMemo, useState } from 'react'
+import { SUPPORTED_LANGUAGES } from '@/src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import { LocalizationContributeModal } from './LocalizationContributeModal'
 
 export default function LanguageSwitcher({

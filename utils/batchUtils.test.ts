@@ -2,7 +2,7 @@
  * Test cases for batch utilities
  */
 
-import { generateBatchId, createBatchReasonMessage } from './batchUtils'
+import { createBatchReasonMessage, generateBatchId } from './batchUtils'
 
 describe('Batch Utilities', () => {
     // Test the generateBatchId function

@@ -1,4 +1,4 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
+import Link from 'next/link'
 import { useState } from 'react'
 import {
     HiChevronDown,
@@ -6,11 +6,11 @@ import {
     HiOutlineAdjustments,
     HiOutlineClipboardCheck,
     HiOutlineCollection,
+    HiOutlineCube,
     HiOutlineDuplicate,
     HiOutlineSupport,
-    HiOutlineCube,
 } from 'react-icons/hi'
-import Link from 'next/link'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface TreeNode {
     id: string

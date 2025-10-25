@@ -1,5 +1,5 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import { useQueryClient } from '@tanstack/react-query'
+import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
 import { Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
@@ -9,6 +9,10 @@ import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
+    REQUEST_OPTIONS_NO_CACHE,
+    UNCLAIMED_ADMIN_PUBLISHER_ID,
+} from 'src/constants'
+import {
     NodeVersion,
     NodeVersionStatus,
     useGetNode,
@@ -17,11 +21,8 @@ import {
     useListNodeVersions,
     useListPublishersForUser,
 } from '@/src/api/generated'
-import {
-    UNCLAIMED_ADMIN_PUBLISHER_ID,
-    REQUEST_OPTIONS_NO_CACHE,
-} from 'src/constants'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
+import { useNextTranslation } from '@/src/hooks/i18n'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
@@ -29,7 +30,6 @@ import NodeStatusBadge from './NodeStatusBadge'
 import NodeVDrawer from './NodeVDrawer'
 import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
 import SearchRankingEditModal from './SearchRankingEditModal'
-import { intlFormatDistance } from 'date-fns'
 
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
     const { t } = useNextTranslation()
@@ -304,7 +304,8 @@ const NodeDetails = () => {
                                             node.latest_version?.createdAt &&
                                                 intlFormatDistance(
                                                     new Date(
-                                                        node.latest_version.createdAt
+                                                        node.latest_version
+                                                            .createdAt
                                                     ),
                                                     new Date(),
                                                     {

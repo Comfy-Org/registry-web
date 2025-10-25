@@ -1,6 +1,6 @@
-import { CustomPagination } from '@/components/common/CustomPagination'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useState } from 'react'
+import { CustomPagination } from '@/components/common/CustomPagination'
 
 // Create a component with state for the Storybook
 const PaginationWithState = ({ initialPage = 1, totalPages = 10 }) => {
