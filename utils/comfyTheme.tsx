@@ -32,10 +32,10 @@ export const customThemeTModal: CustomFlowbiteTheme = {
     },
     content: {
         base: 'relative h-full w-full p-4 md:h-auto rounded-2xl bg-gray-800',
-        inner: 'relative flex max-h-[90dvh] flex-col rounded-lg bg-white   bg-gray-200',
+        inner: 'relative flex max-h-[90dvh] flex-col rounded-lg bg-gray-800',
     },
     body: {
-        base: 'flex-1 overflow-auto p-6 bg-gray-100',
+        base: 'flex-1 overflow-auto p-6 bg-gray-800',
         popup: 'pt-0',
     },
     header: {
