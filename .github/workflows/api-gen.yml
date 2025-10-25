@@ -190,28 +190,29 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = '${{ steps.create_pr.outputs.pull-request-number }}' || null;
+            const prNumberStr = '${{ steps.create_pr.outputs.pull-request-number }}';
+            const prNumber = prNumberStr ? parseInt(prNumberStr, 10) : null;
             const existingPrData = JSON.parse('${{ steps.existing_pr.outputs.result }}');
             const isUpdate = existingPrData.exists;
-            
+
             if (prNumber) {
               const updateType = isUpdate ? '🔄 **Updated**' : '🆕 **Created**';
               const updateTime = new Date().toISOString();
-              
+
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: prNumber,
                 body: `## 🔍 Automated Validation Results
-                
+
                 ${updateType} - ${updateTime}
-                
-                ✅ **Build**: Generated types compile successfully  
-                ✅ **Linting**: Code style validation passed  
-                ✅ **Dependencies**: All imports resolved correctly  
-                
+
+                ✅ **Build**: Generated types compile successfully
+                ✅ **Linting**: Code style validation passed
+                ✅ **Dependencies**: All imports resolved correctly
+
                 ${isUpdate ? '🔄 PR has been updated with the latest API changes!' : 'This PR is ready for review! 🚀'}
-                
+
                 **Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
               });
             }
