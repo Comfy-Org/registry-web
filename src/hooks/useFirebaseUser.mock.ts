@@ -1,5 +1,5 @@
-import { vi } from 'vitest'
 import { User as FirebaseUser } from 'firebase/auth'
+import { vi } from 'vitest'
 import * as actual from './useFirebaseUser'
 
 export * from './useFirebaseUser'
