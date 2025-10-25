@@ -2,7 +2,9 @@ import { NodeVersionStatus } from '@/src/api/generated'
 
 export function NodeVersionStatusToReadable({
     status,
-}: { status?: NodeVersionStatus } = {}) {
+}: {
+    status?: NodeVersionStatus
+} = {}) {
     if (!status) {
         return 'Unknown'
     }

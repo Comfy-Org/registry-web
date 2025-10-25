@@ -1,22 +1,13 @@
-import { http, HttpResponse } from 'msw'
+import { HttpResponse, http } from 'msw'
 import {
     ListNodesForPublisherV2200,
-    NodeStatus,
-    PublisherStatus,
     type Node,
+    NodeStatus,
     type Publisher,
+    PublisherStatus,
     type User,
 } from '../api/generated'
-export const CAPI = (path: `/${string}`) => {
-    // api.comfy.org
-    return new URL(path, process.env.NEXT_PUBLIC_BACKEND_URL!).toString()
-}
-
-// TODO: add algolia search handler...
-export const ALGO = (path: `/${string}`) => {
-    // algolia
-    throw 'WIP'
-}
+import { CAPI } from './apibase'
 
 // Mock data
 const mockNodes: Node[] = [
@@ -156,6 +147,8 @@ const mockUser: User = {
     isAdmin: false,
     isApproved: true,
 }
+
+export { CAPI }
 
 export const handlers = [
     // Users endpoints

@@ -1,9 +1,12 @@
-import NodeDetails from '@/components/nodes/NodeDetails'
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CAPI, handlers } from '@/src/mocks/handlers'
-import { http, HttpResponse } from 'msw'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { User as FirebaseUser } from 'firebase/auth'
+import { HttpResponse, http } from 'msw'
+import NodeDetails from '@/components/nodes/NodeDetails'
 import { Node, NodeStatus, PublisherStatus } from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
+import { CAPI } from '@/src/mocks/apibase'
+import { handlers } from '@/src/mocks/handlers'
 
 const meta: Meta<typeof NodeDetails> = {
     title: 'Components/Nodes/NodeDetails',
@@ -29,6 +32,27 @@ const meta: Meta<typeof NodeDetails> = {
 export default meta
 type Story = StoryObj<typeof NodeDetails>
 
+// Mock Firebase user data
+const mockFirebaseUser = {
+    uid: 'firebase-user-123',
+    email: 'user@example.com',
+    displayName: 'Test User',
+    photoURL: 'https://picsum.photos/40/40',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    refreshToken: '',
+    tenantId: null,
+    delete: async () => undefined,
+    getIdToken: async () => '',
+    getIdTokenResult: async () => ({}) as any,
+    reload: async () => undefined,
+    toJSON: () => ({}),
+    phoneNumber: null,
+    providerId: 'google',
+} satisfies FirebaseUser
+
 export const Default: Story = {
     parameters: {
         nextjs: {
@@ -53,6 +77,10 @@ export const Default: Story = {
             ],
         },
     },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
 }
 
 export const WithPublisherRoute: Story = {
@@ -69,6 +97,10 @@ export const WithPublisherRoute: Story = {
             },
         },
     },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
 }
 
 export const Loading: Story = {
@@ -81,6 +113,10 @@ export const Loading: Story = {
                 isReady: false,
             },
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -102,6 +138,10 @@ export const NodeNotFound: Story = {
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -145,6 +185,10 @@ export const UnclaimedNode: Story = {
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -196,6 +240,18 @@ export const AdminUser: Story = {
             ],
         },
     },
+    beforeEach: () => {
+        // Mock Firebase user as admin
+        useFirebaseUser.mockReturnValue([
+            {
+                ...mockFirebaseUser,
+                email: 'admin@example.com',
+                displayName: 'Admin User',
+            },
+            false,
+            undefined,
+        ])
+    },
 }
 
 export const NoPermissions: Story = {
@@ -232,6 +288,10 @@ export const NoPermissions: Story = {
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as regular user with no permissions
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -276,6 +336,10 @@ export const NodeWithoutIcon: Story = {
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
     },
 }
 
@@ -425,5 +489,45 @@ export const NodeWithManyVersions: Story = {
                 ...handlers,
             ],
         },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged in
+        useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    },
+}
+
+export const LoggedOut: Story = {
+    parameters: {
+        nextjs: {
+            router: {
+                query: { nodeId: 'example-comfyui-custom-node' },
+                pathname: '/nodes/[nodeId]',
+                asPath: '/nodes/1',
+                isReady: true,
+            },
+        },
+        msw: {
+            handlers: [
+                http.get(CAPI('/nodes/1'), () => {
+                    return HttpResponse.json({
+                        id: '1',
+                        name: 'Test Node',
+                        description:
+                            'This is a test node for demonstration purposes',
+                    })
+                }),
+                http.get(CAPI('/users'), () => {
+                    return HttpResponse.json(
+                        { error: 'Unauthorized' },
+                        { status: 401 }
+                    )
+                }),
+                ...handlers,
+            ],
+        },
+    },
+    beforeEach: () => {
+        // Mock Firebase user as logged out
+        useFirebaseUser.mockReturnValue([null, false, undefined])
     },
 }

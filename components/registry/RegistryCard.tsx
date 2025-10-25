@@ -1,7 +1,7 @@
-import { useNextTranslation } from '@/src/hooks/i18n'
 import Image from 'next/image'
 import React from 'react'
 import { NodeVersion } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface RegistryCard {
     name?: string

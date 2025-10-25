@@ -1,14 +1,9 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import Hit from '@/components/Search/SearchHit'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-// Mock the react-instantsearch Snippet component
-// jest.mock('react-instantsearch', () => ({
-//   Snippet: ({ hit, attribute }) => {
-//     // For story purposes, just return the hit's attribute directly
-//     return <span>{hit[attribute]}</span>;
-//   },
-// }));
+// Note: The Snippet component from react-instantsearch is handled in the component
+// For Storybook, we're providing the complete mock hit structure
 
 // Create a wrapper component since Hit requires specific props structure
 const HitWrapper = (props) => {
