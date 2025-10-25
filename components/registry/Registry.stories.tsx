@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import RegistryStory from './RegistryStory'
+import RegistryStory from '@/src/stories/RegistryStory'
 
 const meta = {
     title: 'Pages/Registry',
