@@ -185,7 +185,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = ${{ steps.create_pr.outputs.pull-request-number }};
+            const prNumber = '${{ steps.create_pr.outputs.pull-request-number }}' || null;
             const existingPrData = JSON.parse('${{ steps.existing_pr.outputs.result }}');
             const isUpdate = existingPrData.exists;
             
