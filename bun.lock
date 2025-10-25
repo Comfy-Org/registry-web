@@ -79,7 +79,6 @@
         "@chromatic-com/storybook": "^4.1.1",
         "@eslint/eslintrc": "^3.3.1",
         "@mdx-js/react": "2.1.4",
-        "@storybook/addon-actions": "^9.0.8",
         "@storybook/addon-docs": "^9.1.4",
         "@storybook/addon-vitest": "9.0.17",
         "@storybook/nextjs-vite": "^9.1.4",
@@ -803,8 +802,6 @@
     "@stoplight/yaml": ["@stoplight/yaml@4.3.0", "", { "dependencies": { "@stoplight/ordered-object-literal": "^1.0.5", "@stoplight/types": "^14.1.1", "@stoplight/yaml-ast-parser": "0.0.50", "tslib": "^2.2.0" } }, "sha512-JZlVFE6/dYpP9tQmV0/ADfn32L9uFarHWxfcRhReKUnljz1ZiUM5zpX+PH8h5CJs6lao3TuFqnPm9IJJCEkE2w=="],
 
     "@stoplight/yaml-ast-parser": ["@stoplight/yaml-ast-parser@0.0.50", "", {}, "sha512-Pb6M8TDO9DtSVla9yXSTAxmo9GVEouq5P40DWXdOie69bXogZTkgvopCq+yEvTMA0F6PEvdJmbtTV3ccIp11VQ=="],
-
-    "@storybook/addon-actions": ["@storybook/addon-actions@9.0.8", "", {}, "sha512-LFePu7PPnWN0Il/uoUpmA5T0J0C7d6haJIbg0pXrjxW2MQVSYXE4S4LSUz8fOImltBDV3xAl6tLPYHFj6VcrOA=="],
 
     "@storybook/addon-docs": ["@storybook/addon-docs@9.1.7", "", { "dependencies": { "@mdx-js/react": "^3.0.0", "@storybook/csf-plugin": "9.1.7", "@storybook/icons": "^1.4.0", "@storybook/react-dom-shim": "9.1.7", "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "ts-dedent": "^2.0.0" }, "peerDependencies": { "storybook": "^9.1.7" } }, "sha512-ZwD25QBWOeZS2T/JSHl6iqMx7w2yCxREnZIQaLpyOoGl2mRUk2NHcsGfdXQ4sL0zd7YT7CTfzH5tbwQfLIiEog=="],
 
