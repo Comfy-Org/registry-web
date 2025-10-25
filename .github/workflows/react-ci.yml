@@ -22,6 +22,8 @@ jobs:
         run: npm install -g bun
       - name: Install Dependencies
         run: bun install
+        env:
+          HUSKY: 0
       - name: Run Next.js Lint
         run: bun fix
       - name: Run Format
@@ -34,7 +36,15 @@ jobs:
         run: bunx sort-package-json
       - name: Build the Next.js Project
         run: bun run build
-      # commit prettier fixed code
+      # commit prettier fixed code only if there are changes
+      - name: Check for changes
+        id: verify_diff
+        run: |
+          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: steps.verify_diff.outputs.changed == 'true'
         with:
           commit_message: "format: Apply prettier --fix changes"
+          commit_options: "--no-verify"
+        env:
+          HUSKY: 0
