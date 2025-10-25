@@ -44,39 +44,39 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           set -e
-          
+
           # Function to update a single PR
           update_pr() {
             local pr_number=$1
             local pr_branch=$(gh pr view "$pr_number" --json headRefName -q .headRefName)
             local pr_title=$(gh pr view "$pr_number" --json title -q .title)
             local pr_state=$(gh pr view "$pr_number" --json state -q .state)
-            
+
             echo "=================================================="
             echo "Processing PR #$pr_number: $pr_title"
             echo "Branch: $pr_branch"
             echo "State: $pr_state"
-            
+
             if [ "$pr_state" != "OPEN" ]; then
               echo "⏭️  Skipping - PR is not open"
               return
             fi
-            
+
             # Check if branch exists locally
             if ! git show-ref --verify --quiet "refs/remotes/origin/$pr_branch"; then
               echo "❌ Branch $pr_branch does not exist"
               return
             fi
-            
+
             # Checkout the PR branch
             git checkout "$pr_branch" 2>/dev/null || git checkout -b "$pr_branch" "origin/$pr_branch"
-            
+
             # Check if branch is already up to date
             git merge-base --is-ancestor origin/main HEAD && {
               echo "✅ Already up to date with main"
               return
             }
-            
+
             # Check for merge conflicts
             if ! git merge --no-commit --no-ff origin/main 2>&1 | tee /tmp/merge_output.txt; then
               echo "⚠️  Merge conflict detected. Aborting merge..."
@@ -85,19 +85,19 @@ jobs:
               gh pr comment "$pr_number" --body "⚠️ Unable to automatically update this PR branch to latest main due to merge conflicts. Please resolve conflicts manually."
               return
             fi
-            
+
             # Abort the test merge
             git merge --abort 2>/dev/null || true
-            
+
             if [ "$DRY_RUN" = "true" ]; then
               echo "🔍 DRY RUN: Would merge main into $pr_branch"
               return
             fi
-            
+
             # Perform the actual merge
             if git merge origin/main -m "chore: merge latest main into PR branch"; then
               echo "✅ Successfully merged main into $pr_branch"
-              
+
               # Push the updated branch
               if git push origin "$pr_branch"; then
                 echo "✅ Successfully pushed updated branch"
@@ -110,7 +110,7 @@ jobs:
               git merge --abort 2>/dev/null || true
             fi
           }
-          
+
           # Get list of PRs to update
           if [ -n "$PR_NUMBERS" ]; then
             # Update specific PRs
@@ -123,19 +123,19 @@ jobs:
             # Update all open PRs
             echo "Fetching all open PRs..."
             pr_list=$(gh pr list --state open --json number -q '.[].number')
-            
+
             if [ -z "$pr_list" ]; then
               echo "No open PRs found"
               exit 0
             fi
-            
+
             echo "Found $(echo "$pr_list" | wc -l) open PRs"
-            
+
             for pr_num in $pr_list; do
               update_pr "$pr_num"
             done
           fi
-          
+
           echo "=================================================="
           echo "✅ Update process completed"
 
