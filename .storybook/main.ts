@@ -7,11 +7,9 @@ let createMockResolverPlugin: any
 
 export default defineConfig({
     stories: [
-        // Pages and their stories
-        '../pages/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-        // Components and their co-located stories
+        '../app/**/*.stories.@(js|jsx|mjs|ts|tsx)',
         '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
-        // Documentation pages
+        '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
         '../src/stories/**/*.mdx',
     ],
     addons: [
@@ -21,8 +19,24 @@ export default defineConfig({
         '@storybook/addon-vitest',
     ],
     framework: '@storybook/nextjs-vite',
-    staticDirs: ['../public', '../src/assets'],
-    viteFinal: async (c) => {
+    staticDirs: ['../src/assets'],
+    // Inject base tag for manager (navigation/toolbar) when deploying to /_storybook/
+    managerHead:
+        process.env.CHROMATIC !== 'true'
+            ? (head) => `
+        ${head}
+        <base href="/_storybook/" />
+      `
+            : undefined,
+    // Inject base tag for preview (iframe where components render) when deploying to /_storybook/
+    previewHead:
+        process.env.CHROMATIC !== 'true'
+            ? (head) => `
+        ${head}
+        <base href="/_storybook/" />
+      `
+            : undefined,
+    viteFinal: async (c, { configType }) => {
         // Dynamically import the plugin to avoid build issues
         if (!createMockResolverPlugin) {
             const mockPlugin = await import('./mockResolverPlugin.js')
@@ -30,6 +44,11 @@ export default defineConfig({
         }
 
         return mergeConfig(c, {
+            // Only set custom base path for production builds (not for Chromatic)
+            base:
+                configType === 'PRODUCTION' && process.env.CHROMATIC !== 'true'
+                    ? '/_storybook/'
+                    : c.base,
             server: {
                 allowedHosts: true,
                 hmr: { clientPort: 443 },
