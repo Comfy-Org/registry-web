@@ -306,7 +306,8 @@ const NodeDetails = () => {
                                             node.latest_version?.createdAt &&
                                                 intlFormatDistance(
                                                     new Date(
-                                                        node.latest_version.createdAt
+                                                        node.latest_version
+                                                            .createdAt
                                                     ),
                                                     new Date(),
                                                     {
