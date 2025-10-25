@@ -10,11 +10,13 @@ import { useCreatePublisher, useValidatePublisher } from '@/src/api/generated'
 type CreatePublisherFormContentProps = {
     onSuccess?: (username: string) => void
     onCancel?: () => void
+    showTitle?: boolean
 }
 
 const CreatePublisherFormContent: React.FC<CreatePublisherFormContentProps> = ({
     onSuccess,
     onCancel,
+    showTitle = false,
 }) => {
     const { t } = useNextTranslation()
     const router = useRouter()
@@ -68,6 +70,11 @@ const CreatePublisherFormContent: React.FC<CreatePublisherFormContentProps> = ({
 
     return (
         <>
+            {showTitle && (
+                <h2 className="text-2xl font-bold text-white mb-4">
+                    {t('Create Publisher')}
+                </h2>
+            )}
             <p className="flex justify-center text-sm font-medium text-gray-400 ">
                 {t(
                     'Register a publisher to begin distributing custom nodes on Comfy.'

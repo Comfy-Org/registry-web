@@ -42,6 +42,7 @@ const CreatePublisherPageLayout = () => {
                             <CreatePublisherFormContent
                                 onSuccess={handleSuccess}
                                 onCancel={handleCancel}
+                                showTitle={true}
                             />
                         </Card>
                     </div>
