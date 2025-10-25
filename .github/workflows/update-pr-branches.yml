@@ -1,0 +1,145 @@
+name: Update PR Branches to Latest Main
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_numbers:
+        description: 'Comma-separated PR numbers to update (leave empty to update all open PRs)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Dry run mode (just check what would be updated)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-pr-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch latest main branch
+        run: |
+          git fetch origin main
+          echo "Latest main commit: $(git rev-parse origin/main)"
+
+      - name: Update PR branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBERS: ${{ inputs.pr_numbers }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -e
+          
+          # Function to update a single PR
+          update_pr() {
+            local pr_number=$1
+            local pr_branch=$(gh pr view "$pr_number" --json headRefName -q .headRefName)
+            local pr_title=$(gh pr view "$pr_number" --json title -q .title)
+            local pr_state=$(gh pr view "$pr_number" --json state -q .state)
+            
+            echo "=================================================="
+            echo "Processing PR #$pr_number: $pr_title"
+            echo "Branch: $pr_branch"
+            echo "State: $pr_state"
+            
+            if [ "$pr_state" != "OPEN" ]; then
+              echo "⏭️  Skipping - PR is not open"
+              return
+            fi
+            
+            # Check if branch exists locally
+            if ! git show-ref --verify --quiet "refs/remotes/origin/$pr_branch"; then
+              echo "❌ Branch $pr_branch does not exist"
+              return
+            fi
+            
+            # Checkout the PR branch
+            git checkout "$pr_branch" 2>/dev/null || git checkout -b "$pr_branch" "origin/$pr_branch"
+            
+            # Check if branch is already up to date
+            git merge-base --is-ancestor origin/main HEAD && {
+              echo "✅ Already up to date with main"
+              return
+            }
+            
+            # Check for merge conflicts
+            if ! git merge --no-commit --no-ff origin/main 2>&1 | tee /tmp/merge_output.txt; then
+              echo "⚠️  Merge conflict detected. Aborting merge..."
+              git merge --abort 2>/dev/null || true
+              echo "❌ Cannot auto-update due to conflicts - manual intervention required"
+              gh pr comment "$pr_number" --body "⚠️ Unable to automatically update this PR branch to latest main due to merge conflicts. Please resolve conflicts manually."
+              return
+            fi
+            
+            # Abort the test merge
+            git merge --abort 2>/dev/null || true
+            
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "🔍 DRY RUN: Would merge main into $pr_branch"
+              return
+            fi
+            
+            # Perform the actual merge
+            if git merge origin/main -m "chore: merge latest main into PR branch"; then
+              echo "✅ Successfully merged main into $pr_branch"
+              
+              # Push the updated branch
+              if git push origin "$pr_branch"; then
+                echo "✅ Successfully pushed updated branch"
+                gh pr comment "$pr_number" --body "🤖 This PR branch has been automatically updated with the latest changes from main."
+              else
+                echo "❌ Failed to push updated branch"
+              fi
+            else
+              echo "❌ Failed to merge main into $pr_branch"
+              git merge --abort 2>/dev/null || true
+            fi
+          }
+          
+          # Get list of PRs to update
+          if [ -n "$PR_NUMBERS" ]; then
+            # Update specific PRs
+            IFS=',' read -ra PR_ARRAY <<< "$PR_NUMBERS"
+            for pr_num in "${PR_ARRAY[@]}"; do
+              pr_num=$(echo "$pr_num" | tr -d ' ')
+              update_pr "$pr_num"
+            done
+          else
+            # Update all open PRs
+            echo "Fetching all open PRs..."
+            pr_list=$(gh pr list --state open --json number -q '.[].number')
+            
+            if [ -z "$pr_list" ]; then
+              echo "No open PRs found"
+              exit 0
+            fi
+            
+            echo "Found $(echo "$pr_list" | wc -l) open PRs"
+            
+            for pr_num in $pr_list; do
+              update_pr "$pr_num"
+            done
+          fi
+          
+          echo "=================================================="
+          echo "✅ Update process completed"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          git checkout copilot/update-all-pr-branches 2>/dev/null || git checkout main 2>/dev/null || true
