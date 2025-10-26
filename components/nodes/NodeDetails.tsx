@@ -677,7 +677,6 @@ const NodeDetails = () => {
             }}
           />
         )}
-
         {/* Quick Install Warning Modal */}
         <Modal
           show={isQuickInstallWarningOpen}
