@@ -2,12 +2,12 @@ name: Update API Type definitions
 
 on:
   schedule:
-    # Every Monday at midnight UTC, update the API type definitions from staging backend
+    # Every Monday at midnight UTC, update the API type definitions from production backend
     - cron: '0 0 * * 1'
   workflow_dispatch:
     inputs:
       backend_url:
-        description: 'Backend URL to fetch OpenAPI spec from (optional, defaults to staging)'
+        description: 'Backend URL to fetch OpenAPI spec from (optional, defaults to production)'
         required: false
         type: string
 
@@ -41,7 +41,7 @@ jobs:
           if [ "${{ github.event.inputs.backend_url }}" != "" ]; then
             echo "NEXT_PUBLIC_BACKEND_URL=${{ github.event.inputs.backend_url }}" >> $GITHUB_ENV
           else
-            echo "NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-https://staging.comfyregistry.org}" >> $GITHUB_ENV
+            echo "NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-https://api.comfy.org}" >> $GITHUB_ENV
           fi
 
       - name: Check if API spec is accessible
