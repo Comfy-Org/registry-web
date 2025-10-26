@@ -52,14 +52,14 @@ const preview: Preview = {
     },
   ],
   globalTypes: {
-    darkMode: {
-      description: 'Toggle dark mode',
-      defaultValue: 'dark',
+    theme: {
+      description: 'Theme for the components',
       toolbar: {
-        icon: 'circlehollow',
+        icon: 'paintbrush',
         items: [
-          { value: 'light', right: '☀️', title: 'Light Mode' },
-          { value: 'dark', right: '🌙', title: 'Dark Mode' },
+          { value: 'dark', right: '🌙', title: 'Dark' }, // default
+          { value: 'light', right: '☀️', title: 'Light' },
+          { value: 'system', right: '🖥️', title: 'System' },
         ],
       },
     },
