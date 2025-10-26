@@ -1,5 +1,7 @@
 import Registry from '@/components/registry/Registry'
 
-export default function Home() {
+function NodeList() {
   return <Registry />
 }
+
+export default NodeList

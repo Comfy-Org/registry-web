@@ -1,3 +1,4 @@
+'use client'
 import algoliasearch from 'algoliasearch/lite'
 import singletonRouter from 'next/router'
 import React from 'react'

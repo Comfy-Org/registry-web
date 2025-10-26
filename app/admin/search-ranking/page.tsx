@@ -1,3 +1,9 @@
 'use client'
 
-export { default } from '@/pages/admin/search-ranking'
+import Component from '@/components/pages/admin/search-ranking'
+
+export default function Page() {
+  return <Component />
+}
+
+export const dynamic = 'force-dynamic'

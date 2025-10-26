@@ -1,3 +1,9 @@
 'use client'
 
-export { default } from '@/pages/nodes/[nodeId]/claim'
+import Component from '@/components/pages/nodes/claim'
+
+export default function Page() {
+  return <Component />
+}
+
+export const dynamic = 'force-dynamic'

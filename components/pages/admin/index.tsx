@@ -1,18 +1,20 @@
 'use client'
-
 import { Breadcrumb } from 'flowbite-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import {
   HiHome,
   HiOutlineAdjustments,
   HiOutlineClipboardCheck,
   HiOutlineCollection,
+  HiOutlineDuplicate,
+  HiOutlineSupport,
 } from 'react-icons/hi'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
+export default withAdmin(AdminDashboard)
 function AdminDashboard() {
   const router = useRouter()
   const { t } = useNextTranslation()
@@ -78,11 +80,3 @@ function AdminDashboard() {
     </div>
   )
 }
-
-const WrappedAdminDashboard = withAdmin(AdminDashboard)
-
-export default function Page() {
-  return <WrappedAdminDashboard />
-}
-
-export const dynamic = 'force-dynamic'
