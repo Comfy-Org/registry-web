@@ -1,25 +1,21 @@
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Breadcrumb, Card } from 'flowbite-react'
-import { useRouter } from 'next/router'
-import React from 'react'
 import { HiHome } from 'react-icons/hi'
-import withAuth from '@/components/common/HOC/withAuth'
 import CreatePublisherFormContent from '@/components/publisher/CreatePublisherFormContent'
-import { useNextTranslation } from '@/src/hooks/i18n'
 
-const CreatePublisher = () => {
-  const router = useRouter()
-  const { t } = useNextTranslation()
-
+const CreatePublisherPageLayout = () => {
   const handleSuccess = (username: string) => {
-    router.push(`/publishers/${username}`)
+    console.log('Publisher created successfully:', username)
+    // In a real scenario, this would navigate to the publisher page
   }
 
   const handleCancel = () => {
-    router.back()
+    console.log('Create publisher cancelled')
+    // In a real scenario, this would navigate back
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gray-900 min-h-screen">
       <div className="py-4">
         <Breadcrumb>
           <Breadcrumb.Item
@@ -27,15 +23,13 @@ const CreatePublisher = () => {
             icon={HiHome}
             onClick={(e) => {
               e.preventDefault()
-              router.push('/')
+              console.log('Navigate to home')
             }}
             className="dark"
           >
-            {t('Home')}
+            Home
           </Breadcrumb.Item>
-          <Breadcrumb.Item className="dark">
-            {t('Create Publisher')}
-          </Breadcrumb.Item>
+          <Breadcrumb.Item className="dark">Create Publisher</Breadcrumb.Item>
         </Breadcrumb>
       </div>
 
@@ -56,4 +50,15 @@ const CreatePublisher = () => {
   )
 }
 
-export default withAuth(CreatePublisher)
+const meta: Meta<typeof CreatePublisherPageLayout> = {
+  title: 'Pages/Publishers/CreatePublisherPage',
+  component: CreatePublisherPageLayout,
+  parameters: {
+    layout: 'fullscreen',
+  },
+}
+
+export default meta
+type Story = StoryObj<typeof CreatePublisherPageLayout>
+
+export const Default: Story = {}
