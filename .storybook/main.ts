@@ -20,22 +20,6 @@ export default defineConfig({
     ],
     framework: '@storybook/nextjs-vite',
     staticDirs: ['../src/assets'],
-    // Inject base tag for manager (navigation/toolbar) when deploying to /_storybook/
-    managerHead:
-        process.env.CHROMATIC !== 'true'
-            ? (head) => `
-        ${head}
-        <base href="/_storybook/" />
-      `
-            : undefined,
-    // Inject base tag for preview (iframe where components render) when deploying to /_storybook/
-    previewHead:
-        process.env.CHROMATIC !== 'true'
-            ? (head) => `
-        ${head}
-        <base href="/_storybook/" />
-      `
-            : undefined,
     viteFinal: async (c, { configType }) => {
         // Dynamically import the plugin to avoid build issues
         if (!createMockResolverPlugin) {
@@ -43,12 +27,12 @@ export default defineConfig({
             createMockResolverPlugin = mockPlugin.createMockResolverPlugin
         }
 
+        const isProduction = configType === 'PRODUCTION'
+        const isChromatic = process.env.CHROMATIC === 'true'
+
         return mergeConfig(c, {
             // Only set custom base path for production builds (not for Chromatic)
-            base:
-                configType === 'PRODUCTION' && process.env.CHROMATIC !== 'true'
-                    ? '/_storybook/'
-                    : c.base,
+            base: isProduction && !isChromatic ? '/_storybook/' : c.base,
             server: {
                 allowedHosts: true,
                 hmr: { clientPort: 443 },
