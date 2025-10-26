@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from "@/src/constants";
-import { detectLanguageFromHeader, isRedirectExcludedUrl } from "@/src/hooks/i18n/serverUtils";
+import { NextRequest, NextResponse } from 'next/server'
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
+import {
+  detectLanguageFromHeader,
+  isRedirectExcludedUrl,
+} from '@/src/hooks/i18n/serverUtils'
 
 /**
  * Middleware to handle server-side language detection and redirection
@@ -8,36 +11,36 @@ import { detectLanguageFromHeader, isRedirectExcludedUrl } from "@/src/hooks/i18
  */
 export function middleware(request: NextRequest) {
   // Get current URL and pathname
-  const url = request.nextUrl.clone();
-  const { pathname } = url;
+  const url = request.nextUrl.clone()
+  const { pathname } = url
 
   // Skip redirects for excluded URLs
   if (isRedirectExcludedUrl(pathname)) {
-    return NextResponse.next();
+    return NextResponse.next()
   }
 
   // Check if user has a language preference in cookies
-  const cookieLanguage = request.cookies.get(LANGUAGE_STORAGE_KEY)?.value;
+  const cookieLanguage = request.cookies.get(LANGUAGE_STORAGE_KEY)?.value
 
   // Check if user's preferred language is already set in cookies
   if (cookieLanguage && SUPPORTED_LANGUAGES.includes(cookieLanguage as any)) {
     // User has a valid language preference, no need to redirect
-    return NextResponse.next();
+    return NextResponse.next()
   }
 
   // Detect preferred language from Accept-Language header
-  const detectedLanguage = detectLanguageFromHeader(request);
+  const detectedLanguage = detectLanguageFromHeader(request)
 
   // Create response to set cookie with detected language
-  const response = NextResponse.next();
+  const response = NextResponse.next()
 
   // Set cookie with the detected language
   response.cookies.set(LANGUAGE_STORAGE_KEY, detectedLanguage, {
     maxAge: 60 * 60 * 24 * 365, // 1 year
-    path: "/",
-  });
+    path: '/',
+  })
 
-  return response;
+  return response
 }
 
 /**
@@ -54,6 +57,6 @@ export const config = {
      * 4. /locales (translation files)
      * 5. all files in the public folder
      */
-    "/((?!api|_next|static|locales|favicon.ico|robots.txt).*)",
+    '/((?!api|_next|static|locales|favicon.ico|robots.txt).*)',
   ],
-};
+}

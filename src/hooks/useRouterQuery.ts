@@ -1,6 +1,6 @@
-import { useRouter } from "next/router";
-import { filter, omit } from "rambda";
-import { useCallback } from "react";
+import { useRouter } from 'next/router'
+import { filter, omit } from 'rambda'
+import { useCallback } from 'react'
 
 /**
  * A hook to easily access and update URL query parameters
@@ -25,10 +25,10 @@ import { useCallback } from "react";
 export function useRouterQuery<
   T extends Record<string, any> = Record<string, string | string[]>,
 >() {
-  const router = useRouter();
+  const router = useRouter()
 
   // Cast router.query to the generic type with fallback to empty object
-  const query = router.query as T;
+  const query = router.query as T
 
   /**
    * Update query parameters
@@ -44,7 +44,7 @@ export function useRouterQuery<
   const updateQuery = useCallback(
     (newParams: Partial<T>, replace = false, options = { shallow: true }) => {
       // Filter out null and undefined values
-      const filteredParams = filter((e) => e != null, newParams);
+      const filteredParams = filter((e) => e != null, newParams)
 
       // Prepare the final query object
       const finalQuery = replace
@@ -52,7 +52,7 @@ export function useRouterQuery<
         : {
             ...omit(Object.keys(newParams), router.query),
             ...filteredParams,
-          };
+          }
 
       router.push(
         {
@@ -60,11 +60,11 @@ export function useRouterQuery<
           query: finalQuery,
         },
         undefined,
-        options,
-      );
+        options
+      )
     },
-    [router],
-  );
+    [router]
+  )
 
-  return [query, updateQuery] as const;
+  return [query, updateQuery] as const
 }

@@ -1,34 +1,34 @@
-import { Button, Modal } from "flowbite-react";
-import React from "react";
-import { customThemeTModal } from "utils/comfyTheme";
-import { useNextTranslation } from "@/src/hooks/i18n";
+import { Button, Modal } from 'flowbite-react'
+import React from 'react'
+import { customThemeTModal } from 'utils/comfyTheme'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type CopyAccessTokenModalProps = {
-  openModal: boolean;
-  onCloseModal: () => void;
-  accessToken: string;
-};
+  openModal: boolean
+  onCloseModal: () => void
+  accessToken: string
+}
 
 export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
   openModal,
   onCloseModal,
   accessToken,
 }) => {
-  const { t } = useNextTranslation();
+  const { t } = useNextTranslation()
   const handleSubmit = (event) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
   // Copy a string to the clipboard
   const copyToClipboard = (accessToken: string) => {
     navigator.clipboard.writeText(accessToken).then(() => {
-      const successMessage = document.getElementById("success-message");
-      const defaultMessage = document.getElementById("default-message");
+      const successMessage = document.getElementById('success-message')
+      const defaultMessage = document.getElementById('default-message')
       if (successMessage && defaultMessage) {
-        successMessage.classList.remove("hidden");
-        defaultMessage.classList.add("hidden");
+        successMessage.classList.remove('hidden')
+        defaultMessage.classList.add('hidden')
       }
-    });
-  };
+    })
+  }
 
   return (
     <Modal
@@ -43,10 +43,12 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
       <Modal.Body className="!bg-gray-800 p-8  md:px-7 md:py-7">
         <form className="mt-4 space-y-4 lg:space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-6">
-            <h3 className="text-2xl font-medium text-white">{t("Save your key")}</h3>
+            <h3 className="text-2xl font-medium text-white">
+              {t('Save your key')}
+            </h3>
             <p className="text-gray-200 text-[14px]">
               {t(
-                "Please save this secret key somewhere safe and accessible. If you lose this secret key, you'll need to generate a new one. It can only be copied once.",
+                "Please save this secret key somewhere safe and accessible. If you lose this secret key, you'll need to generate a new one. It can only be copied once."
               )}
             </p>
 
@@ -59,8 +61,8 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                 value={accessToken}
                 disabled
                 style={{
-                  background: "#4B5563",
-                  borderColor: "#4B5563",
+                  background: '#4B5563',
+                  borderColor: '#4B5563',
                 }}
               />
               <button
@@ -69,7 +71,7 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                 className="col-span-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 items-center inline-flex justify-center"
               >
                 <span id="default-message " className="text-xs">
-                  {t("Copy")}
+                  {t('Copy')}
                 </span>
                 <span id="success-message" className="items-center hidden ">
                   <svg
@@ -87,7 +89,7 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
                       d="M1 5.917 5.724 10.5 15 1.5"
                     />
                   </svg>
-                  {t("Copied!")}
+                  {t('Copied!')}
                 </span>
               </button>
             </div>
@@ -100,11 +102,11 @@ export const CopyAccessTokenModal: React.FC<CopyAccessTokenModalProps> = ({
               size="sm"
               onClick={onCloseModal}
             >
-              <span className="text-xs text-white">{t("Done")}</span>
+              <span className="text-xs text-white">{t('Done')}</span>
             </Button>
           </div>
         </form>
       </Modal.Body>
     </Modal>
-  );
-};
+  )
+}

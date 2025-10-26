@@ -50,9 +50,9 @@
       "  FIRESTORE_USER_I2I_COLLECTION_NAME as I2I_INF_JOBS,",
       "  FIRESTORE_FLAGS_COLLECTION_NAME as FLAGS,",
       "  FIRESTORE_ASK_CELEB_DOC_NAME as ASK_CELEB,",
-      "} from \"../../global/constants\";",
-    ],
-  },
+      "} from \"../../global/constants\";"
+    ]
+  }
   // "export default detailsHandler": {
   //   "scope": "javascript,typescript,typescriptreact,javascriptreact",
   //   "prefix": "export default detailsHandler",

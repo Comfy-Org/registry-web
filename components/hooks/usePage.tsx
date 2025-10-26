@@ -1,9 +1,9 @@
-import { useSearchParameter } from "@/src/hooks/useSearchParameter";
+import { useSearchParameter } from '@/src/hooks/useSearchParameter'
 
 export function usePage() {
   return useSearchParameter<number | undefined>(
-    "page",
+    'page',
     (p) => (p ? Number(p) : undefined),
-    (v) => (v ? String(v) : []),
-  );
+    (v) => (v ? String(v) : [])
+  )
 }

@@ -1,19 +1,19 @@
-import Image from "next/image";
-import React from "react";
-import { NodeVersion } from "@/src/api/generated";
-import { useNextTranslation } from "@/src/hooks/i18n";
+import Image from 'next/image'
+import React from 'react'
+import { NodeVersion } from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface RegistryCard {
-  name?: string;
-  latest_version?: NodeVersion;
-  id?: string;
-  license?: string;
-  publisherName?: string;
-  description?: string;
-  image?: string;
-  rating?: number;
-  downloads?: number;
-  isLoggedIn?: boolean;
+  name?: string
+  latest_version?: NodeVersion
+  id?: string
+  license?: string
+  publisherName?: string
+  description?: string
+  image?: string
+  rating?: number
+  downloads?: number
+  isLoggedIn?: boolean
 }
 const RegistryCard: React.FC<RegistryCard> = ({
   name,
@@ -26,7 +26,7 @@ const RegistryCard: React.FC<RegistryCard> = ({
   rating,
   downloads,
 }) => {
-  const { t } = useNextTranslation();
+  const { t } = useNextTranslation()
   return (
     <a href={`nodes/${id}`}>
       <div className="flex flex-col bg-gray-800 rounded-lg shadow cursor-pointer h-full dark:border-gray-700 lg:p-4">
@@ -41,18 +41,22 @@ const RegistryCard: React.FC<RegistryCard> = ({
         </div>
 
         <div className="flex flex-col px-4">
-          <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">{name}</h6>
+          <h6 className="mb-2 text-base font-bold tracking-tight text-white break-words">
+            {name}
+          </h6>
 
           {latest_version && (
             <p className="mb-1 text-xs tracking-tight text-white">
               <span>
-                {t("v{{version}}", {
+                {t('v{{version}}', {
                   version: latest_version.version,
                 })}
               </span>
             </p>
           )}
-          <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">{publisherName}</p>
+          <p className="mb-1 text-xs font-light text-white text-nowrap mt-2">
+            {publisherName}
+          </p>
           <div className="flex items-center flex-start align-center gap-1 mt-2">
             {/* {downloads != 0 && (
                             <p className="flex justify-center text-center align-center">
@@ -104,6 +108,6 @@ const RegistryCard: React.FC<RegistryCard> = ({
         </div>
       </div>
     </a>
-  );
-};
-export default RegistryCard;
+  )
+}
+export default RegistryCard

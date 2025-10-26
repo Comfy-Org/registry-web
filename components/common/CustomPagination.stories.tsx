@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useState } from "react";
-import { CustomPagination } from "@/components/common/CustomPagination";
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useState } from 'react'
+import { CustomPagination } from '@/components/common/CustomPagination'
 
 // Create a component with state for the Storybook
 const PaginationWithState = ({ initialPage = 1, totalPages = 10 }) => {
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [currentPage, setCurrentPage] = useState(initialPage)
 
   return (
     <CustomPagination
@@ -12,38 +12,38 @@ const PaginationWithState = ({ initialPage = 1, totalPages = 10 }) => {
       totalPages={totalPages}
       onPageChange={setCurrentPage}
     />
-  );
-};
+  )
+}
 
 const meta: Meta<typeof PaginationWithState> = {
-  title: "Components/Common/CustomPagination",
+  title: 'Components/Common/CustomPagination',
   component: PaginationWithState,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+}
 
-export default meta;
-type Story = StoryObj<typeof PaginationWithState>;
+export default meta
+type Story = StoryObj<typeof PaginationWithState>
 
 export const Default: Story = {
   args: {
     initialPage: 1,
     totalPages: 10,
   },
-};
+}
 
 export const ManyPages: Story = {
   args: {
     initialPage: 5,
     totalPages: 20,
   },
-};
+}
 
 export const FewPages: Story = {
   args: {
     initialPage: 1,
     totalPages: 3,
   },
-};
+}
