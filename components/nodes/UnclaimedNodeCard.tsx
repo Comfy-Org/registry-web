@@ -27,7 +27,7 @@ export default function UnclaimedNodeCard({
     }
 
     return (
-        <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
+        <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow sm:flex lg:p-4">
             {icon && (
                 <div className="w-[250px]">
                     <Image
@@ -59,11 +59,11 @@ export default function UnclaimedNodeCard({
                 <span className="text-xs text-gray-300">
                     <PublisherId publisherId={publisherId} />
                 </span>
-                <div className="mt-3 mb-1 overflow-hidden text-xs text-gray-[300] font-light text-gray-500 text-gray-400 flex items-end w-full text-ellipsis">
+                <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-end w-full text-ellipsis">
                     <p className="flex-0 line-clamp-2 max-w-full">
                         {description}
                     </p>
-                    <p className="text-blue-500 cursor-pointer">
+                    <p className="text-blue-400 cursor-pointer">
                         <Link href={buttonLink}>{t('More')}</Link>
                     </p>
                 </div>

@@ -16,7 +16,7 @@ const NodesCard: React.FC<NodesCard> = ({
 }) => {
     const { t } = useNextTranslation()
     return (
-        <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow bg-gray-50 sm:flex lg:p-4">
+        <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow sm:flex lg:p-4">
             {icon && (
                 <div className="w-[250px]">
                     <Image
@@ -35,9 +35,9 @@ const NodesCard: React.FC<NodesCard> = ({
                 </h6>
 
                 <span className="text-xs text-gray-300">{name}</span>
-                <div className="mt-3 mb-1 overflow-hidden text-xs text-gray-[300] font-light text-gray-500 text-gray-400 flex items-end">
+                <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-end">
                     <p className="flex-grow line-clamp-2">{description}</p>
-                    <p className="text-blue-500 cursor-pointer">
+                    <p className="text-blue-400 cursor-pointer">
                         {' '}
                         <Link href={buttonLink}>{t('More')}</Link>
                     </p>
