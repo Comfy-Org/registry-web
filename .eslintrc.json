@@ -1,12 +1,12 @@
 {
-    "extends": [
-        "next/core-web-vitals",
-        "plugin:storybook/recommended",
-        "prettier" // Should be last to override eslint config.
-    ],
-    "plugins": [],
-    "rules": {
-        "prefer-template": "warn",
-        "jsx-a11y/alt-text": "off"
-    }
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:storybook/recommended",
+    "prettier" // Should be last to override eslint config.
+  ],
+  "plugins": [],
+  "rules": {
+    "prefer-template": "warn",
+    "jsx-a11y/alt-text": "off"
+  }
 }
