@@ -8,16 +8,16 @@
  * @returns Hash as a hexadecimal string
  */
 function simpleHash(str: string): string {
-    let hash = 0
+  let hash = 0
 
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i)
-        hash = (hash << 5) - hash + char
-        hash = hash & hash // Convert to 32bit integer
-    }
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = (hash << 5) - hash + char
+    hash = hash & hash // Convert to 32bit integer
+  }
 
-    // Convert to unsigned and to hex string
-    return (hash >>> 0).toString(16)
+  // Convert to unsigned and to hex string
+  return (hash >>> 0).toString(16)
 }
 
 /**
@@ -26,10 +26,10 @@ function simpleHash(str: string): string {
  * @returns A hash string that can be used as a batch ID
  */
 export function generateBatchId(keys: string[]): string {
-    // Sort to ensure consistent hash regardless of order
-    const sortedKeys = [...keys].sort().join('|')
-    // Generate a hash from the sorted keys
-    return simpleHash(sortedKeys)
+  // Sort to ensure consistent hash regardless of order
+  const sortedKeys = [...keys].sort().join('|')
+  // Generate a hash from the sorted keys
+  return simpleHash(sortedKeys)
 }
 
 /**
@@ -39,8 +39,8 @@ export function generateBatchId(keys: string[]): string {
  * @returns A reason message with batch information
  */
 export function createBatchReasonMessage(
-    originalReason: string,
-    batchId: string
+  originalReason: string,
+  batchId: string
 ): string {
-    return `${originalReason} [Batch: ${batchId}]`
+  return `${originalReason} [Batch: ${batchId}]`
 }

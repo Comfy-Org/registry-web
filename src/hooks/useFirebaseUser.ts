@@ -6,6 +6,6 @@ import { useAuthState } from 'react-firebase-hooks/auth'
  * This allows for easier mocking in Storybook
  */
 export const useFirebaseUser = () => {
-    const auth = getAuth()
-    return useAuthState(auth)
+  const auth = getAuth()
+  return useAuthState(auth)
 }
