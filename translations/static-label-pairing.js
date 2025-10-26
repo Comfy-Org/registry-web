@@ -9,7 +9,7 @@ const RENDER_ATTRS = []
 export { RENDER_ATTRS_BY_TAG, genesisPairings, RENDER_ATTRS }
 
 export default {
-    RENDER_ATTRS_BY_TAG,
-    genesisPairings,
-    RENDER_ATTRS,
+  RENDER_ATTRS_BY_TAG,
+  genesisPairings,
+  RENDER_ATTRS,
 }

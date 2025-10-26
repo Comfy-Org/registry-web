@@ -7,7 +7,7 @@ const genesisPairings = {}
 const RENDER_ATTRS = []
 
 module.exports = {
-    RENDER_ATTRS_BY_TAG,
-    genesisPairings,
-    RENDER_ATTRS,
+  RENDER_ATTRS_BY_TAG,
+  genesisPairings,
+  RENDER_ATTRS,
 }
