@@ -1,39 +1,39 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-    background-color: rgb(17 24 39);
+  background-color: rgb(17 24 39);
 }
 .placeholder-white::placeholder {
-    color: white !important;
+  color: white !important;
 }
 
 .ais-Hits-list {
-    @apply grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2;
+  @apply grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-2 gap-y-2;
 }
 
 .ais-Hits-item:hover,
 .ais-Snippet:hover,
 .ais-Hits-item h1:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* props utils */
 [hidden] {
-    display: none;
+  display: none;
 }
 
 /* render highlight */
 strong {
-    @apply text-blue-500;
+  @apply text-blue-500;
 }
 
 .text-error {
-    @apply text-red-400 font-bold;
+  @apply text-red-400 font-bold;
 }
 .text-warning {
-    @apply text-yellow-300 font-bold;
+  @apply text-yellow-300 font-bold;
 }
