@@ -1,24 +1,24 @@
 import { useRouter } from 'next/router'
 import withAuth from '@/components/common/HOC/withAuth'
 import UnifiedBreadcrumb, {
-    createHomeBreadcrumb,
-    createNodesBreadcrumb,
+  createHomeBreadcrumb,
+  createNodesBreadcrumb,
 } from '@/components/common/UnifiedBreadcrumb'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import PublisherListNodes from '../components/publisher/PublisherListNodes'
 
 function PublisherNodeList() {
-    const router = useRouter()
-    const { t } = useNextTranslation()
+  const router = useRouter()
+  const { t } = useNextTranslation()
 
-    const breadcrumbItems = [createHomeBreadcrumb(t), createNodesBreadcrumb(t)]
+  const breadcrumbItems = [createHomeBreadcrumb(t), createNodesBreadcrumb(t)]
 
-    return (
-        <div className="p-4">
-            <UnifiedBreadcrumb items={breadcrumbItems} />
-            <PublisherListNodes />
-        </div>
-    )
+  return (
+    <div className="p-4">
+      <UnifiedBreadcrumb items={breadcrumbItems} />
+      <PublisherListNodes />
+    </div>
+  )
 }
 
 export default withAuth(PublisherNodeList)
