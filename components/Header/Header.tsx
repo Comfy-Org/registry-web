@@ -39,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
         paddingRight: 0,
       }}
     >
-      <Link href="/" className="flex gap-1">
+      <Link href="/" className="flex gap-1 items-center h-10">
         <Image
           alt="Comfy Logo"
           src={logoBluePng}
@@ -51,18 +51,30 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
           {t('Comfy Registry')}
         </span>
       </Link>
-      <div className="flex items-center gap-2 bg-gray-900 md:order-2">
+      <div className="flex items-center gap-2 bg-gray-900 md:order-2 h-10">
         {isLoggedIn ? (
-          <ProfileDropdown />
+          <div className="h-10 flex items-center">
+            <ProfileDropdown />
+          </div>
         ) : (
           <>
-            <Button onClick={handleLogIn} color="dark" size="xs">
+            <Button
+              onClick={handleLogIn}
+              color="dark"
+              size="xs"
+              className="h-10"
+            >
               <span className="text-white text-xs md:text-base">
                 {t('Login')}
               </span>
             </Button>
 
-            <Button onClick={handleSignUp} color="blue" size="xs">
+            <Button
+              onClick={handleSignUp}
+              color="blue"
+              size="xs"
+              className="h-10"
+            >
               <span className="text-xs md:text-base">{t('Signup')}</span>
             </Button>
           </>
@@ -75,16 +87,21 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
           }
           color="blue"
           size="xs"
+          className="h-10"
         >
           <span className="text-white text-xs md:text-base">
             {t('Documentation')}
           </span>
         </Button>
 
-        <Badge icon={DiscordIcon} color="gray" href="/discord" size="xs" />
+        <div className="h-10 flex items-center">
+          <Badge icon={DiscordIcon} color="gray" href="/discord" size="xs" />
+        </div>
 
         {/* place in the most-right to reduce ... when switching language  */}
-        <LanguageSwitcher />
+        <div className="h-10 flex items-center">
+          <LanguageSwitcher />
+        </div>
       </div>
     </Navbar>
   )
