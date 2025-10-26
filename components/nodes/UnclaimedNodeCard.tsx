@@ -59,7 +59,7 @@ export default function UnclaimedNodeCard({
                 <span className="text-xs text-gray-300">
                     <PublisherId publisherId={publisherId} />
                 </span>
-                <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-end w-full text-ellipsis">
+                <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-end w-full">
                     <p className="flex-0 line-clamp-2 max-w-full">
                         {description}
                     </p>

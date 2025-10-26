@@ -35,7 +35,7 @@ const NodesCard: React.FC<NodesCard> = ({
                 </h6>
 
                 <span className="text-xs text-gray-300">{name}</span>
-                <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-end">
+                <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-start">
                     <p className="flex-grow line-clamp-2">{description}</p>
                     <p className="text-blue-400 cursor-pointer">
                         {' '}
