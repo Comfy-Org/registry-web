@@ -103,7 +103,10 @@
   "Deprecate version": "バージョンを非推奨にする",
   "Description": "説明",
   "Details": "詳細",
+<<<<<<< HEAD
   "Discord": "Discord",
+=======
+>>>>>>> 09d7541850b2788b2f488ebb796bb92b7c549982
   "Discover and install ComfyUI custom nodes.": "ComfyUIカスタムノードを発見してインストールします。",
   "Display Name": "表示名",
   "Documentation": "ドキュメント",

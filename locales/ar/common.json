@@ -103,7 +103,10 @@
   "Deprecate version": "إهمال الإصدار",
   "Description": "وصف",
   "Details": "التفاصيل",
+<<<<<<< HEAD
   "Discord": "Discord",
+=======
+>>>>>>> 09d7541850b2788b2f488ebb796bb92b7c549982
   "Discover and install ComfyUI custom nodes.": "اكتشف وقم بتثبيت عقد ComfyUI المخصصة.",
   "Display Name": "اسم العرض",
   "Documentation": "توثيق",
