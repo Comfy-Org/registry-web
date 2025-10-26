@@ -529,10 +529,7 @@ function DataTable({
                             queryKey: getGetNodeQueryKey(node.id!),
                           })
                           qc.invalidateQueries({
-                            queryKey: getGetNodeVersionQueryKey(
-                              node.id!,
-                              nv.version!
-                            ),
+                            queryKey: getGetNodeVersionQueryKey(node.id!),
                           })
                           qc.invalidateQueries({
                             queryKey: getListAllNodesQueryKey({
