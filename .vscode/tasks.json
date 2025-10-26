@@ -1,41 +1,41 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "type": "npm",
-            "script": "build",
-            "group": "build",
-            "problemMatcher": [],
-            "label": "npm: build",
-            "detail": "next build"
-        },
-        {
-            "type": "npm",
-            "script": "fix",
-            "problemMatcher": ["$eslint-compact"],
-            "label": "npm: fix",
-            "detail": "prettier -w . && eslint --fix ."
-        },
-        {
-            "type": "npm",
-            "script": "storybook",
-            "problemMatcher": [],
-            "label": "npm: storybook",
-            "detail": "echo Open storybook in http://localhost:6006/ && start-storybook -p 6006 -s ./public"
-        },
-        {
-            "type": "npm",
-            "script": "dev",
-            "problemMatcher": [],
-            "label": "npm: dev",
-            "detail": "next dev"
-        },
-        {
-            "type": "bun",
-            "script": "next lint",
-            "problemMatcher": ["$eslint-stylish"],
-            "label": "bun: lint",
-            "detail": "bun run next lint - package.json"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "npm: build",
+      "detail": "next build"
+    },
+    {
+      "type": "npm",
+      "script": "fix",
+      "problemMatcher": ["$eslint-compact"],
+      "label": "npm: fix",
+      "detail": "prettier -w . && eslint --fix ."
+    },
+    {
+      "type": "npm",
+      "script": "storybook",
+      "problemMatcher": [],
+      "label": "npm: storybook",
+      "detail": "echo Open storybook in http://localhost:6006/ && start-storybook -p 6006 -s ./public"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "label": "npm: dev",
+      "detail": "next dev"
+    },
+    {
+      "type": "bun",
+      "script": "next lint",
+      "problemMatcher": ["$eslint-stylish"],
+      "label": "bun: lint",
+      "detail": "bun run next lint - package.json"
+    }
+  ]
 }
