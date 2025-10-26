@@ -1,5 +1,6 @@
 // load backend url from .env, not necessary if you use bun
-if (!globalThis.Bun) require('dotenv/config')
+import dotenv from 'dotenv'
+if (!globalThis.Bun) dotenv.config()
 
 /**
  * @type {import('orval').ConfigExternal}
