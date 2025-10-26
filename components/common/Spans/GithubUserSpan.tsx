@@ -9,42 +9,42 @@ import { Tooltip } from 'flowbite-react'
 import { MouseEvent } from 'react'
 
 interface GithubUserSpanProps {
-    username: string
-    userId?: string
-    className?: string
-    onClick?: (e: MouseEvent<HTMLSpanElement>) => void
+  username: string
+  userId?: string
+  className?: string
+  onClick?: (e: MouseEvent<HTMLSpanElement>) => void
 }
 
 export default function GithubUserSpan({
-    username,
-    userId,
-    className = '',
-    onClick,
+  username,
+  userId,
+  className = '',
+  onClick,
 }: GithubUserSpanProps) {
-    const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
-        if (onClick) {
-            onClick(e)
-            return
-        }
-
-        e.preventDefault()
-        window.open(`https://github.com/${username}`, '_blank')
+  const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
+    if (onClick) {
+      onClick(e)
+      return
     }
 
-    return (
-        <div className="inline-block">
-            <Tooltip
-                content={`View GitHub profile for ${username}${userId ? ` (ID: ${userId})` : ''}`}
-                placement="top"
-                style="light"
-            >
-                <span
-                    className={`cursor-pointer underline underline-offset-2 decoration-dashed ${className}`}
-                    onClick={handleClick}
-                >
-                    @{username}
-                </span>
-            </Tooltip>
-        </div>
-    )
+    e.preventDefault()
+    window.open(`https://github.com/${username}`, '_blank')
+  }
+
+  return (
+    <div className="inline-block">
+      <Tooltip
+        content={`View GitHub profile for ${username}${userId ? ` (ID: ${userId})` : ''}`}
+        placement="top"
+        style="light"
+      >
+        <span
+          className={`cursor-pointer underline underline-offset-2 decoration-dashed ${className}`}
+          onClick={handleClick}
+        >
+          @{username}
+        </span>
+      </Tooltip>
+    </div>
+  )
 }

@@ -2,111 +2,103 @@ import { Button, Modal, Spinner } from 'flowbite-react'
 import Link from 'next/link'
 import { FaGithub } from 'react-icons/fa'
 import {
-    NodeVersion,
-    Publisher,
-    useGetNode,
-    useGetPublisher,
+  NodeVersion,
+  Publisher,
+  useGetNode,
+  useGetPublisher,
 } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
 export default function MailtoNodeVersionModal({
-    nodeVersion: nv,
-    open,
-    onClose,
+  nodeVersion: nv,
+  open,
+  onClose,
 }: {
-    nodeVersion?: NodeVersion
-    open: boolean
-    onClose: () => void
+  nodeVersion?: NodeVersion
+  open: boolean
+  onClose: () => void
 }) {
-    const { t } = useNextTranslation()
-    // 1. repo+"/issues/new" for github issues
-    // 2. mailto:email for email
-    const { data: node, isLoading: isNodeLoading } = useGetNode(
-        nv?.node_id ?? '',
-        {},
-        { query: { enabled: !!nv } }
-    )
-    const { data: publisher, isLoading: publisherLoading } = useGetPublisher(
-        node?.id ?? '',
-        { query: { enabled: !!node?.id } }
-    )
+  const { t } = useNextTranslation()
+  // 1. repo+"/issues/new" for github issues
+  // 2. mailto:email for email
+  const { data: node, isLoading: isNodeLoading } = useGetNode(
+    nv?.node_id ?? '',
+    {},
+    { query: { enabled: !!nv } }
+  )
+  const { data: publisher, isLoading: publisherLoading } = useGetPublisher(
+    node?.id ?? '',
+    { query: { enabled: !!node?.id } }
+  )
 
-    const newIssueLink = !node?.repository
-        ? 'javascript:'
-        : `${node.repository}/issues/new?title=${encodeURIComponent(t('Issue with Node Version {{nodeId}}@{{version}}', { nodeId: nv?.node_id, version: nv?.version }))}&body=${encodeURIComponent(t('Node Version: {{nodeId}}@{{version}}\n\nPlease describe the issue or request you have regarding this node version.', { nodeId: nv?.node_id, version: nv?.version }))}`
+  const newIssueLink = !node?.repository
+    ? 'javascript:'
+    : `${node.repository}/issues/new?title=${encodeURIComponent(t('Issue with Node Version {{nodeId}}@{{version}}', { nodeId: nv?.node_id, version: nv?.version }))}&body=${encodeURIComponent(t('Node Version: {{nodeId}}@{{version}}\n\nPlease describe the issue or request you have regarding this node version.', { nodeId: nv?.node_id, version: nv?.version }))}`
 
-    if (!nv) return null
+  if (!nv) return null
 
-    return (
-        <Modal show={open} onClose={onClose} dismissible>
-            <Modal.Header>
-                {t('Contact Publisher: {{name}}', {
-                    name: publisher?.name || publisher?.id,
-                })}
-            </Modal.Header>
-            <Modal.Body>
-                <div className="space-y-4">
-                    <ol className="list-decimal pl-5 space-y-2">
-                        {!!node?.repository && (
-                            <li>
-                                <p className="text-gray-500 dark:text-gray-400">
-                                    {t(
-                                        'You can contact the publisher via GitHub:'
-                                    )}
-                                </p>
-                                <Link
-                                    href={newIssueLink}
-                                    className="text-blue-600 hover:underline space-x-2"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <FaGithub className="inline mr-2" />
-                                    {t('Open Issue on GitHub')}
-                                    {isNodeLoading && (
-                                        <Spinner className="w-4 h-4" />
-                                    )}
-                                </Link>
-                            </li>
-                        )}
-                        {publisher?.members?.length && (
-                            <li>
-                                <p className="text-gray-500 dark:text-gray-400">
-                                    {t(
-                                        'You can contact the publisher via email:'
-                                    )}
-                                </p>
-                                <ListPublisherEmails {...{ publisher }} />
-                                {publisherLoading && (
-                                    <Spinner className="w-4 h-4" />
-                                )}
-                            </li>
-                        )}
-                    </ol>
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={onClose}>{t('Close')}</Button>
-            </Modal.Footer>
-        </Modal>
-    )
+  return (
+    <Modal show={open} onClose={onClose} dismissible>
+      <Modal.Header>
+        {t('Contact Publisher: {{name}}', {
+          name: publisher?.name || publisher?.id,
+        })}
+      </Modal.Header>
+      <Modal.Body>
+        <div className="space-y-4">
+          <ol className="list-decimal pl-5 space-y-2">
+            {!!node?.repository && (
+              <li>
+                <p className="text-gray-500 dark:text-gray-400">
+                  {t('You can contact the publisher via GitHub:')}
+                </p>
+                <Link
+                  href={newIssueLink}
+                  className="text-blue-600 hover:underline space-x-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaGithub className="inline mr-2" />
+                  {t('Open Issue on GitHub')}
+                  {isNodeLoading && <Spinner className="w-4 h-4" />}
+                </Link>
+              </li>
+            )}
+            {publisher?.members?.length && (
+              <li>
+                <p className="text-gray-500 dark:text-gray-400">
+                  {t('You can contact the publisher via email:')}
+                </p>
+                <ListPublisherEmails {...{ publisher }} />
+                {publisherLoading && <Spinner className="w-4 h-4" />}
+              </li>
+            )}
+          </ol>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={onClose}>{t('Close')}</Button>
+      </Modal.Footer>
+    </Modal>
+  )
 }
 function ListPublisherEmails({ publisher }: { publisher: Publisher }) {
-    return (
-        <ul className="list-disc pl-5 space-y-2">
-            {publisher?.members
-                ?.map((member) => member.user?.email)
-                // type-safe filter to remove empty emails
-                ?.flatMap((e) => (e ? [e] : []))
-                .map((email) => (
-                    <li key={email}>
-                        <Link
-                            href={`mailto:${email}`}
-                            className="text-blue-600 hover:underline"
-                        >
-                            {email}
-                        </Link>
-                    </li>
-                ))}
-        </ul>
-    )
+  return (
+    <ul className="list-disc pl-5 space-y-2">
+      {publisher?.members
+        ?.map((member) => member.user?.email)
+        // type-safe filter to remove empty emails
+        ?.flatMap((e) => (e ? [e] : []))
+        .map((email) => (
+          <li key={email}>
+            <Link
+              href={`mailto:${email}`}
+              className="text-blue-600 hover:underline"
+            >
+              {email}
+            </Link>
+          </li>
+        ))}
+    </ul>
+  )
 }
