@@ -22,8 +22,8 @@ import { usePage } from '@/components/hooks/usePage'
 import { Node, useAdminUpdateNode, useListAllNodes } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
-export default withAdmin(CategoriesPage)
-function CategoriesPage() {
+export default withAdmin(TagsPage)
+function TagsPage() {
     const { t } = useNextTranslation()
     const router = useRouter()
     const [page, setPage] = usePage()
