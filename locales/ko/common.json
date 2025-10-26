@@ -103,10 +103,7 @@
   "Deprecate version": "버전 폐기",
   "Description": "설명",
   "Details": "세부 정보",
-<<<<<<< HEAD
   "Discord": "Discord",
-=======
->>>>>>> 09d7541850b2788b2f488ebb796bb92b7c549982
   "Discover and install ComfyUI custom nodes.": "ComfyUI 사용자 정의 노드를 찾아서 설치하십시오.",
   "Display Name": "표시 이름",
   "Documentation": "문서화",
