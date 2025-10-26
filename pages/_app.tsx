@@ -6,6 +6,7 @@ import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { AXIOS_INSTANCE } from '@/src/api/mutator/axios-instance'
 import app from '@/src/firebase'
+import { ThemeProvider } from '@/src/hooks/useTheme'
 import FlowBiteThemeProvider from '../components/flowbite-theme'
 import Layout from '../components/layout'
 import '../styles/globals.css'
@@ -111,11 +112,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <FlowBiteThemeProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </FlowBiteThemeProvider>
+      <ThemeProvider>
+        <FlowBiteThemeProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </FlowBiteThemeProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }

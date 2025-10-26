@@ -1,7 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
 import {
-  Breadcrumb,
   Button,
   Checkbox,
   Dropdown,
@@ -15,13 +14,17 @@ import {
 import router from 'next/router'
 import DIE, { DIES } from 'phpdie'
 import React, { Suspense, useEffect, useMemo, useState } from 'react'
-import { HiHome } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import { useAsync, useAsyncFn, useMap } from 'react-use'
 import sflow, { pageFlow } from 'sflow'
 import NodeVersionCompatibilityEditModal from '@/components/admin/NodeVersionCompatibilityEditModal'
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+  createAdminDashboardBreadcrumb,
+  createHomeBreadcrumb,
+  UnifiedBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import { usePage } from '@/components/hooks/usePage'
 import NodeVersionStatusBadge from '@/components/nodes/NodeVersionStatusBadge'
 import {
@@ -60,12 +63,12 @@ function NodeVersionCompatibilityAdmin() {
   const [nodeId, setNodeId] = useSearchParameter<string | undefined>(
     'nodeId',
     (p) => p || undefined,
-    (v) => v || []
+    (v) => v || ''
   )
   const [version, setVersion] = useSearchParameter<string | undefined>(
     'version',
     (p) => p || undefined,
-    (v) => v || []
+    (v) => v || ''
   )
   const [statuses, setStatuses] = useSearchParameter<NodeVersionStatus[]>(
     'status',
@@ -178,35 +181,17 @@ function NodeVersionCompatibilityAdmin() {
       })
     return () => ac.abort()
   }, [])
+
+  // Create breadcrumb items
+  const breadcrumbItems = [
+    createHomeBreadcrumb(t),
+    createAdminDashboardBreadcrumb(t),
+    { href: '', label: t('Node Version Compatibility') },
+  ]
   return (
     <div className="py-4 max-w-full relative dark">
       <div className="py-4">
-        <Breadcrumb>
-          <Breadcrumb.Item
-            href="/"
-            icon={HiHome}
-            onClick={(e) => {
-              e.preventDefault()
-              router.push('/')
-            }}
-            className="dark"
-          >
-            {t('Home')}
-          </Breadcrumb.Item>
-          <Breadcrumb.Item
-            href="/admin"
-            onClick={(e) => {
-              e.preventDefault()
-              router.push('/admin')
-            }}
-            className="dark"
-          >
-            {t('Admin Dashboard')}
-          </Breadcrumb.Item>
-          <Breadcrumb.Item className="dark">
-            {t('Node Version Compatibility')}
-          </Breadcrumb.Item>
-        </Breadcrumb>
+        <UnifiedBreadcrumb items={breadcrumbItems} />
       </div>
 
       <h1 className="text-2xl font-bold mb-4 text-white">
@@ -377,7 +362,7 @@ function DataTable({
       data?.versions?.filter((v) =>
         !version ? true : v.version === version
       ) || [],
-    [data?.versions]
+    [data?.versions, version]
   )
 
   const [editing, setEditing] = useSearchParameter<string>(

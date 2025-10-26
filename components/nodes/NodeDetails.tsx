@@ -23,6 +23,7 @@ import {
 } from '@/src/api/generated'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { themeConfig } from '@/utils/themeConfig'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
@@ -209,19 +210,23 @@ const NodeDetails = () => {
     // TODO: show error message and allow navigate back to the list
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
-        <section className="text-white bg-gray-900 whitespace-nowrap">
+        <section
+          className={`${themeConfig.nodeDetails.text} ${themeConfig.nodeDetails.background} whitespace-nowrap`}
+        >
           <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
             <div className="max-w-screen-sm mx-auto text-center">
               <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
                 {t('Error loading node details')}
               </h1>
               {/* reason */}
-              <p className="mb-4 text-lg font-normal text-gray-400">
+              <p
+                className={`mb-4 text-lg font-normal ${themeConfig.nodeDetails.metaText}`}
+              >
                 {t('Reason')}:{' '}
                 {t('An unexpected error occurred. Please try again later.')}
               </p>
               {process.env.NODE_ENV === 'development' && (
-                <p className="text-sm text-gray-500">
+                <p className={`text-sm ${themeConfig.nodeDetails.metaText}`}>
                   {t('Debug info')}: {error.message}
                 </p>
               )}
@@ -240,7 +245,9 @@ const NodeDetails = () => {
   if (!node) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-120px)]">
-        <section className="text-white bg-gray-900 whitespace-nowrap">
+        <section
+          className={`${themeConfig.nodeDetails.text} ${themeConfig.nodeDetails.background} whitespace-nowrap`}
+        >
           <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
             <div className="max-w-screen-sm mx-auto text-center">
               <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
@@ -256,7 +263,9 @@ const NodeDetails = () => {
   return (
     <>
       {/* TODO(sno): unwrap this div out of fragment in another PR */}
-      <div className="flex flex-wrap justify-between p-8 text-white bg-gray-900 rounded-md lg:flex-nowrap lg:justify-between lg:gap-12">
+      <div
+        className={`flex flex-wrap justify-between p-8 ${themeConfig.nodeDetails.background} ${themeConfig.nodeDetails.text} rounded-md lg:flex-nowrap lg:justify-between lg:gap-12`}
+      >
         <div className="w-full lg:w-1/5 ">
           <Image
             src={node?.icon || nodesLogo}
@@ -272,10 +281,14 @@ const NodeDetails = () => {
             <div className="">
               <div className="flex items-start justify-between">
                 <div>
-                  <h1 className="text-[48px] font-bold">{node.name}</h1>
+                  <h1
+                    className={`text-[48px] font-bold ${themeConfig.nodeDetails.text}`}
+                  >
+                    {node.name}
+                  </h1>
 
                   <p
-                    className="text-[18px] pt-2 text-gray-300 space-x-2"
+                    className={`text-[18px] pt-2 space-x-2 ${themeConfig.nodeDetails.text}`}
                     hidden={isUnclaimed}
                   >
                     {[
@@ -357,7 +370,9 @@ const NodeDetails = () => {
                                     </p>
                                 )} */}
                 {node.downloads != 0 && (
-                  <p className="flex items-center py-2 mt-1 text-xs text-gray-400">
+                  <p
+                    className={`flex items-center py-2 mt-1 text-xs ${themeConfig.nodeDetails.metaText}`}
+                  >
                     <svg
                       className="w-6 h-6"
                       aria-hidden="true"
@@ -408,7 +423,9 @@ const NodeDetails = () => {
               <div className="mt-5 mb-10">
                 <>
                   {isUnclaimed || !nodeVersions?.length ? (
-                    <p className="text-base font-normal text-gray-200">
+                    <p
+                      className={`text-base font-normal ${themeConfig.nodeDetails.text}`}
+                    >
                       {isUnclaimed
                         ? t(
                             "This node can only be installed via git, because it's unclaimed by any publisher"
@@ -441,28 +458,42 @@ const NodeDetails = () => {
                 </>
               </div>
               <div>
-                <h2 className="mb-2 text-lg font-bold">{t('Description')}</h2>
-                <p className="text-base font-normal text-gray-200">
+                <h2
+                  className={`mb-2 text-lg font-bold ${themeConfig.nodeDetails.text}`}
+                >
+                  {t('Description')}
+                </h2>
+                <p
+                  className={`text-base font-normal ${themeConfig.nodeDetails.text}`}
+                >
                   {node.description}
                 </p>
               </div>
               <div className="mt-10" hidden={isUnclaimed}>
-                <h2 className="mb-2 text-lg font-semibold">
+                <h2
+                  className={`mb-2 text-lg font-semibold ${themeConfig.nodeDetails.text}`}
+                >
                   {t('Version history')}
                 </h2>
                 <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
                   {nodeVersions?.map((version, index) => (
                     <div
-                      className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
+                      className={`${themeConfig.nodeDetails.card} ${themeConfig.nodeDetails.cardBorder} border p-[32px] rounded-xl`}
                       key={index}
                     >
-                      <h3 className="text-base font-semibold text-gray-200">
+                      <h3
+                        className={`text-base font-semibold ${themeConfig.nodeDetails.cardText}`}
+                      >
                         {t('Version')} {version.version}
                       </h3>
-                      <p className="mt-3 text-sm font-normal text-gray-400 ">
+                      <p
+                        className={`mt-3 text-sm font-normal ${themeConfig.nodeDetails.metaText}`}
+                      >
                         <FormatRelativeDate date={version.createdAt || ''} />
                       </p>
-                      <div className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
+                      <div
+                        className={`flex-grow mt-3 text-base font-normal ${themeConfig.nodeDetails.cardText} line-clamp-2`}
+                      >
                         {version.changelog}
                       </div>
                       <div

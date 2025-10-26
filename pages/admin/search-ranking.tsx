@@ -1,12 +1,16 @@
-import { Breadcrumb, Button, Spinner, TextInput } from 'flowbite-react'
+import { Button, Spinner, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { HiHome } from 'react-icons/hi'
 import { MdEdit } from 'react-icons/md'
 import { useRouterQuery } from 'src/hooks/useRouterQuery'
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+  createAdminDashboardBreadcrumb,
+  createHomeBreadcrumb,
+  UnifiedBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import { formatDownloadCount } from '@/components/nodes/NodeDetails'
 import SearchRankingEditModal from '@/components/nodes/SearchRankingEditModal'
 import { Node, useSearchNodes } from '@/src/api/generated'
@@ -23,6 +27,13 @@ function SearchRankingAdminPage() {
   // Extract and parse query parameters directly
   const page = Number(query.page || 1)
   const searchQuery = String(query.search || '')
+
+  // Create breadcrumb items
+  const breadcrumbItems = [
+    createHomeBreadcrumb(t),
+    createAdminDashboardBreadcrumb(t),
+    { href: '', label: t('Search Ranking Management') },
+  ]
 
   // Fetch all nodes with pagination - searchQuery being undefined is handled properly
   const { data, isLoading, isError } = useSearchNodes({
@@ -77,32 +88,7 @@ function SearchRankingAdminPage() {
   return (
     <div className="p-4">
       <div className="py-4">
-        <Breadcrumb>
-          <Breadcrumb.Item
-            href="/"
-            icon={HiHome}
-            onClick={(e) => {
-              e.preventDefault()
-              router.push('/')
-            }}
-            className="dark"
-          >
-            {t('Home')}
-          </Breadcrumb.Item>
-          <Breadcrumb.Item
-            href="/admin"
-            onClick={(e) => {
-              e.preventDefault()
-              router.push('/admin')
-            }}
-            className="dark"
-          >
-            {t('Admin Dashboard')}
-          </Breadcrumb.Item>
-          <Breadcrumb.Item className="dark">
-            {t('Search Ranking Management')}
-          </Breadcrumb.Item>
-        </Breadcrumb>
+        <UnifiedBreadcrumb items={breadcrumbItems} />
       </div>
 
       <h1 className="text-2xl font-bold text-gray-200 mb-6">

@@ -1,23 +1,20 @@
 import { useQueryClient } from '@tanstack/react-query'
 import clsx from 'clsx'
-import {
-  Breadcrumb,
-  Button,
-  Label,
-  Modal,
-  Spinner,
-  Table,
-  TextInput,
-} from 'flowbite-react'
+import { Button, Label, Modal, Spinner, Table, TextInput } from 'flowbite-react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { omit } from 'rambda'
 import React, { useState } from 'react'
-import { HiHome, HiPencil } from 'react-icons/hi'
+import { HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
+import {
+  createAdminDashboardBreadcrumb,
+  createHomeBreadcrumb,
+  UnifiedBreadcrumb,
+} from '@/components/common/UnifiedBreadcrumb'
 import {
   Node,
   NodeStatus,
@@ -32,12 +29,16 @@ function NodeList() {
   const router = useRouter()
   const [page, setPage] = React.useState<number>(1)
   const [editingNode, setEditingNode] = useState<Node | null>(null)
-  const [editFormData, setEditFormData] = useState({
-    tags: '',
-    category: '',
-  })
+  const [editFormData, setEditFormData] = useState({ tags: '', category: '' })
   const queryClient = useQueryClient()
   const { data: user } = useGetUser()
+
+  // Create breadcrumb items
+  const breadcrumbItems = [
+    createHomeBreadcrumb(t),
+    createAdminDashboardBreadcrumb(t),
+    { href: '', label: t('Nodes') },
+  ]
 
   // Handle page from URL
   React.useEffect(() => {
@@ -232,30 +233,9 @@ function NodeList() {
 
   return (
     <div>
-      <Breadcrumb className="py-4 px-4">
-        <Breadcrumb.Item
-          href="/"
-          icon={HiHome}
-          onClick={(e) => {
-            e.preventDefault()
-            router.push('/')
-          }}
-          className="dark"
-        >
-          {t('Home')}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item
-          href="/admin"
-          onClick={(e) => {
-            e.preventDefault()
-            router.push('/admin')
-          }}
-          className="dark"
-        >
-          {t('Admin Dashboard')}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item className="dark">{t('Manage Nodes')}</Breadcrumb.Item>
-      </Breadcrumb>
+      <div className="py-4 px-4">
+        <UnifiedBreadcrumb items={breadcrumbItems} />
+      </div>
 
       <div className="flex flex-col gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-200">

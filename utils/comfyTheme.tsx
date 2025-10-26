@@ -1,9 +1,11 @@
 import { CustomFlowbiteTheme } from 'flowbite-react'
+import { themeConfig } from './themeConfig'
+
 export const customThemeTModal: CustomFlowbiteTheme = {
   root: {
     base: 'fixed inset-x-0 top-0 z-50 h-screen overflow-y-auto overflow-x-hidden md:inset-0 md:h-full rounded-lg',
     show: {
-      on: 'flex bg-gray-900 bg-opacity-50 bg-opacity-80',
+      on: `flex ${themeConfig.modal.overlay}`,
       off: 'hidden',
     },
     sizes: {
@@ -31,41 +33,40 @@ export const customThemeTModal: CustomFlowbiteTheme = {
     },
   },
   content: {
-    base: 'relative h-full w-full p-4 md:h-auto rounded-2xl bg-gray-800',
-    inner: 'relative flex max-h-[90dvh] flex-col rounded-lg bg-gray-800',
+    base: `relative h-full w-full p-4 md:h-auto rounded-2xl ${themeConfig.modal.content}`,
+    inner: `relative flex max-h-[90dvh] flex-col rounded-lg ${themeConfig.modal.inner}`,
   },
   body: {
-    base: 'flex-1 overflow-auto p-6 bg-gray-800',
+    base: `flex-1 overflow-auto p-6 ${themeConfig.modal.body}`,
     popup: 'pt-0',
   },
   header: {
-    base: 'flex items-start justify-between rounded-t border-b p-5 border-gray-600',
+    base: `flex items-start justify-between rounded-t border-b p-5 ${themeConfig.modal.header.border}`,
     popup: 'border-b-0 p-2',
-    title: 'text-xl font-medium text-gray-900 text-white',
+    title: `text-xl font-medium ${themeConfig.modal.header.title}`,
     close: {
-      base: 'ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 hover:bg-gray-600 hover:text-white',
+      base: `ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm ${themeConfig.modal.close.base}`,
       icon: 'h-5 w-5',
     },
   },
   footer: {
     //@ts-ignore
-    base: 'flex items-center space-x-2 rounded-b border-gray-200 p-6 border-gray-600',
+    base: `flex items-center space-x-2 rounded-b p-6 ${themeConfig.modal.footer.border}`,
     popup: 'border-t',
   },
 }
 export const customThemeTextInput = {
   base: 'flex',
-  addon:
-    'inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900',
+  addon: `inline-flex items-center rounded-l-md border border-r-0 px-3 text-sm ${themeConfig.textInput.addon}`,
   field: {
     base: 'relative w-full',
     icon: {
       base: 'pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3',
-      svg: 'h-5 w-5 text-gray-500',
+      svg: `h-5 w-5 ${themeConfig.textInput.icon}`,
     },
     rightIcon: {
       base: 'pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3',
-      svg: 'h-5 w-5 text-gray-500',
+      svg: `h-5 w-5 ${themeConfig.textInput.icon}`,
     },
     input: {
       base: 'block w-full border disabled:cursor-not-allowed disabled:opacity-50',
@@ -75,7 +76,7 @@ export const customThemeTextInput = {
         lg: 'p-4 sm:text-base',
       },
       colors: {
-        gray: 'border-gray-500 bg-gray-600 text-gray-200 focus:border-blue-500 focus:ring-blue-500',
+        gray: themeConfig.textInput.base,
         info: 'border-blue-500 bg-blue-50 text-blue-900 focus:border-blue-500 focus:ring-blue-500',
         failure:
           'border-red-500 bg-red-50 text-red-900 focus:border-red-500 focus:ring-red-500',
@@ -91,17 +92,17 @@ export const customThemeTextInput = {
 export const CustomThemeTextArea = {
   base: 'block w-full rounded-lg border text-sm disabled:cursor-not-allowed disabled:opacity-50',
   colors: {
-    gray: 'border-gray-300 bg-gray-600 text-gray-200 focus:border-blue-500 focus:ring-blue-500 border-gray-600 bg-gray-700 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500',
-    info: 'border-blue-500 bg-blue-50 text-blue-900 placeholder-blue-700 focus:border-blue-500 focus:ring-blue-500 border-blue-400 bg-blue-100 focus:border-blue-500 focus:ring-blue-500',
+    gray: themeConfig.textArea.base,
+    info: 'border-blue-500 bg-blue-50 text-blue-900 placeholder-blue-700 focus:border-blue-500 focus:ring-blue-500 dark:border-blue-400 dark:bg-blue-100 dark:placeholder-blue-600',
     failure:
-      'border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 border-red-400 bg-red-100 focus:border-red-500 focus:ring-red-500',
+      'border-red-500 bg-red-50 text-red-900 placeholder-red-700 focus:border-red-500 focus:ring-red-500 dark:border-red-400 dark:bg-red-100 dark:placeholder-red-600',
     warning:
-      'border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 border-yellow-400 bg-yellow-100 focus:border-yellow-500 focus:ring-yellow-500',
+      'border-yellow-500 bg-yellow-50 text-yellow-900 placeholder-yellow-700 focus:border-yellow-500 focus:ring-yellow-500 dark:border-yellow-400 dark:bg-yellow-100 dark:placeholder-yellow-600',
     success:
-      'border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 border-green-400 bg-green-100 focus:border-green-500 focus:ring-green-500',
+      'border-green-500 bg-green-50 text-green-900 placeholder-green-700 focus:border-green-500 focus:ring-green-500 dark:border-green-400 dark:bg-green-100 dark:placeholder-green-600',
   },
   withShadow: {
-    on: 'shadow-sm shadow-sm-light',
+    on: 'shadow-sm',
     off: '',
   },
 }
@@ -111,25 +112,24 @@ export const CustomThemePagination: CustomFlowbiteTheme = {
   base: '',
   layout: {
     table: {
-      base: 'text-sm text-gray-700 text-gray-400',
-      span: 'font-semibold text-gray-900 text-white',
+      base: themeConfig.pagination.text,
+      span: `font-semibold ${themeConfig.pagination.span}`,
     },
   },
   pages: {
     base: 'xs:mt-0 mt-2 inline-flex items-center -space-x-px',
     showIcon: 'inline-flex',
     previous: {
-      base: 'ml-0 rounded-l-lg border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 enabled:hover:bg-gray-100 enabled:hover:text-gray-700 border-gray-700 bg-gray-800 text-gray-400 enabled:hover:bg-gray-700 enabled:hover:text-white',
+      base: `ml-0 rounded-l-lg border px-3 py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-gray-700 ${themeConfig.pagination.button}`,
       icon: 'h-5 w-5',
     },
     next: {
-      base: 'rounded-r-lg border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-500 enabled:hover:bg-gray-100 enabled:hover:text-gray-700 border-gray-700 bg-gray-800 text-gray-400 enabled:hover:bg-gray-700 enabled:hover:text-white',
+      base: `rounded-r-lg border px-3 py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-gray-700 ${themeConfig.pagination.button}`,
       icon: 'h-5 w-5',
     },
     selector: {
-      base: 'w-12 border border-gray-300 bg-white py-2 leading-tight text-gray-500 enabled:hover:bg-gray-100 enabled:hover:text-gray-700 border-gray-700 bg-gray-800 text-gray-400 enabled:hover:bg-gray-700 enabled:hover:text-white',
-      active:
-        'bg-cyan-50 text-cyan-600 hover:bg-cyan-100 hover:text-cyan-700 border-gray-700 bg-gray-700 text-white',
+      base: `w-12 border py-2 leading-tight enabled:hover:bg-gray-100 enabled:hover:text-gray-700 ${themeConfig.pagination.button}`,
+      active: themeConfig.pagination.active,
       disabled: 'cursor-not-allowed opacity-50',
     },
   },
