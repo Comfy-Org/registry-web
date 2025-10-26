@@ -6,9 +6,9 @@ import { useRouter } from 'next/router'
  * @returns The fromUrl value as string or null if not present
  */
 export function useFromUrl(): string | null {
-    const router = useRouter()
-    const fromUrl = [router.query.fromUrl].flat()[0]
-    return fromUrl ?? null
+  const router = useRouter()
+  const fromUrl = [router.query.fromUrl].flat()[0]
+  return fromUrl ?? null
 }
 
 /**
@@ -16,6 +16,6 @@ export function useFromUrl(): string | null {
  * @returns A URL parameter string in the format 'fromUrl=encodedCurrentPath'
  */
 export function useFromUrlParam(): string {
-    const router = useRouter()
-    return `fromUrl=${encodeURIComponent(router.asPath)}`
+  const router = useRouter()
+  return `fromUrl=${encodeURIComponent(router.asPath)}`
 }
