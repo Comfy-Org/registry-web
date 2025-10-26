@@ -18,23 +18,26 @@ The "Update PR Branches to Latest Main" workflow allows maintainers to automatic
 2. Click on "Update PR Branches to Latest Main" workflow
 3. Click the "Run workflow" button
 4. Configure options:
-   - **PR numbers**: Leave empty to update all open PRs, or specify comma-separated PR numbers (e.g., `220,224,226`)
-   - **Dry run**: Check this to see what would be updated without making changes
+    - **PR numbers**: Leave empty to update all open PRs, or specify comma-separated PR numbers (e.g., `220,224,226`)
+    - **Dry run**: Check this to see what would be updated without making changes
 5. Click "Run workflow"
 
 ### Via GitHub CLI
 
 Update all open PRs:
+
 ```bash
 gh workflow run update-pr-branches.yml
 ```
 
 Update specific PRs:
+
 ```bash
 gh workflow run update-pr-branches.yml -f pr_numbers="220,224,226"
 ```
 
 Dry run mode:
+
 ```bash
 gh workflow run update-pr-branches.yml -f dry_run=true
 ```
@@ -58,9 +61,9 @@ If the workflow detects merge conflicts:
 - The merge is aborted automatically
 - A comment is added to the PR noting manual intervention is needed
 - The PR author should:
-  1. Pull latest changes from main
-  2. Resolve conflicts locally
-  3. Push the resolved changes
+    1. Pull latest changes from main
+    2. Resolve conflicts locally
+    3. Push the resolved changes
 
 ## Limitations
 
@@ -80,16 +83,19 @@ If the workflow detects merge conflicts:
 ## Troubleshooting
 
 ### Workflow fails with permission error
+
 - Check that `GITHUB_TOKEN` has write permissions
 - Verify branch protection rules allow GitHub Actions to push
 
 ### PR not updated
+
 - Check workflow logs for specific error messages
 - Verify PR is in OPEN state
 - Ensure branch exists and is accessible
 - Check for merge conflicts reported in comments
 
 ### Push fails
+
 - Branch may have protection rules preventing push
 - PR might be from a forked repository
 - Network issues or rate limiting
@@ -104,16 +110,19 @@ If the workflow detects merge conflicts:
 ## Examples
 
 ### Example 1: Update all open PRs
+
 ```bash
 gh workflow run update-pr-branches.yml
 ```
 
 ### Example 2: Update specific PRs (220, 224, 226)
+
 ```bash
 gh workflow run update-pr-branches.yml -f pr_numbers="220,224,226"
 ```
 
 ### Example 3: Dry run to see what would be updated
+
 ```bash
 gh workflow run update-pr-branches.yml -f dry_run=true
 ```
