@@ -87,9 +87,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
           href="/discord"
           size="xs"
           aria-label={t('Join our Discord community')}
-        >
-          <span className="sr-only">{t('Discord')}</span>
-        </Badge>
+        />
 
         {/* place in the most-right to reduce ... when switching language  */}
         <LanguageSwitcher />
