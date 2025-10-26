@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "build": "concurrently \"next build\" \"bun run build-storybook\"",
-        "build-storybook": "storybook build -o public/_storybook && bun scripts/fix-storybook-paths.ts",
+        "build-storybook": "storybook build -o public/_storybook",
         "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
         "dev": "next dev",
         "fix": "next lint --fix .",
