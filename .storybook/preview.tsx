@@ -8,7 +8,7 @@ import {
   useFirebaseUser,
 } from '@/src/hooks/useFirebaseUser.mock'
 
-initialize({
+const _mswApp = initialize({
   onUnhandledRequest: 'bypass',
 })
 
