@@ -64,4 +64,6 @@ storybook-static
 public/_storybook
 
 # ignore core file
-core
+/core
+/prs
+
