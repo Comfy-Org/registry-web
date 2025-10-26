@@ -1,82 +1,64 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
-    "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-    "files": {
-        "ignoreUnknown": false,
-        "maxSize": 2097152
-    },
-    "formatter": {
-        "enabled": true,
-        "formatWithErrors": false,
-        "indentStyle": "space",
-        "indentWidth": 4,
-        "lineEnding": "lf",
-        "lineWidth": 80,
-        "attributePosition": "auto",
-        "bracketSameLine": false,
-        "bracketSpacing": true,
-        "expand": "auto",
-        "useEditorconfig": true,
-        "includes": [
-            "**",
-            "!**/package-lock.json",
-            "!**/pnpm-lock.yaml",
-            "!**/package.json",
-            "!NativeApp/dist/bundles/*",
-            "!NativeApp/build-*",
-            "!NativeApp/assets/*",
-            "!NativeApp/.expo-shared/*",
-            "!public/*",
-            "!NativeApp/eas.json",
-            "!src/api/generated.ts",
-            "!styles/globals.css"
-        ]
-    },
-    "linter": {
-        "enabled": true,
-        "rules": {
-            "recommended": false,
-            "a11y": { "useAltText": "off" },
-            "style": { "useBlockStatements": "off", "useTemplate": "warn" }
-        },
-        "includes": [
-            "**",
-            "**/.storybook",
-            "!./worktrees",
-            "!NativeApp/*",
-            "!src/api/generated.ts",
-            "!styles/globals.css"
-        ]
-    },
-    "javascript": {
-        "formatter": {
-            "jsxQuoteStyle": "double",
-            "quoteProperties": "asNeeded",
-            "trailingCommas": "es5",
-            "semicolons": "asNeeded",
-            "arrowParentheses": "always",
-            "bracketSameLine": false,
-            "quoteStyle": "single",
-            "attributePosition": "auto",
-            "bracketSpacing": true
-        }
-    },
-    "html": { "formatter": { "selfCloseVoidElements": "always" } },
-    "css": {
-        "parser": {
-            "cssModules": false,
-            "allowWrongLineComments": true
-        }
-    },
-    "assist": {
-        "enabled": true,
-        "actions": { "source": { "organizeImports": "on" } }
-    },
-    "overrides": [
-        {
-            "includes": ["styles/globals.css"],
-            "linter": { "enabled": false },
-            "formatter": { "enabled": false }
-        }
+  "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": { "ignoreUnknown": false },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto",
+    "useEditorconfig": true,
+    "includes": [
+      "**",
+      "!**/package-lock.json",
+      "!**/pnpm-lock.yaml",
+      "!**/package.json",
+      "!NativeApp/dist/bundles/*",
+      "!NativeApp/build-*",
+      "!NativeApp/assets/*",
+      "!NativeApp/.expo-shared/*",
+      "!public/*",
+      "!NativeApp/eas.json",
+      "!src/api/generated.ts"
     ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "a11y": { "useAltText": "off" },
+      "style": { "useBlockStatements": "off", "useTemplate": "warn" }
+    },
+    "includes": [
+      "**",
+      "**/.storybook",
+      "!./worktrees",
+      "!NativeApp/*",
+      "!src/api/generated.ts"
+    ]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "html": { "formatter": { "selfCloseVoidElements": "always" } },
+  "assist": {
+    "enabled": true,
+    "actions": { "source": { "organizeImports": "on" } }
+  }
 }
