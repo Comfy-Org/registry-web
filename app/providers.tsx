@@ -104,7 +104,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           return true
         },
       },
-      maxAge: 86400e3, // 1 day in seconds
+      maxAge: 86400e3, // 1 day in milliseconds
       buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1',
     })
 

@@ -1,4 +1,4 @@
-import Registry from '../../components/registry/Registry'
+import Registry from '@/components/registry/Registry'
 
 export default function NodeList() {
   return <Registry />
