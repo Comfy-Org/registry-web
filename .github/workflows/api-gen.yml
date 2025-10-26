@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -69,36 +69,6 @@ jobs:
             echo "### Change summary:"
             git diff --stat src/api/generated.ts
           fi
-
-      - name: Check for existing API update PR
-        if: steps.changes.outputs.has_changes == 'true'
-        id: existing_pr
-        uses: actions/github-script@v7
-        with:
-          result-encoding: string
-          script: |
-            const { data: prs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              head: `${context.repo.owner}:chore-update-comfy-api`,
-              sort: 'created',
-              direction: 'desc'
-            });
-
-            const existingPr = prs.length > 0 ? prs[0] : null;
-
-            if (existingPr) {
-              console.log(`Found existing PR #${existingPr.number}: ${existingPr.title}`);
-              return JSON.stringify({
-                exists: true,
-                number: existingPr.number,
-                url: existingPr.html_url
-              });
-            } else {
-              console.log('No existing API update PR found');
-              return JSON.stringify({ exists: false });
-            }
 
       - name: Generate diff summary for PR
         if: steps.changes.outputs.has_changes == 'true'
@@ -171,113 +141,39 @@ jobs:
         if: steps.changes.outputs.has_changes == 'true'
         run: |
           echo "🔍 Validating generated API types..."
-          # Check if the generated file compiles
-          bun run build || {
-            echo "❌ Build failed after API generation"
-            exit 1
-          }
-          
-          # Run linting
-          bun run lint || {
-            echo "❌ Linting failed - running auto-fix"
-            bun run fix || exit 1
-          }
-          
+          bun run build
+          bun run lint || bun run fix
           echo "✅ Generated API types are valid"
 
       - name: Update PR with validation results
-        if: steps.changes.outputs.has_changes == 'true'
-        uses: actions/github-script@v7
+        if: steps.changes.outputs.has_changes == 'true' && steps.create_pr.outputs.pull-request-number
+        uses: peter-evans/find-comment@v3
+        id: find_comment
         with:
-          script: |
-            const prNumberStr = '${{ steps.create_pr.outputs.pull-request-number }}';
-            const prNumber = prNumberStr ? parseInt(prNumberStr, 10) : null;
-            const existingPrData = JSON.parse('${{ steps.existing_pr.outputs.result }}');
-            const isUpdate = existingPrData.exists;
+          issue-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '## 🔍 Automated Validation Results'
 
-            if (prNumber) {
-              const updateType = isUpdate ? '🔄 **Updated**' : '🆕 **Created**';
-              const updateTime = new Date().toISOString();
+      - name: Create or update validation comment
+        if: steps.changes.outputs.has_changes == 'true' && steps.create_pr.outputs.pull-request-number
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          edit-mode: replace
+          body: |
+            ## 🔍 Automated Validation Results
 
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: `## 🔍 Automated Validation Results
+            🔄 **Updated** - ${{ steps.timestamp.outputs.current }}
 
-                ${updateType} - ${updateTime}
+            ✅ **Build**: Generated types compile successfully
+            ✅ **Linting**: Code style validation passed
+            ✅ **Dependencies**: All imports resolved correctly
 
-                ✅ **Build**: Generated types compile successfully
-                ✅ **Linting**: Code style validation passed
-                ✅ **Dependencies**: All imports resolved correctly
+            This PR is ready for review! 🚀
 
-                ${isUpdate ? '🔄 PR has been updated with the latest API changes!' : 'This PR is ready for review! 🚀'}
-
-                **Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`
-              });
-            }
-
-      - name: Comment on success
-        if: steps.changes.outputs.has_changes == 'true'
-        run: |
-          EXISTING_PR=$(echo '${{ steps.existing_pr.outputs.result }}' | jq -r .exists)
-          if [ "$EXISTING_PR" = "true" ]; then
-            echo "✅ API update PR updated successfully"
-            echo "🔄 Force-pushed to existing PR branch: chore-update-comfy-api"
-          else
-            echo "✅ API update PR created successfully"
-            echo "🆕 New PR created on branch: chore-update-comfy-api"
-          fi
-          echo "🔗 PR #${{ steps.create_pr.outputs.pull-request-number }}"
-          echo "🔗 URL: ${{ steps.create_pr.outputs.pull-request-url }}"
+            **Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
       - name: No changes message
         if: steps.changes.outputs.has_changes == 'false'
         run: echo "ℹ️ No API changes detected - skipping PR creation"
-
-      - name: Notify on failure
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const title = "API Generation Workflow Failed";
-            const body = `
-            ❌ **API Type Generation Failed**
-            
-            **Run ID**: ${{ github.run_id }}
-            **Backend URL**: ${{ env.NEXT_PUBLIC_BACKEND_URL }}
-            **Trigger**: ${{ github.event_name }}
-            
-            Please check the [workflow logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.
-            
-            Common issues:
-            - Backend API is unreachable
-            - OpenAPI spec format has changed
-            - Dependencies need updating
-            `;
-            
-            // Create an issue for failed runs if it doesn't exist
-            const { data: issues } = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: 'api-generation-failure',
-              state: 'open'
-            });
-            
-            if (issues.length === 0) {
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: title,
-                body: body,
-                labels: ['api-generation-failure', 'automated', 'bug']
-              });
-            } else {
-              // Update existing issue with new failure info
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issues[0].number,
-                body: `🔄 **New Failure**: ${new Date().toISOString()}\n\n${body}`
-              });
-            }
