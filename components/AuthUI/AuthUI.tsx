@@ -21,7 +21,6 @@ const AuthUI: React.FC<{}> = ({}) => {
   const { t } = useNextTranslation()
   const router = useRouter()
   const auth = getAuth(app)
-
   // Email/password form state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
