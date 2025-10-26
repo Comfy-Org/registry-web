@@ -228,6 +228,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                     'Public tags visible to all users (e.g., video, audio, utility)'
                   )}
                 </p>
+              </div>
 
                 <div className="flex mt-5">
                   <Button
