@@ -15,7 +15,6 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
 
-            // このワークフローを発火させたPRのみを対象に自動更新
             const pr = context.payload.pull_request;
             if (!pr) {
               console.log('Not triggered by a pull_request event.');
@@ -26,7 +25,7 @@ jobs:
                 owner,
                 repo,
                 pull_number: pr.number,
-                expected_head_sha: pr.head.sha, // オプティミスティックロック用
+                expected_head_sha: pr.head.sha,
               });
               console.log(`Successfully updated PR #${pr.number} (${pr.head.ref}).`);
             } catch (error) {
