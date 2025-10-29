@@ -1,8 +1,9 @@
 name: Auto-update Pull Requests
 
 on:
-  pull_request:
-    types: [opened, synchronize, labeled, unlabeled]
+  push:
+    branches:
+      - main
 
 jobs:
   autoupdate-prs:
