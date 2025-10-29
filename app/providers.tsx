@@ -10,10 +10,10 @@ import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { DIE } from 'phpdie'
-import { AXIOS_INSTANCE } from '@/src/api/mutator/axios-instance'
-import app from '@/src/firebase'
 import FlowBiteThemeProvider from '@/components/flowbite-theme'
 import Layout from '@/components/layout'
+import { AXIOS_INSTANCE } from '@/src/api/mutator/axios-instance'
+import app from '@/src/firebase'
 
 // Add an interceptor to attach the Firebase JWT token to every request
 AXIOS_INSTANCE.interceptors.request.use(async (config) => {
