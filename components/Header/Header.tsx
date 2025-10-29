@@ -95,7 +95,13 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
         </Button>
 
         <div className="h-10 flex items-center">
-          <Badge icon={DiscordIcon} color="gray" href="/discord" size="xs" />
+          <Badge
+            icon={DiscordIcon}
+            color="gray"
+            href="/discord"
+            size="xs"
+            aria-label={t('Join our Discord community')}
+          />
         </div>
 
         {/* place in the most-right to reduce ... when switching language  */}
