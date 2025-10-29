@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { sleep } from 'workflow'
 
 /**
  * Example Vercel Workflow API route
@@ -32,9 +31,6 @@ async function exampleWorkflow(topic: string) {
 
   // Step 1: Process the topic
   const processed = await processStep(topic)
-
-  // Sleep for demonstration (doesn't consume resources)
-  await sleep(1000)
 
   // Step 2: Generate summary
   const summary = await summarizeStep(processed)
