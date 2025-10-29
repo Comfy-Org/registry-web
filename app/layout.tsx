@@ -1,4 +1,3 @@
-import i18next from 'i18next'
 import { Metadata } from 'next'
 import { Providers } from './providers'
 import '../styles/globals.css'
@@ -18,9 +17,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Default to 'en', will be handled by i18n middleware/client-side detection
+  // TODO: Re-implement i18n configuration for App Router
+  // For now, default to 'en' locale and 'ltr' direction
   const locale = 'en'
-  const dir = i18next.dir(locale)
+  const dir = 'ltr'
 
   return (
     <html lang={locale} dir={dir}>
