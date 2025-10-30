@@ -1,3 +1,4 @@
+'use client'
 import { useQueryClient } from '@tanstack/react-query'
 import { getAuth } from 'firebase/auth'
 import { Button } from 'flowbite-react'
