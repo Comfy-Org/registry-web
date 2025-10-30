@@ -1,5 +1,8 @@
 'use client'
 import algoliasearch from 'algoliasearch/lite'
+// TODO: Migrate to App Router compatible routing solution
+// Currently using Pages Router API for Algolia InstantSearch routing during incremental migration
+// This works in 'use client' components but should be migrated to use react-instantsearch-nextjs
 import singletonRouter from 'next/router'
 import React from 'react'
 import { Configure, Hits, InstantSearch } from 'react-instantsearch'
