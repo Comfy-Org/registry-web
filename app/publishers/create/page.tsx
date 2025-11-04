@@ -57,4 +57,6 @@ const CreatePublisher = () => {
   )
 }
 
-export default withAuth(CreatePublisher)
+// TODO: Re-enable withAuth after migrating HOC to App Router
+// export default withAuth(CreatePublisher)
+export default CreatePublisher

@@ -10,7 +10,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 function PublisherDetails() {
   const router = useRouter()
   const params = useParams()
-  const publisherId = params.publisherId as string
+  const publisherId = params?.publisherId as string
   const { t } = useNextTranslation()
   const { data, isError, isLoading } = useGetPublisher(publisherId)
 
@@ -52,4 +52,6 @@ function PublisherDetails() {
   )
 }
 
-export default withAuth(PublisherDetails)
+// TODO: Re-enable withAuth after migrating HOC to App Router
+// export default withAuth(PublisherDetails)
+export default PublisherDetails

@@ -53,8 +53,8 @@ function ClaimMyNodePage() {
   const searchParams = useSearchParams()
   const qc = useQueryClient()
 
-  const publisherId = params.publisherId as string
-  const nodeId = searchParams.get('nodeId') as string
+  const publisherId = params?.publisherId as string
+  const nodeId = searchParams?.get('nodeId') as string
 
   const [currentStage, setCurrentStage] =
     useState<ClaimStage>('info_confirmation')
@@ -322,7 +322,7 @@ function ClaimMyNodePage() {
     const [, owner, repo] = repoMatch
 
     // Check for GitHub token in the URL (OAuth callback)
-    const token = searchParams.get('token')
+    const token = searchParams?.get('token')
 
     if (token) {
       // If token is in URL, we've completed OAuth flow
@@ -375,7 +375,7 @@ function ClaimMyNodePage() {
         })
 
       // Clean up URL by removing only the token parameter while preserving other query params
-      const newParams = new URLSearchParams(searchParams.toString())
+      const newParams = new URLSearchParams(searchParams?.toString())
       newParams.delete('token')
       const newSearch = newParams.toString()
       const newUrl =
@@ -821,4 +821,6 @@ function ClaimMyNodePage() {
   )
 }
 
-export default withAuth(ClaimMyNodePage)
+// TODO: Re-enable withAuth after migrating HOC to App Router
+// export default withAuth(ClaimMyNodePage)
+export default ClaimMyNodePage

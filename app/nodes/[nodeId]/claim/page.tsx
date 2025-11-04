@@ -16,7 +16,7 @@ function ClaimNodePage() {
   const { t } = useNextTranslation()
   const router = useRouter()
   const params = useParams()
-  const nodeId = params.nodeId as string
+  const nodeId = params?.nodeId as string
   const [selectedPublisherId, setSelectedPublisherId] = useState<string | null>(
     null
   )
@@ -242,4 +242,6 @@ function ClaimNodePage() {
   )
 }
 
-export default withAuth(ClaimNodePage)
+// TODO: Re-enable withAuth after migrating HOC to App Router
+// export default withAuth(ClaimNodePage)
+export default ClaimNodePage

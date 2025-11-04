@@ -8,7 +8,7 @@ import { useNextTranslation } from '@/src/hooks/i18n'
 export default function NodeView() {
   const router = useRouter()
   const params = useParams()
-  const nodeId = params.nodeId as string
+  const nodeId = params?.nodeId as string
   const { t } = useNextTranslation()
 
   return (
