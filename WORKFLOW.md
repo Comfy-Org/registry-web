@@ -48,7 +48,7 @@ async function callExternalAPI(data: string) {
 
 ## Example Implementation
 
-See `pages/api/workflow-example.ts` for a complete working example that demonstrates:
+See `app/api/workflow-example/route.ts` for a complete working example that demonstrates:
 
 - Durable workflow function with `'use workflow'`
 - Stateless step functions with `'use step'`
@@ -131,7 +131,7 @@ wf [command]
 ## Resources
 
 - [Official Vercel Workflow Documentation](https://vercel.com/docs/workflow)
-- [Example Implementation](./pages/api/workflow-example.ts)
+- [Example Implementation](./app/api/workflow-example/route.ts)
 - [Vercel Workflow Package](https://www.npmjs.com/package/workflow)
 
 ## Integration with This Project

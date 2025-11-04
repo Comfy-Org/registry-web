@@ -1,26 +1,27 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { sleep } from 'workflow'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
- * Example Vercel Workflow API route
+ * Example Vercel Workflow API route using App Router
  * Demonstrates the use of 'use workflow' and 'use step' directives
  */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+export const POST = async (request: NextRequest) => {
+  try {
+    const body = await request.json()
+    const { topic } = body
+
+    if (!topic) {
+      return NextResponse.json({ error: 'Topic is required' }, { status: 400 })
+    }
+
+    const result = await exampleWorkflow(topic)
+    return NextResponse.json(result, { status: 200 })
+  } catch (error) {
+    console.error('Workflow error:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
-
-  const { topic } = req.body
-
-  if (!topic) {
-    return res.status(400).json({ error: 'Topic is required' })
-  }
-
-  const result = await exampleWorkflow(topic)
-  res.status(200).json(result)
 }
 
 /**
@@ -32,9 +33,6 @@ async function exampleWorkflow(topic: string) {
 
   // Step 1: Process the topic
   const processed = await processStep(topic)
-
-  // Sleep for demonstration (doesn't consume resources)
-  await sleep(1000)
 
   // Step 2: Generate summary
   const summary = await summarizeStep(processed)

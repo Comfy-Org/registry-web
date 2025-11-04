@@ -33,7 +33,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Vercel Workflow
 
 - `workflow` or `wf` - Vercel Workflow CLI for managing durable workflows
-- See `pages/api/workflow-example.ts` for example implementation
+- See `app/api/workflow-example/route.ts` for example implementation
 
 ## Architecture Overview
 
@@ -52,8 +52,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Project Structure
 
-- `pages/` - Next.js pages (App Router not used)
-- `pages/api/` - Next.js API routes including Workflow examples
+- `pages/` - Next.js pages (Pages Router, legacy)
+- `pages/api/` - Next.js API routes (Pages Router, legacy)
+- `app/` - Next.js App Router (preferred for new features)
+- `app/api/` - Next.js API routes (App Router, includes Workflow examples)
 - `components/` - Reusable React components organized by feature
 - `src/api/` - Auto-generated API client and custom Axios instance
 - `src/hooks/` - Custom React hooks including i18n
@@ -121,7 +123,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Use `'use workflow'` directive to mark functions as durable workflows
 - Use `'use step'` directive for stateless functions with automatic retries
 - Workflows maintain state across deployments and provide built-in observability
-- Example implementation available in `pages/api/workflow-example.ts`
+- Example implementation: `app/api/workflow-example/route.ts`
 - See [Vercel Workflow Documentation](https://vercel.com/docs/workflow) for details
 
 ## Environment Variables
