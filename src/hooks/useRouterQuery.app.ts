@@ -1,6 +1,6 @@
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { filter, omit } from 'rambda'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 /**
  * A hook to easily access and update URL query parameters (App Router version)
@@ -29,8 +29,11 @@ export function useRouterQuery<
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Convert URLSearchParams to object
-  const query = Object.fromEntries(searchParams.entries()) as T
+  // Convert URLSearchParams to object (memoized to avoid recreation)
+  const query = useMemo(
+    () => Object.fromEntries(searchParams?.entries() ?? []) as T,
+    [searchParams]
+  )
 
   /**
    * Update query parameters
@@ -44,6 +47,11 @@ export function useRouterQuery<
    */
   const updateQuery = useCallback(
     (newParams: Partial<T>, replace = false) => {
+      // Get current query from searchParams to avoid stale closures
+      const currentQuery = Object.fromEntries(
+        searchParams?.entries() ?? []
+      ) as T
+
       // Filter out null and undefined values
       const filteredParams = filter((e) => e != null, newParams)
 
@@ -51,7 +59,7 @@ export function useRouterQuery<
       const finalQuery = replace
         ? filteredParams
         : {
-            ...omit(Object.keys(newParams), query),
+            ...omit(Object.keys(newParams), currentQuery),
             ...filteredParams,
           }
 
@@ -68,9 +76,9 @@ export function useRouterQuery<
         ? `${pathname}?${params.toString()}`
         : pathname
 
-      router.push(newUrl)
+      router.push(newUrl ?? '/')
     },
-    [router, pathname, query]
+    [router, pathname, searchParams]
   )
 
   return [query, updateQuery] as const

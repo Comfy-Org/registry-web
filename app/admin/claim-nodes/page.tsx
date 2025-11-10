@@ -29,7 +29,7 @@ function ClaimNodesPage() {
     // Update URL with new page parameter
     const params = new URLSearchParams(searchParams?.toString())
     params.set('page', page.toString())
-    router.push(`?${params.toString()}`)
+    router.push(`/admin/claim-nodes?${params.toString()}`)
   }
 
   // Use the page from searchParams for the API call

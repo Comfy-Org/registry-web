@@ -52,7 +52,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // General localStorage cache invalidation for all endpoints
-    // this interceptors will user always have latest data after edit.
+    // This interceptor ensures users always have the latest data after edit.
     const responseInterceptor = AXIOS_INSTANCE.interceptors.response.use(
       function onSuccess(response: AxiosResponse) {
         const req = response.config

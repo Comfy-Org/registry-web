@@ -2,7 +2,6 @@
 
 import { Breadcrumb } from 'flowbite-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import {
   HiHome,
   HiOutlineAdjustments,
@@ -14,7 +13,6 @@ import withAdmin from '@/components/common/HOC/authAdmin'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
 function AdminDashboard() {
-  const router = useRouter()
   const { t } = useNextTranslation()
 
   return (
