@@ -36,11 +36,12 @@ export default function ProfileDropdown() {
       inline
       theme={customDropdownTheme}
       label={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 h-10">
           <Avatar
             alt="User avatar"
             img={firebaseUser.photoURL || undefined}
             rounded
+            size="sm"
             placeholderInitials={
               firebaseUser.displayName
                 ? firebaseUser.displayName.charAt(0).toUpperCase()

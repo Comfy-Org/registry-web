@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
         paddingRight: 0,
       }}
     >
-      <Link href="/" className="flex gap-1">
+      <Link href="/" className="flex gap-1 items-center h-10">
         <Image
           alt="Comfy Logo"
           src={logoBluePng}
@@ -55,16 +55,18 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
         </span>
       </Link>
       <div
-        className={`flex items-center gap-2 md:order-2 ${themeConfig.header.background}`}
+        className={`flex items-center gap-2 md:order-2 h-10 ${themeConfig.header.background}`}
       >
         {isLoggedIn ? (
-          <ProfileDropdown />
+          <div className="h-10 flex items-center">
+            <ProfileDropdown />
+          </div>
         ) : (
           <>
             <Button
               onClick={handleLogIn}
               size="xs"
-              className={`${themeConfig.button.login} border-0`}
+              className={`${themeConfig.button.login} border-0 h-10`}
             >
               <span className="text-xs md:text-base">{t('Login')}</span>
             </Button>
@@ -72,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
             <Button
               onClick={handleSignUp}
               size="xs"
-              className={`${themeConfig.button.signup} border-0`}
+              className={`${themeConfig.button.signup} border-0 h-10`}
             >
               <span className="text-xs md:text-base text-white">
                 {t('Signup')}
@@ -87,18 +89,28 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, title }) => {
               : 'https://docs.comfy.org/registry/overview'
           }
           size="xs"
-          className={`${themeConfig.button.documentation} border-0`}
+          className={`${themeConfig.button.documentation} border-0 h-10`}
         >
           <span className="text-xs md:text-base text-white">
             {t('Documentation')}
           </span>
         </Button>
 
-        <Badge icon={DiscordIcon} color="gray" href="/discord" size="xs" />
+        <div className="h-10 flex items-center">
+          <Badge
+            icon={DiscordIcon}
+            color="gray"
+            href="/discord"
+            size="xs"
+            aria-label={t('Join our Discord community')}
+          />
+        </div>
 
         <ThemeSwitcher />
         {/* place in the most-right to reduce ... when switching language  */}
-        <LanguageSwitcher />
+        <div className="h-10 flex items-center">
+          <LanguageSwitcher />
+        </div>
       </div>
     </Navbar>
   )

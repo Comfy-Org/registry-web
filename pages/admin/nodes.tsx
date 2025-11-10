@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { omit } from 'rambda'
 import React, { useState } from 'react'
-import { HiPencil } from 'react-icons/hi'
+import { HiHome, HiOutlineX, HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import { CustomPagination } from '@/components/common/CustomPagination'
@@ -18,10 +18,12 @@ import {
 import {
   Node,
   NodeStatus,
+  useAdminUpdateNode,
   useGetUser,
   useListAllNodes,
   useUpdateNode,
 } from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'
 
 function NodeList() {
@@ -30,6 +32,7 @@ function NodeList() {
   const [page, setPage] = React.useState<number>(1)
   const [editingNode, setEditingNode] = useState<Node | null>(null)
   const [editFormData, setEditFormData] = useState({ tags: '', category: '' })
+  const [unclaimingNode, setUnclaimingNode] = useState<Node | null>(null)
   const queryClient = useQueryClient()
   const { data: user } = useGetUser()
 
@@ -120,6 +123,7 @@ function NodeList() {
   })
 
   const updateNodeMutation = useUpdateNode()
+  const adminUpdateNodeMutation = useAdminUpdateNode()
 
   React.useEffect(() => {
     if (getAllNodesQuery.isError) {
@@ -218,6 +222,32 @@ function NodeList() {
     if (e.ctrlKey && e.key === 'Enter') {
       e.preventDefault()
       handleSave()
+    }
+  }
+
+  const handleUnclaim = async () => {
+    if (!unclaimingNode || !unclaimingNode.id) {
+      toast.error(t('Unable to unclaim: missing node information'))
+      return
+    }
+
+    try {
+      await adminUpdateNodeMutation.mutateAsync({
+        nodeId: unclaimingNode.id,
+        data: {
+          ...unclaimingNode,
+          publisher: {
+            id: UNCLAIMED_ADMIN_PUBLISHER_ID,
+          },
+        },
+      })
+
+      toast.success(t('Node successfully unclaimed'))
+      setUnclaimingNode(null)
+      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+    } catch (error) {
+      console.error('Error unclaiming node:', error)
+      toast.error(t('Error unclaiming node'))
     }
   }
 
@@ -383,18 +413,30 @@ function NodeList() {
                   </span>
                 </Table.Cell>
                 <Table.Cell className="dark">
-                  <Button
-                    size="sm"
-                    onClick={() => openEditModal(node)}
-                    disabled={!node.publisher?.id}
-                    title={
-                      !node.publisher?.id
-                        ? t('No publisher information available')
-                        : t('Edit node')
-                    }
-                  >
-                    <HiPencil className="w-4 h-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => openEditModal(node)}
+                      disabled={!node.publisher?.id}
+                      title={
+                        !node.publisher?.id
+                          ? t('No publisher information available')
+                          : t('Edit node')
+                      }
+                    >
+                      <HiPencil className="w-4 h-4" />
+                    </Button>
+                    {node.publisher?.id && (
+                      <Button
+                        size="sm"
+                        color="warning"
+                        onClick={() => setUnclaimingNode(node)}
+                        title={t('Unclaim node')}
+                      >
+                        <HiOutlineX className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}
@@ -534,6 +576,58 @@ function NodeList() {
             {updateNodeMutation.isPending ? <Spinner size="sm" /> : t('Save')}
           </Button>
           <Button color="gray" onClick={closeEditModal}>
+            {t('Cancel')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Unclaim Confirmation Modal */}
+      <Modal
+        show={!!unclaimingNode}
+        onClose={() => setUnclaimingNode(null)}
+        size="md"
+        className="dark"
+      >
+        <Modal.Header className="dark">
+          {t('Confirm Unclaim Node')}
+        </Modal.Header>
+        <Modal.Body className="dark">
+          <div className="space-y-4">
+            <p className="text-gray-300">
+              {t(
+                'Are you sure you want to unclaim this node? This will remove the publisher association, allowing the original author to claim it under a different publisher.'
+              )}
+            </p>
+            <div className="bg-gray-700 p-4 rounded">
+              <div className="font-semibold text-white">
+                {unclaimingNode?.name}
+              </div>
+              <div className="text-sm text-gray-400">@{unclaimingNode?.id}</div>
+              {unclaimingNode?.publisher && (
+                <div className="text-sm text-gray-400 mt-2">
+                  {t('Current Publisher')}: {unclaimingNode.publisher.name} (
+                  {unclaimingNode.publisher.id})
+                </div>
+              )}
+            </div>
+            <div className="text-yellow-500 text-sm">
+              ⚠️ {t('This action cannot be undone automatically.')}
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="dark">
+          <Button
+            color="warning"
+            onClick={handleUnclaim}
+            disabled={adminUpdateNodeMutation.isPending}
+          >
+            {adminUpdateNodeMutation.isPending ? (
+              <Spinner size="sm" />
+            ) : (
+              t('Unclaim Node')
+            )}
+          </Button>
+          <Button color="gray" onClick={() => setUnclaimingNode(null)}>
             {t('Cancel')}
           </Button>
         </Modal.Footer>

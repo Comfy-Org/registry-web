@@ -1,0 +1,38 @@
+name: Auto-update Pull Requests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  autoupdate-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-update Pull Request Branches
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              console.log('Not triggered by a pull_request event.');
+              return;
+            }
+            try {
+              await github.rest.pulls.updateBranch({
+                owner,
+                repo,
+                pull_number: pr.number,
+                expected_head_sha: pr.head.sha,
+              });
+              console.log(`Successfully updated PR #${pr.number} (${pr.head.ref}).`);
+            } catch (error) {
+              if (error.status === 422 && error.response.data.message.includes('Conflicts')) {
+                console.warn(`PR #${pr.number} (${pr.head.ref}) has conflicts. Manual intervention needed.`);
+              } else {
+                console.error(`Failed to update PR #${pr.number} (${pr.head.ref}):`, error);
+              }
+            }
