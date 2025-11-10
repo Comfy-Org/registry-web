@@ -38,6 +38,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
   const [description, setDescription] = useState('')
   const [license, setLicense] = useState('')
   const [githubLink, setGithubLink] = useState('')
+  const [tags, setTags] = useState('')
 
   useEffect(() => {
     if (nodeData) {
@@ -45,6 +46,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
       setDescription(nodeData.description || '')
       setLicense(nodeData.license || '')
       setGithubLink(nodeData.repository || '')
+      setTags(nodeData.tags?.join(', ') || '')
     }
   }, [nodeData])
   // const handleOpenLogoModal = () => {
@@ -58,6 +60,11 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
 
   const handleUpdateNode = () => {
     if (nodeData.id) {
+      const newTags = tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0)
+
       updateNodeMutation.mutate(
         {
           data: {
@@ -66,6 +73,7 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
             description: description,
             license: license,
             repository: githubLink,
+            tags: newTags,
           },
           nodeId: nodeData.id,
           publisherId: publisherId,
@@ -199,23 +207,44 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                   onChange={(e) => setGithubLink(e.target.value)}
                   required
                 />
-
-                <div className="flex mt-5">
-                  <Button
-                    color="gray"
-                    className="w-full text-white bg-gray-800"
-                    onClick={onCloseEditModal}
-                  >
-                    {t('Cancel')}
-                  </Button>
-                  <Button
-                    color="blue"
-                    className="w-full ml-5"
-                    onClick={handleUpdateNode}
-                  >
-                    {t('Save Changes')}
-                  </Button>
+              </div>
+              <div>
+                <div className="block mb-2">
+                  <Label
+                    htmlFor="tags"
+                    value={t('Tags (comma separated)')}
+                    className="text-white"
+                  />
                 </div>
+                <TextInput
+                  id="tags"
+                  theme={customThemeTextInput}
+                  placeholder={t('Enter tags separated by commas')}
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                />
+                <p className="mt-2 text-sm text-gray-400">
+                  {t(
+                    'Public tags visible to all users (e.g., video, audio, utility)'
+                  )}
+                </p>
+              </div>
+
+              <div className="flex mt-5">
+                <Button
+                  color="gray"
+                  className="w-full text-white bg-gray-800"
+                  onClick={onCloseEditModal}
+                >
+                  {t('Cancel')}
+                </Button>
+                <Button
+                  color="blue"
+                  className="w-full ml-5"
+                  onClick={handleUpdateNode}
+                >
+                  {t('Save Changes')}
+                </Button>
               </div>
             </div>
           </div>

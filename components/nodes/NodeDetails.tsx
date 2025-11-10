@@ -1,11 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { intlFormatDistance } from 'date-fns'
 import download from 'downloadjs'
-import { Button, Label, Spinner } from 'flowbite-react'
+import { Badge, Button, Label, Spinner } from 'flowbite-react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
-import { HiTrash } from 'react-icons/hi'
+import { HiTag, HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
@@ -446,6 +446,22 @@ const NodeDetails = () => {
                   {node.description}
                 </p>
               </div>
+              {node.tags && node.tags.length > 0 && (
+                <div className="mt-6">
+                  <h2 className="mb-2 text-lg font-bold">{t('Tags')}</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {node.tags.map((tag, index) => (
+                      <Badge
+                        key={`${tag}-${index}`}
+                        color="purple"
+                        icon={HiTag}
+                      >
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="mt-10" hidden={isUnclaimed}>
                 <h2 className="mb-2 text-lg font-semibold">
                   {t('Version history')}
