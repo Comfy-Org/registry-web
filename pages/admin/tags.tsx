@@ -13,7 +13,13 @@ import {
 import { useRouter } from 'next/router'
 import { omit } from 'rambda'
 import React, { useState } from 'react'
-import { HiHome, HiOutlineCollection, HiPencil, HiTag } from 'react-icons/hi'
+import {
+  HiExternalLink,
+  HiHome,
+  HiOutlineCollection,
+  HiPencil,
+  HiTag,
+} from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import { CustomPagination } from '@/components/common/CustomPagination'
@@ -199,7 +205,11 @@ function TagsPage() {
               <h2 className="text-xl font-semibold text-gray-200">
                 {t('Nodes with Tags')}
               </h2>
-              <Badge color="info" icon={HiOutlineCollection}>
+              <Badge
+                color="info"
+                icon={HiOutlineCollection}
+                className="text-white"
+              >
                 {nodesData?.total || 0} {t('nodes')}
               </Badge>
             </div>
@@ -269,13 +279,25 @@ function TagsPage() {
                           </div>
                         </Table.Cell>
                         <Table.Cell>
-                          <Button
-                            size="sm"
-                            onClick={() => openEditModal(node)}
-                            title={t('Edit tags')}
-                          >
-                            <HiPencil className="w-4 h-4" />
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => openEditModal(node)}
+                              title={t('Edit tags')}
+                            >
+                              <HiPencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              color="gray"
+                              onClick={() =>
+                                window.open(`/nodes/${node.id}`, '_blank')
+                              }
+                              title={t('Open node details in new window')}
+                            >
+                              <HiExternalLink className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </Table.Cell>
                       </Table.Row>
                     ))}
