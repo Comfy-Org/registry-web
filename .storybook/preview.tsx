@@ -23,50 +23,8 @@ const preview: Preview = {
     msw: {
       handlers: [],
     },
-    loaders: [mswLoader],
-    decorators: [
-        (Story) => {
-            const queryClient = new QueryClient({
-                defaultOptions: {
-                    queries: {
-                        retry: false,
-                        staleTime: 0,
-                    },
-                },
-            })
-            return (
-                <QueryClientProvider client={queryClient}>
-                    <Story />
-                </QueryClientProvider>
-            )
-        },
-    ],
-    globalTypes: {
-        darkMode: {
-            description: 'Toggle dark mode',
-            defaultValue: 'dark',
-            toolbar: {
-                icon: 'circlehollow',
-                items: [
-                    { value: 'light', right: '☀️', title: 'Light Mode' },
-                    { value: 'dark', right: '🌙', title: 'Dark Mode' },
-                ],
-            },
-        },
-        locale: {
-            description: 'Internationalization locale',
-            toolbar: {
-                icon: 'globe',
-                items: [
-                    { value: 'en', right: '🇺🇸', title: 'English' },
-                    { value: 'es', right: '🇪🇸', title: 'Español' },
-                    { value: 'fr', right: '🇫🇷', title: 'Français' },
-                    { value: 'ja', right: '🇯🇵', title: '日本語' },
-                    { value: 'kr', right: '🇰🇷', title: '한국어' },
-                    { value: 'zh', right: '🇨🇳', title: '中文' },
-                ],
-            },
-        },
+    docs: {
+      toc: true,
     },
   },
   beforeEach: async () => {
@@ -107,12 +65,12 @@ const preview: Preview = {
       toolbar: {
         icon: 'globe',
         items: [
-          { value: 'en', right: '🇺🇸', title: languageName('en') },
-          { value: 'es', right: '🇪🇸', title: languageName('es') },
-          { value: 'fr', right: '🇫🇷', title: languageName('fr') },
-          { value: 'ja', right: '🇯🇵', title: languageName('ja') },
-          { value: 'kr', right: '🇰🇷', title: languageName('kr') },
-          { value: 'zh', right: '🇨🇳', title: languageName('zh') },
+          { value: 'en', right: '🇺🇸', title: 'English' },
+          { value: 'es', right: '🇪🇸', title: 'Español' },
+          { value: 'fr', right: '🇫🇷', title: 'Français' },
+          { value: 'ja', right: '🇯🇵', title: '日本語' },
+          { value: 'kr', right: '🇰🇷', title: '한국어' },
+          { value: 'zh', right: '🇨🇳', title: '中文' },
         ],
       },
     },
