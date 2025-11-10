@@ -18,7 +18,6 @@ const CreatePublisher = () => {
   const handleCancel = () => {
     router.back()
   }
-
   return (
     <div className="p-4">
       <div className="py-4">
