@@ -128,6 +128,8 @@
   "Edit node": "Edit node",
   "Edit secret key": "Edit secret key",
   "Edit unclaimed node": "Edit unclaimed node",
+  "Email address": "Email address",
+  "Email is required": "Email is required",
   "Enter a GitHub repository URL and click \"Fetch Info\" to automatically fill in details from pyproject.toml": "Enter a GitHub repository URL and click \"Fetch Info\" to automatically fill in details from pyproject.toml",
   "Enter category": "Enter category",
   "Enter one OS per line": "Enter one OS per line",
