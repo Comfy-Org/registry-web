@@ -103,12 +103,13 @@ function TagsPage() {
 
     // Check if regular tags changed
     const tagsChanged =
-      JSON.stringify(originalTags.sort()) !== JSON.stringify(newTags.sort())
+      JSON.stringify([...originalTags].sort()) !==
+      JSON.stringify([...newTags].sort())
 
     // Check if admin tags changed
     const adminTagsChanged =
-      JSON.stringify(originalAdminTags.sort()) !==
-      JSON.stringify(newAdminTags.sort())
+      JSON.stringify([...originalAdminTags].sort()) !==
+      JSON.stringify([...newAdminTags].sort())
 
     // Check if anything changed
     if (!tagsChanged && !adminTagsChanged) {
@@ -251,8 +252,12 @@ function TagsPage() {
                         <Table.Cell>
                           <div className="flex flex-wrap gap-2">
                             {node.tags && node.tags.length > 0 ? (
-                              node.tags.map((tag) => (
-                                <Badge key={tag} color="purple" icon={HiTag}>
+                              node.tags.map((tag, index) => (
+                                <Badge
+                                  key={`${tag}-${index}`}
+                                  color="purple"
+                                  icon={HiTag}
+                                >
                                   {tag}
                                 </Badge>
                               ))
@@ -266,8 +271,12 @@ function TagsPage() {
                         <Table.Cell>
                           <div className="flex flex-wrap gap-2">
                             {node.tags_admin && node.tags_admin.length > 0 ? (
-                              node.tags_admin.map((tag) => (
-                                <Badge key={tag} color="warning" icon={HiTag}>
+                              node.tags_admin.map((tag, index) => (
+                                <Badge
+                                  key={`${tag}-${index}`}
+                                  color="warning"
+                                  icon={HiTag}
+                                >
                                   {tag}
                                 </Badge>
                               ))

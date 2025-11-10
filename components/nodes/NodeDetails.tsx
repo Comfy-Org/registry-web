@@ -450,8 +450,12 @@ const NodeDetails = () => {
                 <div className="mt-6">
                   <h2 className="mb-2 text-lg font-bold">{t('Tags')}</h2>
                   <div className="flex flex-wrap gap-2">
-                    {node.tags.map((tag) => (
-                      <Badge key={tag} color="purple" icon={HiTag}>
+                    {node.tags.map((tag, index) => (
+                      <Badge
+                        key={`${tag}-${index}`}
+                        color="purple"
+                        icon={HiTag}
+                      >
                         {tag}
                       </Badge>
                     ))}
