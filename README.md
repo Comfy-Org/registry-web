@@ -1,6 +1,6 @@
 # Comfy Registry Frontend
 
-The frontend React App for [Comfy Registry](https://comfyregistry.org).
+The frontend React App for [Comfy Registry](https://registry.comfy.org/).
 
 Registry React Frontend [Github](https://github.com/Comfy-Org/registry-web)
 
