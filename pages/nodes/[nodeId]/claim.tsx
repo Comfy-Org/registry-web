@@ -10,6 +10,7 @@ import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import withAuth from '@/components/common/HOC/withAuth'
 import CreatePublisherModal from '@/components/publisher/CreatePublisherModal'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { themeConfig } from '@/utils/themeConfig'
 
 export default withAuth(ClaimNodePage)
 
@@ -85,7 +86,7 @@ function ClaimNodePage() {
 
   if (!isUnclaimed) {
     return (
-      <div className="container p-6 mx-auto h-[90vh] text-white">
+      <div className="container p-6 mx-auto h-[90vh] text-gray-900 dark:text-white">
         <Head>
           <title>{t('Already Claimed')} | Comfy Registry</title>
           <meta
@@ -93,11 +94,11 @@ function ClaimNodePage() {
             content={t('This node is already claimed by a publisher.')}
           />
         </Head>
-        <div className="bg-red-800 p-4 rounded-lg">
-          <h2 className="text-xl font-bold">
+        <div className="bg-red-100 dark:bg-red-800 p-4 rounded-lg">
+          <h2 className="text-xl font-bold text-red-900 dark:text-white">
             {t('This node is already claimed')}
           </h2>
-          <p className="mt-2">
+          <p className="mt-2 text-red-800 dark:text-gray-200">
             {t(
               'This node is already owned by a publisher and cannot be claimed.'
             )}
@@ -159,15 +160,18 @@ function ClaimNodePage() {
         </span>
       </div>
 
-      <h1 className="mb-4 text-3xl font-bold text-white">
+      <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
         {t('Claim Node: {{nodeName}}', { nodeName: node?.name })}
       </h1>
 
-      <div className="bg-gray-800 p-6 rounded-lg mb-6">
-        <h2 className="text-xl font-bold text-white mb-4">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg mb-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
           {t('Select a Publisher')}
         </h2>
-        <p className="text-gray-300 mb-6">
+        <p className="text-gray-700 dark:text-gray-300 mb-6">
+          {t(
+            'Choose which publisher account you want to use to claim this node. You must be the owner of the GitHub repository'
+          )}
           {node?.repository ? (
             <>
               {t(
@@ -196,15 +200,17 @@ function ClaimNodePage() {
                 key={publisher.id}
                 className={`p-4 rounded-lg cursor-pointer border ${
                   selectedPublisherId === publisher.id
-                    ? 'border-blue-500 bg-gray-700'
-                    : 'border-gray-600 hover:bg-gray-700'
+                    ? 'border-blue-500 bg-blue-50 dark:bg-gray-700'
+                    : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
                 onClick={() => handleSelectPublisher(publisher.id as string)}
               >
-                <h3 className="text-lg font-medium text-white">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                   {publisher.name}
                 </h3>
-                <p className="text-gray-400">@{publisher.id}</p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  @{publisher.id}
+                </p>
               </div>
             ))}
 
@@ -219,8 +225,8 @@ function ClaimNodePage() {
             </div>
           </div>
         ) : (
-          <div className="bg-gray-700 p-4 rounded-lg">
-            <p className="text-white mb-4">
+          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+            <p className="text-gray-900 dark:text-white mb-4">
               {t(
                 "You don't have any publishers yet. Create a publisher first to claim nodes."
               )}

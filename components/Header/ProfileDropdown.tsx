@@ -5,6 +5,7 @@ import { HiChevronDown } from 'react-icons/hi'
 import { useGetUser } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
+import { themeConfig } from '@/utils/themeConfig'
 import { useLogout } from '../AuthUI/Logout'
 
 export default function ProfileDropdown() {
@@ -12,6 +13,17 @@ export default function ProfileDropdown() {
   const { t } = useNextTranslation()
   const [onSignOut, isSignoutLoading, error] = useLogout()
   const { data: user } = useGetUser()
+
+  // Custom theme for dropdown to match our theme configuration
+  const customDropdownTheme = {
+    floating: {
+      base: `z-10 w-fit rounded divide-y divide-gray-100 shadow focus:outline-none ${themeConfig.dropdown.background} ${themeConfig.dropdown.border}`,
+      content: 'py-1 text-sm',
+      item: {
+        base: `flex items-center justify-start py-2 px-4 text-sm cursor-pointer w-full ${themeConfig.dropdown.item}`,
+      },
+    },
+  }
 
   // // debug
   // return <>{JSON.stringify(useFirebaseUser(), null, 2)}</>
@@ -22,6 +34,7 @@ export default function ProfileDropdown() {
     <Dropdown
       arrowIcon={false}
       inline
+      theme={customDropdownTheme}
       label={
         <div className="flex items-center gap-2 h-10">
           <Avatar

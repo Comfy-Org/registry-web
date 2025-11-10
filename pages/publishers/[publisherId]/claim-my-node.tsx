@@ -524,7 +524,7 @@ function ClaimMyNodePage() {
         </Alert>
       )}
 
-      <div className="bg-gray-800 p-6 rounded-lg mb-6">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg mb-6">
         {/* Progress Indicator */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
