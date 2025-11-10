@@ -243,7 +243,7 @@
   "Node Claimed Successfully": "Nodo reclamado con éxito",
   "Node ID": "ID de nodo",
   "Node ID is required": "Se requiere ID de nodo",
-  "Node ID is required for claiming.": "需要节点ID进行认领。",
+  "Node ID is required for claiming.": "Se requiere el ID del nodo para reclamar.",
   "Node Information": "Información del Nodo",
   "Node Management": "Gestión de Nodos",
   "Node Name": "Nombre del nodo",
