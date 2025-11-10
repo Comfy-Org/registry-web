@@ -230,22 +230,21 @@ export const NodeEditModal: React.FC<NodeEditModalProps> = ({
                 </p>
               </div>
 
-                <div className="flex mt-5">
-                  <Button
-                    color="gray"
-                    className="w-full text-white bg-gray-800"
-                    onClick={onCloseEditModal}
-                  >
-                    {t('Cancel')}
-                  </Button>
-                  <Button
-                    color="blue"
-                    className="w-full ml-5"
-                    onClick={handleUpdateNode}
-                  >
-                    {t('Save Changes')}
-                  </Button>
-                </div>
+              <div className="flex mt-5">
+                <Button
+                  color="gray"
+                  className="w-full text-white bg-gray-800"
+                  onClick={onCloseEditModal}
+                >
+                  {t('Cancel')}
+                </Button>
+                <Button
+                  color="blue"
+                  className="w-full ml-5"
+                  onClick={handleUpdateNode}
+                >
+                  {t('Save Changes')}
+                </Button>
               </div>
             </div>
           </div>
