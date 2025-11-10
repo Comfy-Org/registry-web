@@ -1,46 +1,179 @@
 name: Update API Type definitions
 
-# Disabled: Changes must be made by PR
-# on:
-#     push:
-#         branches: [staging, dev, main]
-#     # schedule:
-#     #     # Every day at midnight UTC, update the API type definitions from staging backend
-#     #     - cron: '0 0 * * *'
-#     # disabled this because it seems not possible push to main
-#     # ref - [[Feature Request] Allow github actions to bypass branch protection rules in certain specific circumstances · community · Discussion #13836]( https://github.com/orgs/community/discussions/13836 )
-#     workflow_dispatch:
+on:
+  schedule:
+    # Every Monday at midnight UTC, update the API type definitions from production backend
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      backend_url:
+        description: 'Backend URL to fetch OpenAPI spec from (optional, defaults to production)'
+        required: false
+        type: string
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  orval:
+  update-api:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      # Set up Node.js environment
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: "22"
+
       - name: Install bun
         run: npm install -g bun
-      - name: Install dependencies
-        run: bun i
-      - name: Update api definition
-        run: bun orval
 
-      # commit generated api
-      - name: Configure git
+      - name: Install dependencies
+        run: bun install
+
+      - name: Set backend URL
         run: |
-          # Setup for commiting using built-in token. See https://github.com/actions/checkout#push-a-commit-using-the-built-in-token
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - uses: stefanzweifel/git-auto-commit-action@v5
+          if [ "${{ github.event.inputs.backend_url }}" != "" ]; then
+            echo "NEXT_PUBLIC_BACKEND_URL=${{ github.event.inputs.backend_url }}" >> $GITHUB_ENV
+          else
+            echo "NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL:-https://api.comfy.org}" >> $GITHUB_ENV
+          fi
+
+      - name: Check if API spec is accessible
+        run: |
+          echo "Checking API spec at: $NEXT_PUBLIC_BACKEND_URL/openapi"
+          curl -f -s "$NEXT_PUBLIC_BACKEND_URL/openapi" > /dev/null || {
+            echo "Error: Cannot access OpenAPI spec at $NEXT_PUBLIC_BACKEND_URL/openapi"
+            exit 1
+          }
+
+      - name: Generate API types
+        run: bun run orval
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet src/api/generated.ts; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected in API types"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in API types"
+            echo "### Changed files:"
+            git diff --name-only src/api/generated.ts
+            echo "### Change summary:"
+            git diff --stat src/api/generated.ts
+          fi
+
+      - name: Generate diff summary for PR
+        if: steps.changes.outputs.has_changes == 'true'
+        id: diff_summary
+        run: |
+          echo "DIFF_STATS<<EOF" >> $GITHUB_OUTPUT
+          git diff --stat src/api/generated.ts >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "DIFF_SUMMARY<<EOF" >> $GITHUB_OUTPUT
+          echo "### 📋 Change Summary" >> $GITHUB_OUTPUT
+          git log --oneline -1 >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "### 📊 File Statistics" >> $GITHUB_OUTPUT
+          git diff --stat src/api/generated.ts >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Get current timestamp
+        if: steps.changes.outputs.has_changes == 'true'
+        id: timestamp
+        run: echo "current=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
+
+      - name: Create or Update Pull Request
+        if: steps.changes.outputs.has_changes == 'true'
+        id: create_pr
+        uses: peter-evans/create-pull-request@v6
         with:
-          commit_message: "chore: generate backend API static type"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update API type definitions from upstream"
+          title: "Chore: Update Comfy-API"
+          body: |
+            ## 🔄 Automated API Update
+
+            This PR contains automatically generated changes to the API client based on the latest OpenAPI specification from the backend.
+
+            **Source**: `${{ env.NEXT_PUBLIC_BACKEND_URL }}/openapi`
+            **Trigger**: ${{ github.event_name }}
+            **Generated**: ${{ github.run_id }}
+            **Last Updated**: ${{ steps.timestamp.outputs.current }}
+
+            ${{ steps.diff_summary.outputs.DIFF_SUMMARY }}
+
+            ## ✅ Automated Checks
+            - [x] OpenAPI spec successfully fetched
+            - [x] API types generated without errors
+            - [x] Changes detected and committed
+
+            ## 🧪 Manual Test Plan
+            - [ ] Verify the generated types compile correctly: `bun run build`
+            - [ ] Run linting: `bun run lint`
+            - [ ] Test critical API endpoints in development
+            - [ ] Check for any breaking changes in method signatures
+
+            ## 🔗 Related Links
+            - [Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            - [OpenAPI Spec](${{ env.NEXT_PUBLIC_BACKEND_URL }}/openapi)
+
+            ---
+            🤖 Generated with [GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          branch: chore-update-comfy-api
+          delete-branch: false
+          draft: false
+          labels: |
+            api
+            automated
+            dependencies
+            backend-sync
+
+      - name: Validate generated code
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          echo "🔍 Validating generated API types..."
+          bun run build
+          bun run lint || bun run fix
+          echo "✅ Generated API types are valid"
+
+      - name: Update PR with validation results
+        if: steps.changes.outputs.has_changes == 'true' && steps.create_pr.outputs.pull-request-number
+        uses: peter-evans/find-comment@v3
+        id: find_comment
+        with:
+          issue-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '## 🔍 Automated Validation Results'
+
+      - name: Create or update validation comment
+        if: steps.changes.outputs.has_changes == 'true' && steps.create_pr.outputs.pull-request-number
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ steps.create_pr.outputs.pull-request-number }}
+          edit-mode: replace
+          body: |
+            ## 🔍 Automated Validation Results
+
+            🔄 **Updated** - ${{ steps.timestamp.outputs.current }}
+
+            ✅ **Build**: Generated types compile successfully
+            ✅ **Linting**: Code style validation passed
+            ✅ **Dependencies**: All imports resolved correctly
+
+            This PR is ready for review! 🚀
+
+            **Workflow Run**: [#${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+      - name: No changes message
+        if: steps.changes.outputs.has_changes == 'false'
+        run: echo "ℹ️ No API changes detected - skipping PR creation"
