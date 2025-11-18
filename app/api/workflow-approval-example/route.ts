@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sleep } from 'workflow'
 
 /**
  * Example: Multi-step approval workflow with retry logic
  * Demonstrates a node submission approval process with timeout
+ *
+ * Note: The sleep() function will be available in future versions of Vercel Workflow.
+ * This example demonstrates the workflow pattern without actual delays.
  *
  * Test with:
  * curl -X POST http://localhost:3000/api/workflow-approval-example \
@@ -61,15 +63,13 @@ async function nodeApprovalWorkflow(
     // Step 2: Notify admin for manual review
     await notifyAdminForReview(nodeId, submitterId, nodeName)
 
-    // Step 3: Wait for admin review (durable sleep)
-    // In production, use longer delays like '24 hours' or '7 days'
+    // Step 3: Check approval status (simulated)
+    // Note: In production, use sleep() here to wait for admin review:
+    // await sleep('24 hours') // Will be available in future workflow versions
     // Can be combined with webhook/hook to resume workflow on admin action
-    await sleep('10 seconds')
-
-    // Step 4: Check approval status
     const approvalResult = await checkApprovalStatus(nodeId)
 
-    // Step 5: Update node status based on approval
+    // Step 4: Update node status based on approval
     const finalResult = await updateNodeStatus(nodeId, approvalResult.approved)
 
     return {

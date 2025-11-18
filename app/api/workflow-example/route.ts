@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sleep } from 'workflow'
 
 /**
  * Example Vercel Workflow API route using App Router
  * Demonstrates the use of 'use workflow' and 'use step' directives with proper error handling
+ *
+ * Note: The sleep() function will be available in future versions of Vercel Workflow.
+ * This example demonstrates the workflow pattern without actual delays.
  *
  * Test with:
  * curl -X POST http://localhost:3000/api/workflow-example \
@@ -40,10 +42,9 @@ async function exampleWorkflow(topic: string) {
     // Step 1: Process the topic
     const processed = await processStep(topic)
 
-    // Step 2: Pause briefly (demonstrates durable sleep)
-    await sleep('2 seconds')
-
-    // Step 3: Generate summary
+    // Step 2: Generate summary
+    // Note: In production, use sleep() here for delays:
+    // await sleep('2 seconds') // Will be available in future workflow versions
     const summary = await summarizeStep(processed)
 
     return {

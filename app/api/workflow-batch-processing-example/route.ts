@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sleep } from 'workflow'
 
 /**
  * Example: Batch processing workflow with rate limiting
  * Demonstrates processing multiple items with delays to avoid rate limits
+ *
+ * Note: The sleep() function will be available in future versions of Vercel Workflow.
+ * This example demonstrates the workflow pattern without actual delays.
  *
  * Test with:
  * curl -X POST http://localhost:3000/api/workflow-batch-processing-example \
@@ -58,11 +60,11 @@ async function batchProcessingWorkflow(items: string[]) {
       const batchResults = await processBatch(batch, batchNumber)
       results.push(...batchResults)
 
-      // Rate limiting: sleep between batches (durable sleep)
-      // Adjust delay based on API rate limits
-      if (i + batchSize < items.length) {
-        await sleep('3 seconds')
-      }
+      // Rate limiting between batches
+      // Note: In production, use sleep() here to respect rate limits:
+      // if (i + batchSize < items.length) {
+      //   await sleep('3 seconds') // Will be available in future workflow versions
+      // }
     }
 
     // Generate final summary

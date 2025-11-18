@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sleep } from 'workflow'
 
 /**
  * Example: Delayed notification workflow
  * Demonstrates sending a notification after a delay (e.g., welcome email after signup)
+ *
+ * Note: The sleep() function will be available in future versions of Vercel Workflow.
+ * This example demonstrates the workflow pattern without actual delays.
  *
  * Test with:
  * curl -X POST http://localhost:3000/api/workflow-notification-example \
@@ -46,11 +48,9 @@ async function welcomeNotificationWorkflow(
     // Step 1: Send immediate welcome notification
     const welcomeResult = await sendWelcomeNotification(userId, email, name)
 
-    // Step 2: Wait before sending follow-up (durable sleep)
-    // In production, use longer delays like '1 day' or '7 days'
-    await sleep('5 seconds')
-
-    // Step 3: Send follow-up notification
+    // Step 2: Send follow-up notification
+    // Note: In production, use sleep() here for delayed follow-ups:
+    // await sleep('1 day') // Will be available in future workflow versions
     const followUpResult = await sendFollowUpNotification(userId, email, name)
 
     return {
