@@ -46,40 +46,80 @@ async function callExternalAPI(data: string) {
 }
 ```
 
-## Example Implementation
+## Example Implementations
 
-See `app/api/workflow-example/route.ts` for a complete working example that demonstrates:
+This project includes multiple workflow examples demonstrating different use cases:
+
+### 1. Basic Workflow with Sleep (`app/api/workflow-example/route.ts`)
+
+A simple workflow demonstrating:
 
 - Durable workflow function with `'use workflow'`
 - Stateless step functions with `'use step'`
 - Using `sleep()` to pause without consuming resources
 - Handling HTTP requests in Next.js API routes
 
-### Testing the Example
+**Test it:**
 
 ```bash
-# Start the development server
-bun dev
-
-# In another terminal, test the workflow endpoint
 curl -X POST http://localhost:3000/api/workflow-example \
   -H "Content-Type: application/json" \
   -d '{"topic": "test workflow"}'
 ```
 
-Expected response:
+### 2. Delayed Notification Workflow (`app/api/workflow-notification-example/route.ts`)
 
-```json
-{
-  "topic": "test workflow",
-  "processed": {
-    "original": "test workflow",
-    "processed": "TEST WORKFLOW",
-    "length": 13
-  },
-  "summary": "Processed \"test workflow\" (13 chars) to \"TEST WORKFLOW\"",
-  "timestamp": "2025-10-26T..."
-}
+Demonstrates a welcome notification system with follow-up:
+
+- Immediate welcome notification upon user signup
+- Delayed follow-up notification after a specified time
+- Practical use of `sleep()` for time-based actions
+
+**Use case:** Send a welcome email immediately, then a follow-up email after 1 day encouraging users to explore features.
+
+**Test it:**
+
+```bash
+curl -X POST http://localhost:3000/api/workflow-notification-example \
+  -H "Content-Type: application/json" \
+  -d '{"userId": "user123", "email": "user@example.com", "name": "John"}'
+```
+
+### 3. Approval Workflow (`app/api/workflow-approval-example/route.ts`)
+
+Multi-step approval process for node submissions:
+
+- Automated validation checks
+- Admin notification for manual review
+- Waiting for approval with `sleep()`
+- Status updates based on approval decision
+
+**Use case:** When a user submits a new custom node, automatically validate it, notify admins, wait for approval, and update the node status.
+
+**Test it:**
+
+```bash
+curl -X POST http://localhost:3000/api/workflow-approval-example \
+  -H "Content-Type: application/json" \
+  -d '{"nodeId": "node123", "submitterId": "user456", "nodeName": "My Custom Node"}'
+```
+
+### 4. Batch Processing with Rate Limiting (`app/api/workflow-batch-processing-example/route.ts`)
+
+Process large datasets in batches with delays:
+
+- Process items in configurable batch sizes
+- Use `sleep()` between batches to respect rate limits
+- Generate processing summaries
+
+**Use case:** Update Algolia search indices for multiple nodes without hitting API rate limits, or sync data from external sources.
+
+**Test it:**
+
+```bash
+curl -X POST http://localhost:3000/api/workflow-batch-processing-example \
+  -H "Content-Type: application/json" \
+  -d '{"items": ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8", "item9", "item10"]}'
 ```
 
 ## Use Cases
