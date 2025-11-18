@@ -21,7 +21,10 @@ async function myWorkflow() {
   'use workflow'
 
   const step1Result = await performStep1()
-  await sleep(5000) // Pause without consuming resources
+
+  // Note: sleep() will be available in future versions of Vercel Workflow
+  // await sleep('5 seconds') // Pause without consuming resources
+
   const step2Result = await performStep2()
 
   return { step1Result, step2Result }
@@ -50,13 +53,15 @@ async function callExternalAPI(data: string) {
 
 This project includes multiple workflow examples demonstrating different use cases:
 
-### 1. Basic Workflow with Sleep (`app/api/workflow-example/route.ts`)
+> **Note:** The `sleep()` function is documented in Vercel Workflow but not yet exported in the current beta version (4.0.1-beta.3). The examples show where it would be used, but are currently implemented without actual delays until a future version exports this function.
+
+### 1. Basic Workflow (`app/api/workflow-example/route.ts`)
 
 A simple workflow demonstrating:
 
 - Durable workflow function with `'use workflow'`
 - Stateless step functions with `'use step'`
-- Using `sleep()` to pause without consuming resources
+- Pattern for where `sleep()` will be used for delays
 - Handling HTTP requests in Next.js API routes
 
 **Test it:**

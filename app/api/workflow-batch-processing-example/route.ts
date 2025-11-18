@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sleep } from 'workflow'
+
+/**
+ * Note: sleep() will be available when Vercel Workflow exports it in future versions.
+ * For now, this example demonstrates the workflow pattern without actual delays.
+ */
 
 /**
  * Example: Batch processing workflow with rate limiting
@@ -37,7 +41,6 @@ async function batchProcessingWorkflow(items: string[]) {
 
   const results = []
   const batchSize = 5
-  const delayBetweenBatches = '3 seconds' // Adjust for rate limits
 
   // Process items in batches
   for (let i = 0; i < items.length; i += batchSize) {
@@ -47,10 +50,10 @@ async function batchProcessingWorkflow(items: string[]) {
     const batchResults = await processBatch(batch, i / batchSize + 1)
     results.push(...batchResults)
 
-    // If there are more items, wait before processing next batch
-    if (i + batchSize < items.length) {
-      await sleep(delayBetweenBatches)
-    }
+    // Note: sleep() would be used here for rate limiting in production
+    // if (i + batchSize < items.length) {
+    //   await sleep('3 seconds') // Adjust for rate limits
+    // }
   }
 
   // Generate final summary

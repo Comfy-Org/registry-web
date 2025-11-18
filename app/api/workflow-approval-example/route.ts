@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sleep } from 'workflow'
+
+/**
+ * Note: sleep() will be available when Vercel Workflow exports it in future versions.
+ * For now, this example demonstrates the workflow pattern without actual delays.
+ */
 
 /**
  * Example: Multi-step approval workflow with retry logic
@@ -54,9 +58,9 @@ async function nodeApprovalWorkflow(
   // Step 2: Notify admin for manual review
   await notifyAdminForReview(nodeId, submitterId, nodeName)
 
-  // Wait for admin review (simulated with sleep)
+  // Note: sleep() would be used here to wait for admin review
+  // await sleep('24 hours') // Wait for admin to review
   // In production, this would wait for an actual admin action via webhook/hook
-  await sleep('10 seconds')
 
   // Step 3: Check approval status (simulated)
   const approvalResult = await checkApprovalStatus(nodeId)
