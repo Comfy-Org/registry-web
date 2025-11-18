@@ -1,0 +1,43 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": [
+    "pages/**/*.{js,jsx,ts,tsx}",
+    "app/**/*.{js,jsx,ts,tsx}",
+    "components/**/*.{js,jsx,ts,tsx}",
+    "src/**/*.{js,jsx,ts,tsx}",
+    "utils/**/*.{js,jsx,ts,tsx}",
+    "scripts/**/*.{js,jsx,ts,tsx}",
+    "orval.config.ts"
+  ],
+  "project": [
+    "**/*.{js,jsx,ts,tsx}",
+    "!node_modules/**",
+    "!.next/**",
+    "!storybook-static/**"
+  ],
+  "ignore": [
+    "src/api/generated.ts",
+    "**/*.stories.{js,jsx,ts,tsx}",
+    "**/*.test.{js,jsx,ts,tsx}",
+    "**/*.spec.{js,jsx,ts,tsx}",
+    ".storybook/**/*",
+    "next.config.ts",
+    "middleware.ts"
+  ],
+  "ignoreDependencies": [
+    "@algolia/autocomplete-shared",
+    "sflow",
+    "phpdie",
+    "@snomiao/glob-watch"
+  ],
+  "next": {
+    "config": ["next.config.ts"],
+    "entry": ["pages/**/*.{js,jsx,ts,tsx}", "app/**/*.{js,jsx,ts,tsx}"]
+  },
+  "vitest": {
+    "config": ["vitest.config.{js,ts,mjs}"]
+  },
+  "storybook": {
+    "entry": ["src/stories/**/*.{js,jsx,ts,tsx}"]
+  }
+}
