@@ -39,7 +39,13 @@ export const POST = async (request: NextRequest) => {
 async function batchProcessingWorkflow(items: string[]) {
   'use workflow'
 
-  const results = []
+  const results: Array<{
+    item: string
+    batchNumber: number
+    indexInBatch: number
+    processed: boolean
+    processedAt: string
+  }> = []
   const batchSize = 5
 
   // Process items in batches
