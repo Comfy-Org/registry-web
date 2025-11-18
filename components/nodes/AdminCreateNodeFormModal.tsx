@@ -76,6 +76,17 @@ async function fetchGitHubRepoInfo(
       if (response.status === 404) {
         throw new Error('pyproject.toml not found in repository')
       }
+      // Handle GitHub API rate limit (HTTP 403)
+      if (response.status === 403) {
+        const rateLimitRemaining = response.headers.get('X-RateLimit-Remaining')
+        const rateLimitReset = response.headers.get('X-RateLimit-Reset')
+        let errorMsg = 'GitHub API rate limit exceeded.'
+        if (rateLimitReset) {
+          const resetDate = new Date(parseInt(rateLimitReset, 10) * 1000)
+          errorMsg += ` You can retry after ${resetDate.toLocaleString()}.`
+        }
+        throw new Error(errorMsg)
+      }
       throw new Error(`GitHub API error: ${response.statusText}`)
     }
 
@@ -86,13 +97,16 @@ async function fetchGitHubRepoInfo(
         `Unexpected encoding for pyproject.toml: ${data.encoding}`
       )
     }
+    // Strip whitespace from base64 content before validation
+    const cleanedContent = data.content.replace(/\s/g, '')
     // Basic base64 validation regex (allows padding)
     const base64Regex =
       /^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/
-    if (!base64Regex.test(data.content)) {
+    if (!base64Regex.test(cleanedContent)) {
       throw new Error('Invalid base64 content in pyproject.toml')
     }
-    const content = atob(data.content)
+    // Use Buffer for Node.js compatibility (works in both browser and Node.js)
+    const content = Buffer.from(cleanedContent, 'base64').toString('utf-8')
 
     // Parse TOML using proper TOML library
     const parsed = TOML.parse(content)
