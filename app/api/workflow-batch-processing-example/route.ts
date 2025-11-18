@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-/**
- * Note: sleep() will be available when Vercel Workflow exports it in future versions.
- * For now, this example demonstrates the workflow pattern without actual delays.
- */
+import { sleep } from 'workflow'
 
 /**
  * Example: Batch processing workflow with rate limiting
  * Demonstrates processing multiple items with delays to avoid rate limits
+ *
+ * Test with:
+ * curl -X POST http://localhost:3000/api/workflow-batch-processing-example \
+ *   -H "Content-Type: application/json" \
+ *   -d '{"items": ["item1", "item2", "item3", "item4", "item5"]}'
  */
 export const POST = async (request: NextRequest) => {
   try {
@@ -25,10 +26,9 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(result, { status: 200 })
   } catch (error) {
     console.error('Batch processing workflow error:', error)
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    )
+    const errorMessage =
+      error instanceof Error ? error.message : 'Internal Server Error'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 
@@ -39,59 +39,79 @@ export const POST = async (request: NextRequest) => {
 async function batchProcessingWorkflow(items: string[]) {
   'use workflow'
 
-  const results: Array<{
-    item: string
-    batchNumber: number
-    indexInBatch: number
-    processed: boolean
-    processedAt: string
-  }> = []
-  const batchSize = 5
+  try {
+    const results: Array<{
+      item: string
+      batchNumber: number
+      indexInBatch: number
+      processed: boolean
+      processedAt: string
+    }> = []
+    const batchSize = 5
 
-  // Process items in batches
-  for (let i = 0; i < items.length; i += batchSize) {
-    const batch = items.slice(i, i + batchSize)
+    // Process items in batches
+    for (let i = 0; i < items.length; i += batchSize) {
+      const batch = items.slice(i, i + batchSize)
+      const batchNumber = Math.floor(i / batchSize) + 1
 
-    // Process current batch
-    const batchResults = await processBatch(batch, i / batchSize + 1)
-    results.push(...batchResults)
+      // Process current batch
+      const batchResults = await processBatch(batch, batchNumber)
+      results.push(...batchResults)
 
-    // Note: sleep() would be used here for rate limiting in production
-    // if (i + batchSize < items.length) {
-    //   await sleep('3 seconds') // Adjust for rate limits
-    // }
-  }
+      // Rate limiting: sleep between batches (durable sleep)
+      // Adjust delay based on API rate limits
+      if (i + batchSize < items.length) {
+        await sleep('3 seconds')
+      }
+    }
 
-  // Generate final summary
-  const summary = await generateBatchSummary(results)
+    // Generate final summary
+    const summary = await generateBatchSummary(results)
 
-  return {
-    totalItems: items.length,
-    processedItems: results.length,
-    results,
-    summary,
-    timestamp: new Date().toISOString(),
+    return {
+      success: true,
+      totalItems: items.length,
+      processedItems: results.length,
+      results,
+      summary,
+      timestamp: new Date().toISOString(),
+    }
+  } catch (error) {
+    console.error('Batch processing workflow failed:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString(),
+    }
   }
 }
 
 /**
  * Process a batch of items
+ * Steps automatically retry on failure with exponential backoff
  */
 async function processBatch(batch: string[], batchNumber: number) {
   'use step'
 
-  console.log(`Processing batch ${batchNumber} with ${batch.length} items`)
+  try {
+    console.log(`Processing batch ${batchNumber} with ${batch.length} items`)
 
-  // Simulate processing each item
-  const results = batch.map((item, index) => ({
-    item,
-    batchNumber,
-    indexInBatch: index,
-    processed: true,
-    processedAt: new Date().toISOString(),
-  }))
+    // Simulate processing each item
+    // In production, this would be actual API calls (e.g., Algolia index updates)
+    const results = batch.map((item, index) => ({
+      item,
+      batchNumber,
+      indexInBatch: index,
+      processed: true,
+      processedAt: new Date().toISOString(),
+    }))
 
-  return results
+    return results
+  } catch (error) {
+    console.error(`Batch ${batchNumber} processing failed:`, error)
+    // Re-throw to trigger automatic retry
+    throw error
+  }
 }
 
 /**

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-/**
- * Note: sleep() will be available when Vercel Workflow exports it in future versions.
- * For now, this example demonstrates the workflow pattern without actual delays.
- */
+import { sleep } from 'workflow'
 
 /**
  * Example: Multi-step approval workflow with retry logic
  * Demonstrates a node submission approval process with timeout
+ *
+ * Test with:
+ * curl -X POST http://localhost:3000/api/workflow-approval-example \
+ *   -H "Content-Type: application/json" \
+ *   -d '{"nodeId": "node123", "submitterId": "user456", "nodeName": "My Custom Node"}'
  */
 export const POST = async (request: NextRequest) => {
   try {
@@ -25,10 +26,9 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(result, { status: 200 })
   } catch (error) {
     console.error('Approval workflow error:', error)
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    )
+    const errorMessage =
+      error instanceof Error ? error.message : 'Internal Server Error'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
 
@@ -43,61 +43,85 @@ async function nodeApprovalWorkflow(
 ) {
   'use workflow'
 
-  // Step 1: Run automated validation checks
-  const validationResult = await runAutomatedValidation(nodeId, nodeName)
+  try {
+    // Step 1: Run automated validation checks
+    const validationResult = await runAutomatedValidation(nodeId, nodeName)
 
-  if (!validationResult.passed) {
-    return {
-      nodeId,
-      status: 'rejected',
-      reason: 'Failed automated validation',
-      validationResult,
+    if (!validationResult.passed) {
+      return {
+        success: false,
+        nodeId,
+        status: 'rejected',
+        reason: 'Failed automated validation',
+        validationResult,
+        timestamp: new Date().toISOString(),
+      }
     }
-  }
 
-  // Step 2: Notify admin for manual review
-  await notifyAdminForReview(nodeId, submitterId, nodeName)
+    // Step 2: Notify admin for manual review
+    await notifyAdminForReview(nodeId, submitterId, nodeName)
 
-  // Note: sleep() would be used here to wait for admin review
-  // await sleep('24 hours') // Wait for admin to review
-  // In production, this would wait for an actual admin action via webhook/hook
+    // Step 3: Wait for admin review (durable sleep)
+    // In production, use longer delays like '24 hours' or '7 days'
+    // Can be combined with webhook/hook to resume workflow on admin action
+    await sleep('10 seconds')
 
-  // Step 3: Check approval status (simulated)
-  const approvalResult = await checkApprovalStatus(nodeId)
+    // Step 4: Check approval status
+    const approvalResult = await checkApprovalStatus(nodeId)
 
-  // Step 4: Update node status based on approval
-  const finalResult = await updateNodeStatus(nodeId, approvalResult.approved)
+    // Step 5: Update node status based on approval
+    const finalResult = await updateNodeStatus(nodeId, approvalResult.approved)
 
-  return {
-    nodeId,
-    nodeName,
-    status: approvalResult.approved ? 'approved' : 'rejected',
-    validationResult,
-    approvalResult,
-    finalResult,
-    timestamp: new Date().toISOString(),
+    return {
+      success: true,
+      nodeId,
+      nodeName,
+      status: approvalResult.approved ? 'approved' : 'rejected',
+      validationResult,
+      approvalResult,
+      finalResult,
+      timestamp: new Date().toISOString(),
+    }
+  } catch (error) {
+    console.error('Approval workflow failed:', error)
+    return {
+      success: false,
+      nodeId,
+      nodeName,
+      status: 'error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString(),
+    }
   }
 }
 
 /**
  * Run automated validation checks on the submitted node
+ * Steps automatically retry on failure with exponential backoff
  */
 async function runAutomatedValidation(nodeId: string, nodeName: string) {
   'use step'
 
-  // Simulate validation checks
-  const checks = {
-    hasValidName: nodeName.length > 0 && nodeName.length < 100,
-    hasValidFormat: true, // Would check file format
-    passesSecurityScan: true, // Would run security checks
-  }
+  try {
+    // Simulate validation checks
+    // In production, these would be actual API calls or file validations
+    const checks = {
+      hasValidName: nodeName.length > 0 && nodeName.length < 100,
+      hasValidFormat: true, // Would check file format
+      passesSecurityScan: true, // Would run security checks
+    }
 
-  const passed = Object.values(checks).every((check) => check === true)
+    const passed = Object.values(checks).every((check) => check === true)
 
-  return {
-    passed,
-    checks,
-    checkedAt: new Date().toISOString(),
+    return {
+      passed,
+      checks,
+      checkedAt: new Date().toISOString(),
+    }
+  } catch (error) {
+    console.error('Validation failed:', error)
+    // Re-throw to trigger automatic retry
+    throw error
   }
 }
 
