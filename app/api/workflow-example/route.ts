@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { sleep } from 'workflow'
 
 /**
  * Example Vercel Workflow API route using App Router
@@ -25,7 +26,7 @@ export const POST = async (request: NextRequest) => {
 }
 
 /**
- * Example workflow function that demonstrates durability
+ * Example workflow function that demonstrates durability with sleep
  * This function can be paused and resumed across deployments
  */
 async function exampleWorkflow(topic: string) {
@@ -34,7 +35,11 @@ async function exampleWorkflow(topic: string) {
   // Step 1: Process the topic
   const processed = await processStep(topic)
 
-  // Step 2: Generate summary
+  // Pause for 2 seconds to demonstrate sleep() functionality
+  // In production, you might use longer durations like "1 day" or "7 days"
+  await sleep('2 seconds')
+
+  // Step 2: Generate summary after the delay
   const summary = await summarizeStep(processed)
 
   return {
