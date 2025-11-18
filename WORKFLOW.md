@@ -10,6 +10,30 @@ Vercel Workflow has been added to this project:
 bun i workflow
 ```
 
+## Configuration
+
+### Next.js Configuration
+
+The project is configured with `withWorkflow()` wrapper in `next.config.ts`:
+
+```typescript
+import { withWorkflow } from 'workflow/next'
+
+export default withWorkflow(withMDX(conf))
+```
+
+### TypeScript Configuration
+
+The workflow TypeScript plugin is enabled in `tsconfig.json` for enhanced IntelliSense:
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }, { "name": "workflow" }]
+  }
+}
+```
+
 ## Key Concepts
 
 ### Workflow Directive (`'use workflow'`)
@@ -17,17 +41,31 @@ bun i workflow
 Mark a function as a durable workflow that can pause and resume across deployments:
 
 ```typescript
+import { sleep } from 'workflow'
+
 async function myWorkflow() {
   'use workflow'
 
-  const step1Result = await performStep1()
+  try {
+    const step1Result = await performStep1()
 
-  // Note: sleep() will be available in future versions of Vercel Workflow
-  // await sleep('5 seconds') // Pause without consuming resources
+    // Durable sleep - pauses without consuming resources
+    await sleep('5 seconds')
 
-  const step2Result = await performStep2()
+    const step2Result = await performStep2()
 
-  return { step1Result, step2Result }
+    return {
+      success: true,
+      step1Result,
+      step2Result,
+    }
+  } catch (error) {
+    console.error('Workflow failed:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    }
+  }
 }
 ```
 
@@ -39,21 +77,42 @@ Mark a function as a stateless step with automatic retries:
 async function callExternalAPI(data: string) {
   'use step'
 
-  // This will automatically retry on failure
-  const response = await fetch('https://api.example.com', {
-    method: 'POST',
-    body: JSON.stringify({ data }),
-  })
+  try {
+    // This will automatically retry on failure with exponential backoff
+    const response = await fetch('https://api.example.com', {
+      method: 'POST',
+      body: JSON.stringify({ data }),
+    })
 
-  return response.json()
+    return response.json()
+  } catch (error) {
+    console.error('API call failed:', error)
+    // Re-throw to trigger automatic retry
+    throw error
+  }
+}
+```
+
+### Sleep Function
+
+Pause workflow execution efficiently without consuming compute resources:
+
+```typescript
+import { sleep } from 'workflow'
+
+async function exampleWorkflow() {
+  'use workflow'
+
+  await sleep('2 seconds') // Short delays for testing
+  await sleep('5 minutes') // Medium delays
+  await sleep('1 day') // Long delays for user actions
+  await sleep('7 days') // Extended delays for follow-ups
 }
 ```
 
 ## Example Implementations
 
-This project includes multiple workflow examples demonstrating different use cases:
-
-> **Note:** The `sleep()` function is documented in Vercel Workflow but not yet exported in the current beta version (4.0.1-beta.3). The examples show where it would be used, but are currently implemented without actual delays until a future version exports this function.
+This project includes multiple workflow examples demonstrating different use cases with proper error handling and durable sleep:
 
 ### 1. Basic Workflow (`app/api/workflow-example/route.ts`)
 
@@ -170,8 +229,13 @@ wf [command]
 1. **Use `'use step'` for external calls**: Wrap API calls and external operations in step functions for automatic retry handling
 2. **Keep workflows focused**: Break complex workflows into smaller, composable workflows
 3. **Use `sleep()` wisely**: For time-based delays, use `sleep()` instead of `setTimeout()`
-4. **Handle errors gracefully**: Implement proper error handling in step functions
+4. **Handle errors gracefully**:
+   - Add try-catch blocks in workflow functions to handle errors gracefully
+   - Re-throw errors in step functions to trigger automatic retries
+   - Return structured error responses with `success` flags
 5. **Monitor in production**: Use Vercel's dashboard to observe workflow execution
+6. **Import sleep from workflow**: Always `import { sleep } from 'workflow'` at the top of your files
+7. **Version control**: Use latest stable version of workflow package (currently 4.0.1-beta.15)
 
 ## Resources
 
