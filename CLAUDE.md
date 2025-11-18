@@ -30,6 +30,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `bun run build-storybook` - Build Storybook for production
 - `bun run chromatic` - Run Chromatic visual testing (requires CHROMATIC_PROJECT_TOKEN)
 
+### Vercel Workflow
+
+- `workflow` or `wf` - Vercel Workflow CLI for managing durable workflows
+- See `app/api/workflow-example/route.ts` for example implementation
+
 ## Architecture Overview
 
 ### Tech Stack
@@ -43,10 +48,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Authentication**: Firebase Auth
 - **Testing**: Vitest with Playwright browser testing
 - **Component Development**: Storybook with Chromatic visual testing
+- **Workflows**: Vercel Workflow for durable, stateful operations
 
 ### Project Structure
 
-- `pages/` - Next.js pages (App Router not used)
+- `pages/` - Next.js pages (Pages Router, legacy)
+- `pages/api/` - Next.js API routes (Pages Router, legacy)
+- `app/` - Next.js App Router (preferred for new features)
+- `app/api/` - Next.js API routes (App Router, includes Workflow examples)
 - `components/` - Reusable React components organized by feature
 - `src/api/` - Auto-generated API client and custom Axios instance
 - `src/hooks/` - Custom React hooks including i18n
@@ -107,6 +116,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Storybook stories serve as component documentation and testing
 - Chromatic for visual regression testing
 - Run `bun test` for full test suite
+
+### Vercel Workflow
+
+- Vercel Workflow enables durable, stateful operations that can pause and resume
+- Use `'use workflow'` directive to mark functions as durable workflows
+- Use `'use step'` directive for stateless functions with automatic retries
+- Workflows maintain state across deployments and provide built-in observability
+- Example implementation: `app/api/workflow-example/route.ts`
+- See [Vercel Workflow Documentation](https://vercel.com/docs/workflow) for details
 
 ## Environment Variables
 

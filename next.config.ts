@@ -1,5 +1,6 @@
 import mdx from '@next/mdx'
 import { NextConfig } from 'next'
+import { withWorkflow } from 'workflow/next'
 import { SUPPORTED_LANGUAGES } from './src/constants'
 
 const withMDX = mdx({
@@ -51,4 +52,4 @@ const conf: NextConfig = {
     ]
   },
 }
-export default withMDX(conf)
+export default withWorkflow(withMDX(conf))
