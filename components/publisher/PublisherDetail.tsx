@@ -1,6 +1,7 @@
-import { Button } from 'flowbite-react'
+import { Button, Dropdown } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { HiDotsVertical } from 'react-icons/hi'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import {
@@ -14,6 +15,7 @@ import {
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
 import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
+import { DeletePublisherModal } from '../publisher/DeletePublisherModal'
 import EditPublisherModal from '../publisher/EditPublisherModal'
 import PublisherNodes from './PublisherNodes'
 import PublisherStatusBadge from './PublisherStatusBadge'
@@ -38,6 +40,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
   )
   const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false)
   const [openEditModal, setOpenEditModal] = useState(false)
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
   const handleCreateButtonClick = () => {
     analytic.track('Create Publisher API Token Clicked')
@@ -74,6 +77,15 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
   }
   const onCloseEditModal = () => {
     setOpenEditModal(false)
+  }
+
+  const handleDeleteButtonClick = () => {
+    analytic.track('Delete Publisher Clicked')
+    setOpenDeleteModal(true)
+  }
+
+  const onCloseDeleteModal = () => {
+    setOpenDeleteModal(false)
   }
 
   const oneMemberOfPublisher = getFirstMemberName(publisher)
@@ -118,31 +130,68 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
             {publisher.name}
           </h1>
           {permissions?.canEdit && (
-            <Button
-              size="xs"
-              className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
-              color="blue"
-              onClick={handleEditButtonClick}
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
+            <div className="flex gap-2">
+              <Button
+                size="xs"
+                className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
+                color="blue"
+                onClick={handleEditButtonClick}
               >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-                />
-              </svg>
-              <span className="text-[10px]">{t('Edit details')}</span>
-            </Button>
+                <svg
+                  className="w-5 h-5 text-white"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                  />
+                </svg>
+                <span className="text-[10px]">{t('Edit details')}</span>
+              </Button>
+              <Dropdown
+                label=""
+                dismissOnClick={true}
+                renderTrigger={() => (
+                  <Button
+                    size="xs"
+                    className="h-8 p-2 text-white bg-gray-700 rounded hover:bg-gray-600"
+                    color="gray"
+                  >
+                    <HiDotsVertical className="w-5 h-5" />
+                  </Button>
+                )}
+              >
+                <Dropdown.Item
+                  onClick={handleDeleteButtonClick}
+                  className="text-red-500 hover:bg-red-100 dark:hover:bg-red-900"
+                >
+                  <svg
+                    className="w-4 h-4 mr-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+                    />
+                  </svg>
+                  {t('Delete publisher')}
+                </Dropdown.Item>
+              </Dropdown>
+            </div>
           )}
         </div>
         <p className="text-gray-400">@{publisher.id}</p>
@@ -250,6 +299,11 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         onCloseModal={onCloseEditModal}
         onSubmit={handleSubmitEditPublisher}
         publisher={publisher}
+      />
+      <DeletePublisherModal
+        openDeleteModal={openDeleteModal}
+        onClose={onCloseDeleteModal}
+        publisherId={publisher.id}
       />
     </div>
   )
