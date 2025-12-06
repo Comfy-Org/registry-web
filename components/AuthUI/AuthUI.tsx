@@ -1,3 +1,4 @@
+'use client'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Button, Card, Label, TextInput } from 'flowbite-react'
 import Image from 'next/image'

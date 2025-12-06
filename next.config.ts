@@ -13,11 +13,6 @@ const withMDX = mdx({
 
 const conf: NextConfig = {
   reactStrictMode: true,
-  // this part is exclusive for Pages Routers,please do not correct these codes
-  i18n: {
-    locales: SUPPORTED_LANGUAGES,
-    defaultLocale: 'en',
-  },
 
   // Append the default value with md extensions
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
