@@ -528,6 +528,7 @@ export const BytePlusImageGenerationRequestModel = {
   'seedream-3-0-t2i-250415': 'seedream-3-0-t2i-250415',
   'seededit-3-0-i2i-250628': 'seededit-3-0-i2i-250628',
   'seedream-4-0-250828': 'seedream-4-0-250828',
+  'seedream-4-5-251128': 'seedream-4-5-251128',
 } as const;
 
 /**
@@ -758,7 +759,7 @@ export interface BytePlusVideoGenerationQueryResponse {
 }
 
 /**
- * The ID of the model to call. Available models include seedance-1-0-pro-250528, seedance-1-0-lite-t2v-250428, seedance-1-0-lite-i2v-250428
+ * The ID of the model to call. Available models include seedance-1-0-pro-250528, seedance-1-0-pro-fast-251015, seedance-1-0-lite-t2v-250428, seedance-1-0-lite-i2v-250428
  */
 export type BytePlusVideoGenerationRequestModel = typeof BytePlusVideoGenerationRequestModel[keyof typeof BytePlusVideoGenerationRequestModel];
 
@@ -768,6 +769,7 @@ export const BytePlusVideoGenerationRequestModel = {
   'seedance-1-0-pro-250528': 'seedance-1-0-pro-250528',
   'seedance-1-0-lite-t2v-250428': 'seedance-1-0-lite-t2v-250428',
   'seedance-1-0-lite-i2v-250428': 'seedance-1-0-lite-i2v-250428',
+  'seedance-1-0-pro-fast-251015': 'seedance-1-0-pro-fast-251015',
 } as const;
 
 export interface BytePlusVideoGenerationRequest {
@@ -778,7 +780,7 @@ export interface BytePlusVideoGenerationRequest {
    * @minItems 1
    */
   content: BytePlusVideoGenerationContent[];
-  /** The ID of the model to call. Available models include seedance-1-0-pro-250528, seedance-1-0-lite-t2v-250428, seedance-1-0-lite-i2v-250428 */
+  /** The ID of the model to call. Available models include seedance-1-0-pro-250528, seedance-1-0-pro-fast-251015, seedance-1-0-lite-t2v-250428, seedance-1-0-lite-i2v-250428 */
   model: BytePlusVideoGenerationRequestModel;
 }
 
@@ -7945,6 +7947,7 @@ export const SubscriptionTier = {
   STANDARD: 'STANDARD',
   CREATOR: 'CREATOR',
   PRO: 'PRO',
+  FOUNDERS_EDITION: 'FOUNDERS_EDITION',
 } as const;
 
 /**
@@ -15233,7 +15236,7 @@ export const getGetNodeQueryKey = (nodeId?: string,
     }
 
     
-export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(nodeId: string,
+export const getGetNodeQueryOptions = <TData = Awaited<ReturnType<typeof getNode>>, TError = void | ErrorResponse>(nodeId: string,
     params?: GetNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
@@ -15253,10 +15256,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetNodeQueryResult = NonNullable<Awaited<ReturnType<typeof getNode>>>
-export type GetNodeQueryError = ErrorResponse
+export type GetNodeQueryError = void | ErrorResponse
 
 
-export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(
+export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = void | ErrorResponse>(
  nodeId: string,
     params: undefined |  GetNodeParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
@@ -15267,7 +15270,7 @@ export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError =
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(
+export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = void | ErrorResponse>(
  nodeId: string,
     params?: GetNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
@@ -15278,7 +15281,7 @@ export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError =
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(
+export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = void | ErrorResponse>(
  nodeId: string,
     params?: GetNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
@@ -15287,7 +15290,7 @@ export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError =
  * @summary Retrieve a specific node by ID
  */
 
-export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = ErrorResponse>(
+export function useGetNode<TData = Awaited<ReturnType<typeof getNode>>, TError = void | ErrorResponse>(
  nodeId: string,
     params?: GetNodeParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getNode>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
