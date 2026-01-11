@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
 import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
+import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
 import {
   REQUEST_OPTIONS_NO_CACHE,
@@ -16,11 +17,13 @@ import {
   NodeStatus,
   NodeVersion,
   NodeVersionStatus,
+  useBanPublisherNode,
   useGetNode,
   useGetPermissionOnPublisherNodes,
   useGetUser,
   useListNodeVersions,
   useListPublishersForUser,
+  useUpdateNode,
 } from '@/src/api/generated'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
 import { useNextTranslation } from '@/src/hooks/i18n'
@@ -159,6 +162,70 @@ const NodeDetails = () => {
   )
 
   const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
+
+  const queryClient = useQueryClient()
+  const banNodeMutation = useBanPublisherNode()
+  const updateNodeMutation = useUpdateNode()
+
+  const handleBanNode = async () => {
+    if (!node?.publisher?.id || !node?.id) {
+      toast.error(t('Unable to ban: missing node or publisher information'))
+      return
+    }
+
+    if (
+      !confirm(
+        t('Are you sure you want to ban "{{name}}"?', { name: node.name })
+      )
+    ) {
+      return
+    }
+
+    try {
+      await banNodeMutation.mutateAsync({
+        publisherId: node.publisher.id,
+        nodeId: node.id,
+      })
+      toast.success(t('Node banned successfully'))
+      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      router.reload()
+    } catch (error) {
+      console.error('Error banning node:', error)
+      toast.error(t('Error banning node'))
+    }
+  }
+
+  const handleUnbanNode = async () => {
+    if (!node?.publisher?.id || !node?.id) {
+      toast.error(t('Unable to unban: missing node or publisher information'))
+      return
+    }
+
+    if (
+      !confirm(
+        t('Are you sure you want to unban "{{name}}"?', { name: node.name })
+      )
+    ) {
+      return
+    }
+
+    try {
+      await updateNodeMutation.mutateAsync({
+        publisherId: node.publisher.id,
+        nodeId: node.id,
+        data: {
+          ...node,
+          status: NodeStatus.NodeStatusActive,
+        },
+      })
+      toast.success(t('Node unbanned successfully'))
+      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      router.reload()
+    } catch (error) {
+      console.error('Error unbanning node:', error)
+      toast.error(t('Error unbanning node'))
+    }
+  }
 
   const toggleDrawer = () => {
     analytic.track('View Node Version Details')
@@ -567,6 +634,69 @@ const NodeDetails = () => {
                 <HiTrash className="w-5 h-5 mr-2" />
                 <span>{t('Delete')}</span>
                 {warningForAdminEdit && <>&nbsp;{t('(admin)')}</>}
+              </Button>
+            )}
+
+            {/* Ban/Unban button - admin only */}
+            {isAdmin && node.status === NodeStatus.NodeStatusActive && (
+              <Button
+                className="flex-shrink-0 px-4 flex items-center text-white bg-red-600 hover:bg-red-700 rounded whitespace-nowrap text-[16px]"
+                onClick={handleBanNode}
+                disabled={banNodeMutation.isPending}
+              >
+                {banNodeMutation.isPending ? (
+                  <Spinner size="sm" className="mr-2" />
+                ) : (
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m15 9-6 6m0-6 6 6m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                )}
+                <span>{t('Ban Node')}</span>
+              </Button>
+            )}
+
+            {isAdmin && node.status === NodeStatus.NodeStatusBanned && (
+              <Button
+                className="flex-shrink-0 px-4 flex items-center text-white bg-green-600 hover:bg-green-700 rounded whitespace-nowrap text-[16px]"
+                onClick={handleUnbanNode}
+                disabled={updateNodeMutation.isPending}
+              >
+                {updateNodeMutation.isPending ? (
+                  <Spinner size="sm" className="mr-2" />
+                ) : (
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                  </svg>
+                )}
+                <span>{t('Unban Node')}</span>
               </Button>
             )}
 
