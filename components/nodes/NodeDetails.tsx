@@ -13,6 +13,7 @@ import {
   UNCLAIMED_ADMIN_PUBLISHER_ID,
 } from 'src/constants'
 import {
+  NodeStatus,
   NodeVersion,
   NodeVersionStatus,
   useGetNode,
@@ -407,7 +408,21 @@ const NodeDetails = () => {
               </div>
               <div className="mt-5 mb-10">
                 <>
-                  {isUnclaimed || !nodeVersions?.length ? (
+                  {node.status === NodeStatus.NodeStatusBanned ? (
+                    <div className="p-4 mb-4 text-sm rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
+                      <p className="font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                        {t('This node has been banned')}
+                      </p>
+                      {node.status_detail && (
+                        <p className="text-base font-normal text-gray-700 dark:text-gray-300">
+                          {node.status_detail}
+                        </p>
+                      )}
+                      <p className="mt-2 text-base font-normal text-gray-700 dark:text-gray-300">
+                        {t('Installation is not available for this node.')}
+                      </p>
+                    </div>
+                  ) : isUnclaimed || !nodeVersions?.length ? (
                     <p className="text-base font-normal text-gray-200">
                       {isUnclaimed
                         ? t(
@@ -428,16 +443,18 @@ const NodeDetails = () => {
                     <CopyableCodeBlock code={`comfy node install ${nodeId}`} />
                   )}
 
-                  {isUnclaimed && user && (
-                    // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
-                    <Button
-                      color="blue"
-                      className="mt-4 font-bold"
-                      onClick={handleClaimNode}
-                    >
-                      {t('Claim my node')}
-                    </Button>
-                  )}
+                  {isUnclaimed &&
+                    user &&
+                    node.status !== NodeStatus.NodeStatusBanned && (
+                      // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                      <Button
+                        color="blue"
+                        className="mt-4 font-bold"
+                        onClick={handleClaimNode}
+                      >
+                        {t('Claim my node')}
+                      </Button>
+                    )}
                 </>
               </div>
               <div>

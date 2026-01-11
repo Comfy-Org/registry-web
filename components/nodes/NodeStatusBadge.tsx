@@ -7,7 +7,11 @@ const NodeStatusBadge: React.FC<{ status?: NodeStatus }> = ({ status }) => {
 
   // TODO(robinjhuang): Add badge for active status
   if (status === NodeStatus.NodeStatusBanned) {
-    return <Badge color="failure">{t('Banned')}</Badge>
+    return (
+      <Badge color="failure" className="w-fit">
+        {t('Banned')}
+      </Badge>
+    )
   }
 
   return null
