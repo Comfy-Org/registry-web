@@ -22,6 +22,7 @@ import {
   Node,
   NodeStatus,
   useAdminUpdateNode,
+  useBanPublisherNode,
   useGetUser,
   useListAllNodes,
   useUpdateNode,
@@ -123,6 +124,7 @@ function NodeList() {
 
   const updateNodeMutation = useUpdateNode()
   const adminUpdateNodeMutation = useAdminUpdateNode()
+  const banNodeMutation = useBanPublisherNode()
 
   React.useEffect(() => {
     if (getAllNodesQuery.isError) {
@@ -160,6 +162,66 @@ function NodeList() {
     queryForNodeId,
     allStatuses.length,
   ])
+
+  const handleBanNode = async (node: Node) => {
+    if (!node.publisher?.id || !node.id) {
+      toast.error(t('Unable to ban: missing node or publisher information'))
+      return
+    }
+
+    if (
+      !confirm(
+        t('Are you sure you want to ban "{{name}}"?', { name: node.name })
+      )
+    ) {
+      return
+    }
+
+    try {
+      await banNodeMutation.mutateAsync({
+        publisherId: node.publisher.id,
+        nodeId: node.id,
+      })
+      toast.success(t('Node banned successfully'))
+      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      getAllNodesQuery.refetch()
+    } catch (error) {
+      console.error('Error banning node:', error)
+      toast.error(t('Error banning node'))
+    }
+  }
+
+  const handleUnbanNode = async (node: Node) => {
+    if (!node.publisher?.id || !node.id) {
+      toast.error(t('Unable to unban: missing node or publisher information'))
+      return
+    }
+
+    if (
+      !confirm(
+        t('Are you sure you want to unban "{{name}}"?', { name: node.name })
+      )
+    ) {
+      return
+    }
+
+    try {
+      await updateNodeMutation.mutateAsync({
+        publisherId: node.publisher.id,
+        nodeId: node.id,
+        data: {
+          ...node,
+          status: NodeStatus.NodeStatusActive,
+        },
+      })
+      toast.success(t('Node unbanned successfully'))
+      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      getAllNodesQuery.refetch()
+    } catch (error) {
+      console.error('Error unbanning node:', error)
+      toast.error(t('Error unbanning node'))
+    }
+  }
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
@@ -446,6 +508,43 @@ function NodeList() {
                     >
                       <HiPencil className="w-4 h-4" />
                     </Button>
+
+                    {node.status === NodeStatus.NodeStatusActive && (
+                      <Button
+                        size="sm"
+                        color="failure"
+                        onClick={() => handleBanNode(node)}
+                        disabled={
+                          !node.publisher?.id || banNodeMutation.isPending
+                        }
+                        title={t('Ban this node')}
+                      >
+                        {banNodeMutation.isPending ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          t('Ban')
+                        )}
+                      </Button>
+                    )}
+
+                    {node.status === NodeStatus.NodeStatusBanned && (
+                      <Button
+                        size="sm"
+                        color="success"
+                        onClick={() => handleUnbanNode(node)}
+                        disabled={
+                          !node.publisher?.id || updateNodeMutation.isPending
+                        }
+                        title={t('Unban this node')}
+                      >
+                        {updateNodeMutation.isPending ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          t('Unban')
+                        )}
+                      </Button>
+                    )}
+
                     {node.publisher?.id && (
                       <Button
                         size="sm"
