@@ -190,8 +190,8 @@ function NodeList() {
         })
         toast.success(t('Node banned successfully'))
       } else {
-        await updateNodeMutation.mutateAsync({
-          publisherId: node.publisher.id,
+        // Use adminUpdateNodeMutation for unban to ensure proper permissions
+        await adminUpdateNodeMutation.mutateAsync({
           nodeId: node.id,
           data: {
             ...node,
