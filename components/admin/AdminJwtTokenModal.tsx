@@ -2,8 +2,8 @@ import { Button, Modal, Spinner } from 'flowbite-react'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useGenerateAdminToken } from '@/src/api/generated'
-import { setAdminJwtToken } from '@/src/utils/adminJwtStorage'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { setAdminJwtToken } from '@/src/utils/adminJwtStorage'
 
 export interface AdminJwtTokenModalProps {
   isOpen: boolean

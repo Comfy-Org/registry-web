@@ -16,6 +16,7 @@ import React, { useState } from 'react'
 import { HiHome, HiOutlineX, HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { AdminJwtTokenModal } from '@/components/admin/AdminJwtTokenModal'
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import {
@@ -29,7 +30,6 @@ import {
 } from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'
-import { AdminJwtTokenModal } from '@/components/admin/AdminJwtTokenModal'
 import { isAdminJwtTokenValid } from '@/src/utils/adminJwtStorage'
 
 function NodeList() {

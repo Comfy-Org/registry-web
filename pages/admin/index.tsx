@@ -7,8 +7,8 @@ import {
   HiOutlineClipboardCheck,
   HiOutlineCollection,
   HiOutlineDuplicate,
-  HiOutlineSupport,
   HiOutlineKey,
+  HiOutlineSupport,
 } from 'react-icons/hi'
 import AdminTreeNavigation from '@/components/admin/AdminTreeNavigation'
 import withAdmin from '@/components/common/HOC/authAdmin'

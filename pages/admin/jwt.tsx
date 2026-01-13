@@ -1,9 +1,9 @@
 import { Breadcrumb, Button, Card, Spinner } from 'flowbite-react'
-import { HiHome, HiCheck, HiX, HiClock } from 'react-icons/hi'
+import { HiCheck, HiClock, HiHome, HiX } from 'react-icons/hi'
+import { AdminJwtTokenModal } from '@/components/admin/AdminJwtTokenModal'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { useAdminJwtToken } from '@/src/hooks/useAdminJwtToken'
-import { AdminJwtTokenModal } from '@/components/admin/AdminJwtTokenModal'
 
 function AdminJwtPage() {
   const { t } = useNextTranslation()
