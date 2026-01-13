@@ -416,7 +416,7 @@
   "Total Results": "Résultats Totals",
   "Try Again": "Réessayer",
   "Type": "Type",
-  "Unable to ban: missing node or publisher information": "无法禁用：缺少节点或发布者信息",
+  "Unable to ban: missing node or publisher information": "Impossible d'interdire : informations sur le nœud ou l'éditeur manquantes",
   "Unable to claim the node. Please verify your GitHub repository ownership and try again.": "Impossible de revendiquer le nœud. Veuillez vérifier la propriété de votre dépôt GitHub et réessayer.",
   "Unable to get user email, please reload and try again": "Impossible d'obtenir l'email de l'utilisateur, veuillez recharger et réessayer",
   "Unable to save: missing node or publisher information": "Impossible de sauvegarder : informations sur le nœud ou l'éditeur manquantes",

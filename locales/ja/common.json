@@ -28,7 +28,7 @@
   "Approve": "承認",
   "Approve Reason:": "承認理由：",
   "Approved by admin": "（管理者）によって承認済み",
-  "Are you sure you want to ban \"{{name}}\"?": "Are you sure you want to ban \"{{name}}\"?",
+  "Are you sure you want to ban \"{{name}}\"?": "\"{{name}}\" を禁止してもよろしいですか？",
   "Are you sure you want to delete this node? This action cannot be undone.": "このノードを削除してもよろしいですか？この操作は取り消すことができません。",
   "Are you sure you want to delete this publisher? This action cannot be undone.": "このパブリッシャーを削除してもよろしいですか？この操作は取り消すことができません。",
   "Are you sure you want to delete this version? This action cannot be undone.": "このバージョンを削除してもよろしいですか？この操作は元に戻せません。",
