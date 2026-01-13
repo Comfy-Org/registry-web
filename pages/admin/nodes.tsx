@@ -47,6 +47,7 @@ function NodeList() {
     node: Node
     action: 'ban' | 'unban'
   } | null>(null)
+  const [processingNodeId, setProcessingNodeId] = useState<string | null>(null)
   const queryClient = useQueryClient()
   const { data: user } = useGetUser()
 
@@ -180,6 +181,7 @@ function NodeList() {
       return
     }
 
+    setProcessingNodeId(node.id)
     try {
       if (action === 'ban') {
         await banNodeMutation.mutateAsync({
@@ -206,10 +208,13 @@ function NodeList() {
         // Save pending operation and show modal
         setPendingBanOperation({ node, action })
         setShowJwtModal(true)
+        setProcessingNodeId(null)
         return
       }
       console.error(`Error ${action}ning node:`, error)
       toast.error(t('Error {{action}}ning node', { action }))
+    } finally {
+      setProcessingNodeId(null)
     }
   }
 
@@ -554,11 +559,11 @@ function NodeList() {
                         color="failure"
                         onClick={() => handleBanNode(node)}
                         disabled={
-                          !node.publisher?.id || banNodeMutation.isPending
+                          !node.publisher?.id || processingNodeId === node.id
                         }
                         title={t('Ban this node')}
                       >
-                        {banNodeMutation.isPending ? (
+                        {processingNodeId === node.id ? (
                           <Spinner size="sm" />
                         ) : (
                           t('Ban')
@@ -572,11 +577,11 @@ function NodeList() {
                         color="success"
                         onClick={() => handleUnbanNode(node)}
                         disabled={
-                          !node.publisher?.id || updateNodeMutation.isPending
+                          !node.publisher?.id || processingNodeId === node.id
                         }
                         title={t('Unban this node')}
                       >
-                        {updateNodeMutation.isPending ? (
+                        {processingNodeId === node.id ? (
                           <Spinner size="sm" />
                         ) : (
                           t('Unban')
