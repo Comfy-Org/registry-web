@@ -67,3 +67,5 @@ public/_storybook
 /core
 /prs
 
+# ai reports
+/report.md

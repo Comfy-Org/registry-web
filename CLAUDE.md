@@ -108,6 +108,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Chromatic for visual regression testing
 - Run `bun test` for full test suite
 
+### Debugging with Playwright MCP
+
+For automated end-to-end testing and debugging with a live browser, use the `auto-e2e` skill:
+
+```
+/skills auto-e2e
+```
+
+This skill provides step-by-step guidance for:
+
+- Starting the dev server and launching Playwright in headed mode
+- Logging in with test credentials
+- Testing admin features (ban/unban actions)
+- Capturing screenshots and monitoring console logs
+
 ## Environment Variables
 
 - `NEXT_PUBLIC_BACKEND_URL` - Backend API URL (required for orval)

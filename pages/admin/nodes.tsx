@@ -16,18 +16,21 @@ import React, { useState } from 'react'
 import { HiHome, HiOutlineX, HiPencil } from 'react-icons/hi'
 import { MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
+import { AdminJwtTokenModal } from '@/components/admin/AdminJwtTokenModal'
 import { CustomPagination } from '@/components/common/CustomPagination'
 import withAdmin from '@/components/common/HOC/authAdmin'
 import {
   Node,
   NodeStatus,
   useAdminUpdateNode,
+  useBanPublisherNode,
   useGetUser,
   useListAllNodes,
   useUpdateNode,
 } from '@/src/api/generated'
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { isAdminJwtTokenValid } from '@/src/utils/adminJwtStorage'
 
 function NodeList() {
   const { t } = useNextTranslation()
@@ -39,6 +42,12 @@ function NodeList() {
     category: '',
   })
   const [unclaimingNode, setUnclaimingNode] = useState<Node | null>(null)
+  const [showJwtModal, setShowJwtModal] = useState(false)
+  const [pendingBanOperation, setPendingBanOperation] = useState<{
+    node: Node
+    action: 'ban' | 'unban'
+  } | null>(null)
+  const [processingNodeId, setProcessingNodeId] = useState<string | null>(null)
   const queryClient = useQueryClient()
   const { data: user } = useGetUser()
 
@@ -123,6 +132,7 @@ function NodeList() {
 
   const updateNodeMutation = useUpdateNode()
   const adminUpdateNodeMutation = useAdminUpdateNode()
+  const banNodeMutation = useBanPublisherNode()
 
   React.useEffect(() => {
     if (getAllNodesQuery.isError) {
@@ -160,6 +170,102 @@ function NodeList() {
     queryForNodeId,
     allStatuses.length,
   ])
+
+  const executeBanOperation = async (node: Node, action: 'ban' | 'unban') => {
+    if (!node.publisher?.id || !node.id) {
+      toast.error(
+        t('Unable to {{action}}: missing node or publisher information', {
+          action,
+        })
+      )
+      return
+    }
+
+    setProcessingNodeId(node.id)
+    try {
+      if (action === 'ban') {
+        await banNodeMutation.mutateAsync({
+          publisherId: node.publisher.id,
+          nodeId: node.id,
+        })
+        toast.success(t('Node banned successfully'))
+      } else {
+        // Use adminUpdateNodeMutation for unban to ensure proper permissions
+        await adminUpdateNodeMutation.mutateAsync({
+          nodeId: node.id,
+          data: {
+            ...node,
+            status: NodeStatus.NodeStatusActive,
+          },
+        })
+        toast.success(t('Node unbanned successfully'))
+      }
+      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      getAllNodesQuery.refetch()
+    } catch (error: any) {
+      // Check if error is due to missing JWT token
+      if (error?.message === 'ADMIN_JWT_REQUIRED') {
+        // Save pending operation and show modal
+        setPendingBanOperation({ node, action })
+        setShowJwtModal(true)
+        setProcessingNodeId(null)
+        return
+      }
+      console.error(`Error ${action}ning node:`, error)
+      toast.error(t('Error {{action}}ning node', { action }))
+    } finally {
+      setProcessingNodeId(null)
+    }
+  }
+
+  const handleBanNode = async (node: Node) => {
+    if (
+      !confirm(
+        t('Are you sure you want to ban "{{name}}"?', { name: node.name })
+      )
+    ) {
+      return
+    }
+
+    // Check if JWT token is valid
+    if (!isAdminJwtTokenValid()) {
+      setPendingBanOperation({ node, action: 'ban' })
+      setShowJwtModal(true)
+      return
+    }
+
+    await executeBanOperation(node, 'ban')
+  }
+
+  const handleUnbanNode = async (node: Node) => {
+    if (
+      !confirm(
+        t('Are you sure you want to unban "{{name}}"?', { name: node.name })
+      )
+    ) {
+      return
+    }
+
+    // Check if JWT token is valid
+    if (!isAdminJwtTokenValid()) {
+      setPendingBanOperation({ node, action: 'unban' })
+      setShowJwtModal(true)
+      return
+    }
+
+    await executeBanOperation(node, 'unban')
+  }
+
+  const handleJwtTokenGenerated = async () => {
+    // Retry pending operation after token is generated
+    if (pendingBanOperation) {
+      await executeBanOperation(
+        pendingBanOperation.node,
+        pendingBanOperation.action
+      )
+      setPendingBanOperation(null)
+    }
+  }
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
@@ -446,6 +552,43 @@ function NodeList() {
                     >
                       <HiPencil className="w-4 h-4" />
                     </Button>
+
+                    {node.status === NodeStatus.NodeStatusActive && (
+                      <Button
+                        size="sm"
+                        color="failure"
+                        onClick={() => handleBanNode(node)}
+                        disabled={
+                          !node.publisher?.id || processingNodeId === node.id
+                        }
+                        title={t('Ban this node')}
+                      >
+                        {processingNodeId === node.id ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          t('Ban')
+                        )}
+                      </Button>
+                    )}
+
+                    {node.status === NodeStatus.NodeStatusBanned && (
+                      <Button
+                        size="sm"
+                        color="success"
+                        onClick={() => handleUnbanNode(node)}
+                        disabled={
+                          !node.publisher?.id || processingNodeId === node.id
+                        }
+                        title={t('Unban this node')}
+                      >
+                        {processingNodeId === node.id ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          t('Unban')
+                        )}
+                      </Button>
+                    )}
+
                     {node.publisher?.id && (
                       <Button
                         size="sm"
@@ -652,6 +795,16 @@ function NodeList() {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* JWT Token Modal */}
+      <AdminJwtTokenModal
+        isOpen={showJwtModal}
+        onClose={() => {
+          setShowJwtModal(false)
+          setPendingBanOperation(null)
+        }}
+        onTokenGenerated={handleJwtTokenGenerated}
+      />
     </div>
   )
 }
