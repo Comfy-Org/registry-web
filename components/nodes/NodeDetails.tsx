@@ -667,7 +667,9 @@ const NodeDetails = () => {
                     />
                   </svg>
                 )}
-                <span>{t('Ban Node')}</span>
+                <span>
+                  {t('Ban Node')} {t('(admin)')}
+                </span>
               </Button>
             )}
 
