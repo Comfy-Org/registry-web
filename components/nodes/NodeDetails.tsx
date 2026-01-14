@@ -219,8 +219,10 @@ const NodeDetails = () => {
         },
       })
       toast.success(t('Node unbanned successfully'))
-      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
-      router.reload()
+      await queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      if (node?.id) {
+        await queryClient.invalidateQueries({ queryKey: ['/nodes', node.id] })
+      }
     } catch (error) {
       console.error('Error unbanning node:', error)
       toast.error(t('Error unbanning node'))
