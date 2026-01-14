@@ -75,10 +75,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Internationalization
 
-- All user-facing text must use the `t()` function from `useNextTranslation` hook
-- Use English text as translation keys for readability
-- Run `bun scripts/scan-i18n.ts` to extract new translation keys
+**CRITICAL**: All user-facing text MUST be wrapped with the `t()` function from `useNextTranslation` hook.
+
+- **ALWAYS** use `t()` for any text shown to users, including:
+  - Button labels and text
+  - Error messages and toasts
+  - Form labels and placeholders
+  - Page headings and descriptions
+  - Modal titles and content
+  - Status messages
+- Use English text as translation keys for readability (e.g., `t('Ban Node')`)
+- **NEVER** hardcode user-facing strings without `t()`
+- After adding new `t()` calls, run `bun scripts/scan-i18n.ts` to extract translation keys
 - New languages require updating `SUPPORTED_LANGUAGES` in `src/constants.ts`
+
+**Example - CORRECT:**
+
+```tsx
+<span>{t('Ban Node')}</span>
+<span>{t('(admin)')}</span>
+```
+
+**Example - WRONG:**
+
+```tsx
+<span>Ban Node</span>  // Missing t()
+<span>(admin)</span>   // Missing t()
+```
 
 ### Component Development
 
