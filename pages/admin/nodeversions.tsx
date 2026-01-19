@@ -20,6 +20,7 @@ import { HiBan, HiCheck, HiHome, HiReply } from "react-icons/hi";
 import { MdFolderZip, MdOpenInNew } from "react-icons/md";
 import { toast } from "react-toastify";
 import { NodeVersionStatusToReadable } from "src/mapper/nodeversion";
+import { AdminJwtTokenModal } from "@/components/admin/AdminJwtTokenModal";
 import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
 import { CustomPagination } from "@/components/common/CustomPagination";
 import withAdmin from "@/components/common/HOC/authAdmin";
@@ -37,6 +38,7 @@ import {
   useListAllNodeVersions,
 } from "@/src/api/generated";
 import { useNextTranslation } from "@/src/hooks/i18n";
+import { isAdminJwtTokenValid } from "@/src/utils/adminJwtStorage";
 import { generateBatchId } from "@/utils/batchUtils";
 
 function NodeVersionList({}) {
@@ -51,6 +53,15 @@ function NodeVersionList({}) {
   const [batchReason, setBatchReason] = useState<string>("");
   const { data: user } = useGetUser();
   const lastCheckedRef = useRef<string | null>(null);
+
+  // JWT token modal state
+  const [showJwtModal, setShowJwtModal] = useState(false);
+  const [pendingOperation, setPendingOperation] = useState<{
+    nodeVersion: NodeVersion;
+    status: NodeVersionStatus;
+    message: string;
+    batchId?: string;
+  } | null>(null);
 
   // Contact button, send issues or email to node version publisher
   const [mailtoNv, setMailtoNv] = useState<NodeVersion | null>(null);
@@ -161,6 +172,14 @@ function NodeVersionList({}) {
     message: string;
     batchId?: string; // Optional batchId for batch operations
   }) {
+    // Check if JWT token is valid before making the request
+    if (!isAdminJwtTokenValid()) {
+      // Save pending operation and show modal
+      setPendingOperation({ nodeVersion: nv, status, message, batchId })
+      setShowJwtModal(true)
+      return
+    }
+
     // parse previous status reason with fallbacks
     const prevStatusReasonJson = parseJsonSafe(nv.status_reason).data;
     const prevStatusReason = zStatusReason.safeParse(prevStatusReasonJson).data;
@@ -187,39 +206,51 @@ function NodeVersionList({}) {
       statusHistory,
       ...(batchId ? { batchId } : {}), // Include batchId if provided
     });
-    await updateNodeVersionMutation.mutateAsync(
-      {
-        nodeId: nv.node_id!.toString(),
-        versionNumber: nv.version!.toString(),
-        data: { status, status_reason: JSON.stringify(reason) },
-      },
-      {
-        onSuccess: () => {
-          // Cache-busting invalidation for cached endpoints
-          queryClient.fetchQuery(
-            shouldInvalidate.getListNodeVersionsQueryOptions(
-              nv.node_id!.toString(),
-              undefined,
-              INVALIDATE_CACHE_OPTION,
-            ),
-          );
 
-          // Regular invalidation for non-cached endpoints
-          queryClient.invalidateQueries({
-            queryKey: ["/versions"],
-          });
+    try {
+      await updateNodeVersionMutation.mutateAsync(
+        {
+          nodeId: nv.node_id!.toString(),
+          versionNumber: nv.version!.toString(),
+          data: { status, status_reason: JSON.stringify(reason) },
         },
-        onError: (error) => {
-          console.error(t("Error reviewing node version"), error);
-          toast.error(
-            t("Error reviewing node version {{nodeId}}@{{version}}", {
-              nodeId: nv.node_id!,
-              version: nv.version!,
-            }),
-          );
+        {
+          onSuccess: () => {
+            // Cache-busting invalidation for cached endpoints
+            queryClient.fetchQuery(
+              shouldInvalidate.getListNodeVersionsQueryOptions(
+                nv.node_id!.toString(),
+                undefined,
+                INVALIDATE_CACHE_OPTION,
+              ),
+            );
+
+            // Regular invalidation for non-cached endpoints
+            queryClient.invalidateQueries({
+              queryKey: ["/versions"],
+            });
+          },
+          onError: (error) => {
+            console.error(t("Error reviewing node version"), error);
+            toast.error(
+              t("Error reviewing node version {{nodeId}}@{{version}}", {
+                nodeId: nv.node_id!,
+                version: nv.version!,
+              }),
+            );
+          },
         },
-      },
-    );
+      );
+    } catch (error: any) {
+      // Check if error is due to missing/expired JWT token
+      if (error?.message === "ADMIN_JWT_REQUIRED") {
+        // Save pending operation and show modal
+        setPendingOperation({ nodeVersion: nv, status, message, batchId });
+        setShowJwtModal(true);
+        return;
+      }
+      throw error;
+    }
   }
 
   // For batch operations that include batchId in the status reason
@@ -600,6 +631,18 @@ function NodeVersionList({}) {
     setBatchReason("");
   };
 
+  // Handler for when JWT token is generated
+  const handleTokenGenerated = async () => {
+    if (!pendingOperation) return;
+
+    // Retry the pending operation
+    toast.info(t("Retrying operation with new JWT token..."));
+    await onReview(pendingOperation);
+
+    // Clear the pending operation
+    setPendingOperation(null);
+  };
+
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
     router.push(
@@ -776,6 +819,15 @@ function NodeVersionList({}) {
           </Button>
         </Modal.Footer>
       </Modal>
+      {/* JWT Token Modal */}
+      <AdminJwtTokenModal
+        isOpen={showJwtModal}
+        onClose={() => {
+          setShowJwtModal(false);
+          setPendingOperation(null);
+        }}
+        onTokenGenerated={handleTokenGenerated}
+      />
       <div className="flex flex-col gap-4 mb-6">
         <h1 className="text-2xl font-bold text-gray-200">{t("Node Versions")}</h1>
         <div className="text-lg font-bold text-gray-200">
