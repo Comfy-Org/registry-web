@@ -54,11 +54,11 @@ All API interactions use generated hooks:
 ```typescript
 retry: (failureCount, error: any) => {
   // Don't retry on 404s
-  if (error?.response?.status === 404) return false
+  if (error?.response?.status === 404) return false;
 
   // Retry up to 3 times for other errors
-  return failureCount < 3
-}
+  return failureCount < 3;
+};
 ```
 
 ### Status Code Handling
@@ -72,7 +72,7 @@ retry: (failureCount, error: any) => {
 ### 1. Data Fetching
 
 ```typescript
-const { data: user, isLoading, error } = useGetUser({})
+const { data: user, isLoading, error } = useGetUser({});
 ```
 
 ### 2. Mutations
@@ -85,7 +85,7 @@ const createNodeMutation = useCreateNode({
   onError: (error) => {
     // Handle error
   },
-})
+});
 ```
 
 ### 3. Pagination
@@ -94,7 +94,7 @@ const createNodeMutation = useCreateNode({
 const { data: nodes } = useGetNodes({
   page: currentPage,
   limit: pageSize,
-})
+});
 ```
 
 ## Environment Variables

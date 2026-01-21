@@ -37,22 +37,22 @@ const persistEffect = () => {
     queryClient: queryClient,
     persister: createSyncStoragePersister({
       storage: window.localStorage,
-      key: 'comfy-registry-cache',
+      key: "comfy-registry-cache",
     }),
     dehydrateOptions: {
       shouldDehydrateQuery: ({ queryKey, state }) => {
         // Don't persist pending queries as they can't be properly restored
-        if (state.status === 'pending') return false
+        if (state.status === "pending") return false;
 
         // Persist all successful queries
-        return true
+        return true;
       },
     },
     maxAge: 86400e3, // 1 day in milliseconds
-    buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1',
-  })
-  return unsubscribe
-}
+    buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? "v1",
+  });
+  return unsubscribe;
+};
 ```
 
 ### Query Client Defaults
@@ -63,13 +63,13 @@ const queryClient = new QueryClient({
     queries: {
       retry: (failureCount, error: any) => {
         // Don't retry on 404s
-        if (error?.response?.status === 404) return false
+        if (error?.response?.status === 404) return false;
         // Retry up to 3 times for other errors
-        return failureCount < 3
+        return failureCount < 3;
       },
     },
   },
-})
+});
 ```
 
 ## Cache Invalidation Strategies
@@ -80,21 +80,17 @@ const queryClient = new QueryClient({
 const updateNodeMutation = useUpdateNode({
   onSuccess: (updatedNode) => {
     // Invalidate specific node
-    queryClient.invalidateQueries(['node', updatedNode.id])
+    queryClient.invalidateQueries(["node", updatedNode.id]);
 
     // Invalidate node lists
-    queryClient.invalidateQueries(['nodes'])
+    queryClient.invalidateQueries(["nodes"]);
 
     // Invalidate publisher nodes if applicable
     if (updatedNode.publisherId) {
-      queryClient.invalidateQueries([
-        'publisher',
-        updatedNode.publisherId,
-        'nodes',
-      ])
+      queryClient.invalidateQueries(["publisher", updatedNode.publisherId, "nodes"]);
     }
   },
-})
+});
 ```
 
 ### 2. Time-Based Invalidation
@@ -103,20 +99,20 @@ const updateNodeMutation = useUpdateNode({
 const { data: nodes } = useGetNodes({
   staleTime: 5 * 60 * 1000, // 5 minutes
   cacheTime: 10 * 60 * 1000, // 10 minutes
-})
+});
 ```
 
 ### 3. Manual Invalidation
 
 ```typescript
 // Invalidate all queries
-queryClient.invalidateQueries()
+queryClient.invalidateQueries();
 
 // Invalidate specific query pattern
-queryClient.invalidateQueries(['nodes'])
+queryClient.invalidateQueries(["nodes"]);
 
 // Invalidate and refetch immediately
-queryClient.invalidateQueries(['user'], { refetchActive: true })
+queryClient.invalidateQueries(["user"], { refetchActive: true });
 ```
 
 ## Cache Key Patterns
@@ -125,15 +121,13 @@ queryClient.invalidateQueries(['user'], { refetchActive: true })
 
 ```typescript
 // User data
-;['user'][('user', userId)][ // Current user // Specific user
+["user"][("user", userId)][ // Current user // Specific user
   // Nodes
-  'nodes'
-][('nodes', { page, limit, search })][('node', nodeId)][
-  ('node', nodeId, 'versions')
-][ // All nodes list // Paginated nodes // Specific node // Node versions
+  "nodes"
+][("nodes", { page, limit, search })][("node", nodeId)][("node", nodeId, "versions")][ // All nodes list // Paginated nodes // Specific node // Node versions
   // Publishers
-  'publishers'
-][('publisher', publisherId)][('publisher', publisherId, 'nodes')] // All publishers // Specific publisher // Publisher's nodes
+  "publishers"
+][("publisher", publisherId)][("publisher", publisherId, "nodes")]; // All publishers // Specific publisher // Publisher's nodes
 ```
 
 ### Query Key Generation
@@ -142,10 +136,10 @@ Auto-generated hooks use consistent key patterns:
 
 ```typescript
 // Generated query keys
-queryKey: ['user']
-queryKey: ['nodes', params]
-queryKey: ['node', nodeId]
-queryKey: ['publisher', publisherId, 'nodes', params]
+queryKey: ["user"];
+queryKey: ["nodes", params];
+queryKey: ["node", nodeId];
+queryKey: ["publisher", publisherId, "nodes", params];
 ```
 
 ## Performance Optimizations
@@ -162,14 +156,14 @@ queryKey: ['publisher', publisherId, 'nodes', params]
 ```typescript
 shouldDehydrateQuery: ({ queryKey, state }) => {
   // Don't persist pending queries
-  if (state.status === 'pending') return false
+  if (state.status === "pending") return false;
 
   // Persist successful queries
-  if (state.status === 'success') return true
+  if (state.status === "success") return true;
 
   // Don't persist errors
-  return false
-}
+  return false;
+};
 ```
 
 ### 3. Memory Management
@@ -200,7 +194,7 @@ shouldDehydrateQuery: ({ queryKey, state }) => {
 const { data } = useGetNodes({
   staleTime: 5 * 60 * 1000, // Serve from cache for 5 minutes
   cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
-})
+});
 ```
 
 ### 2. Optimistic Updates
@@ -210,25 +204,25 @@ const mutation = useMutation({
   mutationFn: updateNode,
   onMutate: async (newNode) => {
     // Cancel outgoing refetches
-    await queryClient.cancelQueries(['node', newNode.id])
+    await queryClient.cancelQueries(["node", newNode.id]);
 
     // Snapshot previous value
-    const previousNode = queryClient.getQueryData(['node', newNode.id])
+    const previousNode = queryClient.getQueryData(["node", newNode.id]);
 
     // Optimistically update
-    queryClient.setQueryData(['node', newNode.id], newNode)
+    queryClient.setQueryData(["node", newNode.id], newNode);
 
-    return { previousNode }
+    return { previousNode };
   },
   onError: (err, newNode, context) => {
     // Rollback on error
-    queryClient.setQueryData(['node', newNode.id], context.previousNode)
+    queryClient.setQueryData(["node", newNode.id], context.previousNode);
   },
   onSettled: (data, error, variables) => {
     // Refetch after mutation
-    queryClient.invalidateQueries(['node', variables.id])
+    queryClient.invalidateQueries(["node", variables.id]);
   },
-})
+});
 ```
 
 ### 3. Prefetching
@@ -236,10 +230,8 @@ const mutation = useMutation({
 ```typescript
 // Prefetch related data
 const prefetchNodeVersions = (nodeId: string) => {
-  queryClient.prefetchQuery(['node', nodeId, 'versions'], () =>
-    getNodeVersions(nodeId)
-  )
-}
+  queryClient.prefetchQuery(["node", nodeId, "versions"], () => getNodeVersions(nodeId));
+};
 ```
 
 ### 4. Background Updates
@@ -249,7 +241,7 @@ const { data } = useGetNodes({
   refetchOnWindowFocus: true,
   refetchOnMount: true,
   refetchOnReconnect: true,
-})
+});
 ```
 
 ## Cache Debugging
@@ -265,13 +257,13 @@ const { data } = useGetNodes({
 
 ```typescript
 // Check cache state
-console.log(queryClient.getQueryCache().getAll())
+console.log(queryClient.getQueryCache().getAll());
 
 // Monitor specific query
-console.log(queryClient.getQueryData(['user']))
+console.log(queryClient.getQueryData(["user"]));
 
 // Check cache stats
-console.log(queryClient.getQueryCache().findAll())
+console.log(queryClient.getQueryCache().findAll());
 ```
 
 ## Environment Considerations

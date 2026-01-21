@@ -36,9 +36,9 @@ Use the Playwright MCP tool to navigate to the application:
 ```javascript
 // Navigate to the login page
 playwright_navigate({
-  url: 'http://localhost:3000/auth/login',
+  url: "http://localhost:3000/auth/login",
   headless: false,
-})
+});
 ```
 
 ### 3. Login with Test Credentials
@@ -54,19 +54,19 @@ Fill in the login form:
 // Fill username/email field
 playwright_fill({
   selector: 'input[type="email"]', // or appropriate selector
-  value: 'test@example.com',
-})
+  value: "test@example.com",
+});
 
 // Fill password field
 playwright_fill({
   selector: 'input[type="password"]',
-  value: 'test_password',
-})
+  value: "test_password",
+});
 
 // Click login button
 playwright_click({
   selector: 'button[type="submit"]',
-})
+});
 ```
 
 ### 4. Navigate and Test Features
@@ -81,15 +81,15 @@ Once logged in, you can:
 ```javascript
 // Take a screenshot
 playwright_screenshot({
-  name: 'admin-dashboard',
+  name: "admin-dashboard",
   fullPage: true,
   savePng: true,
-})
+});
 
 // Get console logs to check for errors
 playwright_console_logs({
-  type: 'error',
-})
+  type: "error",
+});
 ```
 
 ### 5. Clean Up
@@ -98,7 +98,7 @@ When done testing:
 
 ```javascript
 // Close the browser
-playwright_close()
+playwright_close();
 ```
 
 ## Tips

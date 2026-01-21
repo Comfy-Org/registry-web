@@ -5,36 +5,36 @@
                 onClick={handleClick}
             > * Displays a GitHub username with hover information and click navigation to GitHub profile
  */
-import { Tooltip } from 'flowbite-react'
-import { MouseEvent } from 'react'
+import { Tooltip } from "flowbite-react";
+import { MouseEvent } from "react";
 
 interface GithubUserSpanProps {
-  username: string
-  userId?: string
-  className?: string
-  onClick?: (e: MouseEvent<HTMLSpanElement>) => void
+  username: string;
+  userId?: string;
+  className?: string;
+  onClick?: (e: MouseEvent<HTMLSpanElement>) => void;
 }
 
 export default function GithubUserSpan({
   username,
   userId,
-  className = '',
+  className = "",
   onClick,
 }: GithubUserSpanProps) {
   const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
     if (onClick) {
-      onClick(e)
-      return
+      onClick(e);
+      return;
     }
 
-    e.preventDefault()
-    window.open(`https://github.com/${username}`, '_blank')
-  }
+    e.preventDefault();
+    window.open(`https://github.com/${username}`, "_blank");
+  };
 
   return (
     <div className="inline-block">
       <Tooltip
-        content={`View GitHub profile for ${username}${userId ? ` (ID: ${userId})` : ''}`}
+        content={`View GitHub profile for ${username}${userId ? ` (ID: ${userId})` : ""}`}
         placement="top"
         style="light"
       >
@@ -46,5 +46,5 @@ export default function GithubUserSpan({
         </span>
       </Tooltip>
     </div>
-  )
+  );
 }

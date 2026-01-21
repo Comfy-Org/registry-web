@@ -9,17 +9,17 @@ The application uses Firebase Authentication for user management with React Quer
 ### 1. Firebase Configuration (`src/firebase.ts`)
 
 ```typescript
-import { initializeApp } from 'firebase/app'
-import 'firebase/auth'
+import { initializeApp } from "firebase/app";
+import "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-}
+};
 
-const app = initializeApp(firebaseConfig)
-export default app
+const app = initializeApp(firebaseConfig);
+export default app;
 ```
 
 ### 2. Authentication Interceptor (`pages/_app.tsx`)
@@ -27,22 +27,22 @@ export default app
 ```typescript
 // Add Firebase JWT token to every API request
 AXIOS_INSTANCE.interceptors.request.use(async (config) => {
-  const auth = getAuth(app)
-  const user = auth.currentUser
+  const auth = getAuth(app);
+  const user = auth.currentUser;
 
   if (user) {
-    const token = await user.getIdToken()
-    sessionStorage.setItem('idToken', token)
-    config.headers.Authorization = `Bearer ${token}`
+    const token = await user.getIdToken();
+    sessionStorage.setItem("idToken", token);
+    config.headers.Authorization = `Bearer ${token}`;
   } else {
-    const cachedIdtoken = sessionStorage.getItem('idToken') ?? ''
+    const cachedIdtoken = sessionStorage.getItem("idToken") ?? "";
     if (cachedIdtoken) {
-      config.headers.Authorization = `Bearer ${cachedIdtoken}`
+      config.headers.Authorization = `Bearer ${cachedIdtoken}`;
     }
   }
 
-  return config
-})
+  return config;
+});
 ```
 
 ## Authentication HOCs
@@ -141,10 +141,10 @@ const withAdmin = (WrappedComponent) => {
 
 ```typescript
 // Current user data
-const { data: user, isLoading, error } = useGetUser({})
+const { data: user, isLoading, error } = useGetUser({});
 
 // User authentication state
-const [firebaseUser, loading, error] = useAuthState(auth)
+const [firebaseUser, loading, error] = useAuthState(auth);
 ```
 
 ### State Flow
@@ -159,10 +159,10 @@ const [firebaseUser, loading, error] = useAuthState(auth)
 
 ```typescript
 // Basic authentication required
-export default withAuth(MyPage)
+export default withAuth(MyPage);
 
 // Admin authentication required
-export default withAdmin(AdminPage)
+export default withAdmin(AdminPage);
 ```
 
 ### Component-Level Protection
@@ -269,11 +269,11 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 
 ```typescript
 const useFromUrlParam = () => {
-  const router = useRouter()
-  const fromUrl = router.asPath
+  const router = useRouter();
+  const fromUrl = router.asPath;
 
-  return `from=${encodeURIComponent(fromUrl)}`
-}
+  return `from=${encodeURIComponent(fromUrl)}`;
+};
 ```
 
 ### Flow
@@ -314,14 +314,14 @@ const useFromUrlParam = () => {
 
 ```typescript
 // Mock useAuthState hook
-jest.mock('react-firebase-hooks/auth', () => ({
+jest.mock("react-firebase-hooks/auth", () => ({
   useAuthState: jest.fn(() => [mockUser, false, null]),
-}))
+}));
 
 // Mock useGetUser hook
-jest.mock('src/api/generated', () => ({
+jest.mock("src/api/generated", () => ({
   useGetUser: jest.fn(() => ({ data: mockUser, isLoading: false })),
-}))
+}));
 ```
 
 ### Testing Strategies

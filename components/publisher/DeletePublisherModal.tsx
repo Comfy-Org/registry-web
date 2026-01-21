@@ -1,28 +1,28 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { Button, Label, Modal, TextInput } from 'flowbite-react'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { toast } from 'react-toastify'
-import { customThemeTModal } from 'utils/comfyTheme'
-import { useDeletePublisher } from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { Button, Label, Modal, TextInput } from "flowbite-react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { customThemeTModal } from "utils/comfyTheme";
+import { useDeletePublisher } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
 
 type DeletePublisherModalProps = {
-  openDeleteModal: boolean
-  onClose: () => void
-  publisherId: string
-}
+  openDeleteModal: boolean;
+  onClose: () => void;
+  publisherId: string;
+};
 
 export const DeletePublisherModal: React.FC<DeletePublisherModalProps> = ({
   openDeleteModal,
   onClose,
   publisherId,
 }) => {
-  const { t } = useNextTranslation()
-  const mutation = useDeletePublisher({})
-  const router = useRouter()
-  const qc = useQueryClient()
+  const { t } = useNextTranslation();
+  const mutation = useDeletePublisher({});
+  const router = useRouter();
+  const qc = useQueryClient();
   const handleSubmit = async () => {
     return mutation.mutate(
       {
@@ -34,23 +34,23 @@ export const DeletePublisherModal: React.FC<DeletePublisherModalProps> = ({
             toast.error(
               t(`Failed to delete publisher. {{message}}`, {
                 message: error.response?.data?.message,
-              })
-            )
+              }),
+            );
           } else {
-            toast.error(t('Failed to delete publisher'))
+            toast.error(t("Failed to delete publisher"));
           }
         },
         onSuccess: () => {
-          toast.success(t('Publisher deleted successfully'))
-          onClose()
-          router.push('/nodes')
+          toast.success(t("Publisher deleted successfully"));
+          onClose();
+          router.push("/nodes");
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
-  const validateText = publisherId
-  const [confirmationText, setConfirmationText] = useState('')
+  const validateText = publisherId;
+  const [confirmationText, setConfirmationText] = useState("");
   return (
     <Modal
       show={openDeleteModal}
@@ -63,25 +63,22 @@ export const DeletePublisherModal: React.FC<DeletePublisherModalProps> = ({
     >
       <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
         <Modal.Header className="!bg-gray-800">
-          <p className="text-white">{t('Delete Publisher')}</p>
+          <p className="text-white">{t("Delete Publisher")}</p>
         </Modal.Header>
         <form
           className="space-y-6 p-2"
           onSubmit={async (e) => {
-            e.preventDefault()
-            await handleSubmit()
+            e.preventDefault();
+            await handleSubmit();
           }}
         >
           <p className="text-white">
-            {t(
-              'Are you sure you want to delete this publisher? This action cannot be undone.'
-            )}
+            {t("Are you sure you want to delete this publisher? This action cannot be undone.")}
           </p>
           <div>
             <Label className="text-white">
-              {t('Type')}{' '}
-              <code className="text-red-300 inline">{validateText}</code>{' '}
-              {t('to confirm')}:
+              {t("Type")} <code className="text-red-300 inline">{validateText}</code>{" "}
+              {t("to confirm")}:
             </Label>
             <TextInput
               className="input"
@@ -90,12 +87,8 @@ export const DeletePublisherModal: React.FC<DeletePublisherModalProps> = ({
             />
           </div>
           <div className="flex">
-            <Button
-              color="gray"
-              className="w-full text-white bg-gray-800"
-              onClick={onClose}
-            >
-              {t('Cancel')}
+            <Button color="gray" className="w-full text-white bg-gray-800" onClick={onClose}>
+              {t("Cancel")}
             </Button>
             <Button
               color="red"
@@ -103,11 +96,11 @@ export const DeletePublisherModal: React.FC<DeletePublisherModalProps> = ({
               type="submit"
               disabled={validateText !== confirmationText}
             >
-              {t('Delete')}
+              {t("Delete")}
             </Button>
           </div>
         </form>
       </Modal.Body>
     </Modal>
-  )
-}
+  );
+};
