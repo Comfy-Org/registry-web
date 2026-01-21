@@ -20,8 +20,8 @@ AXIOS_INSTANCE.interceptors.request.use(async (config) => {
   const url = config.url || "";
 
   // Check if this is an admin endpoint that requires JWT admin token
-  // This includes ban/unban operations and admin node version updates
-  const requiresAdminJwt = url.includes("/ban") || url.includes("/admin/");
+  // This includes ban/unban operations
+  const requiresAdminJwt = url.includes("/ban");
 
   if (requiresAdminJwt) {
     // Use JWT admin token for admin operations
