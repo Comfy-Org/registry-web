@@ -15,12 +15,12 @@ Administrative interface for managing nodes in the ComfyUI Registry.
 - [x] Add node filtering capabilities by status
 - [x] Create node edit modal
 - [x] Add table columns:
-    - Node (Name + @nodeId)
-    - Publisher (name + publisherId)
-    - Categories
-    - Tags
-    - Node status
-    - Actions (edit button)
+  - Node (Name + @nodeId)
+  - Publisher (name + publisherId)
+  - Categories
+  - Tags
+  - Node status
+  - Actions (edit button)
 - [x] Implement node admin edit modal
 - [x] Add save functionality with ctrl+enter
 - [x] Test pagination and filters

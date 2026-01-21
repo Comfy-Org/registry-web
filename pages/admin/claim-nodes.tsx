@@ -28,14 +28,19 @@ function ClaimNodesPage() {
     router.push(
       { pathname: router.pathname, query: { ...router.query, page } },
       undefined,
-      { shallow: true }
+      {
+        shallow: true,
+      }
     )
   }
 
   // Use the page from router.query for the API call
   const { data, isError, isLoading } = useListNodesForPublisherV2(
     UNCLAIMED_ADMIN_PUBLISHER_ID,
-    { page: currentPage, limit: pageSize }
+    {
+      page: currentPage,
+      limit: pageSize,
+    }
   )
 
   if (isLoading) {

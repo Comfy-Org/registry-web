@@ -14,11 +14,11 @@ on:
   workflow_dispatch:
     inputs:
       pr_numbers:
-        description: 'Comma-separated PR numbers to update (leave empty to update all open PRs)'
+        description: "Comma-separated PR numbers to update (leave empty to update all open PRs)"
         required: false
         type: string
       dry_run:
-        description: 'Dry run mode (just check what would be updated)'
+        description: "Dry run mode (just check what would be updated)"
         required: false
         type: boolean
         default: false

@@ -33,25 +33,25 @@ The application implements a multi-layered caching strategy combining React Quer
 
 ```typescript
 const persistEffect = () => {
-    const [unsubscribe] = persistQueryClient({
-        queryClient: queryClient,
-        persister: createSyncStoragePersister({
-            storage: window.localStorage,
-            key: 'comfy-registry-cache',
-        }),
-        dehydrateOptions: {
-            shouldDehydrateQuery: ({ queryKey, state }) => {
-                // Don't persist pending queries as they can't be properly restored
-                if (state.status === 'pending') return false
+  const [unsubscribe] = persistQueryClient({
+    queryClient: queryClient,
+    persister: createSyncStoragePersister({
+      storage: window.localStorage,
+      key: 'comfy-registry-cache',
+    }),
+    dehydrateOptions: {
+      shouldDehydrateQuery: ({ queryKey, state }) => {
+        // Don't persist pending queries as they can't be properly restored
+        if (state.status === 'pending') return false
 
-                // Persist all successful queries
-                return true
-            },
-        },
-        maxAge: 86400e3, // 1 day in milliseconds
-        buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1',
-    })
-    return unsubscribe
+        // Persist all successful queries
+        return true
+      },
+    },
+    maxAge: 86400e3, // 1 day in milliseconds
+    buster: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? 'v1',
+  })
+  return unsubscribe
 }
 ```
 
@@ -59,16 +59,16 @@ const persistEffect = () => {
 
 ```typescript
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            retry: (failureCount, error: any) => {
-                // Don't retry on 404s
-                if (error?.response?.status === 404) return false
-                // Retry up to 3 times for other errors
-                return failureCount < 3
-            },
-        },
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error: any) => {
+        // Don't retry on 404s
+        if (error?.response?.status === 404) return false
+        // Retry up to 3 times for other errors
+        return failureCount < 3
+      },
     },
+  },
 })
 ```
 
@@ -78,22 +78,22 @@ const queryClient = new QueryClient({
 
 ```typescript
 const updateNodeMutation = useUpdateNode({
-    onSuccess: (updatedNode) => {
-        // Invalidate specific node
-        queryClient.invalidateQueries(['node', updatedNode.id])
+  onSuccess: (updatedNode) => {
+    // Invalidate specific node
+    queryClient.invalidateQueries(['node', updatedNode.id])
 
-        // Invalidate node lists
-        queryClient.invalidateQueries(['nodes'])
+    // Invalidate node lists
+    queryClient.invalidateQueries(['nodes'])
 
-        // Invalidate publisher nodes if applicable
-        if (updatedNode.publisherId) {
-            queryClient.invalidateQueries([
-                'publisher',
-                updatedNode.publisherId,
-                'nodes',
-            ])
-        }
-    },
+    // Invalidate publisher nodes if applicable
+    if (updatedNode.publisherId) {
+      queryClient.invalidateQueries([
+        'publisher',
+        updatedNode.publisherId,
+        'nodes',
+      ])
+    }
+  },
 })
 ```
 
@@ -101,8 +101,8 @@ const updateNodeMutation = useUpdateNode({
 
 ```typescript
 const { data: nodes } = useGetNodes({
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
+  staleTime: 5 * 60 * 1000, // 5 minutes
+  cacheTime: 10 * 60 * 1000, // 10 minutes
 })
 ```
 
@@ -126,13 +126,13 @@ queryClient.invalidateQueries(['user'], { refetchActive: true })
 ```typescript
 // User data
 ;['user'][('user', userId)][ // Current user // Specific user
-    // Nodes
-    'nodes'
-][('nodes', { page, limit, search })][('node', nodeId)][ // All nodes list // Paginated nodes // Specific node
-    ('node', nodeId, 'versions')
-][ // Node versions
-    // Publishers
-    'publishers'
+  // Nodes
+  'nodes'
+][('nodes', { page, limit, search })][('node', nodeId)][
+  ('node', nodeId, 'versions')
+][ // All nodes list // Paginated nodes // Specific node // Node versions
+  // Publishers
+  'publishers'
 ][('publisher', publisherId)][('publisher', publisherId, 'nodes')] // All publishers // Specific publisher // Publisher's nodes
 ```
 
@@ -161,14 +161,14 @@ queryKey: ['publisher', publisherId, 'nodes', params]
 
 ```typescript
 shouldDehydrateQuery: ({ queryKey, state }) => {
-    // Don't persist pending queries
-    if (state.status === 'pending') return false
+  // Don't persist pending queries
+  if (state.status === 'pending') return false
 
-    // Persist successful queries
-    if (state.status === 'success') return true
+  // Persist successful queries
+  if (state.status === 'success') return true
 
-    // Don't persist errors
-    return false
+  // Don't persist errors
+  return false
 }
 ```
 
@@ -198,8 +198,8 @@ shouldDehydrateQuery: ({ queryKey, state }) => {
 
 ```typescript
 const { data } = useGetNodes({
-    staleTime: 5 * 60 * 1000, // Serve from cache for 5 minutes
-    cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
+  staleTime: 5 * 60 * 1000, // Serve from cache for 5 minutes
+  cacheTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
 })
 ```
 
@@ -207,27 +207,27 @@ const { data } = useGetNodes({
 
 ```typescript
 const mutation = useMutation({
-    mutationFn: updateNode,
-    onMutate: async (newNode) => {
-        // Cancel outgoing refetches
-        await queryClient.cancelQueries(['node', newNode.id])
+  mutationFn: updateNode,
+  onMutate: async (newNode) => {
+    // Cancel outgoing refetches
+    await queryClient.cancelQueries(['node', newNode.id])
 
-        // Snapshot previous value
-        const previousNode = queryClient.getQueryData(['node', newNode.id])
+    // Snapshot previous value
+    const previousNode = queryClient.getQueryData(['node', newNode.id])
 
-        // Optimistically update
-        queryClient.setQueryData(['node', newNode.id], newNode)
+    // Optimistically update
+    queryClient.setQueryData(['node', newNode.id], newNode)
 
-        return { previousNode }
-    },
-    onError: (err, newNode, context) => {
-        // Rollback on error
-        queryClient.setQueryData(['node', newNode.id], context.previousNode)
-    },
-    onSettled: (data, error, variables) => {
-        // Refetch after mutation
-        queryClient.invalidateQueries(['node', variables.id])
-    },
+    return { previousNode }
+  },
+  onError: (err, newNode, context) => {
+    // Rollback on error
+    queryClient.setQueryData(['node', newNode.id], context.previousNode)
+  },
+  onSettled: (data, error, variables) => {
+    // Refetch after mutation
+    queryClient.invalidateQueries(['node', variables.id])
+  },
 })
 ```
 
@@ -236,9 +236,9 @@ const mutation = useMutation({
 ```typescript
 // Prefetch related data
 const prefetchNodeVersions = (nodeId: string) => {
-    queryClient.prefetchQuery(['node', nodeId, 'versions'], () =>
-        getNodeVersions(nodeId)
-    )
+  queryClient.prefetchQuery(['node', nodeId, 'versions'], () =>
+    getNodeVersions(nodeId)
+  )
 }
 ```
 
@@ -246,9 +246,9 @@ const prefetchNodeVersions = (nodeId: string) => {
 
 ```typescript
 const { data } = useGetNodes({
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    refetchOnReconnect: true,
+  refetchOnWindowFocus: true,
+  refetchOnMount: true,
+  refetchOnReconnect: true,
 })
 ```
 

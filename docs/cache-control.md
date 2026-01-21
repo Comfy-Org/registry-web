@@ -44,22 +44,22 @@ var comfyNodesListEndpointPattern = regexp.MustCompile(`^/nodes/[^/]+/versions/[
 
 ```typescript
 export const shouldRevalidateRegex = {
-    nodeEndpointPattern: /^\/nodes\/[^/]+$/,
-    nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
-    comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
-    comfyNodesListEndpointPattern:
-        /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
+  nodeEndpointPattern: /^\/nodes\/[^/]+$/,
+  nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
+  comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
+  comfyNodesListEndpointPattern:
+    /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
 }
 
 export const NO_CACHE_HEADERS = {
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    Pragma: 'no-cache',
-    Expires: '0',
+  'Cache-Control': 'no-cache, no-store, must-revalidate',
+  Pragma: 'no-cache',
+  Expires: '0',
 }
 
 export const INVALIDATE_CACHE_OPTION = {
-    query: { staleTime: 0 }, // force refetch
-    request: REQUEST_OPTIONS_NO_CACHE, // add no-cache headers
+  query: { staleTime: 0 }, // force refetch
+  request: REQUEST_OPTIONS_NO_CACHE, // add no-cache headers
 }
 ```
 
@@ -114,15 +114,15 @@ The `shouldInvalidate` helper provides query options with cache-busting capabili
 
 ```typescript
 export const shouldInvalidate = {
-    getGetNodeQueryOptions, // For node details
-    getListNodeVersionsQueryOptions, // For node versions
-    getGetNodeByComfyNodeNameQueryOptions, // For comfy node mapping
-    getListComfyNodesQueryOptions, // For comfy nodes listing
+  getGetNodeQueryOptions, // For node details
+  getListNodeVersionsQueryOptions, // For node versions
+  getGetNodeByComfyNodeNameQueryOptions, // For comfy node mapping
+  getListComfyNodesQueryOptions, // For comfy nodes listing
 }
 
 export const INVALIDATE_CACHE_OPTION = {
-    query: { staleTime: 0 }, // Force React Query refetch
-    request: REQUEST_OPTIONS_NO_CACHE, // Add no-cache HTTP headers
+  query: { staleTime: 0 }, // Force React Query refetch
+  request: REQUEST_OPTIONS_NO_CACHE, // Add no-cache HTTP headers
 }
 ```
 
@@ -130,17 +130,17 @@ export const INVALIDATE_CACHE_OPTION = {
 
 ```typescript
 import {
-    INVALIDATE_CACHE_OPTION,
-    shouldInvalidate,
+  INVALIDATE_CACHE_OPTION,
+  shouldInvalidate,
 } from '@/components/cache-control'
 
 // For cached endpoints (requires cache-busting)
 qc.fetchQuery(
-    shouldInvalidate.getGetNodeQueryOptions(
-        nodeId,
-        undefined,
-        INVALIDATE_CACHE_OPTION
-    )
+  shouldInvalidate.getGetNodeQueryOptions(
+    nodeId,
+    undefined,
+    INVALIDATE_CACHE_OPTION
+  )
 )
 
 // For non-cached endpoints (automatic via interceptors)
@@ -186,45 +186,45 @@ Follow this pattern for operations that modify nodes or node versions:
 
 ```typescript
 import {
-    INVALIDATE_CACHE_OPTION,
-    shouldInvalidate,
+  INVALIDATE_CACHE_OPTION,
+  shouldInvalidate,
 } from '@/components/cache-control'
 import { useQueryClient } from '@tanstack/react-query'
 
 const qc = useQueryClient()
 
 const mutation = useMutationHook({
-    mutation: {
-        onSuccess: (data) => {
-            // STEP 1: Cache-busting for cached endpoints
-            // Force refetch with no-cache headers to bypass CDN/proxy caches
-            qc.fetchQuery(
-                shouldInvalidate.getGetNodeQueryOptions(
-                    nodeId,
-                    undefined,
-                    INVALIDATE_CACHE_OPTION
-                )
-            )
+  mutation: {
+    onSuccess: (data) => {
+      // STEP 1: Cache-busting for cached endpoints
+      // Force refetch with no-cache headers to bypass CDN/proxy caches
+      qc.fetchQuery(
+        shouldInvalidate.getGetNodeQueryOptions(
+          nodeId,
+          undefined,
+          INVALIDATE_CACHE_OPTION
+        )
+      )
 
-            // For node version operations
-            qc.fetchQuery(
-                shouldInvalidate.getListNodeVersionsQueryOptions(
-                    nodeId,
-                    undefined,
-                    INVALIDATE_CACHE_OPTION
-                )
-            )
+      // For node version operations
+      qc.fetchQuery(
+        shouldInvalidate.getListNodeVersionsQueryOptions(
+          nodeId,
+          undefined,
+          INVALIDATE_CACHE_OPTION
+        )
+      )
 
-            // STEP 2: Regular invalidation for non-cached endpoints
-            // These are automatically handled by axios interceptors, but can be explicit
-            ;[
-                getListNodesForPublisherV2QueryKey(publisherId),
-                getSearchNodesQueryKey().slice(0, 1),
-            ].forEach((queryKey) => {
-                qc.invalidateQueries({ queryKey })
-            })
-        },
+      // STEP 2: Regular invalidation for non-cached endpoints
+      // These are automatically handled by axios interceptors, but can be explicit
+      ;[
+        getListNodesForPublisherV2QueryKey(publisherId),
+        getSearchNodesQueryKey().slice(0, 1),
+      ].forEach((queryKey) => {
+        qc.invalidateQueries({ queryKey })
+      })
     },
+  },
 })
 ```
 
@@ -238,7 +238,7 @@ Most endpoints are automatically handled by axios interceptors. No manual invali
 // - POST/DELETE: Invalidates endpoint + parent list cache
 
 const mutation = useMutationHook({
-    // No manual onSuccess needed for non-cached endpoints
+  // No manual onSuccess needed for non-cached endpoints
 })
 ```
 
@@ -346,18 +346,18 @@ All mutation operations now properly implement cache invalidation:
 The application now implements a comprehensive **hybrid cache control strategy**:
 
 1. **Automatic Cache Invalidation** via axios response interceptors in `_app.tsx`
-    - Handles 90% of endpoints automatically
-    - PUT/PATCH requests → Invalidates specific endpoint
-    - POST/DELETE requests → Invalidates endpoint + parent list
+   - Handles 90% of endpoints automatically
+   - PUT/PATCH requests → Invalidates specific endpoint
+   - POST/DELETE requests → Invalidates endpoint + parent list
 
 2. **Manual Cache-Busting** for CDN-cached endpoints via `cache-control.tsx`
-    - 4 critical endpoints require explicit no-cache headers
-    - Bypasses CDN/proxy caches to ensure immediate data freshness
-    - Uses `shouldInvalidate` helper with `INVALIDATE_CACHE_OPTION`
+   - 4 critical endpoints require explicit no-cache headers
+   - Bypasses CDN/proxy caches to ensure immediate data freshness
+   - Uses `shouldInvalidate` helper with `INVALIDATE_CACHE_OPTION`
 
 3. **Complete Coverage**: All mutation operations properly implemented
-    - ✅ 11/11 cache-busted endpoints implemented
-    - ✅ Automatic handling for all other endpoints
-    - ✅ Cross-tab data consistency achieved
+   - ✅ 11/11 cache-busted endpoints implemented
+   - ✅ Automatic handling for all other endpoints
+   - ✅ Cross-tab data consistency achieved
 
 This strategy ensures **immediate data consistency** across the application while maintaining **optimal performance** through intelligent caching.

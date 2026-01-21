@@ -28,7 +28,9 @@ export default function MailtoNodeVersionModal({
   )
   const { data: publisher, isLoading: publisherLoading } = useGetPublisher(
     node?.id ?? '',
-    { query: { enabled: !!node?.id } }
+    {
+      query: { enabled: !!node?.id },
+    }
   )
 
   const newIssueLink = !node?.repository

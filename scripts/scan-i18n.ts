@@ -28,8 +28,8 @@ async function findTsxFiles(): Promise<string[]> {
     cwd: ROOT_DIR,
     ignore: [
       '**/node_modules/**',
-      '**/\.git/**',
-      '**/\.next/**',
+      '**/.git/**',
+      '**/.next/**',
       '**/dist/**',
       '**/build/**',
       '**/public/**',
