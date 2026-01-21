@@ -343,6 +343,7 @@
   "Repository": "リポジトリ",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "リポジトリ {{owner}}/{{repo}} が見つからないか、アクセスできません。",
   "Request support for new languages": "新しい言語のサポートをリクエスト",
+  "Retrying operation with new JWT token...": "新しいJWTトークンで操作を再試行中...",
   "Review Flagged Versions": "フラグ付きバージョンをレビュー",
   "Review Node Versions": "ノードバージョンのレビュー",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG、PNG、JPGまたはGIF（最大800x400px）",

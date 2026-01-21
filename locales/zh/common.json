@@ -343,6 +343,7 @@
   "Repository": "仓库",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "未找到仓库 {{owner}}/{{repo}} 或您没有访问权限。",
   "Request support for new languages": "请求支持新语言",
+  "Retrying operation with new JWT token...": "使用新的 JWT 令牌重试操作...",
   "Review Flagged Versions": "审核已标记的版本",
   "Review Node Versions": "审核节点版本",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG，PNG，JPG 或 GIF (最大 800x400px)",

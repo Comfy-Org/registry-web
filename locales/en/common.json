@@ -343,6 +343,7 @@
   "Repository": "Repository",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "Repository {{owner}}/{{repo}} not found or you do not have access to it.",
   "Request support for new languages": "Request support for new languages",
+  "Retrying operation with new JWT token...": "Retrying operation with new JWT token...",
   "Review Flagged Versions": "Review Flagged Versions",
   "Review Node Versions": "Review Node Versions",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG, PNG, JPG or GIF (MAX. 800x400px)",
