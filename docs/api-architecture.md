@@ -53,11 +53,11 @@ All API interactions use generated hooks:
 
 ```typescript
 retry: (failureCount, error: any) => {
-    // Don't retry on 404s
-    if (error?.response?.status === 404) return false
+  // Don't retry on 404s
+  if (error?.response?.status === 404) return false
 
-    // Retry up to 3 times for other errors
-    return failureCount < 3
+  // Retry up to 3 times for other errors
+  return failureCount < 3
 }
 ```
 
@@ -79,12 +79,12 @@ const { data: user, isLoading, error } = useGetUser({})
 
 ```typescript
 const createNodeMutation = useCreateNode({
-    onSuccess: (data) => {
-        // Handle success
-    },
-    onError: (error) => {
-        // Handle error
-    },
+  onSuccess: (data) => {
+    // Handle success
+  },
+  onError: (error) => {
+    // Handle error
+  },
 })
 ```
 
@@ -92,8 +92,8 @@ const createNodeMutation = useCreateNode({
 
 ```typescript
 const { data: nodes } = useGetNodes({
-    page: currentPage,
-    limit: pageSize,
+  page: currentPage,
+  limit: pageSize,
 })
 ```
 

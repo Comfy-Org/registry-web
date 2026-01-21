@@ -89,7 +89,7 @@ function NodeVersionList({}) {
     banned: t('Banned'),
     active: t('Active'),
   }
-  const allFlags = [...Object.values(flags)].sort()
+  const allFlags = Object.values(flags).sort()
 
   const defaultSelectedStatus = [
     (router.query as any)?.filter ?? Object.keys(flags),

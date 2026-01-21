@@ -79,7 +79,7 @@ function NodeList() {
     deleted: t('Deleted'),
   }
 
-  const allStatuses = [...Object.values(statusFlags)].sort()
+  const allStatuses = Object.values(statusFlags).sort()
 
   const defaultSelectedStatuses = [
     (router.query as any)?.status ?? Object.keys(statusFlags),

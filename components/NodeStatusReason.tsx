@@ -296,10 +296,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                     nv.status_reason
                   }${
                     zStatusReason.safeParse(nv.status_reason).data?.batchId
-                      ? ` [Batch: ${
-                          zStatusReason.safeParse(nv.status_reason).data
-                            ?.batchId
-                        }]`
+                      ? ` [Batch: ${zStatusReason.safeParse(nv.status_reason).data?.batchId}]`
                       : ''
                   }`}
                 >
@@ -323,10 +320,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                       nv.status_reason
                     }${
                       zStatusReason.safeParse(nv.status_reason).data?.batchId
-                        ? ` [Batch: ${
-                            zStatusReason.safeParse(nv.status_reason).data
-                              ?.batchId
-                          }]`
+                        ? ` [Batch: ${zStatusReason.safeParse(nv.status_reason).data?.batchId}]`
                         : ''
                     }`}
                   >

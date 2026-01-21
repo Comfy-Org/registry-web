@@ -44,7 +44,9 @@ export default function Autocomplete({
   const { refine: setPage } = usePagination()
 
   const [instantSearchUiState, setInstantSearchUiState] =
-    useState<SetInstantSearchUiStateOptions>({ query })
+    useState<SetInstantSearchUiStateOptions>({
+      query,
+    })
   const debouncedSetInstantSearchUiState = debounce(
     setInstantSearchUiState,
     500

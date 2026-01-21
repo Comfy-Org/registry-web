@@ -25,7 +25,11 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
   const [page, setPage] = React.useState(1)
   const { data, isError, isLoading } = useListNodesForPublisherV2(
     publisher.id as string,
-    { page, include_banned, limit: 12 }
+    {
+      page,
+      include_banned,
+      limit: 12,
+    }
   )
 
   return (

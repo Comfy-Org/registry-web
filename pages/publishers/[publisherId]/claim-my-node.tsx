@@ -312,7 +312,7 @@ function ClaimMyNodePage() {
 
     // Extract GitHub owner and repo from URL
     // For example: https://github.com/owner/repo
-    const repoMatch = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/)
+    const repoMatch = repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/)
     if (!repoMatch) {
       setError(t('Invalid GitHub repository URL format.'))
       return
@@ -403,7 +403,7 @@ function ClaimMyNodePage() {
 
     // Extract repo information
     const repoUrl = node.repository
-    const repoMatch = repoUrl!.match(/github\.com\/([^\/]+)\/([^\/]+)/)
+    const repoMatch = repoUrl!.match(/github\.com\/([^/]+)\/([^/]+)/)
     if (!repoMatch) {
       setError(t('Invalid GitHub repository URL format.'))
       setIsVerifying(false)
