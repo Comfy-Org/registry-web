@@ -343,6 +343,7 @@
   "Repository": "Репозиторий",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "Репозиторий {{owner}}/{{repo}} не найден или у вас нет доступа к нему.",
   "Request support for new languages": "Запросить поддержку новых языков",
+  "Retrying operation with new JWT token...": "Повторная попытка операции с новым JWT токеном...",
   "Review Flagged Versions": "Проверить отмеченные версии",
   "Review Node Versions": "Проверить версии узла",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG, PNG, JPG или GIF (МАКС. 800x400px)",

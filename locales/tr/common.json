@@ -343,6 +343,7 @@
   "Repository": "Depo",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "Depo {{owner}}/{{repo}} bulunamadı veya buna erişiminiz yok.",
   "Request support for new languages": "Yeni diller için destek talep et",
+  "Retrying operation with new JWT token...": "Yeni JWT belirteci ile işlem yeniden deneniyor...",
   "Review Flagged Versions": "İşaretlenen Sürümleri İncele",
   "Review Node Versions": "Düğüm Sürümlerini İncele",
   "SVG, PNG, JPG or GIF (MAX. 800x400px)": "SVG, PNG, JPG veya GIF (MAKS. 800x400px)",
