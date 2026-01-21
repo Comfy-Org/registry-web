@@ -1,121 +1,101 @@
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { Button, Card, Label, TextInput } from 'flowbite-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import {
-  useSignInWithGithub,
-  useSignInWithGoogle,
-} from 'react-firebase-hooks/auth'
-import { toast } from 'react-toastify'
-import analytic from 'src/analytic/analytic'
-import logoBluePng from '@/src/assets/images/logo_blue.png'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
-import app from '../../src/firebase'
-import { useFromUrl } from '../common/HOC/useFromUrl'
-import LanguageSwitcher from '../common/LanguageSwitcher'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Button, Card, Label, TextInput } from "flowbite-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { useSignInWithGithub, useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
+import analytic from "src/analytic/analytic";
+import logoBluePng from "@/src/assets/images/logo_blue.png";
+import { useNextTranslation } from "@/src/hooks/i18n";
+import { useFirebaseUser } from "@/src/hooks/useFirebaseUser";
+import app from "../../src/firebase";
+import { useFromUrl } from "../common/HOC/useFromUrl";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 
 const AuthUI: React.FC<{}> = ({}) => {
-  const { t } = useNextTranslation()
-  const router = useRouter()
-  const auth = getAuth(app)
+  const { t } = useNextTranslation();
+  const router = useRouter();
+  const auth = getAuth(app);
   // Email/password form state
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [emailSignInLoading, setEmailSignInLoading] = useState(false)
-  const [showEmailForm, setShowEmailForm] = useState(false)
-  const [
-    signInWithGoogle,
-    _googleUser,
-    _loadingGoogleSignin,
-    googleSignInError,
-  ] = useSignInWithGoogle(auth)
-  const [
-    signInWithGithub,
-    _githubUser,
-    _loadingGithubSignIn,
-    githubSignInError,
-  ] = useSignInWithGithub(auth)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailSignInLoading, setEmailSignInLoading] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [signInWithGoogle, _googleUser, _loadingGoogleSignin, googleSignInError] =
+    useSignInWithGoogle(auth);
+  const [signInWithGithub, _githubUser, _loadingGithubSignIn, githubSignInError] =
+    useSignInWithGithub(auth);
 
   // redirect back when user is logged in
-  const [firebaseUser, _loadingFirebaseUser] = useFirebaseUser()
-  const loggedIn = Boolean(firebaseUser)
-  const fromUrl = useFromUrl()
+  const [firebaseUser, _loadingFirebaseUser] = useFirebaseUser();
+  const loggedIn = Boolean(firebaseUser);
+  const fromUrl = useFromUrl();
   React.useEffect(() => {
-    if (loggedIn) router.push(fromUrl ?? '/nodes')
-  }, [loggedIn, router, fromUrl])
+    if (loggedIn) router.push(fromUrl ?? "/nodes");
+  }, [loggedIn, router, fromUrl]);
 
   // Email/password sign-in handler
   const handleEmailSignIn = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Basic validation
     if (!email) {
-      toast.error(t('Email is required'))
-      return
+      toast.error(t("Email is required"));
+      return;
     }
     if (!password) {
-      toast.error(t('Password is required'))
-      return
+      toast.error(t("Password is required"));
+      return;
     }
     if (password.length < 6) {
-      toast.error(t('Password must be at least 6 characters'))
-      return
+      toast.error(t("Password must be at least 6 characters"));
+      return;
     }
 
-    setEmailSignInLoading(true)
+    setEmailSignInLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password)
-      analytic.track('Sign In', { provider: 'Email' })
-      toast.success(t('Sign In successful'))
+      await signInWithEmailAndPassword(auth, email, password);
+      analytic.track("Sign In", { provider: "Email" });
+      toast.success(t("Sign In successful"));
     } catch (error: any) {
-      console.error('Email sign-in error:', error)
-      if (error.code === 'auth/user-not-found') {
-        toast.error(t('No account found with this email'))
-      } else if (error.code === 'auth/wrong-password') {
-        toast.error(t('Incorrect password'))
-      } else if (error.code === 'auth/invalid-email') {
-        toast.error(t('Invalid email format'))
-      } else if (error.code === 'auth/too-many-requests') {
-        toast.error(t('Too many failed attempts. Please try again later'))
+      console.error("Email sign-in error:", error);
+      if (error.code === "auth/user-not-found") {
+        toast.error(t("No account found with this email"));
+      } else if (error.code === "auth/wrong-password") {
+        toast.error(t("Incorrect password"));
+      } else if (error.code === "auth/invalid-email") {
+        toast.error(t("Invalid email format"));
+      } else if (error.code === "auth/too-many-requests") {
+        toast.error(t("Too many failed attempts. Please try again later"));
       } else {
-        toast.error(
-          error.message ||
-            t('An unexpected error occurred. Please try again later.')
-        )
+        toast.error(error.message || t("An unexpected error occurred. Please try again later."));
       }
     } finally {
-      setEmailSignInLoading(false)
+      setEmailSignInLoading(false);
     }
-  }
+  };
 
   // handle errors
   React.useEffect(() => {
     if (googleSignInError) {
-      if (
-        googleSignInError.code ===
-        'auth/account-exists-with-different-credential'
-      ) {
-        toast.error(t('Account already exists with different credential'))
+      if (googleSignInError.code === "auth/account-exists-with-different-credential") {
+        toast.error(t("Account already exists with different credential"));
       } else {
-        toast.error(googleSignInError?.message)
-        console.log(googleSignInError)
+        toast.error(googleSignInError?.message);
+        console.log(googleSignInError);
       }
     }
     if (githubSignInError) {
-      if (
-        githubSignInError.code ===
-        'auth/account-exists-with-different-credential'
-      ) {
-        toast.error(t('Account already exists with different credential'))
+      if (githubSignInError.code === "auth/account-exists-with-different-credential") {
+        toast.error(t("Account already exists with different credential"));
       } else {
-        toast.error(githubSignInError?.message)
-        console.log(githubSignInError)
+        toast.error(githubSignInError?.message);
+        console.log(githubSignInError);
       }
     }
-  }, [t, googleSignInError, githubSignInError])
+  }, [t, googleSignInError, githubSignInError]);
 
   return (
     <section>
@@ -126,7 +106,7 @@ const AuthUI: React.FC<{}> = ({}) => {
       <div className="flex items-center justify-center max-w-screen-xl px-4 py-16 mx-auto lg:grid lg:grid-cols-12 lg:gap-20 h-[100vh]">
         <div className="w-full col-span-12 mx-auto shadow bg-white-900 sm:max-w-lg md:mt-0 xl:p-0">
           <Card className="max-w-md p-2 bg-gray-800 border border-gray-700 md:p-8 rounded-2xl">
-            <Link className="flex justify-center" href={'/'}>
+            <Link className="flex justify-center" href={"/"}>
               <Image
                 alt="Comfy Logo"
                 src={logoBluePng}
@@ -138,7 +118,7 @@ const AuthUI: React.FC<{}> = ({}) => {
             </Link>
 
             <h1 className="flex justify-center mt-10 text-3xl font-bold text-white ">
-              {t('Sign In')}
+              {t("Sign In")}
             </h1>
 
             {!showEmailForm ? (
@@ -149,10 +129,10 @@ const AuthUI: React.FC<{}> = ({}) => {
                     href="#"
                     className="font-bold "
                     onClick={() => {
-                      analytic.track('Sign In', {
-                        provider: 'Google',
-                      })
-                      signInWithGoogle()
+                      analytic.track("Sign In", {
+                        provider: "Google",
+                      });
+                      signInWithGoogle();
                     }}
                   >
                     <svg
@@ -181,18 +161,11 @@ const AuthUI: React.FC<{}> = ({}) => {
                       </g>
                       <defs>
                         <clipPath id="clip0_13183_10121">
-                          <rect
-                            width="20"
-                            height="20"
-                            fill="white"
-                            transform="translate(0.5)"
-                          />
+                          <rect width="20" height="20" fill="white" transform="translate(0.5)" />
                         </clipPath>
                       </defs>
                     </svg>
-                    <span className="text-gray-900">
-                      {t('Continue with Google')}
-                    </span>
+                    <span className="text-gray-900">{t("Continue with Google")}</span>
                   </Button>
                 </div>
                 <Button
@@ -200,10 +173,10 @@ const AuthUI: React.FC<{}> = ({}) => {
                   href="#"
                   className="mt-2 font-bold hover:bg-gray-50"
                   onClick={() => {
-                    analytic.track('Sign In', {
-                      provider: 'Github',
-                    })
-                    signInWithGithub(['user:email'])
+                    analytic.track("Sign In", {
+                      provider: "Github",
+                    });
+                    signInWithGithub(["user:email"]);
                   }}
                 >
                   <svg
@@ -221,15 +194,11 @@ const AuthUI: React.FC<{}> = ({}) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-900">
-                    {t('Continue with GitHub')}
-                  </span>
+                  <span className="text-gray-900">{t("Continue with GitHub")}</span>
                 </Button>
 
                 <div className="mt-4 text-center">
-                  <span className="text-gray-400">
-                    {t('Or sign in with email')}
-                  </span>
+                  <span className="text-gray-400">{t("Or sign in with email")}</span>
                 </div>
 
                 <Button
@@ -237,49 +206,37 @@ const AuthUI: React.FC<{}> = ({}) => {
                   className="mt-2 w-full"
                   onClick={() => setShowEmailForm(true)}
                 >
-                  {t('Sign In with Email')}
+                  {t("Sign In with Email")}
                 </Button>
               </>
             ) : (
               <form onSubmit={handleEmailSignIn} className="mt-10 space-y-4">
                 <div>
-                  <Label
-                    htmlFor="email"
-                    value={t('Email address')}
-                    className="text-white"
-                  />
+                  <Label htmlFor="email" value={t("Email address")} className="text-white" />
                   <TextInput
                     id="email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t('Enter your email')}
+                    placeholder={t("Enter your email")}
                     required
                     className="mt-1"
                   />
                 </div>
                 <div>
-                  <Label
-                    htmlFor="password"
-                    value={t('Password')}
-                    className="text-white"
-                  />
+                  <Label htmlFor="password" value={t("Password")} className="text-white" />
                   <TextInput
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder={t('Enter your password')}
+                    placeholder={t("Enter your password")}
                     required
                     className="mt-1"
                   />
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={emailSignInLoading}
-                >
-                  {emailSignInLoading ? t('Signing in...') : t('Sign In')}
+                <Button type="submit" className="w-full" disabled={emailSignInLoading}>
+                  {emailSignInLoading ? t("Signing in...") : t("Sign In")}
                 </Button>
                 <Button
                   type="button"
@@ -287,7 +244,7 @@ const AuthUI: React.FC<{}> = ({}) => {
                   className="w-full"
                   onClick={() => setShowEmailForm(false)}
                 >
-                  {t('Back to social login')}
+                  {t("Back to social login")}
                 </Button>
               </form>
             )}
@@ -295,7 +252,7 @@ const AuthUI: React.FC<{}> = ({}) => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default AuthUI
+export default AuthUI;

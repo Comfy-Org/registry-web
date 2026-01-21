@@ -47,20 +47,19 @@ export const shouldRevalidateRegex = {
   nodeEndpointPattern: /^\/nodes\/[^/]+$/,
   nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
   comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
-  comfyNodesListEndpointPattern:
-    /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
-}
+  comfyNodesListEndpointPattern: /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
+};
 
 export const NO_CACHE_HEADERS = {
-  'Cache-Control': 'no-cache, no-store, must-revalidate',
-  Pragma: 'no-cache',
-  Expires: '0',
-}
+  "Cache-Control": "no-cache, no-store, must-revalidate",
+  Pragma: "no-cache",
+  Expires: "0",
+};
 
 export const INVALIDATE_CACHE_OPTION = {
   query: { staleTime: 0 }, // force refetch
   request: REQUEST_OPTIONS_NO_CACHE, // add no-cache headers
-}
+};
 ```
 
 ### Cached Endpoints Requiring Manual Cache-Busting
@@ -118,33 +117,24 @@ export const shouldInvalidate = {
   getListNodeVersionsQueryOptions, // For node versions
   getGetNodeByComfyNodeNameQueryOptions, // For comfy node mapping
   getListComfyNodesQueryOptions, // For comfy nodes listing
-}
+};
 
 export const INVALIDATE_CACHE_OPTION = {
   query: { staleTime: 0 }, // Force React Query refetch
   request: REQUEST_OPTIONS_NO_CACHE, // Add no-cache HTTP headers
-}
+};
 ```
 
 **Usage Pattern:**
 
 ```typescript
-import {
-  INVALIDATE_CACHE_OPTION,
-  shouldInvalidate,
-} from '@/components/cache-control'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
 
 // For cached endpoints (requires cache-busting)
-qc.fetchQuery(
-  shouldInvalidate.getGetNodeQueryOptions(
-    nodeId,
-    undefined,
-    INVALIDATE_CACHE_OPTION
-  )
-)
+qc.fetchQuery(shouldInvalidate.getGetNodeQueryOptions(nodeId, undefined, INVALIDATE_CACHE_OPTION));
 
 // For non-cached endpoints (automatic via interceptors)
-qc.invalidateQueries({ queryKey: [pathname] })
+qc.invalidateQueries({ queryKey: [pathname] });
 ```
 
 ## Mutation Operations and Cache Invalidation Implementation
@@ -185,13 +175,10 @@ The following components properly implement manual cache-busting for cached endp
 Follow this pattern for operations that modify nodes or node versions:
 
 ```typescript
-import {
-  INVALIDATE_CACHE_OPTION,
-  shouldInvalidate,
-} from '@/components/cache-control'
-import { useQueryClient } from '@tanstack/react-query'
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
+import { useQueryClient } from "@tanstack/react-query";
 
-const qc = useQueryClient()
+const qc = useQueryClient();
 
 const mutation = useMutationHook({
   mutation: {
@@ -199,33 +186,29 @@ const mutation = useMutationHook({
       // STEP 1: Cache-busting for cached endpoints
       // Force refetch with no-cache headers to bypass CDN/proxy caches
       qc.fetchQuery(
-        shouldInvalidate.getGetNodeQueryOptions(
-          nodeId,
-          undefined,
-          INVALIDATE_CACHE_OPTION
-        )
-      )
+        shouldInvalidate.getGetNodeQueryOptions(nodeId, undefined, INVALIDATE_CACHE_OPTION),
+      );
 
       // For node version operations
       qc.fetchQuery(
         shouldInvalidate.getListNodeVersionsQueryOptions(
           nodeId,
           undefined,
-          INVALIDATE_CACHE_OPTION
-        )
-      )
+          INVALIDATE_CACHE_OPTION,
+        ),
+      );
 
       // STEP 2: Regular invalidation for non-cached endpoints
       // These are automatically handled by axios interceptors, but can be explicit
-      ;[
+      [
         getListNodesForPublisherV2QueryKey(publisherId),
         getSearchNodesQueryKey().slice(0, 1),
       ].forEach((queryKey) => {
-        qc.invalidateQueries({ queryKey })
-      })
+        qc.invalidateQueries({ queryKey });
+      });
     },
   },
-})
+});
 ```
 
 ### For Non-Cached Endpoints (Automatic via Interceptors)
@@ -239,7 +222,7 @@ Most endpoints are automatically handled by axios interceptors. No manual invali
 
 const mutation = useMutationHook({
   // No manual onSuccess needed for non-cached endpoints
-})
+});
 ```
 
 ## Endpoint Classification

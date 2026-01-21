@@ -25,8 +25,8 @@ Create a JWT token management system that:
 
 ```typescript
 {
-  token: string // JWT admin token
-  expires_at: string // ISO 8601 timestamp
+  token: string; // JWT admin token
+  expires_at: string; // ISO 8601 timestamp
 }
 ```
 
@@ -73,9 +73,9 @@ Create a JWT token management system that:
 
 ```typescript
 interface AdminJwtTokenModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onTokenGenerated?: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onTokenGenerated?: () => void;
 }
 ```
 
@@ -126,13 +126,13 @@ interface AdminJwtTokenModalProps {
 **Pseudo-code:**
 
 ```typescript
-if (url.includes('/ban')) {
-  const adminToken = getAdminJwtToken()
+if (url.includes("/ban")) {
+  const adminToken = getAdminJwtToken();
   if (adminToken && isAdminJwtTokenValid()) {
-    config.headers.Authorization = `Bearer ${adminToken}`
+    config.headers.Authorization = `Bearer ${adminToken}`;
   } else {
     // Will be caught by error handler
-    throw new Error('ADMIN_JWT_REQUIRED')
+    throw new Error("ADMIN_JWT_REQUIRED");
   }
 }
 ```

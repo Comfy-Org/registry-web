@@ -1,23 +1,23 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { fn } from '@storybook/test'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { User as FirebaseUser } from 'firebase/auth'
-import { HttpResponse, http } from 'msw'
-import ClaimMyNodePage from '@/pages/publishers/[publisherId]/claim-my-node'
-import { Node, Publisher, User } from '@/src/api/generated'
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
-import { useFirebaseUser } from '@/src/hooks/useFirebaseUser.mock'
-import { CAPI } from '@/src/mocks/apibase'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { fn } from "@storybook/test";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { User as FirebaseUser } from "firebase/auth";
+import { HttpResponse, http } from "msw";
+import ClaimMyNodePage from "@/pages/publishers/[publisherId]/claim-my-node";
+import { Node, Publisher, User } from "@/src/api/generated";
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from "@/src/constants";
+import { useFirebaseUser } from "@/src/hooks/useFirebaseUser.mock";
+import { CAPI } from "@/src/mocks/apibase";
 
 // Mock next/router
 const mockRouter = {
-  pathname: '/publishers/[publisherId]/claim-my-node',
-  route: '/publishers/[publisherId]/claim-my-node',
+  pathname: "/publishers/[publisherId]/claim-my-node",
+  route: "/publishers/[publisherId]/claim-my-node",
   query: {
-    publisherId: 'publisher-1',
-    nodeId: 'sample-node-1',
+    publisherId: "publisher-1",
+    nodeId: "sample-node-1",
   },
-  asPath: '/publishers/publisher-1/claim-my-node?nodeId=sample-node-1',
+  asPath: "/publishers/publisher-1/claim-my-node?nodeId=sample-node-1",
   push: fn(),
   replace: fn(),
   reload: fn(),
@@ -33,130 +33,127 @@ const mockRouter = {
   isLocaleDomain: false,
   isPreview: false,
   isReady: true,
-  defaultLocale: 'en',
+  defaultLocale: "en",
   domainLocales: [],
-  locales: ['en'],
-  locale: 'en',
-  basePath: '',
-}
+  locales: ["en"],
+  locale: "en",
+  basePath: "",
+};
 
 // Sample data
 const sampleNode: Node = {
-  id: 'sample-node-1',
-  name: 'Sample Custom Node',
-  description: 'A sample ComfyUI custom node for testing purposes',
-  icon: 'https://via.placeholder.com/200',
+  id: "sample-node-1",
+  name: "Sample Custom Node",
+  description: "A sample ComfyUI custom node for testing purposes",
+  icon: "https://via.placeholder.com/200",
   downloads: 1250,
   rating: 4.5,
-  repository: 'https://github.com/sample-user/sample-comfy-node',
+  repository: "https://github.com/sample-user/sample-comfy-node",
   publisher: {
     id: UNCLAIMED_ADMIN_PUBLISHER_ID,
-    name: 'Unclaimed Admin',
+    name: "Unclaimed Admin",
   },
-}
+};
 
 const samplePublisher: Publisher = {
-  id: 'publisher-1',
-  name: 'My Publisher',
-  description: 'My primary publisher account',
-}
+  id: "publisher-1",
+  name: "My Publisher",
+  description: "My primary publisher account",
+};
 
 const sampleUser: User = {
-  id: 'user-1',
-  name: 'Sample User',
-  email: 'user@example.com',
-}
+  id: "user-1",
+  name: "Sample User",
+  email: "user@example.com",
+};
 
 // Mock Firebase user data
 const mockFirebaseUser = {
-  uid: 'firebase-user-123',
-  email: 'user@example.com',
-  displayName: 'Sample User',
-  photoURL: 'https://picsum.photos/40/40',
+  uid: "firebase-user-123",
+  email: "user@example.com",
+  displayName: "Sample User",
+  photoURL: "https://picsum.photos/40/40",
   emailVerified: true,
   isAnonymous: false,
   metadata: {},
   providerData: [],
-  refreshToken: '',
+  refreshToken: "",
   tenantId: null,
   delete: async () => undefined,
-  getIdToken: async () => '',
+  getIdToken: async () => "",
   getIdTokenResult: async () => ({}) as any,
   reload: async () => undefined,
   toJSON: () => ({}),
   phoneNumber: null,
-  providerId: 'google',
-} satisfies FirebaseUser
+  providerId: "google",
+} satisfies FirebaseUser;
 
 // MSW handlers for different scenarios
 const createHandlers = (
-  scenario: 'default' | 'loading' | 'without-repository' | 'already-claimed'
+  scenario: "default" | "loading" | "without-repository" | "already-claimed",
 ) => {
   const baseHandlers = [
     // User endpoint
-    http.get(CAPI('/users'), () => {
-      return HttpResponse.json(sampleUser)
+    http.get(CAPI("/users"), () => {
+      return HttpResponse.json(sampleUser);
     }),
 
     // Publisher endpoint
-    http.get(CAPI('/publishers/publisher-1'), () => {
-      return HttpResponse.json(samplePublisher)
+    http.get(CAPI("/publishers/publisher-1"), () => {
+      return HttpResponse.json(samplePublisher);
     }),
 
     // Claim node endpoint
-    http.post(
-      CAPI('/publishers/publisher-1/nodes/sample-node-1/claim-my-node'),
-      () => {
-        return HttpResponse.json({ success: true })
-      }
-    ),
-  ]
+    http.post(CAPI("/publishers/publisher-1/nodes/sample-node-1/claim-my-node"), () => {
+      return HttpResponse.json({ success: true });
+    }),
+  ];
 
   // Node endpoint - varies by scenario
   const nodeHandler = (() => {
     switch (scenario) {
-      case 'loading':
-        return http.get(CAPI('/nodes/sample-node-1'), () => {
-          return new Promise(() => {}) // Never resolves to simulate loading
-        })
-      case 'without-repository':
-        return http.get(CAPI('/nodes/sample-node-1'), () => {
+      case "loading":
+        return http.get(CAPI("/nodes/sample-node-1"), () => {
+          return new Promise(() => {}); // Never resolves to simulate loading
+        });
+      case "without-repository":
+        return http.get(CAPI("/nodes/sample-node-1"), () => {
           return HttpResponse.json({
             ...sampleNode,
             repository: undefined,
-          })
-        })
-      case 'already-claimed':
-        return http.get(CAPI('/nodes/sample-node-1'), () => {
+          });
+        });
+      case "already-claimed":
+        return http.get(CAPI("/nodes/sample-node-1"), () => {
           return HttpResponse.json({
             ...sampleNode,
             publisher: {
-              id: 'existing-publisher',
-              name: 'Existing Publisher',
+              id: "existing-publisher",
+              name: "Existing Publisher",
             },
-          })
-        })
+          });
+        });
       default:
-        return http.get(CAPI('/nodes/sample-node-1'), () => {
-          return HttpResponse.json(sampleNode)
-        })
+        return http.get(CAPI("/nodes/sample-node-1"), () => {
+          return HttpResponse.json(sampleNode);
+        });
     }
-  })()
+  })();
 
-  return [nodeHandler, ...baseHandlers]
-}
+  return [nodeHandler, ...baseHandlers];
+};
 
 const meta: Meta<typeof ClaimMyNodePage> = {
-  title: 'Pages/ClaimMyNodePage',
+  title: "Pages/ClaimMyNodePage",
   component: ClaimMyNodePage,
   parameters: {
-    layout: 'fullscreen',
-    backgrounds: { default: 'dark' },
+    layout: "fullscreen",
+    backgrounds: { default: "dark" },
     nextjs: {
       router: mockRouter,
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => {
       const queryClient = new QueryClient({
@@ -166,76 +163,76 @@ const meta: Meta<typeof ClaimMyNodePage> = {
             staleTime: 0,
           },
         },
-      })
+      });
 
       return (
         <QueryClientProvider client={queryClient}>
           <Story />
         </QueryClientProvider>
-      )
+      );
     },
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof ClaimMyNodePage>
+export default meta;
+type Story = StoryObj<typeof ClaimMyNodePage>;
 
 export const InitialStage: Story = {
   parameters: {
     msw: {
-      handlers: createHandlers('default'),
+      handlers: createHandlers("default"),
     },
   },
   beforeEach: () => {
     // Mock Firebase user as logged in
-    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined]);
   },
-}
+};
 
 export const Loading: Story = {
   parameters: {
     msw: {
-      handlers: createHandlers('loading'),
+      handlers: createHandlers("loading"),
     },
   },
   beforeEach: () => {
     // Mock Firebase user as logged in
-    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined]);
   },
-}
+};
 
 export const WithoutRepository: Story = {
   parameters: {
     msw: {
-      handlers: createHandlers('without-repository'),
+      handlers: createHandlers("without-repository"),
     },
   },
   beforeEach: () => {
     // Mock Firebase user as logged in
-    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined]);
   },
-}
+};
 
 export const AlreadyClaimed: Story = {
   parameters: {
     msw: {
-      handlers: createHandlers('already-claimed'),
+      handlers: createHandlers("already-claimed"),
     },
   },
   beforeEach: () => {
     // Mock Firebase user as logged in
-    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined])
+    useFirebaseUser.mockReturnValue([mockFirebaseUser, false, undefined]);
   },
-}
+};
 
 export const NotLoggedIn: Story = {
   parameters: {
     msw: {
-      handlers: createHandlers('default'),
+      handlers: createHandlers("default"),
     },
   },
   beforeEach: () => {
     // Mock Firebase user as not logged in
-    useFirebaseUser.mockReturnValue([null, false, undefined])
+    useFirebaseUser.mockReturnValue([null, false, undefined]);
   },
-}
+};

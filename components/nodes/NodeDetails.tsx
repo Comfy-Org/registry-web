@@ -1,18 +1,15 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { intlFormatDistance } from 'date-fns'
-import download from 'downloadjs'
-import { Button, Label, Spinner } from 'flowbite-react'
-import Image from 'next/image'
-import { useRouter } from 'next/router'
-import React, { ReactNode, useState } from 'react'
-import { HiTrash } from 'react-icons/hi'
-import { MdEdit, MdOpenInNew } from 'react-icons/md'
-import { toast } from 'react-toastify'
-import analytic from 'src/analytic/analytic'
-import {
-  REQUEST_OPTIONS_NO_CACHE,
-  UNCLAIMED_ADMIN_PUBLISHER_ID,
-} from 'src/constants'
+import { useQueryClient } from "@tanstack/react-query";
+import { intlFormatDistance } from "date-fns";
+import download from "downloadjs";
+import { Button, Label, Spinner } from "flowbite-react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React, { ReactNode, useState } from "react";
+import { HiTrash } from "react-icons/hi";
+import { MdEdit, MdOpenInNew } from "react-icons/md";
+import { toast } from "react-toastify";
+import analytic from "src/analytic/analytic";
+import { REQUEST_OPTIONS_NO_CACHE, UNCLAIMED_ADMIN_PUBLISHER_ID } from "src/constants";
 import {
   NodeStatus,
   NodeVersion,
@@ -24,95 +21,88 @@ import {
   useListNodeVersions,
   useListPublishersForUser,
   useUpdateNode,
-} from '@/src/api/generated'
-import nodesLogo from '@/src/assets/images/nodesLogo.svg'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import CopyableCodeBlock from '../CodeBlock/CodeBlock'
-import { NodeDeleteModal } from './NodeDeleteModal'
-import { NodeEditModal } from './NodeEditModal'
-import NodeStatusBadge from './NodeStatusBadge'
-import NodeVDrawer from './NodeVDrawer'
-import PreemptedComfyNodeNamesEditModal from './PreemptedComfyNodeNamesEditModal'
-import SearchRankingEditModal from './SearchRankingEditModal'
+} from "@/src/api/generated";
+import nodesLogo from "@/src/assets/images/nodesLogo.svg";
+import { useNextTranslation } from "@/src/hooks/i18n";
+import CopyableCodeBlock from "../CodeBlock/CodeBlock";
+import { NodeDeleteModal } from "./NodeDeleteModal";
+import { NodeEditModal } from "./NodeEditModal";
+import NodeStatusBadge from "./NodeStatusBadge";
+import NodeVDrawer from "./NodeVDrawer";
+import PreemptedComfyNodeNamesEditModal from "./PreemptedComfyNodeNamesEditModal";
+import SearchRankingEditModal from "./SearchRankingEditModal";
 
 export function FormatRelativeDate({ date: dateString }: { date: string }) {
-  const { t } = useNextTranslation()
-  const date = new Date(dateString)
-  const now = new Date()
-  const oneDay = 24 * 60 * 60 * 1000 // milliseconds in one day
-  const difference = now.getTime() - date.getTime() // difference in milliseconds
-  const daysAgo = Math.floor(difference / oneDay)
+  const { t } = useNextTranslation();
+  const date = new Date(dateString);
+  const now = new Date();
+  const oneDay = 24 * 60 * 60 * 1000; // milliseconds in one day
+  const difference = now.getTime() - date.getTime(); // difference in milliseconds
+  const daysAgo = Math.floor(difference / oneDay);
 
   if (daysAgo < 7) {
     if (daysAgo === 0) {
-      return <>{t('Today')}</>
+      return <>{t("Today")}</>;
     } else if (daysAgo === 1) {
-      return <>{t('Yesterday')}</>
+      return <>{t("Yesterday")}</>;
     } else {
-      return <>{t('{{days}} days ago', { days: daysAgo })}</>
+      return <>{t("{{days}} days ago", { days: daysAgo })}</>;
     }
   } else {
     // Formatting to YYYY-MM-DD
-    const year = date.getFullYear()
-    const month = (date.getMonth() + 1).toString().padStart(2, '0')
-    const day = date.getDate().toString().padStart(2, '0')
-    return <>{`${year}-${month}-${day}`}</>
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return <>{`${year}-${month}-${day}`}</>;
   }
 }
 
 const downloadFile = async (url: string, filename: string) => {
   try {
-    console.log('downloading file from:', url)
-    const response = await fetch(url)
-    const blob = await response.blob()
-    download(blob, filename, 'application/gzip')
+    console.log("downloading file from:", url);
+    const response = await fetch(url);
+    const blob = await response.blob();
+    download(blob, filename, "application/gzip");
   } catch (error) {
-    console.error('Error downloading file:', error)
+    console.error("Error downloading file:", error);
   }
-}
+};
 
 export function formatDownloadCount(count: number): string {
-  if (count === 0) return '0'
+  if (count === 0) return "0";
 
-  const units = ['', 'K', 'M', 'B']
-  const unitSize = 1000
-  const unitIndex = Math.floor(Math.log10(count) / Math.log10(unitSize))
+  const units = ["", "K", "M", "B"];
+  const unitSize = 1000;
+  const unitIndex = Math.floor(Math.log10(count) / Math.log10(unitSize));
 
   // Don't format if less than 1000
-  if (unitIndex === 0) return count.toString()
+  if (unitIndex === 0) return count.toString();
 
   // Calculate the formatted number with one decimal place
-  const formattedNum = (count / Math.pow(unitSize, unitIndex)).toFixed(1)
+  const formattedNum = (count / Math.pow(unitSize, unitIndex)).toFixed(1);
 
   // Remove .0 if it exists
-  const cleanNum = formattedNum.endsWith('.0')
-    ? formattedNum.slice(0, -2)
-    : formattedNum
+  const cleanNum = formattedNum.endsWith(".0") ? formattedNum.slice(0, -2) : formattedNum;
 
-  return `${cleanNum}${units[unitIndex]}`
+  return `${cleanNum}${units[unitIndex]}`;
 }
 
 const NodeDetails = () => {
-  const { t, i18n } = useNextTranslation()
+  const { t, i18n } = useNextTranslation();
   // state for drawer and modals
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(
-    null
-  )
-  const [isEditModalOpen, setIsEditModal] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] =
-    useState(false)
-  const [
-    isPreemptedComfyNodeNamesEditModalOpen,
-    setIsPreemptedComfyNodeNamesEditModalOpen,
-  ] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(null);
+  const [isEditModalOpen, setIsEditModal] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] = useState(false);
+  const [isPreemptedComfyNodeNamesEditModalOpen, setIsPreemptedComfyNodeNamesEditModalOpen] =
+    useState(false);
   // useNodeList
   // parse query parameters from the URL
   // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
-  const router = useRouter()
-  const { publisherId: _publisherId, nodeId: _nodeId } = router.query
-  const nodeId = String(_nodeId) // nodeId is always string
+  const router = useRouter();
+  const { publisherId: _publisherId, nodeId: _nodeId } = router.query;
+  const nodeId = String(_nodeId); // nodeId is always string
 
   // fetch node details and permissions with no-cache headers for real-time data
   const {
@@ -123,25 +113,20 @@ const NodeDetails = () => {
     query: {
       enabled: !!_nodeId,
     },
-  })
-  const publisherId = String(node?.publisher?.id ?? _publisherId) // try use _publisherId from url while useGetNode is loading
+  });
+  const publisherId = String(node?.publisher?.id ?? _publisherId); // try use _publisherId from url while useGetNode is loading
 
-  const { data: permissions } = useGetPermissionOnPublisherNodes(
-    publisherId,
-    nodeId,
-    {
-      query: {
-        enabled: !!nodeId,
-      },
-    }
-  )
+  const { data: permissions } = useGetPermissionOnPublisherNodes(publisherId, nodeId, {
+    query: {
+      enabled: !!nodeId,
+    },
+  });
 
-  const { data: user } = useGetUser()
-  const isAdmin = user?.isAdmin
-  const canEdit = isAdmin || permissions?.canEdit
-  const { data: myPublishers } = useListPublishersForUser({})
-  const warningForAdminEdit =
-    isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
+  const { data: user } = useGetUser();
+  const isAdmin = user?.isAdmin;
+  const canEdit = isAdmin || permissions?.canEdit;
+  const { data: myPublishers } = useListPublishersForUser({});
+  const warningForAdminEdit = isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId); // if admin is editing a node that is not owned by them, show a warning
 
   const { data: nodeVersions, refetch: refetchVersions } = useListNodeVersions(
     nodeId as string,
@@ -158,55 +143,47 @@ const NodeDetails = () => {
       query: {
         enabled: !!nodeId,
       },
-    }
-  )
+    },
+  );
 
-  const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
+  const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID;
 
-  const queryClient = useQueryClient()
-  const banNodeMutation = useBanPublisherNode()
-  const updateNodeMutation = useUpdateNode()
+  const queryClient = useQueryClient();
+  const banNodeMutation = useBanPublisherNode();
+  const updateNodeMutation = useUpdateNode();
 
   const handleBanNode = async () => {
     if (!node?.publisher?.id || !node?.id) {
-      toast.error(t('Unable to ban: missing node or publisher information'))
-      return
+      toast.error(t("Unable to ban: missing node or publisher information"));
+      return;
     }
 
-    if (
-      !confirm(
-        t('Are you sure you want to ban "{{name}}"?', { name: node.name })
-      )
-    ) {
-      return
+    if (!confirm(t('Are you sure you want to ban "{{name}}"?', { name: node.name }))) {
+      return;
     }
 
     try {
       await banNodeMutation.mutateAsync({
         publisherId: node.publisher.id,
         nodeId: node.id,
-      })
-      toast.success(t('Node banned successfully'))
-      queryClient.invalidateQueries({ queryKey: ['/nodes'] })
-      router.reload()
+      });
+      toast.success(t("Node banned successfully"));
+      queryClient.invalidateQueries({ queryKey: ["/nodes"] });
+      router.reload();
     } catch (error) {
-      console.error('Error banning node:', error)
-      toast.error(t('Error banning node'))
+      console.error("Error banning node:", error);
+      toast.error(t("Error banning node"));
     }
-  }
+  };
 
   const handleUnbanNode = async () => {
     if (!node?.publisher?.id || !node?.id) {
-      toast.error(t('Unable to unban: missing node or publisher information'))
-      return
+      toast.error(t("Unable to unban: missing node or publisher information"));
+      return;
     }
 
-    if (
-      !confirm(
-        t('Are you sure you want to unban "{{name}}"?', { name: node.name })
-      )
-    ) {
-      return
+    if (!confirm(t('Are you sure you want to unban "{{name}}"?', { name: node.name }))) {
+      return;
     }
 
     try {
@@ -217,62 +194,62 @@ const NodeDetails = () => {
           ...node,
           status: NodeStatus.NodeStatusActive,
         },
-      })
-      toast.success(t('Node unbanned successfully'))
-      await queryClient.invalidateQueries({ queryKey: ['/nodes'] })
+      });
+      toast.success(t("Node unbanned successfully"));
+      await queryClient.invalidateQueries({ queryKey: ["/nodes"] });
       if (node?.id) {
-        await queryClient.invalidateQueries({ queryKey: ['/nodes', node.id] })
+        await queryClient.invalidateQueries({ queryKey: ["/nodes", node.id] });
       }
     } catch (error) {
-      console.error('Error unbanning node:', error)
-      toast.error(t('Error unbanning node'))
+      console.error("Error unbanning node:", error);
+      toast.error(t("Error unbanning node"));
     }
-  }
+  };
 
   const toggleDrawer = () => {
-    analytic.track('View Node Version Details')
-    setIsDrawerOpen(!isDrawerOpen)
-  }
+    analytic.track("View Node Version Details");
+    setIsDrawerOpen(!isDrawerOpen);
+  };
 
   const selectVersion = (version: NodeVersion) => {
-    setSelectedVersion(version)
-    setIsDrawerOpen(true)
-  }
+    setSelectedVersion(version);
+    setIsDrawerOpen(true);
+  };
 
   const handleOpenModal = () => {
-    analytic.track('Edit Node')
-    setIsEditModal(true)
-  }
+    analytic.track("Edit Node");
+    setIsEditModal(true);
+  };
 
   const onCloseEditModal = () => {
-    setIsEditModal(false)
-  }
+    setIsEditModal(false);
+  };
 
   const handleClaimNode = () => {
     if (!user) {
-      router.push(`/auth/login?fromUrl=${router.asPath}`)
-      return
+      router.push(`/auth/login?fromUrl=${router.asPath}`);
+      return;
     }
     // Redirect to publisher selection page for claiming
-    router.push(`/nodes/${nodeId}/claim`)
-  }
+    router.push(`/nodes/${nodeId}/claim`);
+  };
 
   // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
   // usually this happens when publisher changes, e.g. when user claims a node
   const isPublisherIdMismatchedBetweenURLandNode =
-    node && _publisherId && publisherId !== _publisherId
+    node && _publisherId && publisherId !== _publisherId;
   if (isPublisherIdMismatchedBetweenURLandNode) {
-    router.replace(`/publishers/${publisherId}/nodes/${nodeId}`)
-    return null // prevent rendering the component while redirecting
+    router.replace(`/publishers/${publisherId}/nodes/${nodeId}`);
+    return null; // prevent rendering the component while redirecting
   }
 
-  const shouldShowLoading = isLoading || !router.isReady || !_nodeId
+  const shouldShowLoading = isLoading || !router.isReady || !_nodeId;
   if (shouldShowLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Spinner className="" />
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -283,28 +260,27 @@ const NodeDetails = () => {
           <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
             <div className="max-w-screen-sm mx-auto text-center">
               <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
-                {t('Error loading node details')}
+                {t("Error loading node details")}
               </h1>
               {/* reason */}
               <p className="mb-4 text-lg font-normal text-gray-400">
-                {t('Reason')}:{' '}
-                {t('An unexpected error occurred. Please try again later.')}
+                {t("Reason")}: {t("An unexpected error occurred. Please try again later.")}
               </p>
-              {process.env.NODE_ENV === 'development' && (
+              {process.env.NODE_ENV === "development" && (
                 <p className="text-sm text-gray-500">
-                  {t('Debug info')}: {error.message}
+                  {t("Debug info")}: {error.message}
                 </p>
               )}
               <div className="mt-6">
                 <Button color="blue" onClick={() => router.back()}>
-                  {t('Go back')}
+                  {t("Go back")}
                 </Button>
               </div>
             </div>
           </div>
         </section>
       </div>
-    )
+    );
   }
 
   if (!node) {
@@ -314,13 +290,13 @@ const NodeDetails = () => {
           <div className="max-w-screen-xl px-4 py-8 mx-auto lg:px-6 lg:py-16">
             <div className="max-w-screen-sm mx-auto text-center">
               <h1 className="mb-4 text-5xl font-extrabold tracking-tight text-primary-600 dark:text-primary-500">
-                {t('Node not found')}
+                {t("Node not found")}
               </h1>
             </div>
           </div>
         </section>
       </div>
-    )
+    );
   }
 
   return (
@@ -344,26 +320,19 @@ const NodeDetails = () => {
                 <div>
                   <h1 className="text-[48px] font-bold">{node.name}</h1>
 
-                  <p
-                    className="text-[18px] pt-2 text-gray-300 space-x-2"
-                    hidden={isUnclaimed}
-                  >
+                  <p className="text-[18px] pt-2 text-gray-300 space-x-2" hidden={isUnclaimed}>
                     {[
                       <div key="publisher" dir="ltr">
-                        {node.publisher?.id?.replace(/^(?!$)/, '@')}
+                        {node.publisher?.id?.replace(/^(?!$)/, "@")}
                       </div>,
 
-                      node.latest_version?.version?.replace(/^(?!$)/, 'v'),
+                      node.latest_version?.version?.replace(/^(?!$)/, "v"),
 
                       node.latest_version?.createdAt &&
-                        intlFormatDistance(
-                          new Date(node.latest_version.createdAt),
-                          new Date(),
-                          {
-                            numeric: 'auto',
-                            locale: i18n.language,
-                          }
-                        ),
+                        intlFormatDistance(new Date(node.latest_version.createdAt), new Date(), {
+                          numeric: "auto",
+                          locale: i18n.language,
+                        }),
                     ]
                       .flatMap((e) => (e ? [e] : []))
                       // same as .join(' | '), but with span element
@@ -371,11 +340,9 @@ const NodeDetails = () => {
                         (acc, x, i, a) => [
                           ...acc,
                           x,
-                          i < a.length - 1 && (
-                            <span key={`separator-${i}`}> | </span>
-                          ),
+                          i < a.length - 1 && <span key={`separator-${i}`}> | </span>,
                         ],
-                        [] as ReactNode[]
+                        [] as ReactNode[],
                       )
                       .filter(Boolean)}
                   </p>
@@ -446,8 +413,7 @@ const NodeDetails = () => {
                       />
                     </svg>
                     <span className="ml-4 text-[18px]">
-                      {formatDownloadCount(node.downloads || 0)}{' '}
-                      {t('downloads')}
+                      {formatDownloadCount(node.downloads || 0)} {t("downloads")}
                     </span>
                   </p>
                 )}
@@ -469,8 +435,7 @@ const NodeDetails = () => {
                       />
                     </svg>
                     <span className="ml-4 text-[18px]">
-                      {formatDownloadCount(node.github_stars || 0)}{' '}
-                      {t('GitHub stars')}
+                      {formatDownloadCount(node.github_stars || 0)} {t("GitHub stars")}
                     </span>
                   </p>
                 )}
@@ -480,7 +445,7 @@ const NodeDetails = () => {
                   {node.status === NodeStatus.NodeStatusBanned ? (
                     <div className="p-4 mb-4 text-sm rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700">
                       <p className="font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                        {t('This node has been banned')}
+                        {t("This node has been banned")}
                       </p>
                       {node.status_detail && (
                         <p className="text-base font-normal text-gray-700 dark:text-gray-300">
@@ -488,20 +453,20 @@ const NodeDetails = () => {
                         </p>
                       )}
                       <p className="mt-2 text-base font-normal text-gray-700 dark:text-gray-300">
-                        {t('Installation is not available for this node.')}
+                        {t("Installation is not available for this node.")}
                       </p>
                     </div>
                   ) : isUnclaimed || !nodeVersions?.length ? (
                     <p className="text-base font-normal text-gray-200">
                       {isUnclaimed
                         ? t(
-                            "This node can only be installed via git, because it's unclaimed by any publisher"
+                            "This node can only be installed via git, because it's unclaimed by any publisher",
                           )
                         : !nodeVersions?.length
                           ? t(
-                              'This node can only be installed via git, because it has no versions published yet'
+                              "This node can only be installed via git, because it has no versions published yet",
                             )
-                          : t('This node can only be installed via git')}
+                          : t("This node can only be installed via git")}
                       {node.repository && (
                         <CopyableCodeBlock
                           code={`cd your/path/to/ComfyUI/custom_nodes\ngit clone ${node.repository}`}
@@ -512,30 +477,20 @@ const NodeDetails = () => {
                     <CopyableCodeBlock code={`comfy node install ${nodeId}`} />
                   )}
 
-                  {isUnclaimed &&
-                    user &&
-                    node.status !== NodeStatus.NodeStatusBanned && (
-                      // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
-                      <Button
-                        color="blue"
-                        className="mt-4 font-bold"
-                        onClick={handleClaimNode}
-                      >
-                        {t('Claim my node')}
-                      </Button>
-                    )}
+                  {isUnclaimed && user && node.status !== NodeStatus.NodeStatusBanned && (
+                    // TODO: change this button to a small hint like this: "(i) This is my node? [Claim]", and move into [publisher] section above
+                    <Button color="blue" className="mt-4 font-bold" onClick={handleClaimNode}>
+                      {t("Claim my node")}
+                    </Button>
+                  )}
                 </>
               </div>
               <div>
-                <h2 className="mb-2 text-lg font-bold">{t('Description')}</h2>
-                <p className="text-base font-normal text-gray-200">
-                  {node.description}
-                </p>
+                <h2 className="mb-2 text-lg font-bold">{t("Description")}</h2>
+                <p className="text-base font-normal text-gray-200">{node.description}</p>
               </div>
               <div className="mt-10" hidden={isUnclaimed}>
-                <h2 className="mb-2 text-lg font-semibold">
-                  {t('Version history')}
-                </h2>
+                <h2 className="mb-2 text-lg font-semibold">{t("Version history")}</h2>
                 <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
                   {nodeVersions?.map((version, index) => (
                     <div
@@ -543,10 +498,10 @@ const NodeDetails = () => {
                       key={index}
                     >
                       <h3 className="text-base font-semibold text-gray-200">
-                        {t('Version')} {version.version}
+                        {t("Version")} {version.version}
                       </h3>
                       <p className="mt-3 text-sm font-normal text-gray-400 ">
-                        <FormatRelativeDate date={version.createdAt || ''} />
+                        <FormatRelativeDate date={version.createdAt || ""} />
                       </p>
                       <div className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                         {version.changelog}
@@ -556,7 +511,7 @@ const NodeDetails = () => {
                         onClick={() => selectVersion(version)}
                         tabIndex={0}
                       >
-                        {t('More')}
+                        {t("More")}
                       </div>
                     </div>
                   ))}
@@ -571,14 +526,14 @@ const NodeDetails = () => {
               <Button
                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                 onClick={(e) => {
-                  analytic.track('View Repository')
-                  e.preventDefault()
-                  window.open(node.repository, '_blank', 'noopener noreferrer')
+                  analytic.track("View Repository");
+                  e.preventDefault();
+                  window.open(node.repository, "_blank", "noopener noreferrer");
                 }}
-                href={node.repository || ''}
+                href={node.repository || ""}
               >
                 <MdOpenInNew className="w-5 h-5 mr-2" />
-                {t('View Repository')}
+                {t("View Repository")}
               </Button>
             )}
 
@@ -587,17 +542,17 @@ const NodeDetails = () => {
                 hidden={isUnclaimed}
                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px]"
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                  e.preventDefault()
+                  e.preventDefault();
                   if (node?.latest_version?.downloadUrl) {
                     downloadFile(
                       node.latest_version?.downloadUrl,
-                      `${node.name}_${node.latest_version.version}.zip`
-                    )
+                      `${node.name}_${node.latest_version.version}.zip`,
+                    );
                   }
-                  analytic.track('Download Latest Node Version')
+                  analytic.track("Download Latest Node Version");
                 }}
               >
-                <a>{t('Download Latest')}</a>
+                <a>{t("Download Latest")}</a>
               </Button>
             )}
 
@@ -623,8 +578,8 @@ const NodeDetails = () => {
                     d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
                   />
                 </svg>
-                <span>{t('Edit details')}</span>
-                {warningForAdminEdit && <>&nbsp;{t('(admin)')}</>}
+                <span>{t("Edit details")}</span>
+                {warningForAdminEdit && <>&nbsp;{t("(admin)")}</>}
               </Button>
             )}
 
@@ -634,8 +589,8 @@ const NodeDetails = () => {
                 onClick={() => setIsDeleteModalOpen(true)}
               >
                 <HiTrash className="w-5 h-5 mr-2" />
-                <span>{t('Delete')}</span>
-                {warningForAdminEdit && <>&nbsp;{t('(admin)')}</>}
+                <span>{t("Delete")}</span>
+                {warningForAdminEdit && <>&nbsp;{t("(admin)")}</>}
               </Button>
             )}
 
@@ -668,7 +623,7 @@ const NodeDetails = () => {
                   </svg>
                 )}
                 <span>
-                  {t('Ban Node')} {t('(admin)')}
+                  {t("Ban Node")} {t("(admin)")}
                 </span>
               </Button>
             )}
@@ -700,7 +655,7 @@ const NodeDetails = () => {
                     />
                   </svg>
                 )}
-                <span>{t('Unban Node')}</span>
+                <span>{t("Unban Node")}</span>
               </Button>
             )}
 
@@ -720,15 +675,15 @@ const NodeDetails = () => {
                         className="mr-2 flex items-center justify-center"
                         id="edit-search-ranking"
                         onClick={() => {
-                          setIsSearchRankingEditModalOpen(true)
-                          analytic.track('Edit Search Ranking')
+                          setIsSearchRankingEditModalOpen(true);
+                          analytic.track("Edit Search Ranking");
                         }}
                       >
                         <MdEdit className="w-4 h-4 text-white" />
                       </button>
                       <div className="flex items-center">
                         <span>
-                          {t('Search Ranking')}: {node.search_ranking}
+                          {t("Search Ranking")}: {node.search_ranking}
                         </span>
                       </div>
                     </Label>
@@ -751,33 +706,29 @@ const NodeDetails = () => {
                       className="mr-2 flex items-center justify-center"
                       id="edit-preempted-comfy-node-names"
                       onClick={() => {
-                        setIsPreemptedComfyNodeNamesEditModalOpen(true)
-                        analytic.track('Edit Preempted Comfy Node Names')
+                        setIsPreemptedComfyNodeNamesEditModalOpen(true);
+                        analytic.track("Edit Preempted Comfy Node Names");
                       }}
                     >
                       <MdEdit className="w-4 h-4 text-white" />
                     </button>
                     <div className="flex items-center">
                       <span>
-                        {t('Preempted Names')}:{' '}
+                        {t("Preempted Names")}:{" "}
                         <pre className="whitespace-pre-wrap text-xs">
                           {node.preempted_comfy_node_names &&
                           node.preempted_comfy_node_names.length > 0
-                            ? node.preempted_comfy_node_names.join('\n')
-                            : t('None')}
+                            ? node.preempted_comfy_node_names.join("\n")
+                            : t("None")}
                         </pre>
                       </span>
                     </div>
                   </Label>
                   <PreemptedComfyNodeNamesEditModal
                     nodeId={nodeId}
-                    defaultPreemptedComfyNodeNames={
-                      node.preempted_comfy_node_names || []
-                    }
+                    defaultPreemptedComfyNodeNames={node.preempted_comfy_node_names || []}
                     open={isPreemptedComfyNodeNamesEditModalOpen}
-                    onClose={() =>
-                      setIsPreemptedComfyNodeNamesEditModalOpen(false)
-                    }
+                    onClose={() => setIsPreemptedComfyNodeNamesEditModalOpen(false)}
                   />
                 </>
               </>
@@ -805,16 +756,16 @@ const NodeDetails = () => {
             isDrawerOpen={isDrawerOpen}
             nodeId={nodeId}
             publisherId={publisherId}
-            versionNumber={selectedVersion.version ?? ''}
+            versionNumber={selectedVersion.version ?? ""}
             canEdit={canEdit}
             onUpdate={() => {
-              refetchVersions()
+              refetchVersions();
             }}
           />
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default NodeDetails
+export default NodeDetails;

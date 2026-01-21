@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "_lint": "next lint",
+    "_lint:biome": "bunx @biomejs/biome lint --fix",
     "build": "concurrently \"next build\" \"bun run build-storybook\"",
     "build-storybook": "storybook build -o public/_storybook",
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
@@ -11,8 +13,6 @@
     "fix": "oxlint --fix",
     "fmt": "oxfmt",
     "i18n": "bun scripts/scan-i18n.ts",
-    "_lint": "next lint",
-    "_lint:biome": "bunx @biomejs/biome lint --fix",
     "orval": "bunx orval@latest",
     "prepare": "husky",
     "start": "next start",

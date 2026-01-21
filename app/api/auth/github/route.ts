@@ -1,16 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { DIE } from 'phpdie'
-import analytic from 'src/analytic/analytic'
+import { NextRequest, NextResponse } from "next/server";
+import { DIE } from "phpdie";
+import analytic from "src/analytic/analytic";
 
 // Ensure GITHUB_CLIENT environment variables are set for vercel production/staging branch
 // this prevents server misconfiguration in vercel production deployments
 //
 // it's safe to omit github client when developing non-github related features.
-const isGithubClientRequired =
-  !!process.env.VERCEL_GIT_COMMIT_REF?.match(/^(?:main|staging)$/)
+const isGithubClientRequired = !!process.env.VERCEL_GIT_COMMIT_REF?.match(/^(?:main|staging)$/);
 if (isGithubClientRequired) {
-  process.env.GITHUB_CLIENT_ID || DIE('GITHUB_CLIENT_ID is not set')
-  process.env.GITHUB_CLIENT_SECRET || DIE('GITHUB_CLIENT_SECRET is not set')
+  process.env.GITHUB_CLIENT_ID || DIE("GITHUB_CLIENT_ID is not set");
+  process.env.GITHUB_CLIENT_SECRET || DIE("GITHUB_CLIENT_SECRET is not set");
 }
 
 /**
@@ -21,37 +20,31 @@ if (isGithubClientRequired) {
  */
 export const GET = async (request: NextRequest) => {
   try {
-    const url = new URL(request.url)
-    const redirectUri = url.searchParams.get('redirectUri')
-    const owner = url.searchParams.get('owner')
-    const repo = url.searchParams.get('repo')
-    const nodeId = url.searchParams.get('nodeId')
-    const publisherId = url.searchParams.get('publisherId')
-    const customScope = url.searchParams.get('scope')
+    const url = new URL(request.url);
+    const redirectUri = url.searchParams.get("redirectUri");
+    const owner = url.searchParams.get("owner");
+    const repo = url.searchParams.get("repo");
+    const nodeId = url.searchParams.get("nodeId");
+    const publisherId = url.searchParams.get("publisherId");
+    const customScope = url.searchParams.get("scope");
 
     if (!redirectUri || !owner || !repo || !nodeId || !publisherId) {
-      return NextResponse.json(
-        { error: 'Missing required parameters' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
     }
 
     // GitHub OAuth application credentials
-    const clientId = process.env.GITHUB_CLIENT_ID
+    const clientId = process.env.GITHUB_CLIENT_ID;
 
     if (!clientId) {
-      return NextResponse.json(
-        { error: 'GitHub OAuth not configured' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: "GitHub OAuth not configured" }, { status: 500 });
     }
 
     // Log the OAuth initiation
-    analytic.track('GitHub OAuth Initiated', {
+    analytic.track("GitHub OAuth Initiated", {
       nodeId,
       publisherId,
       repository: `https://github.com/${owner}/${repo}`,
-    })
+    });
 
     // Use custom scope if provided, otherwise use empty string
 
@@ -63,32 +56,29 @@ export const GET = async (request: NextRequest) => {
         publisherId,
         repo: `${owner}/${repo}`,
         timestamp: Date.now(),
-      })
-    ).toString('base64')
+      }),
+    ).toString("base64");
 
     // - [System environment variables](https://vercel.com/docs/environment-variables/system-environment-variables )
     const xfh =
-      request.headers.get('x-forwarded-host') || // if use reverse-proxy, e.g. caddy/nginx/vercel
-      request.headers.get('host') // fallback to request host
-    const xfp = request.headers.get('x-forwarded-proto') || 'http'
-    const origin = `${xfp}://${xfh}`
+      request.headers.get("x-forwarded-host") || // if use reverse-proxy, e.g. caddy/nginx/vercel
+      request.headers.get("host"); // fallback to request host
+    const xfp = request.headers.get("x-forwarded-proto") || "http";
+    const origin = `${xfp}://${xfh}`;
 
     // Redirect to GitHub OAuth
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: `${origin}/api/auth/github/callback`,
-      scope: customScope || '',
+      scope: customScope || "",
       state: state,
-      allow_signup: 'false',
-    })
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?${params.toString()}`
+      allow_signup: "false",
+    });
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?${params.toString()}`;
 
-    return NextResponse.redirect(githubAuthUrl)
+    return NextResponse.redirect(githubAuthUrl);
   } catch (error) {
-    console.error('GitHub OAuth error:', error)
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    )
+    console.error("GitHub OAuth error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-}
+};

@@ -1,14 +1,14 @@
-import { Button, FloatingLabel } from 'flowbite-react'
-import React from 'react'
-import { MdClear } from 'react-icons/md'
+import { Button, FloatingLabel } from "flowbite-react";
+import React from "react";
+import { MdClear } from "react-icons/md";
 
 export const ClearableLabel: React.FC<{
-  id: string
-  label: string
-  value: string
-  disabled?: boolean
-  onClear: () => void
-  onChange: (value: string) => void
+  id: string;
+  label: string;
+  value: string;
+  disabled?: boolean;
+  onClear: () => void;
+  onChange: (value: string) => void;
 }> = ({ label, value, onClear, onChange, id, disabled = false }) => {
   return (
     <div className="relative flex items-center">
@@ -35,5 +35,5 @@ export const ClearableLabel: React.FC<{
         </Button>
       )}
     </div>
-  )
-}
+  );
+};

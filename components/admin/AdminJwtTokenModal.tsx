@@ -1,62 +1,58 @@
-import { Button, Modal, Spinner } from 'flowbite-react'
-import { useState } from 'react'
-import { toast } from 'react-toastify'
-import { useGenerateAdminToken } from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { setAdminJwtToken } from '@/src/utils/adminJwtStorage'
+import { Button, Modal, Spinner } from "flowbite-react";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useGenerateAdminToken } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
+import { setAdminJwtToken } from "@/src/utils/adminJwtStorage";
 
 export interface AdminJwtTokenModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onTokenGenerated?: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onTokenGenerated?: () => void;
 }
 
-export function AdminJwtTokenModal({
-  isOpen,
-  onClose,
-  onTokenGenerated,
-}: AdminJwtTokenModalProps) {
-  const { t } = useNextTranslation()
-  const [isGenerating, setIsGenerating] = useState(false)
-  const generateTokenMutation = useGenerateAdminToken()
+export function AdminJwtTokenModal({ isOpen, onClose, onTokenGenerated }: AdminJwtTokenModalProps) {
+  const { t } = useNextTranslation();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const generateTokenMutation = useGenerateAdminToken();
 
   const handleGenerateToken = async () => {
-    setIsGenerating(true)
+    setIsGenerating(true);
     try {
-      const result = await generateTokenMutation.mutateAsync()
+      const result = await generateTokenMutation.mutateAsync();
 
       // Store token in localStorage
-      setAdminJwtToken(result.token, result.expires_at)
+      setAdminJwtToken(result.token, result.expires_at);
 
       // Show success message
-      const expiresAt = new Date(result.expires_at).toLocaleString()
+      const expiresAt = new Date(result.expires_at).toLocaleString();
       toast.success(
-        t('Admin JWT token generated successfully. Expires at: {{expiresAt}}', {
+        t("Admin JWT token generated successfully. Expires at: {{expiresAt}}", {
           expiresAt,
-        })
-      )
+        }),
+      );
 
       // Notify parent component
-      onTokenGenerated?.()
+      onTokenGenerated?.();
 
       // Close modal
-      onClose()
+      onClose();
     } catch (error) {
-      console.error('Error generating admin JWT token:', error)
-      toast.error(t('Failed to generate admin JWT token. Please try again.'))
+      console.error("Error generating admin JWT token:", error);
+      toast.error(t("Failed to generate admin JWT token. Please try again."));
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   return (
     <Modal show={isOpen} onClose={onClose} size="md">
-      <Modal.Header>{t('Generate Admin JWT Token')}</Modal.Header>
+      <Modal.Header>{t("Generate Admin JWT Token")}</Modal.Header>
       <Modal.Body>
         <div className="space-y-4">
           <p className="text-sm text-gray-700 dark:text-gray-300">
             {t(
-              'This operation requires an admin JWT token. The token will be valid for 1 hour and will be stored locally in your browser.'
+              "This operation requires an admin JWT token. The token will be valid for 1 hour and will be stored locally in your browser.",
             )}
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -65,24 +61,20 @@ export function AdminJwtTokenModal({
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          onClick={handleGenerateToken}
-          disabled={isGenerating}
-          color="blue"
-        >
+        <Button onClick={handleGenerateToken} disabled={isGenerating} color="blue">
           {isGenerating ? (
             <>
               <Spinner size="sm" className="mr-2" />
-              {t('Generating...')}
+              {t("Generating...")}
             </>
           ) : (
-            t('Generate Token')
+            t("Generate Token")
           )}
         </Button>
         <Button color="gray" onClick={onClose} disabled={isGenerating}>
-          {t('Cancel')}
+          {t("Cancel")}
         </Button>
       </Modal.Footer>
     </Modal>
-  )
+  );
 }
