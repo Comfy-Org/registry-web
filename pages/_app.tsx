@@ -22,8 +22,7 @@ AXIOS_INSTANCE.interceptors.request.use(async (config) => {
   // Check if this is an admin endpoint that requires JWT admin token
   // This includes ban/unban operations and admin endpoints (except generate-token which uses Firebase auth)
   const requiresAdminJwt =
-    url.includes("/ban") ||
-    (url.includes("/admin/") && !url.includes("/admin/generate-token"));
+    url.includes("/ban") || (url.includes("/admin/") && !url.includes("/admin/generate-token"));
 
   if (requiresAdminJwt) {
     // Use JWT admin token for admin operations
