@@ -22,7 +22,7 @@ const NodesCard: React.FC<NodesCard> = React.memo(
           <div className="w-[250px]">
             <Image
               className="rounded-lg sm:rounded-lg"
-              src={icon || ''}
+              src={icon}
               alt={`${name}'s Avatar`}
               width={200}
               height={200}
