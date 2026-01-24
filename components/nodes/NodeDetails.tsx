@@ -544,7 +544,7 @@ const NodeDetails = () => {
                   {nodeVersions?.map((version) => (
                     <div
                       className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
-                      key={version.id}
+                      key={version.id ?? `${version.version}-${version.createdAt}`}
                     >
                       <h3 className="text-base font-semibold text-gray-200">
                         {t('Version')} {version.version}
