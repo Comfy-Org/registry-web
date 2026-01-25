@@ -261,9 +261,9 @@ const NodeDetails = () => {
     if (!node) return null
 
     const items = [
-      <div key="publisher" dir="ltr">
+      <span key="publisher" dir="ltr">
         {node.publisher?.id?.replace(/^(?!$)/, '@')}
-      </div>,
+      </span>,
       node.latest_version?.version?.replace(/^(?!$)/, 'v'),
       node.latest_version?.createdAt &&
         intlFormatDistance(
