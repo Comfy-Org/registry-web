@@ -1,9 +1,8 @@
-import { Button, Dropdown } from "flowbite-react";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { HiDotsVertical } from "react-icons/hi";
-import { toast } from "react-toastify";
-import analytic from "src/analytic/analytic";
+import { Button } from 'flowbite-react'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
 import {
   Publisher,
   useDeletePersonalAccessToken,
@@ -11,47 +10,47 @@ import {
   useListNodesForPublisherV2,
   useListPersonalAccessTokens,
   useUpdatePublisher,
-} from "@/src/api/generated";
-import { useNextTranslation } from "@/src/hooks/i18n";
-import { CreateSecretKeyModal } from "../AccessTokens/CreateSecretKeyModal";
-import PersonalAccessTokenTable from "../AccessTokens/PersonalAccessTokenTable";
-import { DeletePublisherModal } from "../publisher/DeletePublisherModal";
-import EditPublisherModal from "../publisher/EditPublisherModal";
-import PublisherNodes from "./PublisherNodes";
-import PublisherStatusBadge from "./PublisherStatusBadge";
+} from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { CreateSecretKeyModal } from '../AccessTokens/CreateSecretKeyModal'
+import PersonalAccessTokenTable from '../AccessTokens/PersonalAccessTokenTable'
+import EditPublisherModal from '../publisher/EditPublisherModal'
+import PublisherNodes from './PublisherNodes'
+import PublisherStatusBadge from './PublisherStatusBadge'
 
 type PublisherDetailProps = {
-  publisher: Publisher;
-};
+  publisher: Publisher
+}
 const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
-  const { t } = useNextTranslation();
-  const router = useRouter();
-  const updatePublisherMutation = useUpdatePublisher();
-  const deleteTokenMutation = useDeletePersonalAccessToken();
+  const { t } = useNextTranslation()
+  const router = useRouter()
+  const updatePublisherMutation = useUpdatePublisher()
+  const deleteTokenMutation = useDeletePersonalAccessToken()
   const {
     data: personalAccessTokens,
     error,
     isLoading: isLoadingAccessTokens,
     refetch: refetchTokens,
-  } = useListPersonalAccessTokens(publisher.id as string);
-  const { data: nodeList } = useListNodesForPublisherV2(publisher.id as string);
-  const { data: permissions } = useGetPermissionOnPublisher(publisher.id as string);
-  const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  } = useListPersonalAccessTokens(publisher.id as string)
+  const { data: nodeList } = useListNodesForPublisherV2(publisher.id as string)
+  const { data: permissions } = useGetPermissionOnPublisher(
+    publisher.id as string
+  )
+  const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false)
+  const [openEditModal, setOpenEditModal] = useState(false)
 
   const handleCreateButtonClick = () => {
-    analytic.track("Create Publisher API Token Clicked");
-    setOpenSecretKeyModal(true);
-  };
+    analytic.track('Create Publisher API Token Clicked')
+    setOpenSecretKeyModal(true)
+  }
 
   const onCloseCreateSecretKeyModal = () => {
-    setOpenSecretKeyModal(false);
-  };
+    setOpenSecretKeyModal(false)
+  }
   const handleEditButtonClick = () => {
-    analytic.track("Edit Publisher Clicked");
-    setOpenEditModal(true);
-  };
+    analytic.track('Edit Publisher Clicked')
+    setOpenEditModal(true)
+  }
 
   const handleSubmitEditPublisher = (displayName: string) => {
     updatePublisherMutation.mutate(
@@ -63,33 +62,26 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
       },
       {
         onError: (error) => {
-          toast.error("Failed to update publisher");
+          toast.error('Failed to update publisher')
         },
         onSuccess: () => {
-          setOpenEditModal(false);
+          setOpenEditModal(false)
           // force reload the page
-          router.reload();
+          router.reload()
         },
-      },
-    );
-  };
+      }
+    )
+  }
   const onCloseEditModal = () => {
-    setOpenEditModal(false);
-  };
+    setOpenEditModal(false)
+  }
 
-  const handleDeleteButtonClick = () => {
-    analytic.track("Delete Publisher Clicked");
-    setOpenDeleteModal(true);
-  };
-
-  const onCloseDeleteModal = () => {
-    setOpenDeleteModal(false);
-  };
-
-  const oneMemberOfPublisher = getFirstMemberName(publisher);
+  const oneMemberOfPublisher = getFirstMemberName(publisher)
 
   if (publisher === undefined || publisher.id === undefined) {
-    return <div className="container p-6 mx-auto h-[90vh] text-white">Not Found</div>;
+    return (
+      <div className="container p-6 mx-auto h-[90vh] text-white">Not Found</div>
+    )
   }
 
   return (
@@ -116,76 +108,41 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
           className="text-gray-400 pl-1 text-base  bg-transparent border-none hover:!bg-transparent hover:!border-none focus:!bg-transparent focus:!border-none focus:!outline-none"
           onClick={() => router.push(`/nodes`)}
         >
-          <span>{t("Back to your nodes")}</span>
+          <span>{t('Back to your nodes')}</span>
         </span>
       </div>
 
       <div>
         <div className="flex justify-between">
-          <h1 className="mb-4 text-5xl font-bold text-white">{publisher.name}</h1>
+          <h1 className="mb-4 text-5xl font-bold text-white">
+            {publisher.name}
+          </h1>
           {permissions?.canEdit && (
-            <div className="flex gap-2">
-              <Button
-                size="xs"
-                className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
-                color="blue"
-                onClick={handleEditButtonClick}
+            <Button
+              size="xs"
+              className="h-8 p-2 px-4 font-bold text-white bg-blue-500 rounded hover:bg-blue-600"
+              color="blue"
+              onClick={handleEditButtonClick}
+            >
+              <svg
+                className="w-5 h-5 text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  className="w-5 h-5 text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-                  />
-                </svg>
-                <span className="text-[10px]">{t("Edit details")}</span>
-              </Button>
-              <Dropdown
-                label=""
-                dismissOnClick={true}
-                renderTrigger={() => (
-                  <Button
-                    size="xs"
-                    className="h-8 p-2 text-white bg-gray-700 rounded hover:bg-gray-600"
-                    color="gray"
-                  >
-                    <HiDotsVertical className="w-5 h-5" />
-                  </Button>
-                )}
-              >
-                <Dropdown.Item
-                  onClick={handleDeleteButtonClick}
-                  className="text-red-500 hover:bg-red-100 dark:hover:bg-red-900"
-                >
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-                    />
-                  </svg>
-                  {t("Delete publisher")}
-                </Dropdown.Item>
-              </Dropdown>
-            </div>
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+                />
+              </svg>
+              <span className="text-[10px]">{t('Edit details')}</span>
+            </Button>
           )}
         </div>
         <p className="text-gray-400">@{publisher.id}</p>
@@ -211,7 +168,9 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                 d="M8 8v8m0-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 0a4 4 0 0 1-4 4h-1a3 3 0 0 0-3 3"
               />
             </svg>
-            <span className="ml-2">{t(`{{count}} nodes`, { count: nodeList?.total })}</span>
+            <span className="ml-2">
+              {t(`{{count}} nodes`, { count: nodeList?.total })}
+            </span>
           </p>
           {oneMemberOfPublisher && (
             <p className="flex items-center mt-1 text-xs text-center text-gray-400 align-center">
@@ -240,14 +199,14 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
             {/* Publish instruction for API Keys */}
             <div className="mb-6 p-4 bg-blue-900/20 border border-blue-700/30 rounded-lg">
               <p className="text-blue-200 text-sm">
-                {t("How to use these API keys to publish my node? check")}{" "}
+                {t('How to use these API keys to publish my node? check')}{' '}
                 <a
                   href="https://docs.comfy.org/registry/publishing"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-400 hover:text-blue-300 underline"
                 >
-                  {t("Publishing Nodes - ComfyUI")}
+                  {t('Publishing Nodes - ComfyUI')}
                 </a>
               </p>
             </div>
@@ -264,13 +223,13 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                   },
                   {
                     onError: (error) => {
-                      toast.error("Failed to delete token");
+                      toast.error('Failed to delete token')
                     },
                     onSuccess: () => {
-                      toast.success("Token deleted");
-                      refetchTokens();
+                      toast.success('Token deleted')
+                      refetchTokens()
                     },
-                  },
+                  }
                 )
               }
             />
@@ -292,25 +251,20 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         onSubmit={handleSubmitEditPublisher}
         publisher={publisher}
       />
-      <DeletePublisherModal
-        openDeleteModal={openDeleteModal}
-        onClose={onCloseDeleteModal}
-        publisherId={publisher.id}
-      />
     </div>
-  );
-};
+  )
+}
 
-export default PublisherDetail;
+export default PublisherDetail
 
 function getFirstMemberName(publisher: Publisher): string | undefined {
   // Check if the publisher has members and the first member has a user and name
   if (publisher.members && publisher.members.length > 0) {
-    const firstMember = publisher.members[0];
+    const firstMember = publisher.members[0]
     if (firstMember.user && firstMember.user.name) {
-      return firstMember.user.name;
+      return firstMember.user.name
     }
   }
   // Return undefined if no member or no member name is found
-  return undefined;
+  return undefined
 }

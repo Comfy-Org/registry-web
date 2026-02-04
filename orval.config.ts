@@ -1,5 +1,10 @@
-// load backend url from .env, not necessary if you use bun
-if (!globalThis.Bun) require("dotenv/config");
+import dotenv from 'dotenv'
+import { existsSync } from 'fs'
+
+// load backend url from .env.local and .env, not necessary if you use bun
+if (!globalThis.Bun) {
+  dotenv.config({ path: ['.env.local', '.env'] })
+}
 
 /**
  * @type {import('orval').ConfigExternal}
@@ -7,17 +12,19 @@ if (!globalThis.Bun) require("dotenv/config");
 export default {
   dripApi: {
     input: {
-      target: `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
+      target: existsSync('./openapi.yaml')
+        ? './openapi.yaml'
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL}/openapi`,
     },
     output: {
-      target: "./src/api/generated.ts",
-      client: "react-query",
+      target: './src/api/generated.ts',
+      client: 'react-query',
       override: {
         mutator: {
-          path: "./src/api/mutator/axios-instance.ts",
-          name: "customInstance",
+          path: './src/api/mutator/axios-instance.ts',
+          name: 'customInstance',
         },
       },
     },
   },
-};
+}

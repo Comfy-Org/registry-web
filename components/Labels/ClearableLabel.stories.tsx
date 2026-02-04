@@ -1,10 +1,14 @@
-import { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { useState } from "react";
-import { ClearableLabel } from "@/components/Labels/ClearableLabel";
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { useState } from 'react'
+import { ClearableLabel } from '@/components/Labels/ClearableLabel'
 
 // We need to use a functional component for this because it has state
-const ClearableLabelWithState = ({ label, initialValue = "", disabled = false }) => {
-  const [value, setValue] = useState(initialValue);
+const ClearableLabelWithState = ({
+  label,
+  initialValue = '',
+  disabled = false,
+}) => {
+  const [value, setValue] = useState(initialValue)
 
   return (
     <ClearableLabel
@@ -12,42 +16,42 @@ const ClearableLabelWithState = ({ label, initialValue = "", disabled = false })
       label={label}
       value={value}
       onChange={setValue}
-      onClear={() => setValue("")}
+      onClear={() => setValue('')}
       disabled={disabled}
     />
-  );
-};
+  )
+}
 
 const meta: Meta<typeof ClearableLabelWithState> = {
-  title: "Components/Labels/ClearableLabel",
+  title: 'Components/Labels/ClearableLabel',
   component: ClearableLabelWithState,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+}
 
-export default meta;
-type Story = StoryObj<typeof ClearableLabelWithState>;
+export default meta
+type Story = StoryObj<typeof ClearableLabelWithState>
 
 export const Empty: Story = {
   args: {
-    label: "Search",
-    initialValue: "",
+    label: 'Search',
+    initialValue: '',
   },
-};
+}
 
 export const WithValue: Story = {
   args: {
-    label: "Search",
-    initialValue: "Text to clear",
+    label: 'Search',
+    initialValue: 'Text to clear',
   },
-};
+}
 
 export const Disabled: Story = {
   args: {
-    label: "Search (Disabled)",
-    initialValue: "Cannot be cleared",
+    label: 'Search (Disabled)',
+    initialValue: 'Cannot be cleared',
     disabled: true,
   },
-};
+}

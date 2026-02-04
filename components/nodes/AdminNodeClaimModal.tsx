@@ -1,10 +1,13 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { Button, Label, Modal, Spinner, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from "react-icons/hi";
-import { toast } from "react-toastify";
-import { customThemeTModal } from "utils/comfyTheme";
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
+import { useQueryClient } from '@tanstack/react-query'
+import { Button, Label, Modal, Spinner, TextInput } from 'flowbite-react'
+import { useEffect, useState } from 'react'
+import { HiExternalLink, HiOutlineCheck, HiOutlineSearch } from 'react-icons/hi'
+import { toast } from 'react-toastify'
+import { customThemeTModal } from 'utils/comfyTheme'
+import {
+  INVALIDATE_CACHE_OPTION,
+  shouldInvalidate,
+} from '@/components/cache-control'
 import {
   getGetNodeQueryKey,
   getListNodesForPublisherV2QueryKey,
@@ -13,190 +16,208 @@ import {
   Publisher,
   useListPublishers,
   useUpdateNode,
-} from "@/src/api/generated";
-import { UNCLAIMED_ADMIN_PUBLISHER_ID } from "@/src/constants";
-import { useNextTranslation } from "@/src/hooks/i18n";
-import { PublisherId } from "../Search/PublisherId";
+} from '@/src/api/generated'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from '@/src/constants'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { PublisherId } from '../Search/PublisherId'
 
 interface NodeClaimModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  node: Node;
-  onSuccess?: () => void;
+  isOpen: boolean
+  onClose: () => void
+  node: Node
+  onSuccess?: () => void
 }
 
-export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeClaimModalProps) {
-  const { t } = useNextTranslation();
-  const queryClient = useQueryClient();
-  const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
+export function AdminNodeClaimModal({
+  isOpen,
+  onClose,
+  node,
+  onSuccess,
+}: NodeClaimModalProps) {
+  const { t } = useNextTranslation()
+  const queryClient = useQueryClient()
+  const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(
+    null
+  )
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isVerifying, setIsVerifying] = useState(false)
   const [verificationResult, setVerificationResult] = useState<{
-    publisherId?: string;
-    error?: string;
-    message?: string;
-    verified?: boolean;
-  } | null>(null);
+    publisherId?: string
+    error?: string
+    message?: string
+    verified?: boolean
+  } | null>(null)
 
   // Reset state when modal opens/closes
   useEffect(() => {
     if (!isOpen) {
-      setSelectedPublisher(null);
-      setSearchTerm("");
-      setIsVerifying(false);
-      setVerificationResult(null);
+      setSelectedPublisher(null)
+      setSearchTerm('')
+      setIsVerifying(false)
+      setVerificationResult(null)
     }
-  }, [isOpen]);
+  }, [isOpen])
 
   // Fetch publishers list
-  const { data: allPublishers, isLoading: isLoadingPublishers } = useListPublishers();
+  const { data: allPublishers, isLoading: isLoadingPublishers } =
+    useListPublishers()
 
   // Filter publishers based on search term
   const filteredPublishers =
     allPublishers?.filter(
       (publisher) =>
         publisher.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        publisher.id?.toLowerCase().includes(searchTerm.toLowerCase()),
-    ) || [];
+        publisher.id?.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || []
 
   // Setup mutation for updating node
   const updateNodeMutation = useUpdateNode({
     mutation: {
       onSuccess: () => {
         toast.success(
-          t("Node {{name}} successfully claimed by {{publisherName}}", {
+          t('Node {{name}} successfully claimed by {{publisherName}}', {
             name: node.name,
             publisherName: selectedPublisher?.name,
-          }),
-        );
+          })
+        )
         // Cache-busting invalidation for cached endpoints
         queryClient.fetchQuery(
-          shouldInvalidate.getGetNodeQueryOptions(node.id!, undefined, INVALIDATE_CACHE_OPTION),
-        );
+          shouldInvalidate.getGetNodeQueryOptions(
+            node.id!,
+            undefined,
+            INVALIDATE_CACHE_OPTION
+          )
+        )
 
         // Invalidate unclaimed nodes list (UNCLAIMED_ADMIN_PUBLISHER_ID)
         queryClient.invalidateQueries({
-          queryKey: getListNodesForPublisherV2QueryKey(UNCLAIMED_ADMIN_PUBLISHER_ID),
-          refetchType: "all",
-        });
+          queryKey: getListNodesForPublisherV2QueryKey(
+            UNCLAIMED_ADMIN_PUBLISHER_ID
+          ),
+          refetchType: 'all',
+        })
 
         // Invalidate the new publisher's nodes list
         if (selectedPublisher?.id) {
           queryClient.invalidateQueries({
             queryKey: getListNodesForPublisherV2QueryKey(selectedPublisher.id),
-            refetchType: "all",
-          });
+            refetchType: 'all',
+          })
         }
 
         // Invalidate search results which might include this node
         queryClient.invalidateQueries({
           queryKey: getSearchNodesQueryKey().slice(0, 1),
-          refetchType: "all",
-        });
+          refetchType: 'all',
+        })
 
-        onSuccess?.();
-        onClose();
+        onSuccess?.()
+        onClose()
       },
       onError: (error) => {
         toast.error(
-          t("Failed to update node: {{error}}", {
-            error: String(error?.message || error) || t("Unknown error"),
-          }),
-        );
+          t('Failed to update node: {{error}}', {
+            error: String(error?.message || error) || t('Unknown error'),
+          })
+        )
       },
     },
-  });
+  })
 
   // Verify repository to check publisher ID
   const verifyRepository = async () => {
     if (!selectedPublisher) {
-      toast.error(t("Please select a publisher first"));
-      return;
+      toast.error(t('Please select a publisher first'))
+      return
     }
     if (!node.repository) {
-      toast.error(t("No repository URL available for this node"));
-      return;
+      toast.error(t('No repository URL available for this node'))
+      return
     }
 
-    setIsVerifying(true);
-    setVerificationResult(null);
+    setIsVerifying(true)
+    setVerificationResult(null)
 
     try {
       // Extract GitHub owner/repo from repository URL
-      const repoUrl = node.repository;
-      const match = repoUrl.match(/https:\/\/github\.com\/([^/]+)\/([^/]+)/);
+      const repoUrl = node.repository
+      const match = repoUrl.match(/https:\/\/github\.com\/([^/]+)\/([^/]+)/)
 
       if (!match) {
         setVerificationResult({
-          error: t("Invalid repository URL format"),
-        });
-        return;
+          error: t('Invalid repository URL format'),
+        })
+        return
       }
 
-      const [, owner, repo] = match;
+      const [, owner, repo] = match
       if (!owner || !repo) {
         setVerificationResult({
-          error: t("Could not extract owner and repo from URL"),
-        });
-        return;
+          error: t('Could not extract owner and repo from URL'),
+        })
+        return
       }
 
       // Try to fetch pyproject.toml
-      const file = "pyproject.toml";
+      const file = 'pyproject.toml'
 
       // Use object to store results that we'll get from the loop
       const result = {
         publisherId: null as string | null,
         fileContent: null as string | null,
         foundFile: null as string | null,
-      };
+      }
 
       try {
-        const fileUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${file}`;
-        const response = await fetch(fileUrl);
+        const fileUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${file}`
+        const response = await fetch(fileUrl)
 
         if (response.ok) {
-          result.fileContent = await response.text();
-          result.foundFile = file;
+          result.fileContent = await response.text()
+          result.foundFile = file
         } else {
-          toast.error(`Failed to fetch ${file}: ${response.status} ${response.statusText}`);
-          return;
+          toast.error(
+            `Failed to fetch ${file}: ${response.status} ${response.statusText}`
+          )
+          return
         }
       } catch (error) {
         toast.error(
-          `Error fetching ${file}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        return;
+          `Error fetching ${file}: ${error instanceof Error ? error.message : String(error)}`
+        )
+        return
       }
 
       if (!result.fileContent) {
         setVerificationResult({
-          error: t("Could not find pyproject configuration files"),
-        });
-        return;
+          error: t('Could not find pyproject configuration files'),
+        })
+        return
       }
 
       // Simple parsing to find publisher ID
       // This is a basic implementation - YAML/TOML parsing would be more robust
       const publisherIdMatches = [
-        ...result.fileContent.matchAll(/publisher_?id\s*[=:]\s*["']?([^"'\s]+)["']?/gi),
-      ];
+        ...result.fileContent.matchAll(
+          /publisher_?id\s*[=:]\s*["']?([^"'\s]+)["']?/gi
+        ),
+      ]
       if (publisherIdMatches.length === 0) {
         setVerificationResult({
-          error: t("Could not find publisher ID in pyproject.toml"),
-        });
-        return;
+          error: t('Could not find publisher ID in pyproject.toml'),
+        })
+        return
       }
       if (publisherIdMatches.length > 1) {
         setVerificationResult({
-          error: `Found multiple publisher IDs in pyproject.toml: ${publisherIdMatches.map((m) => m[1]).join(", ")}`,
-        });
-        return;
+          error: `Found multiple publisher IDs in pyproject.toml: ${publisherIdMatches.map((m) => m[1]).join(', ')}`,
+        })
+        return
       }
-      const publisherIdMatch = publisherIdMatches[0];
-      result.publisherId = publisherIdMatch[1];
+      const publisherIdMatch = publisherIdMatches[0]
+      result.publisherId = publisherIdMatch[1]
 
-      const matchesSelected = result.publisherId === selectedPublisher.id;
+      const matchesSelected = result.publisherId === selectedPublisher.id
 
       setVerificationResult({
         publisherId: result.publisherId,
@@ -205,41 +226,41 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
           : `❌ Found publisher ID in repository pyproject.toml: @${result.publisherId}, but it does not match the selected publisher @${selectedPublisher?.id}`,
         error: matchesSelected
           ? undefined
-          : t("Publisher ID in repository does not match selected publisher"),
+          : t('Publisher ID in repository does not match selected publisher'),
         verified: !!matchesSelected,
-      });
+      })
     } catch (error) {
       setVerificationResult({
         error: `Failed to verify repository: ${
           error instanceof Error ? error.message : String(error)
         }`,
-      });
+      })
     } finally {
-      setIsVerifying(false);
+      setIsVerifying(false)
     }
-  };
+  }
 
   // Handle claiming the node
   const handleClaimNode = async () => {
     if (!selectedPublisher?.id) {
-      toast.error(t("Please select a publisher"));
-      return;
+      toast.error(t('Please select a publisher'))
+      return
     }
     if (node.publisher?.id !== UNCLAIMED_ADMIN_PUBLISHER_ID) {
-      toast.error(`Node ${node.id} is not Unclaimed`);
-      return;
+      toast.error(`Node ${node.id} is not Unclaimed`)
+      return
     }
     try {
       await updateNodeMutation.mutateAsync({
         nodeId: node.id!,
         publisherId: UNCLAIMED_ADMIN_PUBLISHER_ID,
         data: { publisher: selectedPublisher },
-      });
+      })
     } catch (error) {
       // Error is handled in the mutation's onError
-      toast.error(t("An unexpected error occurred while claiming the node."));
+      toast.error(t('An unexpected error occurred while claiming the node.'))
     }
-  };
+  }
 
   return (
     <Modal
@@ -252,17 +273,17 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
       dismissible
     >
       <Modal.Header className="!bg-gray-800">
-        <div className="text-white">{t("Edit unclaimed node")}</div>
+        <div className="text-white">{t('Edit unclaimed node')}</div>
       </Modal.Header>
       <Modal.Body className="!bg-gray-800 p-2 md:px-4 rounded-none">
         <div className="mb-4 p-3 bg-gray-700 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-white font-medium">
-                {t("Node")}: {node.name}
+                {t('Node')}: {node.name}
               </div>
               <div className="text-sm text-gray-400">
-                {t("ID")}: {node.id}
+                {t('ID')}: {node.id}
               </div>
             </div>
             <a
@@ -271,19 +292,19 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
               rel="noopener noreferrer"
               className="text-blue-400 hover:underline flex items-center"
             >
-              {t("View")} <HiExternalLink className="ml-1" />
+              {t('View')} <HiExternalLink className="ml-1" />
             </a>
           </div>
         </div>
         <div className="space-y-6">
           <div className="mb-4">
             <Label htmlFor="publisher" className="text-white mb-2">
-              {t("Select Publisher")}:
+              {t('Select Publisher')}:
             </Label>
             <div className="relative">
               <TextInput
                 id="publisher-search"
-                placeholder={t("Search publishers...")}
+                placeholder={t('Search publishers...')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -299,21 +320,29 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
                 <Spinner size="md" />
               </div>
             ) : filteredPublishers.length === 0 ? (
-              <div className="p-4 text-gray-300 text-center">{t("No publishers found")}</div>
+              <div className="p-4 text-gray-300 text-center">
+                {t('No publishers found')}
+              </div>
             ) : (
               <ul className="divide-y divide-gray-600">
                 {filteredPublishers.map((publisher) => (
                   <li
                     key={publisher.id}
                     className={`p-3 hover:bg-gray-600 cursor-pointer ${
-                      selectedPublisher?.id === publisher.id ? "bg-blue-900" : ""
+                      selectedPublisher?.id === publisher.id
+                        ? 'bg-blue-900'
+                        : ''
                     }`}
                     onClick={() => setSelectedPublisher(publisher)}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-white font-medium">{publisher.name}</div>
-                        <div className="text-sm text-gray-400">{publisher.id}</div>
+                        <div className="text-white font-medium">
+                          {publisher.name}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {publisher.id}
+                        </div>
                       </div>
                       {selectedPublisher?.id === publisher.id && (
                         <HiOutlineCheck className="h-5 w-5 text-green-400" />
@@ -327,7 +356,9 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
 
           {selectedPublisher && (
             <div className="p-4 bg-gray-700 rounded-lg">
-              <div className="text-white font-medium mb-2">{t("Selected Publisher")}:</div>
+              <div className="text-white font-medium mb-2">
+                {t('Selected Publisher')}:
+              </div>
               <div className="text-gray-300">
                 <div>{selectedPublisher.name}</div>
                 <div className="text-sm">
@@ -340,17 +371,19 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
           {node.repository && (
             <div className="p-4 bg-gray-700 rounded-lg">
               <div className="flex justify-between items-center mb-2">
-                <div className="text-white font-medium">{t("Repository")}:</div>
+                <div className="text-white font-medium">{t('Repository')}:</div>
                 <a
                   href={node.repository}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-400 hover:underline flex items-center"
                 >
-                  {t("View")} <HiExternalLink className="ml-1" />
+                  {t('View')} <HiExternalLink className="ml-1" />
                 </a>
               </div>
-              <div className="text-gray-300 text-sm mb-2 break-all">{node.repository}</div>
+              <div className="text-gray-300 text-sm mb-2 break-all">
+                {node.repository}
+              </div>
               <Button
                 size="sm"
                 onClick={verifyRepository}
@@ -359,10 +392,10 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
                 {isVerifying ? (
                   <>
                     <Spinner size="sm" className="mr-2" />
-                    {t("Verifying...")}
+                    {t('Verifying...')}
                   </>
                 ) : (
-                  t("Verify Publisher ID")
+                  t('Verify Publisher ID')
                 )}
               </Button>
 
@@ -370,8 +403,8 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
                 <div
                   className={`mt-2 p-2 rounded text-sm ${
                     verificationResult.error
-                      ? "bg-red-900 bg-opacity-50 text-red-200"
-                      : "bg-green-900 bg-opacity-50 text-green-200"
+                      ? 'bg-red-900 bg-opacity-50 text-red-200'
+                      : 'bg-green-900 bg-opacity-50 text-green-200'
                   }`}
                 >
                   {verificationResult.message || verificationResult.error}
@@ -381,15 +414,15 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
           )}
 
           <div className="p-2 bg-yellow-900 bg-opacity-50 text-yellow-200 rounded text-sm mb-2">
-            <strong>{t("Note")}:</strong>{" "}
+            <strong>{t('Note')}:</strong>{' '}
             {t(
-              "Claiming a node requires backend API support for updating publisherId via updateNode(...). This feature is a work in progress (WIP) and may not function until the backend is updated.",
+              'Claiming a node requires backend API support for updating publisherId via updateNode(...). This feature is a work in progress (WIP) and may not function until the backend is updated.'
             )}
           </div>
 
           <div className="flex justify-end space-x-3">
             <Button color="gray" onClick={onClose}>
-              {t("Cancel")}
+              {t('Cancel')}
             </Button>
             <Button
               color="blue"
@@ -404,15 +437,15 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
               {updateNodeMutation.isPending ? (
                 <>
                   <Spinner size="sm" className="mr-2" />
-                  {t("Claiming... (WIP)")}
+                  {t('Claiming... (WIP)')}
                 </>
               ) : (
-                t("Claim Node (WIP)")
+                t('Claim Node (WIP)')
               )}
             </Button>
           </div>
         </div>
       </Modal.Body>
     </Modal>
-  );
+  )
 }

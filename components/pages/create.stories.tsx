@@ -1,18 +1,18 @@
-import { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Breadcrumb, Card } from "flowbite-react";
-import { HiHome } from "react-icons/hi";
-import CreatePublisherFormContent from "@/components/publisher/CreatePublisherFormContent";
+import { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { Breadcrumb, Card } from 'flowbite-react'
+import { HiHome } from 'react-icons/hi'
+import CreatePublisherFormContent from '@/components/publisher/CreatePublisherFormContent'
 
 const CreatePublisherPageLayout = () => {
   const handleSuccess = (username: string) => {
-    console.log("Publisher created successfully:", username);
+    console.log('Publisher created successfully:', username)
     // In a real scenario, this would navigate to the publisher page
-  };
+  }
 
   const handleCancel = () => {
-    console.log("Create publisher cancelled");
+    console.log('Create publisher cancelled')
     // In a real scenario, this would navigate back
-  };
+  }
 
   return (
     <div className="p-4 bg-gray-900 min-h-screen">
@@ -22,8 +22,8 @@ const CreatePublisherPageLayout = () => {
             href="/"
             icon={HiHome}
             onClick={(e) => {
-              e.preventDefault();
-              console.log("Navigate to home");
+              e.preventDefault()
+              console.log('Navigate to home')
             }}
             className="dark"
           >
@@ -47,18 +47,18 @@ const CreatePublisherPageLayout = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
 const meta: Meta<typeof CreatePublisherPageLayout> = {
-  title: "Pages/Publishers/CreatePublisherPage",
+  title: 'Pages/Publishers/CreatePublisherPage',
   component: CreatePublisherPageLayout,
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof CreatePublisherPageLayout>;
+export default meta
+type Story = StoryObj<typeof CreatePublisherPageLayout>
 
-export const Default: Story = {};
+export const Default: Story = {}

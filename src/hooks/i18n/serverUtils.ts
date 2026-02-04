@@ -1,5 +1,5 @@
-import { parse } from "accept-language-parser";
-import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "../../constants";
+import { parse } from 'accept-language-parser'
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from '../../constants'
 
 /**
  * Detects the preferred language from the Accept-Language HTTP header
@@ -8,35 +8,35 @@ import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from "../../constants";
  */
 export function detectLanguageFromHeader(req: Request): string {
   // Get the Accept-Language header
-  const acceptLanguage = req.headers.get("accept-language");
+  const acceptLanguage = req.headers.get('accept-language')
 
   if (!acceptLanguage) {
-    return DEFAULT_LANGUAGE;
+    return DEFAULT_LANGUAGE
   }
 
   // Parse the Accept-Language header
-  const languages = parse(acceptLanguage);
+  const languages = parse(acceptLanguage)
 
   // Find the first supported language from the user's preferences
   for (const lang of languages) {
-    const code = lang.code.toLowerCase();
+    const code = lang.code.toLowerCase()
     // Check if language code matches exactly (e.g., 'en', 'ja')
     if (SUPPORTED_LANGUAGES.includes(code)) {
-      return code;
+      return code
     }
 
     // Check for partial match (e.g., 'zh-CN' should match 'zh')
     const matchingLang = SUPPORTED_LANGUAGES.find((supportedLang) =>
-      code.startsWith(supportedLang),
-    );
+      code.startsWith(supportedLang)
+    )
 
     if (matchingLang) {
-      return matchingLang;
+      return matchingLang
     }
   }
 
   // If no match, return default language
-  return DEFAULT_LANGUAGE;
+  return DEFAULT_LANGUAGE
 }
 
 /**
@@ -47,13 +47,13 @@ export function detectLanguageFromHeader(req: Request): string {
 export function isRedirectExcludedUrl(url: string): boolean {
   // Exclude API routes, static files, etc.
   const excludedPaths = [
-    "/api/",
-    "/_next/",
-    "/static/",
-    "/locales/",
-    "/favicon.ico",
-    "/robots.txt",
-  ];
+    '/api/',
+    '/_next/',
+    '/static/',
+    '/locales/',
+    '/favicon.ico',
+    '/robots.txt',
+  ]
 
-  return excludedPaths.some((path) => url.startsWith(path));
+  return excludedPaths.some((path) => url.startsWith(path))
 }

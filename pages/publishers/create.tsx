@@ -1,22 +1,23 @@
-import { Breadcrumb, Card } from "flowbite-react";
-import { useRouter } from "next/router";
-import React from "react";
-import { HiHome } from "react-icons/hi";
-import withAuth from "@/components/common/HOC/withAuth";
-import CreatePublisherFormContent from "@/components/publisher/CreatePublisherFormContent";
-import { useNextTranslation } from "@/src/hooks/i18n";
+import { Breadcrumb, Card } from 'flowbite-react'
+import { useRouter } from 'next/router'
+import React from 'react'
+import { HiHome } from 'react-icons/hi'
+import withAuth from '@/components/common/HOC/withAuth'
+import CreatePublisherFormContent from '@/components/publisher/CreatePublisherFormContent'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 const CreatePublisher = () => {
-  const router = useRouter();
-  const { t } = useNextTranslation();
+  const router = useRouter()
+  const { t } = useNextTranslation()
 
   const handleSuccess = (username: string) => {
-    router.push(`/publishers/${username}`);
-  };
+    router.push(`/publishers/${username}`)
+  }
 
   const handleCancel = () => {
-    router.back();
-  };
+    router.back()
+  }
+
   return (
     <div className="p-4">
       <div className="py-4">
@@ -25,14 +26,16 @@ const CreatePublisher = () => {
             href="/"
             icon={HiHome}
             onClick={(e) => {
-              e.preventDefault();
-              router.push("/");
+              e.preventDefault()
+              router.push('/')
             }}
             className="dark"
           >
-            {t("Home")}
+            {t('Home')}
           </Breadcrumb.Item>
-          <Breadcrumb.Item className="dark">{t("Create Publisher")}</Breadcrumb.Item>
+          <Breadcrumb.Item className="dark">
+            {t('Create Publisher')}
+          </Breadcrumb.Item>
         </Breadcrumb>
       </div>
 
@@ -50,7 +53,7 @@ const CreatePublisher = () => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default withAuth(CreatePublisher);
+export default withAuth(CreatePublisher)

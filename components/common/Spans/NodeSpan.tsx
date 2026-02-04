@@ -3,29 +3,34 @@
  *
  * Displays a node name and ID with hover information and click navigation
  */
-import { Tooltip } from "flowbite-react";
-import { useRouter } from "next/router";
-import { MouseEvent } from "react";
+import { Tooltip } from 'flowbite-react'
+import { useRouter } from 'next/router'
+import { MouseEvent } from 'react'
 
 interface NodeSpanProps {
-  nodeId: string;
-  nodeName?: string;
-  className?: string;
-  onClick?: (e: MouseEvent<HTMLSpanElement>) => void;
+  nodeId: string
+  nodeName?: string
+  className?: string
+  onClick?: (e: MouseEvent<HTMLSpanElement>) => void
 }
 
-export default function NodeSpan({ nodeId, nodeName, className = "", onClick }: NodeSpanProps) {
-  const router = useRouter();
+export default function NodeSpan({
+  nodeId,
+  nodeName,
+  className = '',
+  onClick,
+}: NodeSpanProps) {
+  const router = useRouter()
 
   const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
     if (onClick) {
-      onClick(e);
-      return;
+      onClick(e)
+      return
     }
 
-    e.preventDefault();
-    window.open(`/nodes/${nodeId}`, "_blank");
-  };
+    e.preventDefault()
+    window.open(`/nodes/${nodeId}`, '_blank')
+  }
 
   return (
     <div className="inline-block">
@@ -42,5 +47,5 @@ export default function NodeSpan({ nodeId, nodeName, className = "", onClick }: 
         </span>
       </Tooltip>
     </div>
-  );
+  )
 }

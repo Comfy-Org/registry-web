@@ -1,8 +1,8 @@
-import React from "react";
-import { useNextTranslation } from "@/src/hooks/i18n";
+import React from 'react'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 const FilterRegistry: React.FC = () => {
-  const { t } = useNextTranslation();
+  const { t } = useNextTranslation()
 
   return (
     <div className="items-center justify-between block my-8 lg:flex">
@@ -24,14 +24,14 @@ const FilterRegistry: React.FC = () => {
             d="M8 20V10m0 10-3-3m3 3 3-3m5-13v10m0-10 3 3m-3-3-3 3"
           />
         </svg>
-        {t("Sort by popularity")}
+        {t('Sort by popularity')}
       </div>
       <div className="relative w-full lg:w-1/3 xs:mt-3">
         <input
           type="search"
           id="search-dropdown"
           className="block p-2.5 w-full z-20 text-sm  rounded-e-lg  focus:ring-gray-700  bg-gray-700   border-gray-600 placeholder-gray-400 text-gray-400 focus:border-gray-500"
-          placeholder={t("Search by nodes or publisher")}
+          placeholder={t('Search by nodes or publisher')}
           required
         />
         <button
@@ -53,11 +53,11 @@ const FilterRegistry: React.FC = () => {
               d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
             />
           </svg>
-          <span className="sr-only">{t("Search")}</span>
+          <span className="sr-only">{t('Search')}</span>
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FilterRegistry;
+export default FilterRegistry

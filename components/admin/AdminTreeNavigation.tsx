@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { useState } from "react";
+import Link from 'next/link'
+import { useState } from 'react'
 import {
   HiChevronDown,
   HiChevronRight,
@@ -9,108 +9,112 @@ import {
   HiOutlineCube,
   HiOutlineDuplicate,
   HiOutlineSupport,
-} from "react-icons/hi";
-import { useNextTranslation } from "@/src/hooks/i18n";
+} from 'react-icons/hi'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface TreeNode {
-  id: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  href?: string;
-  children?: TreeNode[];
-  expanded?: boolean;
+  id: string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  href?: string
+  children?: TreeNode[]
+  expanded?: boolean
 }
 
 interface AdminTreeNavigationProps {
-  className?: string;
+  className?: string
 }
 
-export default function AdminTreeNavigation({ className }: AdminTreeNavigationProps) {
-  const { t } = useNextTranslation();
+export default function AdminTreeNavigation({
+  className,
+}: AdminTreeNavigationProps) {
+  const { t } = useNextTranslation()
 
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(
-    new Set(["nodes", "nodeversions"]),
-  );
+    new Set(['nodes', 'nodeversions'])
+  )
 
   const treeData: TreeNode[] = [
     {
-      id: "nodes",
-      label: t("Nodes"),
+      id: 'nodes',
+      label: t('Nodes'),
       icon: HiOutlineCube,
       children: [
         {
-          id: "manage-nodes",
-          label: t("Manage Nodes"),
+          id: 'manage-nodes',
+          label: t('Manage Nodes'),
           icon: HiOutlineCollection,
-          href: "/admin/nodes",
+          href: '/admin/nodes',
         },
         {
-          id: "unclaimed-nodes",
-          label: t("Unclaimed Nodes"),
+          id: 'unclaimed-nodes',
+          label: t('Unclaimed Nodes'),
           icon: HiOutlineCollection,
-          href: "/admin/claim-nodes",
+          href: '/admin/claim-nodes',
         },
         {
-          id: "add-unclaimed-node",
-          label: t("Add Unclaimed Node"),
+          id: 'add-unclaimed-node',
+          label: t('Add Unclaimed Node'),
           icon: HiOutlineCollection,
-          href: "/admin/add-unclaimed-node",
+          href: '/admin/add-unclaimed-node',
         },
       ],
     },
     {
-      id: "search-ranking",
-      label: t("Search Ranking Table"),
+      id: 'search-ranking',
+      label: t('Search Ranking Table'),
       icon: HiOutlineAdjustments,
-      href: "/admin/search-ranking",
+      href: '/admin/search-ranking',
     },
     {
-      id: "comfy-node-names",
-      label: t("ComfyNode Names"),
+      id: 'comfy-node-names',
+      label: t('ComfyNode Names'),
       icon: HiOutlineDuplicate,
-      href: "/admin/preempted-comfy-node-names",
+      href: '/admin/preempted-comfy-node-names',
     },
     {
-      id: "nodeversions",
-      label: t("Node Versions"),
+      id: 'nodeversions',
+      label: t('Node Versions'),
       icon: HiOutlineClipboardCheck,
       children: [
         {
-          id: "review-versions",
-          label: t("Review Node Versions"),
+          id: 'review-versions',
+          label: t('Review Node Versions'),
           icon: HiOutlineClipboardCheck,
-          href: "/admin/nodeversions?filter=flagged",
+          href: '/admin/nodeversions?filter=flagged',
         },
         {
-          id: "version-compatibility",
-          label: t("Version Compatibility"),
+          id: 'version-compatibility',
+          label: t('Version Compatibility'),
           icon: HiOutlineSupport,
-          href: "/admin/node-version-compatibility",
+          href: '/admin/node-version-compatibility',
         },
       ],
     },
-  ];
+  ]
 
   const toggleExpanded = (nodeId: string) => {
-    const newExpanded = new Set(expandedNodes);
+    const newExpanded = new Set(expandedNodes)
     if (newExpanded.has(nodeId)) {
-      newExpanded.delete(nodeId);
+      newExpanded.delete(nodeId)
     } else {
-      newExpanded.add(nodeId);
+      newExpanded.add(nodeId)
     }
-    setExpandedNodes(newExpanded);
-  };
+    setExpandedNodes(newExpanded)
+  }
 
   const renderTreeNode = (node: TreeNode, depth = 0) => {
-    const hasChildren = node.children && node.children.length > 0;
-    const isExpanded = expandedNodes.has(node.id);
-    const paddingLeft = depth * 20 + 12;
+    const hasChildren = node.children && node.children.length > 0
+    const isExpanded = expandedNodes.has(node.id)
+    const paddingLeft = depth * 20 + 12
 
     return (
       <div key={node.id} className="w-full">
         <div
           className={`flex items-center w-full px-3 py-2 rounded-lg transition-colors ${
-            node.href ? "hover:bg-gray-700 text-gray-200 hover:text-white" : "text-gray-300"
+            node.href
+              ? 'hover:bg-gray-700 text-gray-200 hover:text-white'
+              : 'text-gray-300'
           }`}
           style={{ paddingLeft: `${paddingLeft}px` }}
         >
@@ -136,7 +140,7 @@ export default function AdminTreeNavigation({ className }: AdminTreeNavigationPr
             </Link>
           ) : (
             <span
-              className={`flex-1 text-left ${hasChildren ? "cursor-pointer" : ""}`}
+              className={`flex-1 text-left ${hasChildren ? 'cursor-pointer' : ''}`}
               onClick={() => hasChildren && toggleExpanded(node.id)}
             >
               {node.label}
@@ -150,13 +154,17 @@ export default function AdminTreeNavigation({ className }: AdminTreeNavigationPr
           </div>
         )}
       </div>
-    );
-  };
+    )
+  }
 
   return (
-    <nav className={`bg-gray-800 rounded-lg p-4 ${className || ""}`}>
-      <h2 className="text-lg font-semibold text-gray-200 mb-4">{t("Admin Navigation")}</h2>
-      <div className="space-y-1">{treeData.map((node) => renderTreeNode(node))}</div>
+    <nav className={`bg-gray-800 rounded-lg p-4 ${className || ''}`}>
+      <h2 className="text-lg font-semibold text-gray-200 mb-4">
+        {t('Admin Navigation')}
+      </h2>
+      <div className="space-y-1">
+        {treeData.map((node) => renderTreeNode(node))}
+      </div>
     </nav>
-  );
+  )
 }

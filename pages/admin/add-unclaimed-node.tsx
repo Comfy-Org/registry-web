@@ -1,15 +1,15 @@
-import { Breadcrumb } from "flowbite-react";
-import { useRouter } from "next/router";
-import { HiHome } from "react-icons/hi";
-import withAdmin from "@/components/common/HOC/authAdmin";
-import { AdminCreateNodeFormModal } from "@/components/nodes/AdminCreateNodeFormModal";
-import { useNextTranslation } from "@/src/hooks/i18n";
+import { Breadcrumb } from 'flowbite-react'
+import { useRouter } from 'next/router'
+import { HiHome } from 'react-icons/hi'
+import withAdmin from '@/components/common/HOC/authAdmin'
+import { AdminCreateNodeFormModal } from '@/components/nodes/AdminCreateNodeFormModal'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
-export default withAdmin(AddUnclaimedNodePage);
+export default withAdmin(AddUnclaimedNodePage)
 
 function AddUnclaimedNodePage() {
-  const { t } = useNextTranslation();
-  const router = useRouter();
+  const { t } = useNextTranslation()
+  const router = useRouter()
   return (
     <div className="p-4">
       <Breadcrumb className="py-4">
@@ -17,37 +17,39 @@ function AddUnclaimedNodePage() {
           href="/"
           icon={HiHome}
           onClick={(e) => {
-            e.preventDefault();
-            router.push("/");
+            e.preventDefault()
+            router.push('/')
           }}
           className="dark"
         >
-          {t("Home")}
+          {t('Home')}
         </Breadcrumb.Item>
         <Breadcrumb.Item
           href="/admin"
           onClick={(e) => {
-            e.preventDefault();
-            router.push("/admin");
+            e.preventDefault()
+            router.push('/admin')
           }}
           className="dark"
         >
-          {t("Admin Dashboard")}
+          {t('Admin Dashboard')}
         </Breadcrumb.Item>
         <Breadcrumb.Item
           href="/admin/claim-nodes"
           onClick={(e) => {
-            e.preventDefault();
-            router.push("/admin/claim-nodes");
+            e.preventDefault()
+            router.push('/admin/claim-nodes')
           }}
           className="dark"
         >
-          {t("Unclaimed Nodes")}
+          {t('Unclaimed Nodes')}
         </Breadcrumb.Item>
-        <Breadcrumb.Item className="dark">{t("Add Unclaimed Node")}</Breadcrumb.Item>
+        <Breadcrumb.Item className="dark">
+          {t('Add Unclaimed Node')}
+        </Breadcrumb.Item>
       </Breadcrumb>
 
-      <AdminCreateNodeFormModal open onClose={() => router.push("/admin/")} />
+      <AdminCreateNodeFormModal open onClose={() => router.push('/admin/')} />
     </div>
-  );
+  )
 }
