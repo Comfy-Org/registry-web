@@ -9,7 +9,6 @@ import { HiTag, HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import analytic from 'src/analytic/analytic'
 import {
-  REQUEST_OPTIONS_NO_CACHE,
   UNCLAIMED_ADMIN_PUBLISHER_ID,
 } from 'src/constants'
 import {
