@@ -19,25 +19,57 @@ const DiffEditor = dynamic(
   }
 )
 
-// Lazy load Prettier formatting with plugins
+// Module-level cache for lazily loaded Prettier modules
+let prettierStandalonePromise: Promise<
+  typeof import('prettier/standalone')
+> | null = null
+let prettierPluginBabelPromise: Promise<
+  typeof import('prettier/plugins/babel')
+> | null = null
+let prettierPluginEstreePromise: Promise<
+  typeof import('prettier/plugins/estree')
+> | null = null
+let prettierPluginYamlPromise: Promise<
+  typeof import('prettier/plugins/yaml')
+> | null = null
+
+function loadPrettierStandalone() {
+  if (!prettierStandalonePromise)
+    prettierStandalonePromise = import('prettier/standalone')
+  return prettierStandalonePromise
+}
+function loadPrettierPluginBabel() {
+  if (!prettierPluginBabelPromise)
+    prettierPluginBabelPromise = import('prettier/plugins/babel')
+  return prettierPluginBabelPromise
+}
+function loadPrettierPluginEstree() {
+  if (!prettierPluginEstreePromise)
+    prettierPluginEstreePromise = import('prettier/plugins/estree')
+  return prettierPluginEstreePromise
+}
+function loadPrettierPluginYaml() {
+  if (!prettierPluginYamlPromise)
+    prettierPluginYamlPromise = import('prettier/plugins/yaml')
+  return prettierPluginYamlPromise
+}
+
 async function formatCode(code: string, parser: string) {
-  const [
-    { format },
-    prettierPluginBabel,
-    prettierPluginEstree,
-    prettierPluginYaml,
-  ] = await Promise.all([
-    import('prettier/standalone'),
-    import('prettier/plugins/babel'),
-    import('prettier/plugins/estree'),
-    import('prettier/plugins/yaml'),
-  ])
-
-  const plugins =
-    parser === 'yaml'
-      ? [prettierPluginYaml.default]
-      : [prettierPluginBabel.default, prettierPluginEstree.default]
-
+  const { format } = await loadPrettierStandalone()
+  let plugins: any[]
+  if (parser === 'yaml') {
+    const mod = await loadPrettierPluginYaml()
+    plugins = [(mod as any).default ?? mod]
+  } else {
+    const [babel, estree] = await Promise.all([
+      loadPrettierPluginBabel(),
+      loadPrettierPluginEstree(),
+    ])
+    plugins = [
+      (babel as any).default ?? babel,
+      (estree as any).default ?? estree,
+    ]
+  }
   return format(code, { parser, plugins })
 }
 import { FaChevronDown, FaGithub, FaHistory } from 'react-icons/fa'
@@ -157,12 +189,15 @@ export function NodeStatusReason(nv: NodeVersion) {
     { include_status_reason: true },
     { query: { enabled: inView } }
   )
-  nodeVersions?.sort(compareBy((e) => e.createdAt || e.id || ''))
+  const sortedNodeVersions = nodeVersions
+    ? [...nodeVersions].sort(compareBy((e) => e.createdAt || e.id || ''))
+    : nodeVersions
 
   // query last node versions
   const currentNodeVersionIndex =
-    nodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1
-  const lastApprovedNodeVersion = nodeVersions?.findLast(
+    sortedNodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ??
+    -1
+  const lastApprovedNodeVersion = sortedNodeVersions?.findLast(
     (nv, i) =>
       nv.status === NodeVersionStatus.NodeVersionStatusActive &&
       i < currentNodeVersionIndex
@@ -265,7 +300,7 @@ export function NodeStatusReason(nv: NodeVersion) {
   return (
     <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
       {/* HistoryVersions */}
-      {(nodeVersions?.length ?? null) && (
+      {(sortedNodeVersions?.length ?? null) && (
         <details>
           <summary className="flex gap-2 items-center">
             <FaChevronDown className="w-5 h-5" />
@@ -276,7 +311,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             </h4>
             <ul className="ml-4 flex gap-2 overflow-x-auto">
               {Object.entries(
-                nodeVersions!.reduce(
+                sortedNodeVersions!.reduce(
                   (acc, nv) => {
                     acc[nv.status!] = (acc[nv.status!] || 0) + 1
                     return acc
@@ -306,11 +341,11 @@ export function NodeStatusReason(nv: NodeVersion) {
           </summary>
           <div className="overflow-x-auto overflow-hidden max-w-full">
             <ol className="ml-4 w-max">
-              {nodeVersions?.map((nv) => (
+              {sortedNodeVersions?.map((nv) => (
                 <li
                   key={nv.id}
                   className={`w-full min-w-max flex gap-2 text-xs whitespace-nowrap ${
-                    nodeVersions?.indexOf(nv) === currentNodeVersionIndex
+                    sortedNodeVersions?.indexOf(nv) === currentNodeVersionIndex
                       ? 'bg-gray-700 text-white'
                       : ''
                   }`}
@@ -418,18 +453,6 @@ export function NodeStatusReason(nv: NodeVersion) {
         </details>
       )}
     </div>
-  )
-}
-
-export function PrettieredJSON5({ children: raw }: { children: string }) {
-  const [code, setCode] = useState(raw)
-  useEffect(() => {
-    formatCode(raw ?? '', 'json5').then(setCode)
-  }, [raw])
-  return (
-    <SyntaxHighlighter language="json5" style={dark}>
-      {code}
-    </SyntaxHighlighter>
   )
 }
 
