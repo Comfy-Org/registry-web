@@ -9,9 +9,7 @@ import { HiTrash } from 'react-icons/hi'
 import { MdEdit, MdOpenInNew } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import analytic from 'src/analytic/analytic'
-import {
-  UNCLAIMED_ADMIN_PUBLISHER_ID,
-} from 'src/constants'
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from 'src/constants'
 import {
   NodeStatus,
   NodeVersion,
@@ -130,7 +128,7 @@ const NodeDetails = () => {
     nodeId,
     {
       query: {
-        enabled: !!nodeId,
+        enabled: !!_nodeId,
       },
     }
   )
@@ -155,7 +153,7 @@ const NodeDetails = () => {
     },
     {
       query: {
-        enabled: !!nodeId,
+        enabled: !!_nodeId,
       },
     }
   )
@@ -543,7 +541,9 @@ const NodeDetails = () => {
                   {nodeVersions?.map((version) => (
                     <div
                       className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
-                      key={version.id ?? `${version.version}-${version.createdAt}`}
+                      key={
+                        version.id ?? `${version.version}-${version.createdAt}`
+                      }
                     >
                       <h3 className="text-base font-semibold text-gray-200">
                         {t('Version')} {version.version}
