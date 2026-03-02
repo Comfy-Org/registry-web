@@ -59,7 +59,7 @@ const Hit: React.FC<HitProps> = React.memo(({ hit }) => {
         >
           {(
             hit._snippetResult?.description as HitAttributeSnippetResult
-          )?.value.replace(/<\/?mark>/g, '**')}
+          )?.value?.replace(/<\/?mark>/g, '**') ?? ''}
         </Markdown>
 
         {/* nodes */}
