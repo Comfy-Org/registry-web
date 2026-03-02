@@ -49,7 +49,7 @@ function NodeList() {
   } | null>(null)
   const [processingNodeId, setProcessingNodeId] = useState<string | null>(null)
   const queryClient = useQueryClient()
-  const { data: user } = useGetUser()
+  useGetUser()
 
   // Handle page from URL
   React.useEffect(() => {
@@ -207,7 +207,6 @@ function NodeList() {
         toast.success(t('Node unbanned successfully'))
       }
       queryClient.invalidateQueries({ queryKey: ['/nodes'] })
-      getAllNodesQuery.refetch()
     } catch (error: any) {
       // Check if error is due to missing JWT token
       if (error?.message === 'ADMIN_JWT_REQUIRED') {
