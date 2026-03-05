@@ -176,6 +176,9 @@ export function NodeStatusReason(nv: NodeVersion) {
   const { node_id, status_reason } = nv
   const { ref, inView } = useInView()
 
+  // Pagination state for version history
+  const [visibleVersionCount, setVisibleVersionCount] = useState(10)
+
   // TODO: migrate this to comfy-api, bring node information to /versions
   const { data: node } = useGetNode(
     node_id!,
@@ -193,9 +196,17 @@ export function NodeStatusReason(nv: NodeVersion) {
     ? [...nodeVersions].sort(compareBy((e) => e.createdAt || e.id || ''))
     : nodeVersions
 
+  // Get visible versions (most recent N versions, from sorted array)
+  const visibleNodeVersions = sortedNodeVersions?.slice(-visibleVersionCount)
+  const hasMoreVersions =
+    (sortedNodeVersions?.length ?? 0) > visibleVersionCount
+
   // query last node versions
   const currentNodeVersionIndex =
     sortedNodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ??
+    -1
+  const currentNodeVersionIndexInVisible =
+    visibleNodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ??
     -1
   const lastApprovedNodeVersion = sortedNodeVersions?.findLast(
     (nv, i) =>
@@ -341,11 +352,26 @@ export function NodeStatusReason(nv: NodeVersion) {
           </summary>
           <div className="overflow-x-auto overflow-hidden max-w-full">
             <ol className="ml-4 w-max">
-              {sortedNodeVersions?.map((nv) => (
+              {hasMoreVersions && (
+                <li className="w-full min-w-max flex gap-2 text-xs whitespace-nowrap mb-2">
+                  <Button
+                    size="xs"
+                    color="gray"
+                    onClick={() => setVisibleVersionCount((prev) => prev + 10)}
+                    className="ml-4"
+                  >
+                    {t('Show more versions')} (
+                    {sortedNodeVersions!.length - visibleVersionCount}{' '}
+                    {t('older')})
+                  </Button>
+                </li>
+              )}
+              {visibleNodeVersions?.map((nv) => (
                 <li
                   key={nv.id}
                   className={`w-full min-w-max flex gap-2 text-xs whitespace-nowrap ${
-                    sortedNodeVersions?.indexOf(nv) === currentNodeVersionIndex
+                    visibleNodeVersions?.indexOf(nv) ===
+                    currentNodeVersionIndexInVisible
                       ? 'bg-gray-700 text-white'
                       : ''
                   }`}
