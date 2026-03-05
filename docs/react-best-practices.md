@@ -29,9 +29,9 @@ The framework spans eight optimization areas, rated from CRITICAL to LOW impact:
 ```javascript
 // WRONG: Fetches data even when it won't be used
 async function handleRequest(userId, skipProcessing) {
-  const userData = await fetchUserData(userId) // Always executes
-  if (skipProcessing) return { skipped: true }
-  return processUserData(userData)
+  const userData = await fetchUserData(userId); // Always executes
+  if (skipProcessing) return { skipped: true };
+  return processUserData(userData);
 }
 ```
 
@@ -40,9 +40,9 @@ async function handleRequest(userId, skipProcessing) {
 ```javascript
 // CORRECT: Only fetches when needed
 async function handleRequest(userId, skipProcessing) {
-  if (skipProcessing) return { skipped: true }
-  const userData = await fetchUserData(userId) // Only when needed
-  return processUserData(userData)
+  if (skipProcessing) return { skipped: true };
+  const userData = await fetchUserData(userId); // Only when needed
+  return processUserData(userData);
 }
 ```
 
@@ -54,22 +54,22 @@ async function handleRequest(userId, skipProcessing) {
 
 ```javascript
 // WRONG: Multiple passes
-const valid = items.filter((item) => item.isValid)
-const active = items.filter((item) => item.isActive)
-const premium = items.filter((item) => item.isPremium)
+const valid = items.filter((item) => item.isValid);
+const active = items.filter((item) => item.isActive);
+const premium = items.filter((item) => item.isPremium);
 ```
 
 ```javascript
 // CORRECT: Single pass
 const categorized = items.reduce(
   (acc, item) => {
-    if (item.isValid) acc.valid.push(item)
-    if (item.isActive) acc.active.push(item)
-    if (item.isPremium) acc.premium.push(item)
-    return acc
+    if (item.isValid) acc.valid.push(item);
+    if (item.isActive) acc.active.push(item);
+    if (item.isPremium) acc.premium.push(item);
+    return acc;
   },
-  { valid: [], active: [], premium: [] }
-)
+  { valid: [], active: [], premium: [] },
+);
 ```
 
 ### 2. Parallelizing Awaits
@@ -78,9 +78,9 @@ const categorized = items.reduce(
 
 ```javascript
 // WRONG: Sequential (slow)
-const user = await fetchUser(userId)
-const posts = await fetchPosts(userId)
-const comments = await fetchComments(userId)
+const user = await fetchUser(userId);
+const posts = await fetchPosts(userId);
+const comments = await fetchComments(userId);
 ```
 
 ```javascript
@@ -89,7 +89,7 @@ const [user, posts, comments] = await Promise.all([
   fetchUser(userId),
   fetchPosts(userId),
   fetchComments(userId),
-])
+]);
 ```
 
 ### 3. Lazy State Initialization
@@ -98,12 +98,12 @@ const [user, posts, comments] = await Promise.all([
 
 ```javascript
 // WRONG: Runs expensiveCalculation() on every render
-const [value, setValue] = useState(expensiveCalculation())
+const [value, setValue] = useState(expensiveCalculation());
 ```
 
 ```javascript
 // CORRECT: Only runs once on mount
-const [value, setValue] = useState(() => expensiveCalculation())
+const [value, setValue] = useState(() => expensiveCalculation());
 ```
 
 ## Application to AI-Assisted Development

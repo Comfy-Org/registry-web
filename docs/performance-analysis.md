@@ -84,8 +84,8 @@ Monaco Editor (~2MB) imported at top-level but only used when user expands detai
 Pattern repeated multiple times:
 
 ```tsx
-queryClient.invalidateQueries({ queryKey: ['/nodes'] })
-getAllNodesQuery.refetch() // Sequential refetch
+queryClient.invalidateQueries({ queryKey: ["/nodes"] });
+getAllNodesQuery.refetch(); // Sequential refetch
 ```
 
 **Impact:** Admin pages experience unnecessary delays.
