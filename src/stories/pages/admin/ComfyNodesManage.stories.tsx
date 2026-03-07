@@ -1,15 +1,15 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { vi } from 'vitest'
-import ComfyNodesManage from '@/pages/admin/comfy-nodes'
-import { ComfyNode, ComfyNodePolicy } from '@/src/api/generated'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { vi } from "vitest";
+import ComfyNodesManage from "@/pages/admin/comfy-nodes";
+import { ComfyNode, ComfyNodePolicy } from "@/src/api/generated";
 
 // Mock router
 const mockRouter = {
   push: () => {},
-  pathname: '/admin/comfy-nodes',
+  pathname: "/admin/comfy-nodes",
   query: {},
-  asPath: '/admin/comfy-nodes',
+  asPath: "/admin/comfy-nodes",
   back: () => {},
   beforePopState: () => {},
   prefetch: () => {},
@@ -23,80 +23,79 @@ const mockRouter = {
   isFallback: false,
   isLocaleDomain: false,
   isReady: true,
-  defaultLocale: 'en',
+  defaultLocale: "en",
   domainLocales: [],
   isPreview: false,
-}
+};
 
 // Mock data
 const mockComfyNodes: ComfyNode[] = [
   {
-    comfy_node_name: 'ImageProcessor',
-    category: 'Image Processing',
-    description:
-      'Advanced image processing node with multiple filters and effects',
-    function: 'process_image',
-    input_types: 'IMAGE, CONDITIONING',
-    return_names: 'image, mask',
-    return_types: 'IMAGE, MASK',
+    comfy_node_name: "ImageProcessor",
+    category: "Image Processing",
+    description: "Advanced image processing node with multiple filters and effects",
+    function: "process_image",
+    input_types: "IMAGE, CONDITIONING",
+    return_names: "image, mask",
+    return_types: "IMAGE, MASK",
     output_is_list: [false, true],
     deprecated: false,
     experimental: false,
     policy: ComfyNodePolicy.ComfyNodePolicyActive,
   },
   {
-    comfy_node_name: 'TextGenerator',
-    category: 'Text',
-    description: 'Generate text using various AI models',
-    function: 'generate_text',
-    input_types: 'STRING, CONDITIONING',
-    return_names: 'text',
-    return_types: 'STRING',
+    comfy_node_name: "TextGenerator",
+    category: "Text",
+    description: "Generate text using various AI models",
+    function: "generate_text",
+    input_types: "STRING, CONDITIONING",
+    return_names: "text",
+    return_types: "STRING",
     output_is_list: [false],
     deprecated: false,
     experimental: true,
     policy: ComfyNodePolicy.ComfyNodePolicyActive,
   },
   {
-    comfy_node_name: 'LegacyFilter',
-    category: 'Legacy',
-    description: 'Old filter that should not be used anymore',
-    function: 'apply_filter',
-    input_types: 'IMAGE',
-    return_names: 'filtered_image',
-    return_types: 'IMAGE',
+    comfy_node_name: "LegacyFilter",
+    category: "Legacy",
+    description: "Old filter that should not be used anymore",
+    function: "apply_filter",
+    input_types: "IMAGE",
+    return_names: "filtered_image",
+    return_types: "IMAGE",
     output_is_list: [false],
     deprecated: true,
     experimental: false,
     policy: ComfyNodePolicy.ComfyNodePolicyBanned,
   },
   {
-    comfy_node_name: 'LocalOnlyProcessor',
-    category: 'Specialized',
-    description: 'A processor that only works locally',
-    function: 'local_process',
-    input_types: 'ANY',
-    return_names: 'result',
-    return_types: 'ANY',
+    comfy_node_name: "LocalOnlyProcessor",
+    category: "Specialized",
+    description: "A processor that only works locally",
+    function: "local_process",
+    input_types: "ANY",
+    return_names: "result",
+    return_types: "ANY",
     output_is_list: [false],
     deprecated: false,
     experimental: false,
     policy: ComfyNodePolicy.ComfyNodePolicyLocalOnly,
   },
-]
+];
 
 // Mock API response
 const mockApiResponse = {
   comfy_nodes: mockComfyNodes,
   total: mockComfyNodes.length,
-}
+};
 
 // Mock the API hook
-vi.mock('@/src/api/generated', () => ({
+vi.mock("@/src/api/generated", () => ({
   ComfyNodePolicy: {
-    ComfyNodePolicyActive: 'ComfyNodePolicyActive',
-    ComfyNodePolicyBanned: 'ComfyNodePolicyBanned',
-    ComfyNodePolicyLocalOnly: 'ComfyNodePolicyLocalOnly',
+    ComfyNodePolicyActive: "ComfyNodePolicyActive",
+    ComfyNodePolicyBanned: "ComfyNodePolicyBanned",
+    ComfyNodePolicyLocalOnly: "ComfyNodePolicyLocalOnly",
   },
   useListAllComfyNodes: () => ({
     data: mockApiResponse,
@@ -107,25 +106,25 @@ vi.mock('@/src/api/generated', () => ({
     mutateAsync: async () => {},
     isPending: false,
   }),
-}))
+}));
 
 // Mock the router
-vi.mock('next/router', () => ({
+vi.mock("next/router", () => ({
   useRouter: () => mockRouter,
-}))
+}));
 
 // Mock the auth HOC
-vi.mock('@/components/common/HOC/authAdmin', () => ({
+vi.mock("@/components/common/HOC/authAdmin", () => ({
   default: (Component: any) => Component,
-}))
+}));
 
 // Mock the toast notifications
-vi.mock('react-toastify', () => ({
+vi.mock("react-toastify", () => ({
   toast: {
     success: () => {},
     error: () => {},
   },
-}))
+}));
 
 // Wrapper component to provide necessary context
 const ComfyNodesManageWrapper = () => {
@@ -135,25 +134,25 @@ const ComfyNodesManageWrapper = () => {
         retry: false,
       },
     },
-  })
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
       <ComfyNodesManage />
     </QueryClientProvider>
-  )
-}
+  );
+};
 
 const meta: Meta<typeof ComfyNodesManageWrapper> = {
-  title: 'Pages/Admin/ComfyNodesManage',
+  title: "Pages/Admin/ComfyNodesManage",
   component: ComfyNodesManageWrapper,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     nextjs: {
       appDirectory: true,
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <div className="dark min-h-screen bg-gray-900">
@@ -161,41 +160,41 @@ const meta: Meta<typeof ComfyNodesManageWrapper> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof ComfyNodesManageWrapper>
+export default meta;
+type Story = StoryObj<typeof ComfyNodesManageWrapper>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 // Loading state story - uses a QueryClient wrapper that keeps the query in pending state
 const LoadingWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, staleTime: Infinity } },
-  })
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <ComfyNodesManage />
     </QueryClientProvider>
-  )
-}
+  );
+};
 
 export const Loading: Story = {
   render: () => <LoadingWrapper />,
-}
+};
 
 // Empty state story - uses a QueryClient wrapper with empty pre-seeded results
 const EmptyResultsWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
-  })
+  });
   return (
     <QueryClientProvider client={queryClient}>
       <ComfyNodesManage />
     </QueryClientProvider>
-  )
-}
+  );
+};
 
 export const EmptyResults: Story = {
   render: () => <EmptyResultsWrapper />,
-}
+};

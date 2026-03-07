@@ -1,49 +1,49 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Badge } from 'flowbite-react'
-import { ComfyNodePolicy } from '@/src/api/generated'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { Badge } from "flowbite-react";
+import { ComfyNodePolicy } from "@/src/api/generated";
 
 // Component that mimics the policy badge logic from the admin page
 const ComfyNodePolicyBadge = ({ policy }: { policy?: ComfyNodePolicy }) => {
   const getPolicyBadgeColor = (policy: ComfyNodePolicy) => {
     switch (policy) {
       case ComfyNodePolicy.ComfyNodePolicyActive:
-        return 'success'
+        return "success";
       case ComfyNodePolicy.ComfyNodePolicyBanned:
-        return 'failure'
+        return "failure";
       case ComfyNodePolicy.ComfyNodePolicyLocalOnly:
-        return 'warning'
+        return "warning";
       default:
-        return 'gray'
+        return "gray";
     }
-  }
+  };
 
   const getPolicyLabel = (policy: ComfyNodePolicy) => {
     switch (policy) {
       case ComfyNodePolicy.ComfyNodePolicyActive:
-        return 'Active'
+        return "Active";
       case ComfyNodePolicy.ComfyNodePolicyBanned:
-        return 'Banned'
+        return "Banned";
       case ComfyNodePolicy.ComfyNodePolicyLocalOnly:
-        return 'Local Only'
+        return "Local Only";
       default:
-        return 'Unknown'
+        return "Unknown";
     }
-  }
+  };
 
   return (
-    <Badge color={policy ? getPolicyBadgeColor(policy) : 'gray'} size="sm">
-      {policy ? getPolicyLabel(policy) : 'No Policy'}
+    <Badge color={policy ? getPolicyBadgeColor(policy) : "gray"} size="sm">
+      {policy ? getPolicyLabel(policy) : "No Policy"}
     </Badge>
-  )
-}
+  );
+};
 
 const meta: Meta<typeof ComfyNodePolicyBadge> = {
-  title: 'Components/Admin/ComfyNodePolicyBadge',
+  title: "Components/Admin/ComfyNodePolicyBadge",
   component: ComfyNodePolicyBadge,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <div className="dark bg-gray-900 p-4">
@@ -51,34 +51,34 @@ const meta: Meta<typeof ComfyNodePolicyBadge> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof ComfyNodePolicyBadge>
+export default meta;
+type Story = StoryObj<typeof ComfyNodePolicyBadge>;
 
 export const Active: Story = {
   args: {
     policy: ComfyNodePolicy.ComfyNodePolicyActive,
   },
-}
+};
 
 export const Banned: Story = {
   args: {
     policy: ComfyNodePolicy.ComfyNodePolicyBanned,
   },
-}
+};
 
 export const LocalOnly: Story = {
   args: {
     policy: ComfyNodePolicy.ComfyNodePolicyLocalOnly,
   },
-}
+};
 
 export const NoPolicy: Story = {
   args: {
     policy: undefined,
   },
-}
+};
 
 // Show all variants together
 export const AllVariants: Story = {
@@ -90,4 +90,4 @@ export const AllVariants: Story = {
       <ComfyNodePolicyBadge policy={undefined} />
     </div>
   ),
-}
+};

@@ -1,41 +1,41 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Badge, Button, Table } from 'flowbite-react'
-import { HiPencil } from 'react-icons/hi'
-import { ComfyNode, ComfyNodePolicy } from '@/src/api/generated'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { Badge, Button, Table } from "flowbite-react";
+import { HiPencil } from "react-icons/hi";
+import { ComfyNode, ComfyNodePolicy } from "@/src/api/generated";
 
 // Standalone table component for ComfyNodes
 const ComfyNodeTable = ({
   comfyNodes,
   onEdit,
 }: {
-  comfyNodes: ComfyNode[]
-  onEdit?: (comfyNode: ComfyNode) => void
+  comfyNodes: ComfyNode[];
+  onEdit?: (comfyNode: ComfyNode) => void;
 }) => {
   const getPolicyBadgeColor = (policy: ComfyNodePolicy) => {
     switch (policy) {
       case ComfyNodePolicy.ComfyNodePolicyActive:
-        return 'success'
+        return "success";
       case ComfyNodePolicy.ComfyNodePolicyBanned:
-        return 'failure'
+        return "failure";
       case ComfyNodePolicy.ComfyNodePolicyLocalOnly:
-        return 'warning'
+        return "warning";
       default:
-        return 'gray'
+        return "gray";
     }
-  }
+  };
 
   const getPolicyLabel = (policy: ComfyNodePolicy) => {
     switch (policy) {
       case ComfyNodePolicy.ComfyNodePolicyActive:
-        return 'Active'
+        return "Active";
       case ComfyNodePolicy.ComfyNodePolicyBanned:
-        return 'Banned'
+        return "Banned";
       case ComfyNodePolicy.ComfyNodePolicyLocalOnly:
-        return 'Local Only'
+        return "Local Only";
       default:
-        return 'Unknown'
+        return "Unknown";
     }
-  }
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -65,16 +65,10 @@ const ComfyNodeTable = ({
               </Table.Cell>
               <Table.Cell>
                 <Badge
-                  color={
-                    comfyNode.policy
-                      ? getPolicyBadgeColor(comfyNode.policy)
-                      : 'gray'
-                  }
+                  color={comfyNode.policy ? getPolicyBadgeColor(comfyNode.policy) : "gray"}
                   size="sm"
                 >
-                  {comfyNode.policy
-                    ? getPolicyLabel(comfyNode.policy)
-                    : 'No Policy'}
+                  {comfyNode.policy ? getPolicyLabel(comfyNode.policy) : "No Policy"}
                 </Badge>
               </Table.Cell>
               <Table.Cell>
@@ -92,11 +86,7 @@ const ComfyNodeTable = ({
                 </div>
               </Table.Cell>
               <Table.Cell>
-                <Button
-                  size="sm"
-                  color="blue"
-                  onClick={() => onEdit?.(comfyNode)}
-                >
+                <Button size="sm" color="blue" onClick={() => onEdit?.(comfyNode)}>
                   <HiPencil className="mr-1" />
                   Edit
                 </Button>
@@ -106,73 +96,72 @@ const ComfyNodeTable = ({
         </Table.Body>
       </Table>
     </div>
-  )
-}
+  );
+};
 
 // Mock data
 const mockComfyNodes: ComfyNode[] = [
   {
-    comfy_node_name: 'ImageProcessor',
-    category: 'Image Processing',
-    description:
-      'Advanced image processing node with multiple filters and effects',
-    function: 'process_image',
-    input_types: 'IMAGE, CONDITIONING',
-    return_names: 'image, mask',
-    return_types: 'IMAGE, MASK',
+    comfy_node_name: "ImageProcessor",
+    category: "Image Processing",
+    description: "Advanced image processing node with multiple filters and effects",
+    function: "process_image",
+    input_types: "IMAGE, CONDITIONING",
+    return_names: "image, mask",
+    return_types: "IMAGE, MASK",
     output_is_list: [false, true],
     deprecated: false,
     experimental: false,
     policy: ComfyNodePolicy.ComfyNodePolicyActive,
   },
   {
-    comfy_node_name: 'TextGenerator',
-    category: 'Text',
-    description: 'Generate text using various AI models',
-    function: 'generate_text',
-    input_types: 'STRING, CONDITIONING',
-    return_names: 'text',
-    return_types: 'STRING',
+    comfy_node_name: "TextGenerator",
+    category: "Text",
+    description: "Generate text using various AI models",
+    function: "generate_text",
+    input_types: "STRING, CONDITIONING",
+    return_names: "text",
+    return_types: "STRING",
     output_is_list: [false],
     deprecated: false,
     experimental: true,
     policy: ComfyNodePolicy.ComfyNodePolicyActive,
   },
   {
-    comfy_node_name: 'LegacyFilter',
-    category: 'Legacy',
-    description: 'Old filter that should not be used anymore',
-    function: 'apply_filter',
-    input_types: 'IMAGE',
-    return_names: 'filtered_image',
-    return_types: 'IMAGE',
+    comfy_node_name: "LegacyFilter",
+    category: "Legacy",
+    description: "Old filter that should not be used anymore",
+    function: "apply_filter",
+    input_types: "IMAGE",
+    return_names: "filtered_image",
+    return_types: "IMAGE",
     output_is_list: [false],
     deprecated: true,
     experimental: false,
     policy: ComfyNodePolicy.ComfyNodePolicyBanned,
   },
   {
-    comfy_node_name: 'LocalOnlyProcessor',
-    category: 'Specialized',
-    description: 'A processor that only works locally',
-    function: 'local_process',
-    input_types: 'ANY',
-    return_names: 'result',
-    return_types: 'ANY',
+    comfy_node_name: "LocalOnlyProcessor",
+    category: "Specialized",
+    description: "A processor that only works locally",
+    function: "local_process",
+    input_types: "ANY",
+    return_names: "result",
+    return_types: "ANY",
     output_is_list: [false],
     deprecated: false,
     experimental: false,
     policy: ComfyNodePolicy.ComfyNodePolicyLocalOnly,
   },
-]
+];
 
 const meta: Meta<typeof ComfyNodeTable> = {
-  title: 'Components/Admin/ComfyNodeTable',
+  title: "Components/Admin/ComfyNodeTable",
   component: ComfyNodeTable,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <div className="dark bg-gray-900 min-h-screen">
@@ -180,37 +169,37 @@ const meta: Meta<typeof ComfyNodeTable> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof ComfyNodeTable>
+export default meta;
+type Story = StoryObj<typeof ComfyNodeTable>;
 
 export const Default: Story = {
   args: {
     comfyNodes: mockComfyNodes,
     onEdit: (comfyNode) => {
-      console.log('Edit clicked for:', comfyNode.comfy_node_name)
+      console.log("Edit clicked for:", comfyNode.comfy_node_name);
     },
   },
-}
+};
 
 export const SingleNode: Story = {
   args: {
     comfyNodes: [mockComfyNodes[0]],
     onEdit: (comfyNode) => {
-      console.log('Edit clicked for:', comfyNode.comfy_node_name)
+      console.log("Edit clicked for:", comfyNode.comfy_node_name);
     },
   },
-}
+};
 
 export const EmptyTable: Story = {
   args: {
     comfyNodes: [],
     onEdit: (comfyNode) => {
-      console.log('Edit clicked for:', comfyNode.comfy_node_name)
+      console.log("Edit clicked for:", comfyNode.comfy_node_name);
     },
   },
-}
+};
 
 export const MixedPolicies: Story = {
   args: {
@@ -233,7 +222,7 @@ export const MixedPolicies: Story = {
       },
     ],
     onEdit: (comfyNode) => {
-      console.log('Edit clicked for:', comfyNode.comfy_node_name)
+      console.log("Edit clicked for:", comfyNode.comfy_node_name);
     },
   },
-}
+};
