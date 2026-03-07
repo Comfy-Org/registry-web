@@ -357,14 +357,14 @@ function ComfyNodesManage() {
   const [searchVersion, setSearchVersion] = useState('')
   const [searchComfyNodeName, setSearchComfyNodeName] = useState('')
 
-  const pageSize = 12
+  const pageSize = 20
 
   const { data, isLoading, refetch } = useListAllComfyNodes({
     node_id: searchNodeId || undefined,
     node_version: searchVersion || undefined,
     comfy_node_name: searchComfyNodeName || undefined,
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
+    pageSize: pageSize,
+    page: page,
   })
 
   const handleSearch = (e: React.FormEvent) => {
