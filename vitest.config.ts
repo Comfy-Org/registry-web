@@ -11,6 +11,8 @@ const dirname =
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
   test: {
+    // Suppress Vite HMR WebSocket teardown errors (spurious teardown race, not real failures)
+    dangerouslyIgnoreUnhandledErrors: true,
     workspace: [
       {
         extends: true,
@@ -31,8 +33,6 @@ export default defineConfig({
             provider: 'playwright',
           },
           setupFiles: ['.storybook/vitest.setup.ts'],
-          // Suppress Vite HMR WebSocket teardown errors (spurious, not real failures)
-          dangerouslyIgnoreUnhandledErrors: true,
         },
       },
     ],
