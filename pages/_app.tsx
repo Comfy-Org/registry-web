@@ -144,7 +144,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${gaId}');
+                gtag('config', ${JSON.stringify(gaId)});
               `}
             </Script>
           </>

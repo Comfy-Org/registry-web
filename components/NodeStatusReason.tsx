@@ -244,7 +244,7 @@ export function NodeStatusReason(nv: NodeVersion) {
     };
   }, [status_reason, lastApprovedNodeVersion?.status_reason, node?.repository]);
 
-  // get a summary for the issues, including weather it was approved before
+  // get a summary for the issues, including whether it was approved before
   const problemsSummary = fullfilledIssueList
     ? [...fullfilledIssueList].sort(
         compareBy(
