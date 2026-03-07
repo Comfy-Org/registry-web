@@ -108,7 +108,6 @@
     "@storybook/addon-docs": "^9.1.20",
     "@storybook/addon-vitest": "^9.1.20",
     "@storybook/nextjs-vite": "^9.1.20",
-    "@storybook/test": "^9.1.20",
     "@types/async-busboy": "^1.1.4",
     "@types/downloadjs": "^1.4.6",
     "@types/mixpanel-browser": "^2.66.0",
