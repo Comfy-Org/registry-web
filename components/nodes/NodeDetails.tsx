@@ -114,11 +114,11 @@ const NodeDetails = () => {
       enabled: !!_nodeId,
     },
   });
-  const publisherId = String(node?.publisher?.id ?? _publisherId); // try use _publisherId from url while useGetNode is loading
+  const publisherId = node?.publisher?.id ?? (_publisherId ? String(_publisherId) : undefined); // try use _publisherId from url while useGetNode is loading
 
-  const { data: permissions } = useGetPermissionOnPublisherNodes(publisherId, nodeId, {
+  const { data: permissions } = useGetPermissionOnPublisherNodes(publisherId ?? '', nodeId, {
     query: {
-      enabled: !!_nodeId,
+      enabled: !!_nodeId && !!publisherId,
     },
   });
 

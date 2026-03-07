@@ -11,7 +11,7 @@ interface NodesCard {
   buttonLink: string;
 }
 const NodesCard: React.FC<NodesCard> = React.memo(
-  ({ node: { name, description, icon, downloads, rating, id, github_stars }, buttonLink }) => {
+  ({ node: { name, description, icon, downloads, rating, github_stars }, buttonLink }) => {
     const { t } = useNextTranslation();
     return (
       <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow sm:flex lg:p-4">
