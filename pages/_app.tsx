@@ -10,8 +10,7 @@ import app from "@/src/firebase";
 import FlowBiteThemeProvider from "../components/flowbite-theme";
 import Layout from "../components/layout";
 import "../styles/globals.css";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { request } from "http";
+import { AxiosResponse } from "axios";
 import { DIE } from "phpdie";
 import { getAdminJwtToken, isAdminJwtTokenValid } from "@/src/utils/adminJwtStorage";
 
