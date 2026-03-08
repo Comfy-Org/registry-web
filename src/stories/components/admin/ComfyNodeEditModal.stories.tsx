@@ -1,3 +1,4 @@
+import { fn } from "@storybook/test";
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button } from "flowbite-react";
 import { useState } from "react";
@@ -6,15 +7,17 @@ import { vi } from "vitest";
 import { ComfyNodeEditModal } from "@/pages/admin/comfy-nodes";
 import { ComfyNode, ComfyNodePolicy } from "@/src/api/generated";
 
-// Mock the API hook so "Save Changes" doesn't make real network requests
+const mockMutateAsync = fn(async () => {});
+
+// Mock useUpdateComfyNode so "Save Changes" doesn't fire real network requests
 vi.mock("@/src/api/generated", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/src/api/generated")>();
   return {
     ...actual,
-    useUpdateComfyNode: () => ({
-      mutateAsync: async () => {},
+    useUpdateComfyNode: fn(() => ({
+      mutateAsync: mockMutateAsync,
       isPending: false,
-    }),
+    })),
   };
 });
 

@@ -1,8 +1,9 @@
+import { fn } from "@storybook/test";
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { vi } from "vitest";
 import ComfyNodesManage from "@/pages/admin/comfy-nodes";
-import { ComfyNode, ComfyNodePolicy, useListAllComfyNodes } from "@/src/api/generated";
+import { ComfyNode, ComfyNodePolicy } from "@/src/api/generated";
 
 // Mock router
 const mockRouter = {
@@ -90,22 +91,27 @@ const mockApiResponse = {
   total: mockComfyNodes.length,
 };
 
-// Mock the API hook
+// Spy instances — declared before vi.mock so per-story beforeEach can call .mockReturnValue directly
+const mockUseListAllComfyNodes = fn(() => ({
+  data: mockApiResponse,
+  isLoading: false,
+  refetch: () => {},
+}));
+
+const mockUseUpdateComfyNode = fn(() => ({
+  mutateAsync: async () => {},
+  isPending: false,
+}));
+
+// Mock the API hook — uses fn() spies so per-story beforeEach can override return values
 vi.mock("@/src/api/generated", () => ({
   ComfyNodePolicy: {
     ComfyNodePolicyActive: "ComfyNodePolicyActive",
     ComfyNodePolicyBanned: "ComfyNodePolicyBanned",
     ComfyNodePolicyLocalOnly: "ComfyNodePolicyLocalOnly",
   },
-  useListAllComfyNodes: () => ({
-    data: mockApiResponse,
-    isLoading: false,
-    refetch: () => {},
-  }),
-  useUpdateComfyNode: () => ({
-    mutateAsync: async () => {},
-    isPending: false,
-  }),
+  useListAllComfyNodes: mockUseListAllComfyNodes,
+  useUpdateComfyNode: mockUseUpdateComfyNode,
 }));
 
 // Mock the router
@@ -169,7 +175,7 @@ export const Default: Story = {};
 
 export const Loading: Story = {
   beforeEach() {
-    vi.mocked(useListAllComfyNodes).mockReturnValue({
+    mockUseListAllComfyNodes.mockReturnValue({
       data: undefined,
       isLoading: true,
       refetch: () => Promise.resolve({} as any),
@@ -179,7 +185,7 @@ export const Loading: Story = {
 
 export const EmptyResults: Story = {
   beforeEach() {
-    vi.mocked(useListAllComfyNodes).mockReturnValue({
+    mockUseListAllComfyNodes.mockReturnValue({
       data: { comfy_nodes: [], total: 0 },
       isLoading: false,
       refetch: () => Promise.resolve({} as any),
