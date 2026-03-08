@@ -1,4 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from '@tanstack/react-query'
 import {
   Badge,
   Breadcrumb,
@@ -10,42 +10,42 @@ import {
   Table,
   Textarea,
   TextInput,
-} from "flowbite-react";
-import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { HiHome, HiPencil, HiSearch } from "react-icons/hi";
-import { toast } from "react-toastify";
-import { CustomPagination } from "@/components/common/CustomPagination";
-import withAdmin from "@/components/common/HOC/authAdmin";
+} from 'flowbite-react'
+import React, { useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { HiHome, HiPencil, HiSearch } from 'react-icons/hi'
+import { toast } from 'react-toastify'
+import { CustomPagination } from '@/components/common/CustomPagination'
+import withAdmin from '@/components/common/HOC/authAdmin'
 import {
   ComfyNode,
   ComfyNodePolicy,
   ComfyNodeUpdateRequest,
   useListAllComfyNodes,
   useUpdateComfyNode,
-} from "@/src/api/generated";
-import { useNextTranslation } from "@/src/hooks/i18n";
+} from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 interface ComfyNodeEditModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  comfyNode: ComfyNode | null;
-  nodeId: string;
-  version: string;
-  onSuccess?: () => void;
+  isOpen: boolean
+  onClose: () => void
+  comfyNode: ComfyNode | null
+  nodeId: string
+  version: string
+  onSuccess?: () => void
 }
 
 interface FormData {
-  category: string;
-  description: string;
-  function: string;
-  input_types: string;
-  return_names: string;
-  return_types: string;
-  output_is_list: string;
-  deprecated: boolean;
-  experimental: boolean;
-  policy: ComfyNodePolicy;
+  category: string
+  description: string
+  function: string
+  input_types: string
+  return_names: string
+  return_types: string
+  output_is_list: string
+  deprecated: boolean
+  experimental: boolean
+  policy: ComfyNodePolicy
 }
 
 export function ComfyNodeEditModal({
@@ -56,8 +56,8 @@ export function ComfyNodeEditModal({
   version,
   onSuccess,
 }: ComfyNodeEditModalProps) {
-  const { t } = useNextTranslation();
-  const updateComfyNode = useUpdateComfyNode();
+  const { t } = useNextTranslation()
+  const updateComfyNode = useUpdateComfyNode()
 
   const {
     control,
@@ -66,38 +66,38 @@ export function ComfyNodeEditModal({
     formState: { isDirty },
   } = useForm<FormData>({
     defaultValues: {
-      category: comfyNode?.category || "",
-      description: comfyNode?.description || "",
-      function: comfyNode?.function || "",
-      input_types: comfyNode?.input_types || "",
-      return_names: comfyNode?.return_names || "",
-      return_types: comfyNode?.return_types || "",
-      output_is_list: comfyNode?.output_is_list?.join(", ") || "",
+      category: comfyNode?.category || '',
+      description: comfyNode?.description || '',
+      function: comfyNode?.function || '',
+      input_types: comfyNode?.input_types || '',
+      return_names: comfyNode?.return_names || '',
+      return_types: comfyNode?.return_types || '',
+      output_is_list: comfyNode?.output_is_list?.join(', ') || '',
       deprecated: comfyNode?.deprecated || false,
       experimental: comfyNode?.experimental || false,
       policy: comfyNode?.policy || ComfyNodePolicy.ComfyNodePolicyActive,
     },
-  });
+  })
 
   useEffect(() => {
     if (comfyNode) {
       reset({
-        category: comfyNode.category || "",
-        description: comfyNode.description || "",
-        function: comfyNode.function || "",
-        input_types: comfyNode.input_types || "",
-        return_names: comfyNode.return_names || "",
-        return_types: comfyNode.return_types || "",
-        output_is_list: comfyNode.output_is_list?.join(", ") || "",
+        category: comfyNode.category || '',
+        description: comfyNode.description || '',
+        function: comfyNode.function || '',
+        input_types: comfyNode.input_types || '',
+        return_names: comfyNode.return_names || '',
+        return_types: comfyNode.return_types || '',
+        output_is_list: comfyNode.output_is_list?.join(', ') || '',
         deprecated: comfyNode.deprecated || false,
         experimental: comfyNode.experimental || false,
         policy: comfyNode.policy || ComfyNodePolicy.ComfyNodePolicyActive,
-      });
+      })
     }
-  }, [comfyNode, reset]);
+  }, [comfyNode, reset])
 
   const onSubmit = async (data: FormData) => {
-    if (!comfyNode?.comfy_node_name || !nodeId || !version) return;
+    if (!comfyNode?.comfy_node_name || !nodeId || !version) return
 
     try {
       const updateData: ComfyNodeUpdateRequest = {
@@ -108,40 +108,40 @@ export function ComfyNodeEditModal({
         return_names: data.return_names,
         return_types: data.return_types,
         output_is_list: data.output_is_list
-          ? data.output_is_list.split(",").map((s) => s.trim() === "true")
+          ? data.output_is_list.split(',').map((s) => s.trim() === 'true')
           : undefined,
         deprecated: data.deprecated,
         experimental: data.experimental,
         policy: data.policy,
-      };
+      }
 
       await updateComfyNode.mutateAsync({
         nodeId,
         version,
         comfyNodeName: comfyNode.comfy_node_name,
         data: updateData,
-      });
+      })
 
-      toast.success(t("ComfyNode updated successfully"));
-      onClose();
-      onSuccess?.();
+      toast.success(t('ComfyNode updated successfully'))
+      onClose()
+      onSuccess?.()
     } catch (error) {
-      console.error("Error updating ComfyNode:", error);
-      toast.error(t("Failed to update ComfyNode"));
+      console.error('Error updating ComfyNode:', error)
+      toast.error(t('Failed to update ComfyNode'))
     }
-  };
+  }
 
   const handleClose = () => {
-    reset();
-    onClose();
-  };
+    reset()
+    onClose()
+  }
 
-  if (!comfyNode) return null;
+  if (!comfyNode) return null
 
   return (
     <Modal show={isOpen} onClose={handleClose} size="4xl" className="dark">
       <Modal.Header>
-        {t("Edit ComfyNode: {{name}}", {
+        {t('Edit ComfyNode: {{name}}', {
           name: comfyNode.comfy_node_name,
         })}
       </Modal.Header>
@@ -150,29 +150,37 @@ export function ComfyNodeEditModal({
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="category">{t("Category")}</Label>
+                <Label htmlFor="category">{t('Category')}</Label>
                 <Controller
                   name="category"
                   control={control}
                   render={({ field }) => (
-                    <TextInput id="category" {...field} placeholder={t("Enter category")} />
+                    <TextInput
+                      id="category"
+                      {...field}
+                      placeholder={t('Enter category')}
+                    />
                   )}
                 />
               </div>
               <div>
-                <Label htmlFor="function">{t("Function")}</Label>
+                <Label htmlFor="function">{t('Function')}</Label>
                 <Controller
                   name="function"
                   control={control}
                   render={({ field }) => (
-                    <TextInput id="function" {...field} placeholder={t("Enter function name")} />
+                    <TextInput
+                      id="function"
+                      {...field}
+                      placeholder={t('Enter function name')}
+                    />
                   )}
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="description">{t("Description")}</Label>
+              <Label htmlFor="description">{t('Description')}</Label>
               <Controller
                 name="description"
                 control={control}
@@ -181,7 +189,7 @@ export function ComfyNodeEditModal({
                     id="description"
                     rows={3}
                     {...field}
-                    placeholder={t("Enter description")}
+                    placeholder={t('Enter description')}
                   />
                 )}
               />
@@ -189,7 +197,7 @@ export function ComfyNodeEditModal({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="input_types">{t("Input Types")}</Label>
+                <Label htmlFor="input_types">{t('Input Types')}</Label>
                 <Controller
                   name="input_types"
                   control={control}
@@ -198,13 +206,13 @@ export function ComfyNodeEditModal({
                       id="input_types"
                       rows={3}
                       {...field}
-                      placeholder={t("Enter input types")}
+                      placeholder={t('Enter input types')}
                     />
                   )}
                 />
               </div>
               <div>
-                <Label htmlFor="return_types">{t("Return Types")}</Label>
+                <Label htmlFor="return_types">{t('Return Types')}</Label>
                 <Controller
                   name="return_types"
                   control={control}
@@ -213,7 +221,7 @@ export function ComfyNodeEditModal({
                       id="return_types"
                       rows={3}
                       {...field}
-                      placeholder={t("Enter return types")}
+                      placeholder={t('Enter return types')}
                     />
                   )}
                 />
@@ -222,17 +230,21 @@ export function ComfyNodeEditModal({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="return_names">{t("Return Names")}</Label>
+                <Label htmlFor="return_names">{t('Return Names')}</Label>
                 <Controller
                   name="return_names"
                   control={control}
                   render={({ field }) => (
-                    <TextInput id="return_names" {...field} placeholder={t("Enter return names")} />
+                    <TextInput
+                      id="return_names"
+                      {...field}
+                      placeholder={t('Enter return names')}
+                    />
                   )}
                 />
               </div>
               <div>
-                <Label htmlFor="output_is_list">{t("Output Is List")}</Label>
+                <Label htmlFor="output_is_list">{t('Output Is List')}</Label>
                 <Controller
                   name="output_is_list"
                   control={control}
@@ -240,7 +252,7 @@ export function ComfyNodeEditModal({
                     <TextInput
                       id="output_is_list"
                       {...field}
-                      placeholder={t("Enter comma-separated boolean values")}
+                      placeholder={t('Enter comma-separated boolean values')}
                     />
                   )}
                 />
@@ -249,16 +261,20 @@ export function ComfyNodeEditModal({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="policy">{t("Policy")}</Label>
+                <Label htmlFor="policy">{t('Policy')}</Label>
                 <Controller
                   name="policy"
                   control={control}
                   render={({ field }) => (
                     <Select id="policy" {...field}>
-                      <option value={ComfyNodePolicy.ComfyNodePolicyActive}>{t("Active")}</option>
-                      <option value={ComfyNodePolicy.ComfyNodePolicyBanned}>{t("Banned")}</option>
+                      <option value={ComfyNodePolicy.ComfyNodePolicyActive}>
+                        {t('Active')}
+                      </option>
+                      <option value={ComfyNodePolicy.ComfyNodePolicyBanned}>
+                        {t('Banned')}
+                      </option>
                       <option value={ComfyNodePolicy.ComfyNodePolicyLocalOnly}>
-                        {t("Local Only")}
+                        {t('Local Only')}
                       </option>
                     </Select>
                   )}
@@ -269,33 +285,33 @@ export function ComfyNodeEditModal({
                   <Controller
                     name="deprecated"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field: { value, ...field } }) => (
                       <input
                         type="checkbox"
                         id="deprecated"
-                        checked={field.value}
-                        onChange={field.onChange}
+                        {...field}
+                        checked={value}
                         className="rounded"
                       />
                     )}
                   />
-                  <Label htmlFor="deprecated">{t("Deprecated")}</Label>
+                  <Label htmlFor="deprecated">{t('Deprecated')}</Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <Controller
                     name="experimental"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field: { value, ...field } }) => (
                       <input
                         type="checkbox"
                         id="experimental"
-                        checked={field.value}
-                        onChange={field.onChange}
+                        {...field}
+                        checked={value}
                         className="rounded"
                       />
                     )}
                   />
-                  <Label htmlFor="experimental">{t("Experimental")}</Label>
+                  <Label htmlFor="experimental">{t('Experimental')}</Label>
                 </div>
               </div>
             </div>
@@ -308,7 +324,7 @@ export function ComfyNodeEditModal({
             disabled={updateComfyNode.isPending}
             type="button"
           >
-            {t("Cancel")}
+            {t('Cancel')}
           </Button>
           <Button
             color="blue"
@@ -316,123 +332,136 @@ export function ComfyNodeEditModal({
             disabled={updateComfyNode.isPending || !isDirty}
             isProcessing={updateComfyNode.isPending}
           >
-            {updateComfyNode.isPending ? t("Saving...") : t("Save Changes")}
+            {updateComfyNode.isPending ? t('Saving...') : t('Save Changes')}
           </Button>
         </Modal.Footer>
       </form>
     </Modal>
-  );
+  )
 }
 
 function ComfyNodesManage() {
-  const { t } = useNextTranslation();
-  const queryClient = useQueryClient();
-  const [page, setPage] = useState<number>(1);
-  const [selectedComfyNode, setSelectedComfyNode] = useState<ComfyNode | null>(null);
-  const [editNodeId, setEditNodeId] = useState("");
-  const [editVersion, setEditVersion] = useState("");
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [nodeIdFilter, setNodeIdFilter] = useState("");
-  const [versionFilter, setVersionFilter] = useState("");
-  const [comfyNodeNameFilter, setComfyNodeNameFilter] = useState("");
-  const [searchNodeId, setSearchNodeId] = useState("");
-  const [searchVersion, setSearchVersion] = useState("");
-  const [searchComfyNodeName, setSearchComfyNodeName] = useState("");
+  const { t } = useNextTranslation()
+  const queryClient = useQueryClient()
+  const [page, setPage] = useState<number>(1)
+  const [selectedComfyNode, setSelectedComfyNode] = useState<ComfyNode | null>(
+    null
+  )
+  const [editNodeId, setEditNodeId] = useState('')
+  const [editVersion, setEditVersion] = useState('')
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [nodeIdFilter, setNodeIdFilter] = useState('')
+  const [versionFilter, setVersionFilter] = useState('')
+  const [comfyNodeNameFilter, setComfyNodeNameFilter] = useState('')
+  const [searchNodeId, setSearchNodeId] = useState('')
+  const [searchVersion, setSearchVersion] = useState('')
+  const [searchComfyNodeName, setSearchComfyNodeName] = useState('')
 
-  const pageSize = 20;
+  const pageSize = 20
 
-  const { data, isLoading } = useListAllComfyNodes({
-    node_id: searchNodeId || undefined,
-    node_version: searchVersion || undefined,
-    comfy_node_name: searchComfyNodeName || undefined,
-    pageSize: pageSize,
-    page: page,
-  });
+  const { data, isLoading } = useListAllComfyNodes(
+    {
+      node_id: searchNodeId || undefined,
+      node_version: searchVersion || undefined,
+      comfy_node_name: searchComfyNodeName || undefined,
+      pageSize: pageSize,
+      page: page,
+    },
+    {
+      query: {
+        enabled: Boolean(searchNodeId || searchVersion || searchComfyNodeName),
+      },
+    }
+  )
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchNodeId(nodeIdFilter);
-    setSearchVersion(versionFilter);
-    setSearchComfyNodeName(comfyNodeNameFilter);
-    setPage(1);
-  };
+    e.preventDefault()
+    setSearchNodeId(nodeIdFilter)
+    setSearchVersion(versionFilter)
+    setSearchComfyNodeName(comfyNodeNameFilter)
+    setPage(1)
+  }
 
   const handleEdit = (comfyNode: ComfyNode) => {
-    setSelectedComfyNode(comfyNode);
-    setEditNodeId(searchNodeId);
-    setEditVersion(searchVersion);
-    setIsEditModalOpen(true);
-  };
+    setSelectedComfyNode(comfyNode)
+    setEditNodeId(searchNodeId)
+    setEditVersion(searchVersion)
+    setIsEditModalOpen(true)
+  }
 
   const handleEditSuccess = () => {
     queryClient.invalidateQueries({
-      queryKey: ["/comfy-nodes"],
-    });
-  };
+      queryKey: ['/comfy-nodes'],
+    })
+  }
 
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const getPolicyBadgeColor = (policy: ComfyNodePolicy) => {
     switch (policy) {
       case ComfyNodePolicy.ComfyNodePolicyActive:
-        return "success";
+        return 'success'
       case ComfyNodePolicy.ComfyNodePolicyBanned:
-        return "failure";
+        return 'failure'
       case ComfyNodePolicy.ComfyNodePolicyLocalOnly:
-        return "warning";
+        return 'warning'
       default:
-        return "gray";
+        return 'gray'
     }
-  };
+  }
 
   const getPolicyLabel = (policy: ComfyNodePolicy) => {
     switch (policy) {
       case ComfyNodePolicy.ComfyNodePolicyActive:
-        return t("Active");
+        return t('Active')
       case ComfyNodePolicy.ComfyNodePolicyBanned:
-        return t("Banned");
+        return t('Banned')
       case ComfyNodePolicy.ComfyNodePolicyLocalOnly:
-        return t("Local Only");
+        return t('Local Only')
       default:
-        return t("Unknown");
+        return t('Unknown')
     }
-  };
+  }
 
   return (
     <div className="p-4 w-full">
       <Breadcrumb className="py-4">
         <Breadcrumb.Item href="/" icon={HiHome} className="dark">
-          {t("Home")}
+          {t('Home')}
         </Breadcrumb.Item>
         <Breadcrumb.Item href="/admin" className="dark">
-          {t("Admin Dashboard")}
+          {t('Admin Dashboard')}
         </Breadcrumb.Item>
-        <Breadcrumb.Item className="dark">{t("Manage ComfyNodes")}</Breadcrumb.Item>
+        <Breadcrumb.Item className="dark">
+          {t('Manage ComfyNodes')}
+        </Breadcrumb.Item>
       </Breadcrumb>
 
-      <h1 className="text-2xl font-bold text-gray-200 mb-6">{t("Manage ComfyNodes")}</h1>
+      <h1 className="text-2xl font-bold text-gray-200 mb-6">
+        {t('Manage ComfyNodes')}
+      </h1>
 
       <form onSubmit={handleSearch} className="flex gap-2 items-center mb-6">
         <TextInput
-          placeholder={t("Node ID (optional)")}
+          placeholder={t('Node ID (optional)')}
           value={nodeIdFilter}
           onChange={(e) => setNodeIdFilter(e.target.value)}
         />
         <TextInput
-          placeholder={t("Version (optional)")}
+          placeholder={t('Version (optional)')}
           value={versionFilter}
           onChange={(e) => setVersionFilter(e.target.value)}
         />
         <TextInput
-          placeholder={t("ComfyNode Name (optional)")}
+          placeholder={t('ComfyNode Name (optional)')}
           value={comfyNodeNameFilter}
           onChange={(e) => setComfyNodeNameFilter(e.target.value)}
         />
         <Button type="submit" color="blue">
           <HiSearch className="mr-2" />
-          {t("Search")}
+          {t('Search')}
         </Button>
       </form>
 
@@ -443,7 +472,7 @@ function ComfyNodesManage() {
       ) : data?.comfy_nodes ? (
         <>
           <div className="mb-4 text-sm text-gray-400">
-            {t("Found {{total}} ComfyNodes (showing {{count}} on this page)", {
+            {t('Found {{total}} ComfyNodes (showing {{count}} on this page)', {
               total: data.total || 0,
               count: data.comfy_nodes.length,
             })}
@@ -453,25 +482,25 @@ function ComfyNodesManage() {
             <Table className="dark">
               <Table.Head className="dark:bg-gray-700">
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Name")}
+                  {t('Name')}
                 </Table.HeadCell>
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Category")}
+                  {t('Category')}
                 </Table.HeadCell>
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Function")}
+                  {t('Function')}
                 </Table.HeadCell>
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Description")}
+                  {t('Description')}
                 </Table.HeadCell>
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Policy")}
+                  {t('Policy')}
                 </Table.HeadCell>
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Flags")}
+                  {t('Flags')}
                 </Table.HeadCell>
                 <Table.HeadCell className="dark:bg-gray-700 dark:text-gray-300">
-                  {t("Actions")}
+                  {t('Actions')}
                 </Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y">
@@ -486,26 +515,34 @@ function ComfyNodesManage() {
                     <Table.Cell>{comfyNode.category}</Table.Cell>
                     <Table.Cell>{comfyNode.function}</Table.Cell>
                     <Table.Cell>
-                      <div className="max-w-xs truncate">{comfyNode.description}</div>
+                      <div className="max-w-xs truncate">
+                        {comfyNode.description}
+                      </div>
                     </Table.Cell>
                     <Table.Cell>
                       <Badge
-                        color={comfyNode.policy ? getPolicyBadgeColor(comfyNode.policy) : "gray"}
+                        color={
+                          comfyNode.policy
+                            ? getPolicyBadgeColor(comfyNode.policy)
+                            : 'gray'
+                        }
                         size="sm"
                       >
-                        {comfyNode.policy ? getPolicyLabel(comfyNode.policy) : t("No Policy")}
+                        {comfyNode.policy
+                          ? getPolicyLabel(comfyNode.policy)
+                          : t('No Policy')}
                       </Badge>
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex gap-1">
                         {comfyNode.deprecated && (
                           <Badge color="warning" size="sm">
-                            {t("Deprecated")}
+                            {t('Deprecated')}
                           </Badge>
                         )}
                         {comfyNode.experimental && (
                           <Badge color="info" size="sm">
-                            {t("Experimental")}
+                            {t('Experimental')}
                           </Badge>
                         )}
                       </div>
@@ -518,12 +555,14 @@ function ComfyNodesManage() {
                         disabled={!searchNodeId || !searchVersion}
                         title={
                           !searchNodeId || !searchVersion
-                            ? t("Filter by Node ID and Version to enable editing")
+                            ? t(
+                                'Filter by Node ID and Version to enable editing'
+                              )
                             : undefined
                         }
                       >
                         <HiPencil className="mr-1" />
-                        {t("Edit")}
+                        {t('Edit')}
                       </Button>
                     </Table.Cell>
                   </Table.Row>
@@ -544,11 +583,11 @@ function ComfyNodesManage() {
         </>
       ) : searchNodeId || searchVersion || searchComfyNodeName ? (
         <div className="text-center text-gray-400 py-8">
-          {t("No ComfyNodes found for the specified criteria")}
+          {t('No ComfyNodes found for the specified criteria')}
         </div>
       ) : (
         <div className="text-center text-gray-400 py-8">
-          {t("Enter search criteria to find ComfyNodes")}
+          {t('Enter search criteria to find ComfyNodes')}
         </div>
       )}
 
@@ -561,7 +600,7 @@ function ComfyNodesManage() {
         onSuccess={handleEditSuccess}
       />
     </div>
-  );
+  )
 }
 
-export default withAdmin(ComfyNodesManage);
+export default withAdmin(ComfyNodesManage)
