@@ -359,7 +359,7 @@ function ComfyNodesManage() {
 
   const pageSize = 20
 
-  const { data, isLoading, refetch } = useListAllComfyNodes({
+  const { data, isLoading } = useListAllComfyNodes({
     node_id: searchNodeId || undefined,
     node_version: searchVersion || undefined,
     comfy_node_name: searchComfyNodeName || undefined,
