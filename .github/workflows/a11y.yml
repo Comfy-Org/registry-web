@@ -28,4 +28,6 @@ jobs:
         run: bunx playwright install chromium --with-deps
 
       - name: Run a11y tests (axe-core via Storybook stories)
+        # Runs all Storybook-based Vitest tests, which include axe-core a11y checks
+        # (via @storybook/addon-a11y) plus any interaction/smoke tests in stories.
         run: bunx vitest
