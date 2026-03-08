@@ -13,7 +13,6 @@
   "Add unclaimed node": "Add unclaimed node",
   "Admin Dashboard": "Admin Dashboard",
   "Admin JWT Token Management": "Admin JWT Token Management",
-  "Admin JWT Tokens": "Admin JWT Tokens",
   "Admin JWT token cleared": "Admin JWT token cleared",
   "Admin JWT token generated successfully. Expires at: {{expiresAt}}": "Admin JWT token generated successfully. Expires at: {{expiresAt}}",
   "Admin JWT tokens are required for certain administrative operations like banning/unbanning nodes. Tokens are valid for 1 hour.": "Admin JWT tokens are required for certain administrative operations like banning/unbanning nodes. Tokens are valid for 1 hour.",
