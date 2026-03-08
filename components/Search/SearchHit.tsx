@@ -29,7 +29,7 @@ type HitProps = {
   hit: HitType<NodeHit>;
 };
 
-const Hit: React.FC<HitProps> = React.memo(({ hit }) => {
+const Hit = React.memo<HitProps>(({ hit }) => {
   const { t } = useNextTranslation();
   const matchedNodes = (
     hit._highlightResult?.comfy_nodes as HitAttributeHighlightResult[] | undefined
