@@ -9,7 +9,7 @@ import { HiTrash } from "react-icons/hi";
 import { MdEdit, MdOpenInNew } from "react-icons/md";
 import { toast } from "react-toastify";
 import analytic from "src/analytic/analytic";
-import { REQUEST_OPTIONS_NO_CACHE, UNCLAIMED_ADMIN_PUBLISHER_ID } from "src/constants";
+import { UNCLAIMED_ADMIN_PUBLISHER_ID } from "src/constants";
 import {
   NodeStatus,
   NodeVersion,
@@ -118,7 +118,7 @@ const NodeDetails = () => {
 
   const { data: permissions } = useGetPermissionOnPublisherNodes(publisherId, nodeId, {
     query: {
-      enabled: !!nodeId,
+      enabled: !!_nodeId && publisherId !== "undefined",
     },
   });
 
@@ -141,7 +141,7 @@ const NodeDetails = () => {
     },
     {
       query: {
-        enabled: !!nodeId,
+        enabled: !!_nodeId,
       },
     },
   );
@@ -234,6 +234,31 @@ const NodeDetails = () => {
     router.push(`/nodes/${nodeId}/claim`);
   };
 
+  // Memoize node metadata to avoid repeated string operations
+  const nodeMetadata = React.useMemo(() => {
+    if (!node) return null;
+
+    const items = [
+      <span key="publisher" dir="ltr">
+        {node.publisher?.id?.replace(/^(?!$)/, "@")}
+      </span>,
+      node.latest_version?.version?.replace(/^(?!$)/, "v"),
+      node.latest_version?.createdAt &&
+        intlFormatDistance(new Date(node.latest_version.createdAt), new Date(), {
+          numeric: "auto",
+          locale: i18n.language,
+        }),
+    ];
+
+    return items
+      .flatMap((e) => (e ? [e] : []))
+      .reduce(
+        (acc, x, i, a) => [...acc, x, i < a.length - 1 && <span key={`separator-${i}`}> | </span>],
+        [] as ReactNode[],
+      )
+      .filter(Boolean);
+  }, [node, i18n.language]);
+
   // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
   // usually this happens when publisher changes, e.g. when user claims a node
   const isPublisherIdMismatchedBetweenURLandNode =
@@ -321,30 +346,7 @@ const NodeDetails = () => {
                   <h1 className="text-[48px] font-bold">{node.name}</h1>
 
                   <p className="text-[18px] pt-2 text-gray-300 space-x-2" hidden={isUnclaimed}>
-                    {[
-                      <div key="publisher" dir="ltr">
-                        {node.publisher?.id?.replace(/^(?!$)/, "@")}
-                      </div>,
-
-                      node.latest_version?.version?.replace(/^(?!$)/, "v"),
-
-                      node.latest_version?.createdAt &&
-                        intlFormatDistance(new Date(node.latest_version.createdAt), new Date(), {
-                          numeric: "auto",
-                          locale: i18n.language,
-                        }),
-                    ]
-                      .flatMap((e) => (e ? [e] : []))
-                      // same as .join(' | '), but with span element
-                      .reduce(
-                        (acc, x, i, a) => [
-                          ...acc,
-                          x,
-                          i < a.length - 1 && <span key={`separator-${i}`}> | </span>,
-                        ],
-                        [] as ReactNode[],
-                      )
-                      .filter(Boolean)}
+                    {nodeMetadata}
                   </p>
                 </div>
               </div>
@@ -492,10 +494,10 @@ const NodeDetails = () => {
               <div className="mt-10" hidden={isUnclaimed}>
                 <h2 className="mb-2 text-lg font-semibold">{t("Version history")}</h2>
                 <div className="w-2/3 mt-4 space-y-3 rounded-3xl">
-                  {nodeVersions?.map((version, index) => (
+                  {nodeVersions?.map((version) => (
                     <div
                       className=" bg-gray-700 border-gray-500 border p-[32px] rounded-xl "
-                      key={index}
+                      key={version.id ?? `${version.version}-${version.createdAt}`}
                     >
                       <h3 className="text-base font-semibold text-gray-200">
                         {t("Version")} {version.version}

@@ -1,4 +1,5 @@
 import { ShortNumber } from "@lytieuphong/short-number";
+// trigger preview deployment
 import { Tooltip } from "flowbite-react";
 import type {
   HitAttributeHighlightResult,
@@ -29,7 +30,7 @@ type HitProps = {
   hit: HitType<NodeHit>;
 };
 
-const Hit: React.FC<HitProps> = ({ hit }) => {
+const Hit = React.memo<HitProps>(({ hit }) => {
   const { t } = useNextTranslation();
   const matchedNodes = (
     hit._highlightResult?.comfy_nodes as HitAttributeHighlightResult[] | undefined
@@ -55,10 +56,10 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
             ),
           }}
         >
-          {(hit._snippetResult?.description as HitAttributeSnippetResult)?.value.replace(
+          {(hit._snippetResult?.description as HitAttributeSnippetResult)?.value?.replace(
             /<\/?mark>/g,
             "**",
-          )}
+          ) ?? ""}
         </Markdown>
 
         {/* nodes */}
@@ -117,6 +118,8 @@ const Hit: React.FC<HitProps> = ({ hit }) => {
       </p>
     </Link>
   );
-};
+});
+
+Hit.displayName = "Hit";
 
 export default Hit;

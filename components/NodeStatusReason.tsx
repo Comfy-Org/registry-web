@@ -1,13 +1,9 @@
-import { DiffEditor, Editor } from "@monaco-editor/react";
 import { compareBy } from "comparing";
 import { Button } from "flowbite-react";
 import Link from "next/link";
-import prettierPluginBabel from "prettier/plugins/babel";
-import prettierPluginEstree from "prettier/plugins/estree";
-import prettierPluginYaml from "prettier/plugins/yaml";
-import { format } from "prettier/standalone";
+import dynamic from "next/dynamic";
 import { tryCatch } from "rambda";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaChevronDown, FaGithub, FaHistory } from "react-icons/fa";
 import { MdEdit, MdOpenInNew } from "react-icons/md";
 import { useInView } from "react-intersection-observer";
@@ -26,6 +22,53 @@ import { useNextTranslation } from "@/src/hooks/i18n";
 import { NodeStatusBadge } from "./NodeStatusBadge";
 import { parseIssueList } from "./parseIssueList";
 import { parseJsonSafe } from "./parseJsonSafe";
+
+// Lazy load Monaco Editor components
+const Editor = dynamic(() => import("@monaco-editor/react").then((mod) => mod.Editor), {
+  ssr: false,
+});
+const DiffEditor = dynamic(() => import("@monaco-editor/react").then((mod) => mod.DiffEditor), {
+  ssr: false,
+});
+
+// Module-level cache for lazily loaded Prettier modules
+let prettierStandalonePromise: Promise<typeof import("prettier/standalone")> | null = null;
+let prettierPluginBabelPromise: Promise<typeof import("prettier/plugins/babel")> | null = null;
+let prettierPluginEstreePromise: Promise<typeof import("prettier/plugins/estree")> | null = null;
+let prettierPluginYamlPromise: Promise<typeof import("prettier/plugins/yaml")> | null = null;
+
+function loadPrettierStandalone() {
+  if (!prettierStandalonePromise) prettierStandalonePromise = import("prettier/standalone");
+  return prettierStandalonePromise;
+}
+function loadPrettierPluginBabel() {
+  if (!prettierPluginBabelPromise) prettierPluginBabelPromise = import("prettier/plugins/babel");
+  return prettierPluginBabelPromise;
+}
+function loadPrettierPluginEstree() {
+  if (!prettierPluginEstreePromise) prettierPluginEstreePromise = import("prettier/plugins/estree");
+  return prettierPluginEstreePromise;
+}
+function loadPrettierPluginYaml() {
+  if (!prettierPluginYamlPromise) prettierPluginYamlPromise = import("prettier/plugins/yaml");
+  return prettierPluginYamlPromise;
+}
+
+async function formatCode(code: string, parser: string) {
+  const { format } = await loadPrettierStandalone();
+  let plugins: any[];
+  if (parser === "yaml") {
+    const mod = await loadPrettierPluginYaml();
+    plugins = [(mod as any).default ?? mod];
+  } else {
+    const [babel, estree] = await Promise.all([
+      loadPrettierPluginBabel(),
+      loadPrettierPluginEstree(),
+    ]);
+    plugins = [(babel as any).default ?? babel, (estree as any).default ?? estree];
+  }
+  return format(code, { parser, plugins });
+}
 
 // schema reference from (private): https://github.com/Comfy-Org/security-scanner
 export const zErrorArray = z
@@ -121,18 +164,20 @@ export function NodeStatusReason(nv: NodeVersion) {
     { include_status_reason: true },
     { query: { enabled: inView } },
   );
-  nodeVersions?.sort(compareBy((e) => e.createdAt || e.id || ""));
+  const sortedNodeVersions = nodeVersions
+    ? [...nodeVersions].sort(compareBy((e) => e.createdAt || e.id || ""))
+    : nodeVersions;
 
-  // Get visible versions (most recent N versions)
-  const visibleNodeVersions = nodeVersions?.slice(-visibleVersionCount);
-  const hasMoreVersions = (nodeVersions?.length ?? 0) > visibleVersionCount;
+  // Get visible versions (most recent N versions, from sorted array)
+  const visibleNodeVersions = sortedNodeVersions?.slice(-visibleVersionCount);
+  const hasMoreVersions = (sortedNodeVersions?.length ?? 0) > visibleVersionCount;
 
   // query last node versions
   const currentNodeVersionIndex =
-    nodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1;
+    sortedNodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1;
   const currentNodeVersionIndexInVisible =
     visibleNodeVersions?.findIndex((nodeVersion) => nodeVersion.id === nv.id) ?? -1;
-  const lastApprovedNodeVersion = nodeVersions?.findLast(
+  const lastApprovedNodeVersion = sortedNodeVersions?.findLast(
     (nv, i) =>
       nv.status === NodeVersionStatus.NodeVersionStatusActive && i < currentNodeVersionIndex,
   );
@@ -148,77 +193,76 @@ export function NodeStatusReason(nv: NodeVersion) {
   // )
   // const lastNodeVersion = nodeVersions?.at(-2)
 
-  // parse status reason
-  const issueList = parseIssueList(parseJsonSafe(status_reason ?? "").data);
-  // const lastVersionIssueList = parseIssueList(parseJsonSafe(lastNodeVersion.status_reason ?? '').data)
-
-  // assume all issues are approved if last node version is approved
-  const approvedIssueList = parseIssueList(
-    parseJsonSafe(
-      zStatusReason
-        .safeParse(parseJsonSafe(lastApprovedNodeVersion?.status_reason ?? "").data)
-        .data?.statusHistory?.findLast(
-          (e) => e.status === NodeVersionStatus.NodeVersionStatusFlagged,
-        )?.message,
-    ).data,
-  );
-
-  // const statusReason =
-  //     zStatusReason.safeParse(statusReasonJson).data ??
-  //     zStatusReason.parse({ message: status_reason, by: 'admin@comfy.org' })
-
-  const fullfilledIssueList = issueList
-    // guess url from node
-    ?.map((e) => {
-      const repoUrl = node?.repository || "";
+  // Unified issue processing - combines parsing, URL generation, and approval checking
+  const { fullfilledIssueList, lastFullfilledIssueList } = useMemo(() => {
+    // Helper to add URL to an issue
+    const addIssueUrl = (issue: any, repoUrl: string) => {
       const filepath =
-        repoUrl && (e.file_path || "") && `/blob/HEAD/${e.file_path?.replace(/^\//, "")}`;
-      const linenumber = filepath && (e.line_number || "") && `#L${e.line_number}`;
-      const url = repoUrl + filepath + linenumber;
-      return { ...e, url };
-    })
-    // mark if the issue was approved before
-    ?.map((e) => {
+        repoUrl && issue.file_path && `/blob/HEAD/${issue.file_path.replace(/^\//, "")}`;
+      const linenumber = filepath && issue.line_number && `#L${issue.line_number}`;
+      const url = repoUrl + (filepath || "") + (linenumber || "");
+      return { ...issue, url };
+    };
+
+    // Parse current issues
+    const issueList = parseIssueList(parseJsonSafe(status_reason ?? "").data);
+
+    // Parse approved issues
+    const approvedIssueList = parseIssueList(
+      parseJsonSafe(
+        zStatusReason
+          .safeParse(parseJsonSafe(lastApprovedNodeVersion?.status_reason ?? "").data)
+          .data?.statusHistory?.findLast(
+            (e) => e.status === NodeVersionStatus.NodeVersionStatusFlagged,
+          )?.message,
+      ).data,
+    );
+
+    const repoUrl = node?.repository || "";
+
+    // Process current issues: add URL and check if approved (in a single pass)
+    const fullfilled = issueList?.map((issue) => {
+      const issueWithUrl = addIssueUrl(issue, repoUrl);
       const isApproved = approvedIssueList?.some(
         (approvedIssue) =>
-          approvedIssue.file_path === e.file_path &&
-          approvedIssue.line_number === e.line_number &&
-          approvedIssue.code_snippet === e.code_snippet,
+          approvedIssue.file_path === issue.file_path &&
+          approvedIssue.line_number === issue.line_number &&
+          approvedIssue.code_snippet === issue.code_snippet,
       );
-      return { ...e, isApproved };
+      return { ...issueWithUrl, isApproved };
     });
 
-  const lastFullfilledIssueList = approvedIssueList // guess url from node
-    ?.map((e) => {
-      const repoUrl = node?.repository || "";
-      const filepath =
-        repoUrl && (e.file_path || "") && `/blob/HEAD/${e.file_path?.replace(/^\//, "")}`;
-      const linenumber = filepath && (e.line_number || "") && `#L${e.line_number}`;
-      const url = repoUrl + filepath + linenumber;
-      return { ...e, url };
-    })
-    // mark if the issue was approved before
-    ?.map((e) => {
-      const isApproved = true;
-      return { ...e, isApproved };
-    });
+    // Process approved issues: add URL and mark as approved (in a single pass)
+    const lastFullfilled = approvedIssueList?.map((issue) => ({
+      ...addIssueUrl(issue, repoUrl),
+      isApproved: true,
+    }));
 
-  // get a summary for the issues, including weather it was approved before
-  const problemsSummary = fullfilledIssueList?.sort(
-    compareBy(
-      (e) =>
-        // sort by approved before
-        (e.isApproved ? "0" : "1") +
-        // and then filepath + line number (padStart to order numbers by number, instead of string)
-        e.url
-          .split(/\b/)
-          .map(
-            (strOrNumber) =>
-              z.number().safeParse(strOrNumber).data?.toString().padStart(10, "0") ?? strOrNumber,
-          )
-          .join(""),
-    ),
-  );
+    return {
+      fullfilledIssueList: fullfilled,
+      lastFullfilledIssueList: lastFullfilled,
+    };
+  }, [status_reason, lastApprovedNodeVersion?.status_reason, node?.repository]);
+
+  // get a summary for the issues, including whether it was approved before
+  const problemsSummary = fullfilledIssueList
+    ? [...fullfilledIssueList].sort(
+        compareBy(
+          (e) =>
+            // sort by approved before
+            (e.isApproved ? "0" : "1") +
+            // and then filepath + line number (padStart to order numbers by number, instead of string)
+            e.url
+              .split(/\b/)
+              .map(
+                (strOrNumber) =>
+                  z.number().safeParse(strOrNumber).data?.toString().padStart(10, "0") ??
+                  strOrNumber,
+              )
+              .join(""),
+        ),
+      )
+    : undefined;
 
   const lastCode = lastFullfilledIssueList
     ? JSON.stringify(lastFullfilledIssueList)
@@ -227,7 +271,7 @@ export function NodeStatusReason(nv: NodeVersion) {
   return (
     <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
       {/* HistoryVersions */}
-      {(nodeVersions?.length ?? null) && (
+      {(sortedNodeVersions?.length ?? null) && (
         <details>
           <summary className="flex gap-2 items-center">
             <FaChevronDown className="w-5 h-5" />
@@ -238,7 +282,7 @@ export function NodeStatusReason(nv: NodeVersion) {
             </h4>
             <ul className="ml-4 flex gap-2 overflow-x-auto">
               {Object.entries(
-                nodeVersions!.reduce(
+                sortedNodeVersions!.reduce(
                   (acc, nv) => {
                     acc[nv.status!] = (acc[nv.status!] || 0) + 1;
                     return acc;
@@ -273,7 +317,7 @@ export function NodeStatusReason(nv: NodeVersion) {
                     onClick={() => setVisibleVersionCount((prev) => prev + 10)}
                     className="ml-4"
                   >
-                    {t("Show more versions")} ({nodeVersions!.length - visibleVersionCount}{" "}
+                    {t("Show more versions")} ({sortedNodeVersions!.length - visibleVersionCount}{" "}
                     {t("older")})
                   </Button>
                 </li>
@@ -384,21 +428,6 @@ export function NodeStatusReason(nv: NodeVersion) {
   );
 }
 
-export function PrettieredJSON5({ children: raw }: { children: string }) {
-  const [code, setCode] = useState(raw);
-  useEffect(() => {
-    format(raw ?? "", {
-      parser: "json5",
-      plugins: [prettierPluginBabel, prettierPluginEstree],
-    }).then(setCode);
-  }, [raw]);
-  return (
-    <SyntaxHighlighter language="json5" style={dark}>
-      {code}
-    </SyntaxHighlighter>
-  );
-}
-
 export function PrettieredYAML({ children: raw }: { children: string }) {
   const { ref, inView } = useInView();
 
@@ -406,10 +435,7 @@ export function PrettieredYAML({ children: raw }: { children: string }) {
 
   const [code, setCode] = useState(parsedYaml);
   useEffect(() => {
-    format(parsedYaml, {
-      parser: "yaml",
-      plugins: [prettierPluginYaml],
-    }).then(setCode);
+    formatCode(parsedYaml, "yaml").then(setCode);
   }, [parsedYaml]);
 
   const [isEditorOpen, setEditorOpen] = useState(false);
@@ -471,18 +497,15 @@ export function PrettieredYamlDiffView({
   const [codeOriginal, setCodeOriginal] = useState(parsedOriginal);
   const [codeModified, setCodeModified] = useState(parsedModified);
 
+  // Parallelize formatting operations
   useEffect(() => {
-    format(parsedOriginal, {
-      parser: "yaml",
-      plugins: [prettierPluginYaml],
-    }).then(setCodeOriginal);
-  }, [parsedOriginal]);
-  useEffect(() => {
-    format(parsedModified, {
-      parser: "yaml",
-      plugins: [prettierPluginYaml],
-    }).then(setCodeModified);
-  }, [parsedModified]);
+    Promise.all([formatCode(parsedOriginal, "yaml"), formatCode(parsedModified, "yaml")]).then(
+      ([formattedOriginal, formattedModified]) => {
+        setCodeOriginal(formattedOriginal);
+        setCodeModified(formattedModified);
+      },
+    );
+  }, [parsedOriginal, parsedModified]);
 
   const [isEditorOpen, setEditorOpen] = useState(true);
   const [editorReady, setEditorReady] = useState(false);
