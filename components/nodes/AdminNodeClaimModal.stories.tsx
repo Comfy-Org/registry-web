@@ -1,18 +1,18 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { AdminNodeClaimModal } from '@/components/nodes/AdminNodeClaimModal'
-import { Node } from '@/src/api/generated'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AdminNodeClaimModal } from "@/components/nodes/AdminNodeClaimModal";
+import { Node } from "@/src/api/generated";
 
 // Mock function for actions
 
 const meta: Meta<typeof AdminNodeClaimModal> = {
-  title: 'Components/Nodes/AdminNodeClaimModal',
+  title: "Components/Nodes/AdminNodeClaimModal",
   component: AdminNodeClaimModal,
   parameters: {
-    layout: 'centered',
-    backgrounds: { default: 'dark' },
+    layout: "centered",
+    backgrounds: { default: "dark" },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => {
       const queryClient = new QueryClient({
@@ -21,33 +21,33 @@ const meta: Meta<typeof AdminNodeClaimModal> = {
             retry: false,
           },
         },
-      })
+      });
       return (
         <QueryClientProvider client={queryClient}>
           <Story />
         </QueryClientProvider>
-      )
+      );
     },
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof AdminNodeClaimModal>
+export default meta;
+type Story = StoryObj<typeof AdminNodeClaimModal>;
 
 // Sample node data
 const sampleNode: Node = {
-  id: 'sample-node-1',
-  name: 'Sample Custom Node',
-  description: 'A sample ComfyUI custom node for testing purposes',
-  icon: 'https://via.placeholder.com/200',
+  id: "sample-node-1",
+  name: "Sample Custom Node",
+  description: "A sample ComfyUI custom node for testing purposes",
+  icon: "https://via.placeholder.com/200",
   downloads: 1250,
   rating: 4.5,
-  repository: 'https://github.com/sample-user/sample-comfy-node',
+  repository: "https://github.com/sample-user/sample-comfy-node",
   publisher: {
-    id: 'unclaimed-admin',
-    name: 'Unclaimed Admin',
+    id: "unclaimed-admin",
+    name: "Unclaimed Admin",
   },
-}
+};
 
 // Create mock data for the component
 // Note: In Storybook, we can't directly mock modules like we do with jest.
@@ -61,7 +61,7 @@ export const Default: Story = {
     node: sampleNode,
     onSuccess: () => {},
   },
-}
+};
 
 export const WithLongNodeName: Story = {
   args: {
@@ -69,12 +69,12 @@ export const WithLongNodeName: Story = {
     onClose: () => {},
     node: {
       ...sampleNode,
-      name: 'Very Long Node Name That Should Be Handled Properly In The Modal',
-      id: 'very-long-node-id-that-should-also-be-handled-properly',
+      name: "Very Long Node Name That Should Be Handled Properly In The Modal",
+      id: "very-long-node-id-that-should-also-be-handled-properly",
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const WithoutRepository: Story = {
   args: {
@@ -86,7 +86,7 @@ export const WithoutRepository: Story = {
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const LoadingPublishers: Story = {
   args: {
@@ -102,7 +102,7 @@ export const LoadingPublishers: Story = {
       ],
     },
   },
-}
+};
 
 export const Closed: Story = {
   args: {
@@ -111,4 +111,4 @@ export const Closed: Story = {
     node: sampleNode,
     onSuccess: () => {},
   },
-}
+};
