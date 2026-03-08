@@ -375,7 +375,7 @@
   "Repository": "Репозиторий",
   "Repository {{owner}}/{{repo}} not found or you do not have access to it.": "Репозиторий {{owner}}/{{repo}} не найден или у вас нет доступа к нему.",
   "Request support for new languages": "Запросить поддержку новых языков",
-  "Return Names": "Возвращаемые типы",
+  "Return Names": "Возвращаемые имена",
   "Return Types": "Возвращаемые типы",
   "Review Flagged Versions": "Проверить отмеченные версии",
   "Review Node Versions": "Проверить версии узла",
