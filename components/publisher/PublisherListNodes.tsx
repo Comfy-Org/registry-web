@@ -9,7 +9,7 @@ import PublisherNodes from "./PublisherNodes";
 
 const Nodes: React.FC = () => {
   const { t } = useNextTranslation();
-  const { data, isLoading, isError, refetch } = useListPublishersForUser();
+  const { data, isLoading, refetch } = useListPublishersForUser();
   const updatePublisherMutation = useUpdatePublisher();
   const [selectedPublisher, setSelectedPublisher] = useState<Publisher | null>(null);
 
@@ -29,7 +29,7 @@ const Nodes: React.FC = () => {
         },
       },
       {
-        onError: (error) => {
+        onError: (_error) => {
           toast.error(t("Failed to update publisher"));
         },
         onSuccess: () => {
