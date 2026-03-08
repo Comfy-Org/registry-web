@@ -11,14 +11,6 @@ const dirname =
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
   test: {
-    // Vite HMR client (@vite/client) throws "WebSocket closed without opened" during
-    // browser teardown. We selectively suppress only that noise rather than using
-    // dangerouslyIgnoreUnhandledErrors which would hide real errors too.
-    onUnhandledError(error) {
-      if (error.message?.includes("WebSocket closed without opened")) {
-        return false;
-      }
-    },
     workspace: [
       {
         extends: true,
