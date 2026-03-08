@@ -234,16 +234,42 @@ const NodeDetails = () => {
     router.push(`/nodes/${nodeId}/claim`);
   };
 
+  const isNodeIdMismatched = router.isReady && !!node?.id && !!nodeId && node.id !== nodeId;
+  const isPublisherIdMismatched =
+    router.isReady &&
+    !!node?.id &&
+    !!_publisherId &&
+    !!publisherId &&
+    !!nodeId &&
+    publisherId !== _publisherId;
+
+  // redirect to correct node ID if the responded node.id doesn't match the URL nodeId
+  // this handles cases where the node ID has changed or been normalized
+  React.useEffect(() => {
+    if (!isNodeIdMismatched) return;
+
+    // if we're on /publishers/[publisherId]/nodes/[nodeId], redirect to the correct publisher and node ID
+    if (_publisherId) {
+      router.replace(`/publishers/${publisherId}/nodes/${node!.id}`);
+    } else {
+      // if we're on /nodes/[nodeId], redirect to the correct node ID
+      router.replace(`/nodes/${node!.id}`);
+    }
+  }, [router, node, isNodeIdMismatched, _publisherId, publisherId]);
+
   // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
   // usually this happens when publisher changes, e.g. when user claims a node
-  const isPublisherIdMismatchedBetweenURLandNode =
-    node && _publisherId && publisherId !== _publisherId;
-  if (isPublisherIdMismatchedBetweenURLandNode) {
-    router.replace(`/publishers/${publisherId}/nodes/${nodeId}`);
-    return null; // prevent rendering the component while redirecting
-  }
+  React.useEffect(() => {
+    // If the nodeId is also mismatched, let the nodeId correction effect handle the redirect
+    // to avoid competing router.replace calls.
+    if (!isPublisherIdMismatched || isNodeIdMismatched) return;
 
-  const shouldShowLoading = isLoading || !router.isReady || !_nodeId;
+    // Use the canonical node.id when redirecting to avoid legacy/incorrect node IDs.
+    router.replace(`/publishers/${publisherId}/nodes/${node!.id}`);
+  }, [router, node, isPublisherIdMismatched, isNodeIdMismatched, publisherId]);
+
+  const isRedirecting = isNodeIdMismatched || isPublisherIdMismatched;
+  const shouldShowLoading = isLoading || !router.isReady || !_nodeId || isRedirecting;
   if (shouldShowLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
