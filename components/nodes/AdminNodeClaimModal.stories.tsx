@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AdminNodeClaimModal } from "@/components/nodes/AdminNodeClaimModal";
-import { Node, Publisher } from "@/src/api/generated";
+import { Node } from "@/src/api/generated";
 
 // Mock function for actions
 
@@ -48,25 +48,6 @@ const sampleNode: Node = {
     name: "Unclaimed Admin",
   },
 };
-
-// Sample publishers data
-const samplePublishers: Publisher[] = [
-  {
-    id: "publisher-1",
-    name: "ComfyUI Publisher",
-    description: "Official ComfyUI publisher",
-  },
-  {
-    id: "publisher-2",
-    name: "Community Publisher",
-    description: "Community-driven publisher",
-  },
-  {
-    id: "long-publisher-name",
-    name: "Very Long Publisher Name That Should Be Handled Properly",
-    description: "Testing long names",
-  },
-];
 
 // Create mock data for the component
 // Note: In Storybook, we can't directly mock modules like we do with jest.

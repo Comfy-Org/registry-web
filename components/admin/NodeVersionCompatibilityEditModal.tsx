@@ -7,12 +7,7 @@ import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
-import {
-  AdminUpdateNodeVersionBody,
-  NodeVersion,
-  useAdminUpdateNodeVersion,
-  useGetNode,
-} from "@/src/api/generated";
+import { NodeVersion, useAdminUpdateNodeVersion, useGetNode } from "@/src/api/generated";
 import { useNextTranslation } from "@/src/hooks/i18n";
 
 interface FormData {

@@ -30,7 +30,6 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
   const deleteTokenMutation = useDeletePersonalAccessToken();
   const {
     data: personalAccessTokens,
-    error,
     isLoading: isLoadingAccessTokens,
     refetch: refetchTokens,
   } = useListPersonalAccessTokens(publisher.id as string);
@@ -62,7 +61,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
         },
       },
       {
-        onError: (error) => {
+        onError: (_error) => {
           toast.error("Failed to update publisher");
         },
         onSuccess: () => {
@@ -263,7 +262,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
                     tokenId: tokenId,
                   },
                   {
-                    onError: (error) => {
+                    onError: (_error) => {
                       toast.error("Failed to delete token");
                     },
                     onSuccess: () => {
