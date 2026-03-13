@@ -7,7 +7,8 @@
     "src/**/*.{js,jsx,ts,tsx}",
     "utils/**/*.{js,jsx,ts,tsx}",
     "scripts/**/*.{js,jsx,ts,tsx}",
-    "orval.config.ts"
+    "orval.config.ts",
+    "middleware.ts"
   ],
   "project": [
     "**/*.{js,jsx,ts,tsx}",
@@ -21,8 +22,7 @@
     "**/*.test.{js,jsx,ts,tsx}",
     "**/*.spec.{js,jsx,ts,tsx}",
     ".storybook/**/*",
-    "next.config.ts",
-    "middleware.ts"
+    "next.config.ts"
   ],
   "ignoreDependencies": [
     "@algolia/autocomplete-shared",
