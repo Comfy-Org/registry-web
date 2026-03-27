@@ -21,7 +21,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "next lint --fix --file",
+      "eslint --fix",
       "prettier --write"
     ],
     "*.{json,css,md}": [
@@ -104,10 +104,10 @@
     "@chromatic-com/storybook": "^4.1.1",
     "@eslint/eslintrc": "^3.3.1",
     "@mdx-js/react": "2.1.4",
-    "@storybook/addon-docs": "^9.1.4",
-    "@storybook/addon-vitest": "9.0.17",
-    "@storybook/nextjs-vite": "^9.1.4",
-    "@storybook/test": "^8.6.14",
+    "@storybook/addon-a11y": "^9.1.20",
+    "@storybook/addon-docs": "^9.1.20",
+    "@storybook/addon-vitest": "^9.1.20",
+    "@storybook/nextjs-vite": "^9.1.20",
     "@types/async-busboy": "^1.1.4",
     "@types/downloadjs": "^1.4.6",
     "@types/mixpanel-browser": "^2.66.0",
@@ -141,7 +141,7 @@
     "postcss": "8.4.17",
     "prettier": "^3.6.2",
     "require-from-string": "^2.0.2",
-    "storybook": "^9.1.4",
+    "storybook": "^9.1.20",
     "tailwindcss": "^3.4.17",
     "typescript": "5.8.3",
     "vitest": "^3.2.4",
