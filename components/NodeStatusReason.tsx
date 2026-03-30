@@ -271,7 +271,7 @@ export function NodeStatusReason(nv: NodeVersion) {
   return (
     <div className="text-[18px] pt-2 text-gray-300" ref={ref}>
       {/* HistoryVersions */}
-      {(sortedNodeVersions?.length ?? null) && (
+      {sortedNodeVersions?.length > 0 && (
         <details>
           <summary className="flex gap-2 items-center">
             <FaChevronDown className="w-5 h-5" />
@@ -507,8 +507,9 @@ export function PrettieredYamlDiffView({
   const [codeOriginal, setCodeOriginal] = useState(parsedOriginal);
   const [codeModified, setCodeModified] = useState(parsedModified);
 
-  // Parallelize formatting operations
+  // Parallelize formatting operations (only when in view)
   useEffect(() => {
+    if (!inView) return;
     let cancelled = false;
     Promise.all([formatCode(parsedOriginal, "yaml"), formatCode(parsedModified, "yaml")])
       .then(([formattedOriginal, formattedModified]) => {
@@ -526,7 +527,7 @@ export function PrettieredYamlDiffView({
     return () => {
       cancelled = true;
     };
-  }, [parsedOriginal, parsedModified]);
+  }, [inView, parsedOriginal, parsedModified]);
 
   const [isEditorOpen, setEditorOpen] = useState(true);
   const [editorReady, setEditorReady] = useState(false);
