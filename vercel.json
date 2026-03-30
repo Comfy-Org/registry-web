@@ -10,5 +10,6 @@
       ]
     }
   ],
-  "installCommand": "bun install"
+  "installCommand": "bun install",
+  "buildCommand": "next build"
 }
