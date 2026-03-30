@@ -17,6 +17,7 @@ export default defineConfig({
     "@chromatic-com/storybook",
     "@storybook/addon-docs",
     "@storybook/addon-vitest",
+    "@storybook/addon-a11y",
   ],
   framework: "@storybook/nextjs-vite",
   staticDirs: ["../src/assets"],
@@ -49,7 +50,10 @@ export default defineConfig({
         configType === "PRODUCTION" && process.env.CHROMATIC !== "true" ? "/_storybook/" : c.base,
       server: {
         allowedHosts: true,
-        hmr: { clientPort: 443 },
+        // During vitest runs there is no real WS server on port 443, so the
+        // @vite/client HMR WebSocket throws "WebSocket closed without opened"
+        // on every browser teardown. Disable HMR entirely in that case.
+        hmr: process.env.VITEST ? false : { clientPort: 443 },
       },
       plugins: [await createMockResolverPlugin()],
       resolve: {

@@ -3,7 +3,7 @@ import "../styles/globals.css"; // Import the global CSS file
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import "../src/firebase"; // Initialize Firebase for Storybook
-import { mockFirebaseUser, useFirebaseUser } from "@/src/hooks/useFirebaseUser.mock";
+import { mockFirebaseUser, useFirebaseUser } from "@/src/hooks/useFirebaseUser";
 
 const _mswApp = initialize({
   onUnhandledRequest: "bypass",
@@ -24,6 +24,10 @@ const preview: Preview = {
     },
     docs: {
       toc: true,
+    },
+    a11y: {
+      // Run axe-core checks as test assertions — violations will fail the Vitest Storybook tests
+      test: "error",
     },
   },
   beforeEach: async () => {

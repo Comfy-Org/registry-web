@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { fn } from "@storybook/test";
+import { fn } from "storybook/test";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { User as FirebaseUser } from "firebase/auth";
 import { HttpResponse, http } from "msw";
