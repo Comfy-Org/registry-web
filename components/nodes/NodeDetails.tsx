@@ -114,11 +114,11 @@ const NodeDetails = () => {
       enabled: !!_nodeId,
     },
   });
-  const publisherId = String(node?.publisher?.id ?? _publisherId); // try use _publisherId from url while useGetNode is loading
+  const publisherId = node?.publisher?.id ?? (_publisherId ? String(_publisherId) : undefined); // try use _publisherId from url while useGetNode is loading
 
-  const { data: permissions } = useGetPermissionOnPublisherNodes(publisherId, nodeId, {
+  const { data: permissions } = useGetPermissionOnPublisherNodes(publisherId ?? "", nodeId, {
     query: {
-      enabled: !!_nodeId && publisherId !== "undefined",
+      enabled: !!_nodeId && !!publisherId,
     },
   });
 
@@ -262,7 +262,7 @@ const NodeDetails = () => {
   // redirect to correct /publishers/[publisherId]/nodes/[nodeId] if publisherId in query is different from the one in node
   // usually this happens when publisher changes, e.g. when user claims a node
   const isPublisherIdMismatchedBetweenURLandNode =
-    node && _publisherId && publisherId !== _publisherId;
+    node && _publisherId && publisherId && publisherId !== _publisherId;
   if (isPublisherIdMismatchedBetweenURLandNode) {
     router.replace(`/publishers/${publisherId}/nodes/${nodeId}`);
     return null; // prevent rendering the component while redirecting
@@ -741,12 +741,14 @@ const NodeDetails = () => {
           </div>
         </div>
 
-        <NodeEditModal
-          onCloseEditModal={onCloseEditModal}
-          nodeData={node}
-          openEditModal={isEditModalOpen}
-          publisherId={publisherId}
-        />
+        {publisherId && (
+          <NodeEditModal
+            onCloseEditModal={onCloseEditModal}
+            nodeData={node}
+            openEditModal={isEditModalOpen}
+            publisherId={publisherId}
+          />
+        )}
 
         <NodeDeleteModal
           openDeleteModal={isDeleteModalOpen}
