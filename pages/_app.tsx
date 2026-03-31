@@ -3,14 +3,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { getAuth } from "firebase/auth";
 import type { AppProps } from "next/app";
+import Script from "next/script";
 import { useEffect } from "react";
 import { AXIOS_INSTANCE } from "@/src/api/mutator/axios-instance";
 import app from "@/src/firebase";
 import FlowBiteThemeProvider from "../components/flowbite-theme";
 import Layout from "../components/layout";
 import "../styles/globals.css";
-import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { request } from "http";
+import { AxiosResponse } from "axios";
 import { DIE } from "phpdie";
 import { getAdminJwtToken, isAdminJwtTokenValid } from "@/src/utils/adminJwtStorage";
 
@@ -124,12 +124,30 @@ const persistEffect = () => {
   return unsubscribe;
 };
 
+const gaId = process.env.NEXT_PUBLIC_GA_ID;
+
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(persistEffect, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <FlowBiteThemeProvider>
+        {gaId && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', ${JSON.stringify(gaId)});
+              `}
+            </Script>
+          </>
+        )}
         <Layout>
           <Component {...pageProps} />
         </Layout>

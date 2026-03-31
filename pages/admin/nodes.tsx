@@ -41,7 +41,7 @@ function NodeList() {
   } | null>(null);
   const [processingNodeId, setProcessingNodeId] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  const { data: user } = useGetUser();
+  useGetUser();
 
   // Handle page from URL
   React.useEffect(() => {
@@ -127,23 +127,30 @@ function NodeList() {
 
   // Filter nodes by status and search
   const filteredNodes = React.useMemo(() => {
-    let nodes = getAllNodesQuery.data?.nodes || [];
+    const nodes = getAllNodesQuery.data?.nodes || [];
+    const shouldFilterStatus =
+      selectedStatuses.length > 0 && selectedStatuses.length < allStatuses.length;
+    const shouldFilterSearch = !!queryForNodeId;
+    const lowerQuery = queryForNodeId?.toLowerCase();
 
-    // Filter by status
-    if (selectedStatuses.length > 0 && selectedStatuses.length < allStatuses.length) {
-      nodes = nodes.filter((node) => selectedStatuses.includes(node.status as NodeStatus));
+    // Combine both filters into a single pass
+    if (!shouldFilterStatus && !shouldFilterSearch) {
+      return nodes;
     }
 
-    // Filter by nodeId search
-    if (queryForNodeId) {
-      nodes = nodes.filter(
-        (node) =>
-          node.id?.toLowerCase().includes(queryForNodeId.toLowerCase()) ||
-          node.name?.toLowerCase().includes(queryForNodeId.toLowerCase()),
-      );
-    }
-
-    return nodes;
+    return nodes.filter((node) => {
+      if (shouldFilterStatus && !selectedStatuses.includes(node.status as NodeStatus)) {
+        return false;
+      }
+      if (shouldFilterSearch && lowerQuery) {
+        const matchesId = node.id?.toLowerCase().includes(lowerQuery);
+        const matchesName = node.name?.toLowerCase().includes(lowerQuery);
+        if (!matchesId && !matchesName) {
+          return false;
+        }
+      }
+      return true;
+    });
   }, [getAllNodesQuery.data?.nodes, selectedStatuses, queryForNodeId, allStatuses.length]);
 
   const executeBanOperation = async (node: Node, action: "ban" | "unban") => {
@@ -176,7 +183,6 @@ function NodeList() {
         toast.success(t("Node unbanned successfully"));
       }
       queryClient.invalidateQueries({ queryKey: ["/nodes"] });
-      getAllNodesQuery.refetch();
     } catch (error: any) {
       // Check if error is due to missing JWT token
       if (error?.message === "ADMIN_JWT_REQUIRED") {
