@@ -14,7 +14,10 @@ import { useNextTranslation } from "@/src/hooks/i18n";
 
 function NodeSearchRankingCell({ nodeId }: { nodeId: string }) {
   const { t } = useNextTranslation();
-  const { data: node, isLoading } = useGetNode(nodeId);
+  const { data: node, isLoading } = useGetNode(nodeId, {
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
   if (isLoading) return <Spinner size="xs" />;
   return <>{node?.search_ranking != null ? node.search_ranking : t("N/A")}</>;
 }
