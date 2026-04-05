@@ -11,10 +11,40 @@ import {
 } from '@/src/hooks/i18n/translateNode'
 import NodeDetails from '../../components/nodes/NodeDetails'
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-})
+// Pre-generate top nodes × top locales at build time for instant cache hits
+const PREHEAT_LOCALES = ['zh', 'ja', 'ko', 'ru']
+const PREHEAT_TOP_N = 20
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+  if (!backendUrl) return { paths: [], fallback: 'blocking' }
+
+  try {
+    const res = await fetch(`${backendUrl}/nodes?limit=${PREHEAT_TOP_N}`)
+    if (!res.ok) return { paths: [], fallback: 'blocking' }
+    const data = await res.json()
+    const nodes: { id?: string; downloads?: number }[] = data.nodes ?? []
+
+    const topNodes = nodes
+      .filter((n) => n.id && (n.downloads ?? 0) > 0)
+      .sort((a, b) => (b.downloads ?? 0) - (a.downloads ?? 0))
+      .slice(0, PREHEAT_TOP_N)
+
+    const paths = topNodes.flatMap((node) =>
+      PREHEAT_LOCALES.map((locale) => ({
+        params: { nodeId: node.id! },
+        locale,
+      }))
+    )
+
+    console.log(
+      `[i18n-isr] Pre-generating ${paths.length} node pages (${topNodes.length} nodes × ${PREHEAT_LOCALES.length} locales)`
+    )
+    return { paths, fallback: 'blocking' }
+  } catch {
+    return { paths: [], fallback: 'blocking' }
+  }
+}
 
 export const getStaticProps: GetStaticProps<{
   nodeId: string
