@@ -2,7 +2,6 @@ import { Breadcrumb } from 'flowbite-react'
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
-import { getNode } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import {
   getTranslatedNodeContent,
@@ -24,7 +23,20 @@ export const getStaticProps: GetStaticProps<{
   if (!nodeId) return { notFound: true }
 
   try {
-    const node = await getNode(nodeId, { include_translations: true })
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+    if (!backendUrl) {
+      console.warn(
+        '[i18n-isr] NEXT_PUBLIC_BACKEND_URL not set, skipping SSR translation'
+      )
+      return { props: { nodeId, translatedContent: null }, revalidate: 60 }
+    }
+
+    const res = await fetch(
+      `${backendUrl}/nodes/${encodeURIComponent(nodeId)}?include_translations=true`
+    )
+    if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
+    const node = await res.json()
+
     const extracted = getTranslatedNodeContent(node, locale ?? 'en')
     const translatedContent = await translateNodeContent(
       extracted,
@@ -38,7 +50,6 @@ export const getStaticProps: GetStaticProps<{
     }
   } catch (err) {
     console.error('[i18n-isr] getStaticProps failed for', nodeId, locale, err)
-    // If API fails, still render client-side without pre-translated content
     return {
       props: { nodeId, translatedContent: null },
       revalidate: 60,

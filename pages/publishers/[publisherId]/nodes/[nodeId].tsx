@@ -3,7 +3,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
 import NodeDetails from '@/components/nodes/NodeDetails'
-import { getNode, useGetPublisher } from '@/src/api/generated'
+import { useGetPublisher } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import {
   getTranslatedNodeContent,
@@ -23,7 +23,17 @@ export const getStaticProps: GetStaticProps<{
   if (!nodeId) return { notFound: true }
 
   try {
-    const node = await getNode(nodeId, { include_translations: true })
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+    if (!backendUrl) {
+      return { props: { translatedContent: null }, revalidate: 60 }
+    }
+
+    const res = await fetch(
+      `${backendUrl}/nodes/${encodeURIComponent(nodeId)}?include_translations=true`
+    )
+    if (!res.ok) throw new Error(`API ${res.status}`)
+    const node = await res.json()
+
     const extracted = getTranslatedNodeContent(node, locale ?? 'en')
     const translatedContent = await translateNodeContent(
       extracted,
@@ -35,7 +45,8 @@ export const getStaticProps: GetStaticProps<{
       props: { translatedContent },
       revalidate: 3600,
     }
-  } catch {
+  } catch (err) {
+    console.error('[i18n-isr] getStaticProps failed for', nodeId, locale, err)
     return {
       props: { translatedContent: null },
       revalidate: 60,
