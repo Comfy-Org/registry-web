@@ -56,12 +56,6 @@ export async function translateNodeContent(
   sourceChangelog?: string
 ): Promise<TranslatedNodeContent> {
   const apiKey = process.env.OPENAI_API_KEY
-  console.log('[i18n-isr] translateNodeContent:', {
-    locale: content.locale,
-    hasApiKey: !!apiKey,
-    descMatch: content.description === sourceDescription,
-    changelogMatch: content.changelog === sourceChangelog,
-  })
   if (!apiKey || content.locale === 'en') return content
 
   // Only translate if we're still showing the English fallback

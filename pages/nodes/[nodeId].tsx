@@ -25,9 +25,6 @@ export const getStaticProps: GetStaticProps<{
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
     if (!backendUrl) {
-      console.warn(
-        '[i18n-isr] NEXT_PUBLIC_BACKEND_URL not set, skipping SSR translation'
-      )
       return { props: { nodeId, translatedContent: null }, revalidate: 60 }
     }
 
@@ -48,8 +45,7 @@ export const getStaticProps: GetStaticProps<{
       props: { nodeId, translatedContent },
       revalidate: 3600,
     }
-  } catch (err) {
-    console.error('[i18n-isr] getStaticProps failed for', nodeId, locale, err)
+  } catch {
     return {
       props: { nodeId, translatedContent: null },
       revalidate: 60,

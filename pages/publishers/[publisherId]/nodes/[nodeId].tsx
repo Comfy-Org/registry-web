@@ -45,8 +45,7 @@ export const getStaticProps: GetStaticProps<{
       props: { translatedContent },
       revalidate: 3600,
     }
-  } catch (err) {
-    console.error('[i18n-isr] getStaticProps failed for', nodeId, locale, err)
+  } catch {
     return {
       props: { translatedContent: null },
       revalidate: 60,
