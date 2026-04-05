@@ -12,12 +12,14 @@ import {
 import NodeDetails from "../../components/nodes/NodeDetails";
 
 // Pre-generate top nodes × top locales at build time for instant cache hits
+// Only preheat on production builds, not preview PRs
 const PREHEAT_LOCALES = ["zh", "ja", "ko", "ru"];
 const PREHEAT_TOP_N = 20;
+const PREHEAT_ENABLED = process.env.VERCEL_ENV === "production";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-  if (!backendUrl) return { paths: [], fallback: "blocking" };
+  if (!backendUrl || !PREHEAT_ENABLED) return { paths: [], fallback: "blocking" };
 
   try {
     const res = await fetch(`${backendUrl}/nodes?limit=${PREHEAT_TOP_N}`);
