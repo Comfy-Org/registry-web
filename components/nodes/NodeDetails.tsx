@@ -129,7 +129,7 @@ const NodeDetails = () => {
     nodeId,
     {
       query: {
-        enabled: !!_nodeId && !!publisherId && publisherId !== 'undefined',
+        enabled: !!_nodeId && !!publisherId,
       },
     }
   )

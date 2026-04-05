@@ -1,5 +1,4 @@
 import { ShortNumber } from '@lytieuphong/short-number'
-// trigger preview deployment
 import { Tooltip } from 'flowbite-react'
 import type {
   HitAttributeHighlightResult,
