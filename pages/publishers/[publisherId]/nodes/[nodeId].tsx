@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps<{
       return {
         redirect: {
           destination: `/publishers/${node.publisher.id}/nodes/${nodeId}`,
-          permanent: true,
+          permanent: false,
         },
       };
     }
