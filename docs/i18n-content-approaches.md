@@ -28,24 +28,24 @@ This document compares different approaches to automatically translate **dynamic
 ```tsx
 // pages/nodes/[nodeId].tsx
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const node = await getNode(params.nodeId)
+  const node = await getNode(params.nodeId);
 
   // Use existing translations from API if available
-  let description = node.translations?.[locale]?.description ?? node.description
+  let description = node.translations?.[locale]?.description ?? node.description;
 
   // Auto-translate if missing
-  if (!node.translations?.[locale]?.description && locale !== 'en') {
-    description = await translateText(node.description, locale)
+  if (!node.translations?.[locale]?.description && locale !== "en") {
+    description = await translateText(node.description, locale);
     // Optionally persist back to API via createNodeTranslations
   }
 
-  return { props: { node, description, locale }, revalidate: 3600 }
-}
+  return { props: { node, description, locale }, revalidate: 3600 };
+};
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [], // Generate on-demand
-  fallback: 'blocking',
-})
+  fallback: "blocking",
+});
 ```
 
 ### Pros
