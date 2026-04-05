@@ -5,8 +5,8 @@ This document collects all PRs, issues, and resources related to making **dynami
 ## Current State
 
 - **Static UI text i18n**: ✅ Complete (45 components, 189+ keys, 7+ languages)
-- **Content i18n (node descriptions, changelogs, metadata)**: ⏳ Not yet implemented
-- **Branch**: `sno-i18n-isr` — intended for content i18n + ISR (Incremental Static Regeneration)
+- **Content i18n (node descriptions, changelogs, metadata)**: 🚧 In progress — ISR-time translation and page updates implemented, broader translation tooling still evolving
+- **Branch**: `sno-i18n-isr` — implementation branch for content i18n + ISR (Incremental Static Regeneration)
 
 ---
 
