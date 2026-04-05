@@ -35,6 +35,8 @@ export const getStaticProps: GetStaticProps<{
     if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
     const node = await res.json();
 
+    // Use stored translations from API; auto-translation happens async client-side
+    // via /api/translate-node to avoid blocking ISR (see #258 for DB persistence)
     const translatedContent = getTranslatedNodeContent(node, locale ?? "en");
 
     return {
