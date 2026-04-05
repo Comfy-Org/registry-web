@@ -36,7 +36,8 @@ export const getStaticProps: GetStaticProps<{
       props: { nodeId, translatedContent },
       revalidate: 3600,
     }
-  } catch {
+  } catch (err) {
+    console.error('[i18n-isr] getStaticProps failed for', nodeId, locale, err)
     // If API fails, still render client-side without pre-translated content
     return {
       props: { nodeId, translatedContent: null },
