@@ -6,6 +6,7 @@ import { getNode } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import {
   getTranslatedNodeContent,
+  translateNodeContent,
   TranslatedNodeContent,
 } from '@/src/hooks/i18n/translateNode'
 import NodeDetails from '../../components/nodes/NodeDetails'
@@ -24,7 +25,12 @@ export const getStaticProps: GetStaticProps<{
 
   try {
     const node = await getNode(nodeId, { include_translations: true })
-    const translatedContent = getTranslatedNodeContent(node, locale ?? 'en')
+    const extracted = getTranslatedNodeContent(node, locale ?? 'en')
+    const translatedContent = await translateNodeContent(
+      extracted,
+      node.description,
+      node.latest_version?.changelog
+    )
 
     return {
       props: { nodeId, translatedContent },
