@@ -5,7 +5,7 @@ This document compares different approaches to automatically translate **dynamic
 ## Current State
 
 - **Static UI i18n**: ✅ Done — `t()` wraps all fixed strings, auto-translated via OpenAI in CI
-- **Dynamic content**: ❌ Rendered as-is from API (English-only `node.description`, `version.changelog`)
+- **Dynamic content**: 🚧 Node descriptions auto-translated at ISR time via OpenAI; changelogs still English-only
 - **Backend API**: ✅ Already supports `node.translations` field (`NodeTranslations` type) and `POST /nodes/{nodeId}/translations` endpoint via `useCreateNodeTranslations` hook
 - **9 languages** supported: en, zh, ja, fr, es, ko, ru, ar, tr
 
@@ -28,24 +28,24 @@ This document compares different approaches to automatically translate **dynamic
 ```tsx
 // pages/nodes/[nodeId].tsx
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
-  const node = await getNode(params.nodeId);
+  const node = await getNode(params.nodeId)
 
   // Use existing translations from API if available
-  let description = node.translations?.[locale]?.description ?? node.description;
+  let description = node.translations?.[locale]?.description ?? node.description
 
   // Auto-translate if missing
-  if (!node.translations?.[locale]?.description && locale !== "en") {
-    description = await translateText(node.description, locale);
+  if (!node.translations?.[locale]?.description && locale !== 'en') {
+    description = await translateText(node.description, locale)
     // Optionally persist back to API via createNodeTranslations
   }
 
-  return { props: { node, description, locale }, revalidate: 3600 };
-};
+  return { props: { node, description, locale }, revalidate: 3600 }
+}
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [], // Generate on-demand
-  fallback: "blocking",
-});
+  fallback: 'blocking',
+})
 ```
 
 ### Pros

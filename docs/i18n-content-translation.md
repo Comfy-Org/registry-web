@@ -64,7 +64,7 @@ This document collects all PRs, issues, and resources related to making **dynami
 - **Mechanism**: Translate content at build/ISR time, serve pre-translated pages per locale
 - **Pros**: SEO-friendly, works in all browsers, fast page loads
 - **Cons**: Requires translation API integration, ISR infrastructure, storage for translations
-- **Status**: Not yet implemented — this is the next step
+- **Status**: ✅ Implemented — ISR-time translation with OpenAI auto-translate for node detail pages
 
 ---
 
