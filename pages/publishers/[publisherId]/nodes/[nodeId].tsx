@@ -1,5 +1,6 @@
 import { Breadcrumb } from 'flowbite-react'
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { HiHome } from 'react-icons/hi'
 import NodeDetails from '@/components/nodes/NodeDetails'
@@ -17,6 +18,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 })
 
 export const getStaticProps: GetStaticProps<{
+  nodeName: string | null
   translatedContent: TranslatedNodeContent | null
 }> = async ({ params, locale }) => {
   const nodeId = params?.nodeId as string
@@ -26,7 +28,10 @@ export const getStaticProps: GetStaticProps<{
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
     if (!backendUrl) {
-      return { props: { translatedContent: null }, revalidate: 60 }
+      return {
+        props: { nodeName: null, translatedContent: null },
+        revalidate: 60,
+      }
     }
 
     const res = await fetch(
@@ -52,27 +57,42 @@ export const getStaticProps: GetStaticProps<{
     )
 
     return {
-      props: { translatedContent },
+      props: { nodeName: node.name ?? null, translatedContent },
       revalidate: 3600,
     }
   } catch {
     return {
-      props: { translatedContent: null },
+      props: { nodeName: null, translatedContent: null },
       revalidate: 60,
     }
   }
 }
 
 const NodeView = ({
+  nodeName,
   translatedContent,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
   const { publisherId, nodeId } = router.query
   const { data: publisher } = useGetPublisher(publisherId as string)
   const { t } = useNextTranslation()
+  const title = nodeName
+    ? `${nodeName} - ${t('ComfyUI Registry')}`
+    : t('ComfyUI Registry')
+  const description = translatedContent?.description ?? ''
 
   return (
     <div className="p-4">
+      <Head>
+        <title>{title}</title>
+        {description && (
+          <meta name="description" content={description.slice(0, 160)} />
+        )}
+        {description && (
+          <meta property="og:description" content={description.slice(0, 160)} />
+        )}
+        {nodeName && <meta property="og:title" content={title} />}
+      </Head>
       <Breadcrumb className="py-4">
         <Breadcrumb.Item
           href="/"
