@@ -536,7 +536,9 @@ const NodeDetails = ({
               <div>
                 <h2 className="mb-2 text-lg font-bold">{t('Description')}</h2>
                 <p className="text-base font-normal text-gray-200">
-                  {translatedContent?.description ?? node.description}
+                  {translatedContent?.locale === i18n.language
+                    ? (translatedContent?.description ?? node.description)
+                    : node.description}
                 </p>
               </div>
               <div className="mt-10" hidden={isUnclaimed}>
