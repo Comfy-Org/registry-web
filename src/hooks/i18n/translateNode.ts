@@ -1,45 +1,39 @@
-import type { Node } from "@/src/api/generated";
+import type { Node } from '@/src/api/generated'
+import { LANGUAGE_NAMES } from '@/src/constants'
 
 export interface TranslatedNodeContent {
-  description?: string;
-  changelog?: string;
-  locale: string;
+  description?: string
+  locale: string
 }
-
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: "English",
-  zh: "中文",
-  ja: "日本語",
-  fr: "Français",
-  es: "Español",
-  ko: "한국어",
-  ru: "Русский",
-  ar: "العربية",
-  tr: "Türkçe",
-};
 
 /**
  * Extract translated content for a node in the given locale.
  * Falls back to the original English content if no translation is available.
  */
-export function getTranslatedNodeContent(node: Node, locale: string): TranslatedNodeContent {
-  if (locale === "en") {
+export function getTranslatedNodeContent(
+  node: Node,
+  locale: string
+): TranslatedNodeContent {
+  if (locale === 'en') {
     return {
       locale,
       description: node.description,
-      changelog: node.latest_version?.changelog,
-    };
+    }
   }
 
   const translation = node.translations?.[locale] as
-    | { description?: string; changelog?: string }
-    | undefined;
+    | { description?: unknown }
+    | undefined
+
+  const translatedDesc = translation?.description
 
   return {
     locale,
-    description: (translation?.description as string) || node.description,
-    changelog: (translation?.changelog as string) || node.latest_version?.changelog,
-  };
+    description:
+      typeof translatedDesc === 'string' && translatedDesc
+        ? translatedDesc
+        : node.description,
+  }
 }
 
 /**
@@ -48,67 +42,59 @@ export function getTranslatedNodeContent(node: Node, locale: string): Translated
  */
 export async function translateNodeContent(
   content: TranslatedNodeContent,
-  sourceDescription?: string,
-  sourceChangelog?: string,
+  sourceDescription?: string
 ): Promise<TranslatedNodeContent> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey || content.locale === "en") return content;
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey || content.locale === 'en') return content
 
   // Only translate if we're still showing the English fallback
-  const needsDescTranslation = content.description && content.description === sourceDescription;
-  const needsChangelogTranslation = content.changelog && content.changelog === sourceChangelog;
+  const needsDescTranslation =
+    content.description && content.description === sourceDescription
 
-  if (!needsDescTranslation && !needsChangelogTranslation) return content;
+  if (!needsDescTranslation) return content
 
-  const langName = LANGUAGE_NAMES[content.locale] ?? content.locale;
+  const langName = LANGUAGE_NAMES[content.locale] ?? content.locale
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 15_000)
 
   try {
-    const parts: { key: string; text: string }[] = [];
-    if (needsDescTranslation) parts.push({ key: "description", text: content.description! });
-    if (needsChangelogTranslation) parts.push({ key: "changelog", text: content.changelog! });
+    const prompt = `[description]\n${content.description}`
 
-    const prompt = parts.map((t) => `[${t.key}]\n${t.text}`).join("\n\n");
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15_000);
-
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: 'gpt-4o-mini',
         messages: [
           {
-            role: "system",
+            role: 'system',
             content: `Translate the following ComfyUI custom node metadata into ${langName} (${content.locale}). Preserve technical terms, node names, and code references. Return the translation in the same [key] format. No explanation needed.`,
           },
-          { role: "user", content: prompt },
+          { role: 'user', content: prompt },
         ],
         temperature: 0.3,
       }),
       signal: controller.signal,
-    });
+    })
 
-    clearTimeout(timeout);
+    if (!res.ok) return content
 
-    if (!res.ok) return content;
+    const data = await res.json()
+    const reply: string = data.choices?.[0]?.message?.content ?? ''
 
-    const data = await res.json();
-    const reply: string = data.choices?.[0]?.message?.content ?? "";
-
-    const result = { ...content };
-    for (const { key } of parts) {
-      const regex = new RegExp(`\\[${key}\\]\\n([\\s\\S]*?)(?=\\n\\[|$)`);
-      const match = reply.match(regex);
-      if (match?.[1]?.trim()) {
-        (result as Record<string, string>)[key] = match[1].trim();
-      }
+    const regex = /\[description\]\r?\n([\s\S]*?)$/
+    const match = reply.match(regex)
+    if (match?.[1]?.trim()) {
+      return { ...content, description: match[1].trim() }
     }
-    return result;
+    return content
   } catch {
-    return content;
+    return content
+  } finally {
+    clearTimeout(timeout)
   }
 }
