@@ -1,10 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { SUPPORTED_LANGUAGES } from "@/src/constants";
 import { getTranslatedNodeContent, translateNodeContent } from "@/src/hooks/i18n/translateNode";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
   const { nodeId, locale } = req.query;
-  if (typeof nodeId !== "string" || typeof locale !== "string" || locale === "en") {
-    return res.status(400).json({ error: "nodeId and non-en locale required" });
+  if (
+    typeof nodeId !== "string" ||
+    typeof locale !== "string" ||
+    locale === "en" ||
+    !SUPPORTED_LANGUAGES.includes(locale as any)
+  ) {
+    return res.status(400).json({ error: "valid nodeId and supported non-en locale required" });
   }
 
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -22,6 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const extracted = getTranslatedNodeContent(node, locale);
     const translated = await translateNodeContent(extracted, node.description);
+
+    // TODO: persist translation to DB once server-to-server auth is available (see #258)
 
     // Cache the translated response for 1 hour
     res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
