@@ -1,7 +1,7 @@
-import { GetStaticPaths, GetStaticProps } from 'next'
-import { loadNodeStaticProps } from '@/src/hooks/i18n/nodeStaticProps'
-import { TranslatedNodeContent } from '@/src/hooks/i18n/translateNode'
-import NodeView from '../../nodes/[nodeId]'
+import { GetStaticPaths, GetStaticProps } from "next";
+import { loadNodeStaticProps } from "@/src/hooks/i18n/nodeStaticProps";
+import { TranslatedNodeContent } from "@/src/hooks/i18n/translateNode";
+import NodeView from "../../nodes/[nodeId]";
 
 /**
  * Bot-only variant of /nodes/[nodeId] that blocks ISR on the OpenAI
@@ -12,18 +12,18 @@ import NodeView from '../../nodes/[nodeId]'
  */
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
-  fallback: 'blocking',
-})
+  fallback: "blocking",
+});
 
 export const getStaticProps: GetStaticProps<{
-  nodeId: string
-  nodeName: string | null
-  translatedContent: TranslatedNodeContent | null
+  nodeId: string;
+  nodeName: string | null;
+  translatedContent: TranslatedNodeContent | null;
 }> = async ({ params, locale }) => {
-  const nodeId = params?.nodeId as string
-  if (!nodeId) return { notFound: true }
+  const nodeId = params?.nodeId as string;
+  if (!nodeId) return { notFound: true };
 
-  return loadNodeStaticProps({ nodeId, locale: locale ?? 'en', blocking: true })
-}
+  return loadNodeStaticProps({ nodeId, locale: locale ?? "en", blocking: true });
+};
 
-export default NodeView
+export default NodeView;
