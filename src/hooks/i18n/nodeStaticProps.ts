@@ -1,18 +1,14 @@
+import type { GetStaticPropsResult } from 'next'
 import {
   getTranslatedNodeContent,
   translateNodeContent,
   TranslatedNodeContent,
 } from './translateNode'
 
-export interface NodeStaticPropsResult {
-  notFound?: true
-  redirect?: { destination: string; permanent: boolean }
-  props?: {
-    nodeId: string
-    nodeName: string | null
-    translatedContent: TranslatedNodeContent | null
-  }
-  revalidate?: number
+export interface NodeStaticPropsData {
+  nodeId: string
+  nodeName: string | null
+  translatedContent: TranslatedNodeContent | null
 }
 
 /**
@@ -35,7 +31,7 @@ export async function loadNodeStaticProps({
   locale: string
   publisherId?: string
   blocking: boolean
-}): Promise<NodeStaticPropsResult> {
+}): Promise<GetStaticPropsResult<NodeStaticPropsData>> {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
   if (!backendUrl) {
     return {
