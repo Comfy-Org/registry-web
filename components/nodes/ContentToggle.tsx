@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { useEffect, useState } from "react";
+import { useNextTranslation } from "@/src/hooks/i18n";
 
-const STORAGE_KEY = 'comfy-registry-content-translation-mode'
-type Mode = 'translated' | 'original'
+const STORAGE_KEY = "comfy-registry-content-translation-mode";
+type Mode = "translated" | "original";
 
 interface ContentToggleProps {
-  original: string
-  translated: string | null
-  locale: string
-  isLoadingTranslation?: boolean
+  original: string;
+  translated: string | null;
+  locale: string;
+  isLoadingTranslation?: boolean;
 }
 
 /**
@@ -28,31 +28,30 @@ export default function ContentToggle({
   locale,
   isLoadingTranslation,
 }: ContentToggleProps) {
-  const { t } = useNextTranslation()
-  const [mode, setMode] = useState<Mode>('translated')
+  const { t } = useNextTranslation();
+  const [mode, setMode] = useState<Mode>("translated");
 
   // Restore stored preference on mount
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    const saved = window.localStorage.getItem(STORAGE_KEY)
-    if (saved === 'original' || saved === 'translated') setMode(saved)
-  }, [])
+    if (typeof window === "undefined") return;
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (saved === "original" || saved === "translated") setMode(saved);
+  }, []);
 
-  const isNonEn = locale !== 'en'
-  const hasTranslation = !!translated && isNonEn
-  const showOriginal = !hasTranslation || mode === 'original'
-  const displayed = showOriginal ? original : translated!
+  const isNonEn = locale !== "en";
+  const hasTranslation = !!translated && isNonEn;
+  const showOriginal = !hasTranslation || mode === "original";
+  const displayed = showOriginal ? original : translated!;
   // Show the header whenever we're on a non-en locale and either have a
   // translation to toggle to or are still fetching one. This makes the
   // "Translating…" indicator reachable while the async fetch is in flight.
-  const showHeader = isNonEn && (hasTranslation || isLoadingTranslation)
+  const showHeader = isNonEn && (hasTranslation || isLoadingTranslation);
 
   const toggle = () => {
-    const next: Mode = mode === 'translated' ? 'original' : 'translated'
-    setMode(next)
-    if (typeof window !== 'undefined')
-      window.localStorage.setItem(STORAGE_KEY, next)
-  }
+    const next: Mode = mode === "translated" ? "original" : "translated";
+    setMode(next);
+    if (typeof window !== "undefined") window.localStorage.setItem(STORAGE_KEY, next);
+  };
 
   return (
     <div>
@@ -64,24 +63,20 @@ export default function ContentToggle({
               onClick={toggle}
               className="rounded border border-gray-600 px-2 py-1 hover:border-blue-500 hover:text-blue-300"
             >
-              {showOriginal ? t('Show translation') : t('Show original')}
+              {showOriginal ? t("Show translation") : t("Show original")}
             </button>
           )}
           {hasTranslation && !showOriginal && (
-            <span
-              title={t('Auto-translated by AI; original may be more accurate')}
-            >
-              {t('Auto-translated')}
+            <span title={t("Auto-translated by AI; original may be more accurate")}>
+              {t("Auto-translated")}
             </span>
           )}
           {isLoadingTranslation && !translated && (
-            <span className="italic">{t('Translating…')}</span>
+            <span className="italic">{t("Translating…")}</span>
           )}
         </div>
       )}
-      <p className="text-base font-normal whitespace-pre-wrap text-gray-200">
-        {displayed}
-      </p>
+      <p className="text-base font-normal whitespace-pre-wrap text-gray-200">{displayed}</p>
     </div>
-  )
+  );
 }
