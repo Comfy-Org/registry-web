@@ -66,6 +66,7 @@
     "i18next-http-backend": "^3.0.2",
     "i18next-resources-to-backend": "^1.2.1",
     "instantsearch.js": "^4.79.2",
+    "isbot": "^5.1.37",
     "json-stringify-pretty-compact": "^4.0.0",
     "md5": "^2.3.0",
     "mixpanel-browser": "^2.69.1",
