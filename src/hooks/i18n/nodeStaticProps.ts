@@ -16,7 +16,7 @@ export interface NodeStaticPropsData {
  *
  * - `blocking: false` (human path) — only uses stored translations from the
  *   registry API, never calls OpenAI. Cold ISR rendering is instant; missing
- *   translations are filled in client-side via /api/translate-node.
+ *   translations remain in English until stored upstream.
  * - `blocking: true` (bot path) — additionally awaits an OpenAI translation
  *   when no stored translation exists, so search engine crawlers always see
  *   localized meta tags in the HTML source.
