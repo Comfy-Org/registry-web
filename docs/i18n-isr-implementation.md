@@ -23,9 +23,12 @@ Per page (getStaticProps):
   4. Return translated content as props (pre-rendered in HTML)
   5. Cache via ISR (revalidate: 3600s success, 60s on failure)
 
-Client-side fallback:
-  NodeDetails useEffect → /api/translate-node → async translation swap
-  (for locale switches and pages without ISR-cached translation)
+Human path (default):
+  Stored translations only; missing translations remain in English
+  until stored upstream. No client-side OpenAI calls.
+
+Bot path (middleware-routed to /_bot/nodes/[nodeId]):
+  Blocks on OpenAI translation to guarantee translated meta tags in HTML.
 ```
 
 ---
@@ -84,11 +87,11 @@ Client-side fallback:
 
 **Why**: The generated axios client relies on interceptors set up in `_app.tsx` (browser environment). In `getStaticProps` (server-side), the interceptors aren't available. Direct `fetch()` is simpler and more reliable for server-side data fetching.
 
-### 4. Async client-side translation as fallback
+### 4. No client-side translation fallback
 
-**Decision**: Keep `/api/translate-node` route + `useEffect` in NodeDetails for client-side async translation.
+**Decision**: Removed the `/api/translate-node` route and client-side `useEffect` translation. Human visitors see stored translations or English; bots are routed by middleware to `/_bot/nodes/[nodeId]` which blocks on OpenAI.
 
-**Why**: When switching locales client-side, `getStaticProps` re-runs (we removed `shallow: true`), but if the ISR cache doesn't have the new locale yet, the async fetch provides a faster UX — English renders immediately, then translation swaps in.
+**Why**: Client-side translation couldn't populate `<meta>` tags for SEO, and added complexity. The bot path guarantees translated HTML for crawlers, while human visitors get instant page loads with stored translations.
 
 ### 5. Production-only preheat
 
@@ -150,8 +153,8 @@ Client-side fallback:
 | --------------------------------------------------- | ---------------------------------------------- |
 | `pages/nodes/[nodeId].tsx`                          | ISR + preheat + SEO meta tags                  |
 | `pages/publishers/[publisherId]/nodes/[nodeId].tsx` | ISR + publisher validation                     |
-| `pages/api/translate-node.ts`                       | API route for async client-side translation    |
-| `components/nodes/NodeDetails.tsx`                  | Accept translated props + async fallback       |
+| `pages/_bot/nodes/[nodeId].tsx`                     | Bot path: blocking OpenAI translation for SEO  |
+| `components/nodes/NodeDetails.tsx`                  | Accept translated props                        |
 | `src/hooks/i18n/translateNode.ts`                   | Translation extraction + OpenAI auto-translate |
 | `src/hooks/i18n/index.ts`                           | Remove `shallow: true` for locale switch       |
 | `src/constants.ts`                                  | Export `LANGUAGE_NAMES`                        |
