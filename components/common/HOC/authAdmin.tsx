@@ -1,10 +1,9 @@
-import { getAuth } from 'firebase/auth'
 import { Spinner } from 'flowbite-react'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import { useGetUser } from 'src/api/generated'
-import { getFromUrlSearchParam } from './getFromUrlSearchParam'
+import { useGetUser } from '@/src/api/generated'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
+import { useFromUrlParam } from './useFromUrl'
 
 /**
  * Admin dashboard HOC
@@ -15,49 +14,48 @@ import { getFromUrlSearchParam } from './getFromUrlSearchParam'
  * this HOC component should be used in page level, since h-[50vh] in loading spinner settle
  */
 const withAdmin = (WrappedComponent) => {
-    const HOC = (props: JSX.IntrinsicAttributes) => {
-        const router = useRouter()
-        const auth = getAuth()
+  const HOC = (props: JSX.IntrinsicAttributes) => {
+    const router = useRouter()
+    const fromUrlParam = useFromUrlParam()
 
-        // if firebaseUser is signed out, redirect to login page
-        const [firebaseUser, firebaseUserLoading] = useAuthState(auth)
-        useEffect(() => {
-            if (!firebaseUserLoading && !firebaseUser) {
-                router.push(`/auth/login?${getFromUrlSearchParam()}`)
-            }
-        }, [router, firebaseUser, firebaseUserLoading])
+    // if firebaseUser is signed out, redirect to login page
+    const [firebaseUser, firebaseUserLoading] = useFirebaseUser()
+    useEffect(() => {
+      if (!firebaseUserLoading && !firebaseUser) {
+        router.push(`/auth/login?${fromUrlParam}`)
+      }
+    }, [router, firebaseUser, firebaseUserLoading, fromUrlParam])
 
-        const { data: user, isLoading } = useGetUser({})
-        useEffect(() => {
-            if (!isLoading && !user)
-                router.push(`/auth/login?${getFromUrlSearchParam()}`)
-        }, [router, user, isLoading])
+    const { data: user, isLoading } = useGetUser({})
+    useEffect(() => {
+      if (!isLoading && !user) router.push(`/auth/login?${fromUrlParam}`)
+    }, [router, user, isLoading, fromUrlParam])
 
-        if (isLoading)
-            return (
-                <div className="flex-grow flex justify-center items-center h-[50vh]">
-                    <Spinner />
-                </div>
-            )
+    if (isLoading)
+      return (
+        <div className="flex-grow flex justify-center items-center h-[50vh]">
+          <Spinner />
+        </div>
+      )
 
-        if (!user) return null // show nothing while redirecting to login page
+    if (!user) return null // show nothing while redirecting to login page
 
-        if (!user.isAdmin) {
-            return (
-                <div className="text-white dark:text-white">
-                    403 Forbidden: You have no permission to this page.
-                </div>
-            )
-        }
-
-        return <WrappedComponent {...props} />
+    if (!user.isAdmin) {
+      return (
+        <div className="text-white dark:text-white">
+          403 Forbidden: You have no permission to this page.
+        </div>
+      )
     }
 
-    if (WrappedComponent.getInitialProps) {
-        HOC.getInitialProps = WrappedComponent.getInitialProps
-    }
+    return <WrappedComponent {...props} />
+  }
 
-    return HOC
+  if (WrappedComponent.getInitialProps) {
+    HOC.getInitialProps = WrappedComponent.getInitialProps
+  }
+
+  return HOC
 }
 
 export default withAdmin
