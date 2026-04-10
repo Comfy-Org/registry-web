@@ -19,16 +19,17 @@ Build time (production only):
 Per page (getStaticProps):
   1. Fetch node data with include_translations=true
   2. Check node.translations[locale] for stored translations
-  3. If no stored translation → call OpenAI gpt-4o-mini to translate
-  4. Return translated content as props (pre-rendered in HTML)
-  5. Cache via ISR (revalidate: 3600s success, 60s on failure)
+  3. Return translated content as props (pre-rendered in HTML)
+  4. Cache via ISR (revalidate: 3600s success, 60s on failure)
 
 Human path (default):
   Stored translations only; missing translations remain in English
   until stored upstream. No client-side OpenAI calls.
 
 Bot path (middleware-routed to /_bot/nodes/[nodeId]):
-  Blocks on OpenAI translation to guarantee translated meta tags in HTML.
+  Same as above, plus: if no stored translation → call OpenAI
+  gpt-4o-mini to auto-translate. Blocks on the result to guarantee
+  translated meta tags in HTML source for crawlers.
 ```
 
 ---
