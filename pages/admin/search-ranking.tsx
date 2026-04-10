@@ -9,8 +9,18 @@ import { CustomPagination } from "@/components/common/CustomPagination";
 import withAdmin from "@/components/common/HOC/authAdmin";
 import { formatDownloadCount } from "@/components/nodes/NodeDetails";
 import SearchRankingEditModal from "@/components/nodes/SearchRankingEditModal";
-import { Node, useSearchNodes } from "@/src/api/generated";
+import { Node, useGetNode, useSearchNodes } from "@/src/api/generated";
 import { useNextTranslation } from "@/src/hooks/i18n";
+
+function NodeSearchRankingCell({ nodeId }: { nodeId: string }) {
+  const { t } = useNextTranslation();
+  const { data: node, isLoading } = useGetNode(nodeId, {
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+  if (isLoading) return <Spinner size="xs" />;
+  return <>{node?.search_ranking != null ? node.search_ranking : t("N/A")}</>;
+}
 
 function SearchRankingAdminPage() {
   const { t } = useNextTranslation();
@@ -140,7 +150,7 @@ function SearchRankingAdminPage() {
               <div className="truncate text-gray-300">{node.publisher?.id || t("N/A")}</div>
               <div className="text-gray-300">{formatDownloadCount(node.downloads || 0)}</div>
               <div className="text-gray-300">
-                {node.search_ranking !== undefined ? node.search_ranking : t("N/A")}
+                <NodeSearchRankingCell nodeId={node.id || ""} />
               </div>
               <div>
                 <Button size="xs" color="blue" onClick={() => handleEditRanking(node)}>
