@@ -1,235 +1,239 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { Button, Label, Modal, Textarea, TextInput } from 'flowbite-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { Error, Node, useUpdateNode } from 'src/api/generated'
 import {
-    CustomThemeTextArea,
-    customThemeTextInput,
-    customThemeTModal,
+  CustomThemeTextArea,
+  customThemeTextInput,
+  customThemeTModal,
 } from 'utils/comfyTheme'
-import nodesLogo from '../../public/images/nodelogo2.png'
+import {
+  INVALIDATE_CACHE_OPTION,
+  shouldInvalidate,
+} from '@/components/cache-control'
+import { ErrorResponse, Node, useUpdateNode } from '@/src/api/generated'
+import nodesLogo from '@/src/assets/images/nodelogo2.png'
+import { useNextTranslation } from '@/src/hooks/i18n'
 
 type NodeEditModalProps = {
-    openEditModal: boolean
-    onCloseEditModal: () => void
-    nodeData: Node
-    publisherId: string
+  openEditModal: boolean
+  onCloseEditModal: () => void
+  nodeData: Node
+  publisherId: string
 }
 
 export const NodeEditModal: React.FC<NodeEditModalProps> = ({
-    publisherId,
-    openEditModal,
-    onCloseEditModal,
-    nodeData,
+  publisherId,
+  openEditModal,
+  onCloseEditModal,
+  nodeData,
 }) => {
-    const updateNodeMutation = useUpdateNode({})
-    const [nodeName, setNodeName] = useState('')
-    // const [openLogoModal, setOpenLogoModal] = useState(false)
-    const [description, setDescription] = useState('')
-    const [license, setLicense] = useState('')
-    const [githubLink, setGithubLink] = useState('')
+  const { t } = useNextTranslation()
+  const updateNodeMutation = useUpdateNode({})
+  const queryClient = useQueryClient()
+  const [nodeName, setNodeName] = useState('')
+  // const [openLogoModal, setOpenLogoModal] = useState(false)
+  const [description, setDescription] = useState('')
+  const [license, setLicense] = useState('')
+  const [githubLink, setGithubLink] = useState('')
 
-    useEffect(() => {
-        if (nodeData) {
-            setNodeName(nodeData.name || '')
-            setDescription(nodeData.description || '')
-            setLicense(nodeData.license || '')
-            setGithubLink(nodeData.repository || '')
-        }
-    }, [nodeData])
-    // const handleOpenLogoModal = () => {
-    //     onCloseEditModal()
-    //     setOpenLogoModal(true)
-    // }
-
-    // const handleCloseLogoModal = () => {
-    //     setOpenLogoModal(false)
-    // }
-
-    const handleUpdateNode = () => {
-        if (nodeData.id) {
-            updateNodeMutation.mutate(
-                {
-                    data: {
-                        name: nodeName,
-                        description: description,
-                        license: license,
-                        repository: githubLink,
-                    },
-                    nodeId: nodeData.id,
-                    publisherId: publisherId,
-                },
-                {
-                    onError: (error, variables, context) => {
-                        if (error instanceof AxiosError) {
-                            const axiosError: AxiosError<Error, any> = error
-                            toast.error(
-                                `Failed to update node. ${axiosError.response?.data?.message}`
-                            )
-                        } else {
-                            toast.error('Failed to update node')
-                        }
-                    },
-                }
-            )
-        }
-        onCloseEditModal()
+  useEffect(() => {
+    if (nodeData) {
+      setNodeName(nodeData.name || '')
+      setDescription(nodeData.description || '')
+      setLicense(nodeData.license || '')
+      setGithubLink(nodeData.repository || '')
     }
+  }, [nodeData])
+  // const handleOpenLogoModal = () => {
+  //     onCloseEditModal()
+  //     setOpenLogoModal(true)
+  // }
 
-    return (
-        <>
-            <Modal
-                show={openEditModal}
-                size="3xl"
-                onClose={onCloseEditModal}
-                popup
-                //@ts-ignore
-                theme={customThemeTModal}
-                dismissible
-            >
-                <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
-                    <Modal.Header className="!bg-gray-800 px-8">
-                        <p className="text-white">Edit Node</p>
-                    </Modal.Header>
-                    <div className="flex justify-evenly">
-                        <div className="relative max-w-sm transition-all duration-300 cursor-pointer ">
-                            {/* <p className="mb-2 text-sm text-white">
-                                Upload Logo
-                            </p> */}
-                            <Image
-                                src={nodesLogo}
-                                alt="icon"
-                                width={200}
-                                height={200}
-                                className=""
-                            />
-                            {/* <div className="absolute right-[-5px] px-4 text-lg text-white top-[180px]">
-                                <div
-                                    className="p-2 bg-gray-500 rounded-full"
-                                    onClick={handleOpenLogoModal}
-                                >
-                                    <svg
-                                        className="w-[16px] h-[16px] text-white "
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        fill="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z"
-                                            clipRule="evenodd"
-                                        />
-                                    </svg>
-                                </div>
-                            </div> */}
-                        </div>
-                        <div className="space-y-6 min-w-[350px]">
-                            <div>
-                                <div className="block mb-2">
-                                    <Label
-                                        htmlFor="name"
-                                        value="Node name"
-                                        className="text-white"
-                                    />
-                                </div>
-                                <TextInput
-                                    //@ts-ignore
-                                    theme={customThemeTextInput}
-                                    id="name"
-                                    placeholder="Node name"
-                                    onChange={(e) =>
-                                        setNodeName(e.target.value)
-                                    }
-                                    value={nodeName}
-                                    required
-                                />
-                            </div>
-                            <div className="max-w-md">
-                                <div className="block mb-2">
-                                    <Label
-                                        htmlFor="comment"
-                                        value="Description"
-                                        className="text-white"
-                                    />
-                                </div>
-                                <Textarea
-                                    id="comment"
-                                    theme={CustomThemeTextArea}
-                                    value={description}
-                                    placeholder="Description"
-                                    onChange={(e) =>
-                                        setDescription(e.target.value)
-                                    }
-                                    required
-                                    rows={8}
-                                />
-                            </div>
-                            <div>
-                                <div className="block mb-2">
-                                    <Label
-                                        htmlFor="license"
-                                        value="License"
-                                        className="text-white"
-                                    />
-                                </div>
-                                <TextInput
-                                    id="license"
-                                    theme={customThemeTextInput}
-                                    placeholder="Path To License File"
-                                    value={license}
-                                    onChange={(e) => setLicense(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <div className="block mb-2">
-                                    <Label
-                                        htmlFor="name"
-                                        value="Github Repository link"
-                                        className="text-white"
-                                    />
-                                </div>
-                                <TextInput
-                                    id="name"
-                                    theme={customThemeTextInput}
-                                    placeholder="Github Repository link"
-                                    value={githubLink}
-                                    onChange={(e) =>
-                                        setGithubLink(e.target.value)
-                                    }
-                                    required
-                                />
+  // const handleCloseLogoModal = () => {
+  //     setOpenLogoModal(false)
+  // }
 
-                                <div className="flex mt-5">
-                                    <Button
-                                        color="gray"
-                                        className="w-full text-white bg-gray-800"
-                                        onClick={onCloseEditModal}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        color="blue"
-                                        className="w-full ml-5"
-                                        onClick={handleUpdateNode}
-                                    >
-                                        Save Changes
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Modal.Body>
-            </Modal>
-            {/* <NodeLogoModal
+  const handleUpdateNode = () => {
+    if (nodeData.id) {
+      updateNodeMutation.mutate(
+        {
+          data: {
+            id: nodeData.id, // solve missing id error
+            name: nodeName,
+            description: description,
+            license: license,
+            repository: githubLink,
+          },
+          nodeId: nodeData.id,
+          publisherId: publisherId,
+        },
+        {
+          onSuccess: (data) => {
+            // Cache-busting invalidation for cached endpoints
+            queryClient.fetchQuery(
+              shouldInvalidate.getGetNodeQueryOptions(
+                nodeData.id!,
+                undefined,
+                INVALIDATE_CACHE_OPTION
+              )
+            )
+            if (data) {
+              toast.success(t('Node updated successfully'))
+            } else {
+              toast.error(t('Failed to update node'))
+            }
+          },
+          onError: (error, variables, context) => {
+            if (error instanceof AxiosError) {
+              const axiosError: AxiosError<ErrorResponse, any> = error
+              toast.error(
+                t(`Failed to update node.\n{{detail}}`, {
+                  detail: parseAxiosErrorResponse(axiosError),
+                })
+              )
+            } else {
+              toast.error(t('Failed to update node'))
+            }
+          },
+        }
+      )
+    }
+    onCloseEditModal()
+  }
+
+  return (
+    <>
+      <Modal
+        show={openEditModal}
+        size="3xl"
+        onClose={onCloseEditModal}
+        popup
+        //@ts-ignore
+        theme={customThemeTModal}
+        dismissible
+      >
+        <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none ">
+          <Modal.Header className="!bg-gray-800 px-8">
+            <p className="text-white">{t('Edit Node')}</p>
+          </Modal.Header>
+          <div className="flex justify-evenly">
+            <div className="relative max-w-sm transition-all duration-300 cursor-pointer ">
+              <Image
+                src={nodesLogo}
+                alt="icon"
+                width={200}
+                height={200}
+                className=""
+              />
+            </div>
+            <div className="space-y-6 min-w-[350px]">
+              <div>
+                <div className="block mb-2">
+                  <Label
+                    htmlFor="name"
+                    value={t('Node name')}
+                    className="text-white"
+                  />
+                </div>
+                <TextInput
+                  //@ts-ignore
+                  theme={customThemeTextInput}
+                  id="name"
+                  placeholder={t('Node name')}
+                  onChange={(e) => setNodeName(e.target.value)}
+                  value={nodeName}
+                  required
+                />
+              </div>
+              <div className="max-w-md">
+                <div className="block mb-2">
+                  <Label
+                    htmlFor="comment"
+                    value={t('Description')}
+                    className="text-white"
+                  />
+                </div>
+                <Textarea
+                  id="comment"
+                  theme={CustomThemeTextArea}
+                  value={description}
+                  placeholder={t('Description')}
+                  onChange={(e) => setDescription(e.target.value)}
+                  required
+                  rows={8}
+                />
+              </div>
+              <div>
+                <div className="block mb-2">
+                  <Label
+                    htmlFor="license"
+                    value={t('License')}
+                    className="text-white"
+                  />
+                </div>
+                <TextInput
+                  id="license"
+                  theme={customThemeTextInput}
+                  placeholder={t('Path To License File')}
+                  value={license}
+                  onChange={(e) => setLicense(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <div className="block mb-2">
+                  <Label
+                    htmlFor="name"
+                    value={t('Github Repository link')}
+                    className="text-white"
+                  />
+                </div>
+                <TextInput
+                  id="name"
+                  theme={customThemeTextInput}
+                  placeholder={t('Github Repository link')}
+                  value={githubLink}
+                  onChange={(e) => setGithubLink(e.target.value)}
+                  required
+                />
+
+                <div className="flex mt-5">
+                  <Button
+                    color="gray"
+                    className="w-full text-white bg-gray-800"
+                    onClick={onCloseEditModal}
+                  >
+                    {t('Cancel')}
+                  </Button>
+                  <Button
+                    color="blue"
+                    className="w-full ml-5"
+                    onClick={handleUpdateNode}
+                  >
+                    {t('Save Changes')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+      {/* <NodeLogoModal
                 openLogoModal={openLogoModal}
                 onCloseModal={handleCloseLogoModal}
             /> */}
-        </>
-    )
+    </>
+  )
+}
+
+function parseAxiosErrorResponse(
+  axiosError: AxiosError<ErrorResponse, any>
+): string {
+  // TODO: extract this fn to utils and use for all api/generated requests errors
+  return [axiosError.response?.data?.message, axiosError.response?.data?.error]
+    .filter(Boolean)
+    .join('\n')
 }

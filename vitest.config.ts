@@ -1,39 +1,38 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-
+import storybookTest from '@storybook/addon-vitest/vitest-plugin'
 import { defineConfig } from 'vitest/config'
 
-import { storybookTest } from '@storybook/experimental-addon-test/vitest-plugin'
-
 const dirname =
-    typeof __dirname !== 'undefined'
-        ? __dirname
-        : path.dirname(fileURLToPath(import.meta.url))
+  typeof __dirname !== 'undefined'
+    ? __dirname // run by nodejs, vitest
+    : path.dirname(fileURLToPath(import.meta.url)) // bun
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
-    test: {
-        workspace: [
-            {
-                extends: true,
-                plugins: [
-                    // The plugin will run tests for the stories defined in your Storybook config
-                    // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
-                    storybookTest({
-                        configDir: path.join(dirname, '.storybook'),
-                    }),
-                ],
-                test: {
-                    name: 'storybook',
-                    browser: {
-                        enabled: true,
-                        headless: true,
-                        name: 'chromium',
-                        provider: 'playwright',
-                    },
-                    setupFiles: ['.storybook/vitest.setup.ts'],
-                },
-            },
+  test: {
+    workspace: [
+      {
+        extends: true,
+        plugins: [
+          // The plugin will run tests for the stories defined in your Storybook config
+          // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
+          // @ts-expect-error: The storybookTest plugin has incomplete type definitions, but it works as expected.
+          storybookTest({
+            configDir: path.join(dirname, '.storybook'),
+          }),
         ],
-    },
+        test: {
+          name: 'storybook',
+          browser: {
+            enabled: true,
+            headless: true,
+            name: 'chromium',
+            provider: 'playwright',
+          },
+          setupFiles: ['.storybook/vitest.setup.ts'],
+        },
+      },
+    ],
+  },
 })

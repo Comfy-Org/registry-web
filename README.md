@@ -1,6 +1,6 @@
 # Comfy Registry Frontend
 
-The frontend React App for [Comfy Registry](https://comfyregistry.org).
+The frontend React App for [Comfy Registry](https://registry.comfy.org/).
 
 Registry React Frontend [Github](https://github.com/Comfy-Org/registry-web)
 
@@ -29,6 +29,10 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### GitHub OAuth App Setup
+
+For features that require GitHub authentication (like node claiming), you'll need to set up a GitHub OAuth App. See [docs/github-app.md](docs/github-app.md) for detailed setup instructions.
+
 ### Storybook
 
 We use Storybook for component development and documentation. To run Storybook:
@@ -55,6 +59,18 @@ pnpm run chromatic
 ```
 
 See [docs/chromatic-setup.md](docs/chromatic-setup.md) for more details on our Chromatic CI/CD integration.
+
+### Workflows & Automation
+
+#### Update PR Branches
+
+We provide a GitHub Actions workflow to automatically update open PR branches with the latest changes from `main`. This is useful for:
+
+- Keeping long-running PRs up-to-date
+- Reducing merge conflicts
+- Repository maintenance
+
+See [docs/update-pr-branches.md](docs/update-pr-branches.md) for detailed usage instructions.
 
 ### Generate Code Stub based on OpenAPI Spec
 

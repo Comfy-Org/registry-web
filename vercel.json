@@ -1,14 +1,14 @@
 {
-    "headers": [
+  "headers": [
+    {
+      "source": "/_next/image/(.*)",
+      "headers": [
         {
-            "source": "/_next/image/(.*)",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=7200, must-revalidate"
-                }
-            ]
+          "key": "Cache-Control",
+          "value": "public, max-age=7200, must-revalidate"
         }
-    ],
-    "installCommand": "bun install"
+      ]
+    }
+  ],
+  "installCommand": "bun install"
 }
