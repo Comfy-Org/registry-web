@@ -201,9 +201,7 @@ export default function LanguageSwitcher({
                           isCurrent
                             ? "bg-blue-50 font-bold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
                             : "text-gray-700 dark:text-gray-200",
-                          isActive &&
-                            !isCurrent &&
-                            "bg-gray-100 dark:bg-gray-600",
+                          isActive && !isCurrent && "bg-gray-100 dark:bg-gray-600",
                           !isCurrent && !isActive && "hover:bg-gray-100 dark:hover:bg-gray-600",
                         )}
                       >
