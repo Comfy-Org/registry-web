@@ -134,6 +134,8 @@ export default function LanguageSwitcher({
         setActiveIndex((i) => Math.max(i - 1, 0))
         break
       case 'Enter':
+        // Skip if IME is composing (e.g. CJK input confirmation)
+        if (e.nativeEvent.isComposing) break
         if (activeIndex >= 0 && filteredLanguages[activeIndex]) {
           changeLanguage(filteredLanguages[activeIndex])
           setOpen(false)
@@ -178,7 +180,7 @@ export default function LanguageSwitcher({
         </button>
 
         {open && (
-          <div className="absolute right-0 z-50 mt-1 w-64 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700">
+          <div className="absolute end-0 z-50 mt-1 w-64 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700">
             {/* Search input */}
             <div className="border-b border-gray-200 p-2 dark:border-gray-600">
               <input
