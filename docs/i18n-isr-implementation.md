@@ -58,7 +58,8 @@ Bot path (middleware-routed to /_bot/nodes/[nodeId]):
 ### Preheat matrix
 
 - **Top 20 nodes × 4 locales = 80 pages** preheated at build time
-- Only runs on production (`VERCEL_ENV === 'production'`)
+- Runs on production (`VERCEL_ENV === 'production'`) or when
+  `PREHEAT_ENABLED === 'true'`
 - Build time impact: ~1 min (parallel, 80 pages)
 - OpenAI cost: ~$0.01
 
@@ -94,11 +95,12 @@ Bot path (middleware-routed to /_bot/nodes/[nodeId]):
 
 **Why**: Client-side translation couldn't populate `<meta>` tags for SEO, and added complexity. The bot path guarantees translated HTML for crawlers, while human visitors get instant page loads with stored translations.
 
-### 5. Production-only preheat
+### 5. Production/flagged preheat
 
-**Decision**: Preheat only when `VERCEL_ENV === 'production'` (+ test branch).
+**Decision**: Preheat when `VERCEL_ENV === 'production'`, or force-enable with
+`PREHEAT_ENABLED='true'`.
 
-**Why**: Preview PR deploys don't need preheated pages. Skipping preheat saves build time and OpenAI credits on the ~10+ preview deploys per day.
+**Why**: Preview PR deploys usually don't need preheated pages. Skipping preheat saves build time and OpenAI credits on the ~10+ preview deploys per day, while keeping an explicit override for testing.
 
 ---
 
