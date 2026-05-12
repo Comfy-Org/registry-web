@@ -1,4 +1,4 @@
-import type { TranslatedNodeContent } from './translateNode'
+import type { TranslatedNodeContent } from "./translateNode";
 
 /**
  * Server-side helper to persist an auto-generated node translation back to
@@ -20,46 +20,43 @@ import type { TranslatedNodeContent } from './translateNode'
  */
 export async function persistNodeTranslation(
   nodeId: string,
-  content: TranslatedNodeContent
+  content: TranslatedNodeContent,
 ): Promise<void> {
-  if (content.source !== 'auto') return
-  if (!content.description) return
+  if (content.source !== "auto") return;
+  if (!content.description) return;
 
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
-  const adminSecret = process.env.COMFY_REGISTRY_ADMIN_SECRET
-  if (!backendUrl || !adminSecret) return
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const adminSecret = process.env.COMFY_REGISTRY_ADMIN_SECRET;
+  if (!backendUrl || !adminSecret) return;
 
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 10_000)
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10_000);
 
   try {
-    const res = await fetch(
-      `${backendUrl}/nodes/${encodeURIComponent(nodeId)}/translations`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Comfy-Admin-Secret': adminSecret,
+    const res = await fetch(`${backendUrl}/nodes/${encodeURIComponent(nodeId)}/translations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Comfy-Admin-Secret": adminSecret,
+      },
+      body: JSON.stringify({
+        data: {
+          [content.locale]: { description: content.description },
         },
-        body: JSON.stringify({
-          data: {
-            [content.locale]: { description: content.description },
-          },
-        }),
-        signal: controller.signal,
-      }
-    )
+      }),
+      signal: controller.signal,
+    });
     if (!res.ok) {
       console.warn(
-        `[i18n-isr] persistNodeTranslation: backend returned ${res.status} for node=${nodeId} locale=${content.locale}`
-      )
+        `[i18n-isr] persistNodeTranslation: backend returned ${res.status} for node=${nodeId} locale=${content.locale}`,
+      );
     }
   } catch (err) {
     console.warn(
       `[i18n-isr] persistNodeTranslation failed for node=${nodeId} locale=${content.locale}:`,
-      err
-    )
+      err,
+    );
   } finally {
-    clearTimeout(timeout)
+    clearTimeout(timeout);
   }
 }
