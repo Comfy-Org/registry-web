@@ -95,6 +95,14 @@ Bot path (middleware-routed to /_bot/nodes/[nodeId]):
 
 **Why**: Client-side translation couldn't populate `<meta>` tags for SEO, and added complexity. The bot path guarantees translated HTML for crawlers, while human visitors get instant page loads with stored translations.
 
+### 4a. Bot path persists auto-translations back to the backend
+
+**Decision**: After the bot path's OpenAI call succeeds, fire-and-forget `POST /nodes/{id}/translations` using a server-only `COMFY_REGISTRY_ADMIN_SECRET` (sent as `X-Comfy-Admin-Secret`). Subsequent ISR builds — including the human path — then read the stored translation instead of re-calling OpenAI.
+
+**Why**: Without persistence, every ISR revalidation (every 1h) re-translates the same content via OpenAI. Persisting converges the human + bot paths (humans eventually see translated meta once a bot has crawled) and bounds OpenAI cost to one call per (node, locale) — not per revalidation per region.
+
+**Tradeoff**: Needs a shared secret on Vercel. Authentication change happens on the backend side in [`Comfy-Org/cloud#3641`](https://github.com/Comfy-Org/cloud/pull/3641), which attaches `APISecretMiddleware` to `POST /nodes/{id}/translations`. Frontend never blocks on the persistence call — if the backend is down, the page still renders with the OpenAI translation.
+
 ### 5. Production/flagged preheat
 
 **Decision**: Preheat when `VERCEL_ENV === 'production'`, or force-enable with

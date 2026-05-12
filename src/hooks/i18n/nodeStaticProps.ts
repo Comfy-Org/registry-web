@@ -1,14 +1,15 @@
-import type { GetStaticPropsResult } from "next";
+import type { GetStaticPropsResult } from 'next'
+import { persistNodeTranslation } from './persistNodeTranslation'
 import {
   getTranslatedNodeContent,
   translateNodeContent,
   TranslatedNodeContent,
-} from "./translateNode";
+} from './translateNode'
 
 export interface NodeStaticPropsData {
-  nodeId: string;
-  nodeName: string | null;
-  translatedContent: TranslatedNodeContent | null;
+  nodeId: string
+  nodeName: string | null
+  translatedContent: TranslatedNodeContent | null
 }
 
 /**
@@ -27,32 +28,32 @@ export async function loadNodeStaticProps({
   publisherId,
   blocking,
 }: {
-  nodeId: string;
-  locale: string;
-  publisherId?: string;
-  blocking: boolean;
+  nodeId: string
+  locale: string
+  publisherId?: string
+  blocking: boolean
 }): Promise<GetStaticPropsResult<NodeStaticPropsData>> {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
   if (!backendUrl) {
     return {
       props: { nodeId, nodeName: null, translatedContent: null },
       revalidate: 60,
-    };
+    }
   }
 
   try {
     const res = await fetch(
-      `${backendUrl}/nodes/${encodeURIComponent(nodeId)}?include_translations=true`,
-    );
+      `${backendUrl}/nodes/${encodeURIComponent(nodeId)}?include_translations=true`
+    )
     if (res.status === 404) {
-      return { notFound: true, revalidate: 3600 };
+      return { notFound: true, revalidate: 3600 }
     }
-    if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
-    const node = await res.json();
+    if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
+    const node = await res.json()
 
     // Validate publisher in URL matches the node's actual publisher
     if (publisherId) {
-      const actualPublisherId = node.publisher?.id;
+      const actualPublisherId = node.publisher?.id
 
       if (!actualPublisherId) {
         return {
@@ -60,7 +61,7 @@ export async function loadNodeStaticProps({
             destination: `/nodes/${encodeURIComponent(nodeId)}`,
             permanent: false,
           },
-        };
+        }
       }
 
       if (actualPublisherId !== publisherId) {
@@ -69,14 +70,23 @@ export async function loadNodeStaticProps({
             destination: `/publishers/${encodeURIComponent(actualPublisherId)}/nodes/${encodeURIComponent(nodeId)}`,
             permanent: false,
           },
-        };
+        }
       }
     }
 
-    const extracted = getTranslatedNodeContent(node, locale);
+    const extracted = getTranslatedNodeContent(node, locale)
     const translatedContent = blocking
       ? await translateNodeContent(extracted, node.description)
-      : extracted;
+      : extracted
+
+    // Fire-and-forget: persist a freshly auto-generated translation back to
+    // the registry backend so subsequent ISR builds (human or bot) can read
+    // it from `node.translations` instead of re-calling OpenAI. Awaiting
+    // here would re-introduce the blocking-render problem the bot/human
+    // split was designed to avoid; failure must not affect this response.
+    if (blocking && translatedContent.source === 'auto') {
+      void persistNodeTranslation(nodeId, translatedContent)
+    }
 
     return {
       props: {
@@ -85,11 +95,11 @@ export async function loadNodeStaticProps({
         translatedContent,
       },
       revalidate: 3600,
-    };
+    }
   } catch {
     return {
       props: { nodeId, nodeName: null, translatedContent: null },
       revalidate: 60,
-    };
+    }
   }
 }
