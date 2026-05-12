@@ -17,12 +17,15 @@ import { getAdminJwtToken, isAdminJwtTokenValid } from "@/src/utils/adminJwtStor
 // Add an interceptor to attach the Firebase JWT token to every request
 // Put in _app.tsx because this only works in react-dom environment
 AXIOS_INSTANCE.interceptors.request.use(async (config) => {
-  const url = config.url || "";
+  const method = (config.method || "GET").toUpperCase();
+  const path = (config.url || "").split("?")[0];
 
-  // Check if this is an admin endpoint that requires JWT admin token
-  // This includes ban/unban operations and admin endpoints (except generate-token which uses Firebase auth)
+  // Admin-JWT endpoints are all mutations; gating on method prevents IDs like
+  // "bananaforge" from matching the /ban suffix on a GET.
   const requiresAdminJwt =
-    url.includes("/ban") || (url.includes("/admin/") && !url.includes("/admin/generate-token"));
+    method !== "GET" &&
+    (path.endsWith("/ban") ||
+      (path.startsWith("/admin/") && !path.startsWith("/admin/generate-token")));
 
   if (requiresAdminJwt) {
     // Use JWT admin token for admin operations
