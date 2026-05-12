@@ -1,4 +1,5 @@
 import type { GetStaticPropsResult } from "next";
+import { persistNodeTranslation } from "./persistNodeTranslation";
 import {
   getTranslatedNodeContent,
   translateNodeContent,
@@ -77,6 +78,15 @@ export async function loadNodeStaticProps({
     const translatedContent = blocking
       ? await translateNodeContent(extracted, node.description)
       : extracted;
+
+    // Fire-and-forget: persist a freshly auto-generated translation back to
+    // the registry backend so subsequent ISR builds (human or bot) can read
+    // it from `node.translations` instead of re-calling OpenAI. Awaiting
+    // here would re-introduce the blocking-render problem the bot/human
+    // split was designed to avoid; failure must not affect this response.
+    if (blocking && translatedContent.source === "auto") {
+      void persistNodeTranslation(nodeId, translatedContent);
+    }
 
     return {
       props: {
