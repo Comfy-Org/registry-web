@@ -44,6 +44,9 @@ export async function loadNodeStaticProps({
     const res = await fetch(
       `${backendUrl}/nodes/${encodeURIComponent(nodeId)}?include_translations=true`
     )
+    if (res.status === 404) {
+      return { notFound: true, revalidate: 3600 }
+    }
     if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`)
     const node = await res.json()
 
