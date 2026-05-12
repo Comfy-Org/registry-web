@@ -1,15 +1,12 @@
-import { isbot } from 'isbot'
-import { NextRequest, NextResponse } from 'next/server'
-import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from '@/src/constants'
-import {
-  detectLanguageFromHeader,
-  isRedirectExcludedUrl,
-} from '@/src/hooks/i18n/serverUtils'
+import { isbot } from "isbot";
+import { NextRequest, NextResponse } from "next/server";
+import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from "@/src/constants";
+import { detectLanguageFromHeader, isRedirectExcludedUrl } from "@/src/hooks/i18n/serverUtils";
 
 // Use the `isbot` package (1000+ patterns, monthly updates) to identify
 // search-engine, social, and AI crawlers. Used to route bot requests to the
 // blocking-translation /_bot/* page variants so SEO meta tags stay localized.
-const NODE_PAGE_PATH = /^\/nodes\/[^/]+$|^\/publishers\/[^/]+\/nodes\/[^/]+$/
+const NODE_PAGE_PATH = /^\/nodes\/[^/]+$|^\/publishers\/[^/]+\/nodes\/[^/]+$/;
 
 /**
  * Middleware to handle server-side language detection and redirection
@@ -17,8 +14,8 @@ const NODE_PAGE_PATH = /^\/nodes\/[^/]+$|^\/publishers\/[^/]+\/nodes\/[^/]+$/
  */
 export function middleware(request: NextRequest) {
   // Get current URL and pathname
-  const url = request.nextUrl.clone()
-  const { pathname } = url
+  const url = request.nextUrl.clone();
+  const { pathname } = url;
 
   // Bot rewrite: route search-engine crawlers hitting node detail pages to
   // the blocking-ISR /_bot/* variant so the rendered HTML contains
@@ -26,46 +23,46 @@ export function middleware(request: NextRequest) {
   // redirect). Note: bots may see auto-translated content (via OpenAI)
   // while humans see stored translations or English fallback.
   if (NODE_PAGE_PATH.test(pathname)) {
-    if (isbot(request.headers.get('user-agent'))) {
-      url.pathname = `/_bot${pathname}`
-      return NextResponse.rewrite(url)
+    if (isbot(request.headers.get("user-agent"))) {
+      url.pathname = `/_bot${pathname}`;
+      return NextResponse.rewrite(url);
     }
   }
 
   // Direct human access to /_bot/* (e.g. URL typed in address bar) is
   // bounced to the canonical human path so the bot route stays internal.
-  if (pathname === '/_bot' || pathname.startsWith('/_bot/')) {
-    url.pathname = pathname === '/_bot' ? '/' : pathname.replace(/^\/_bot/, '')
-    return NextResponse.redirect(url)
+  if (pathname === "/_bot" || pathname.startsWith("/_bot/")) {
+    url.pathname = pathname === "/_bot" ? "/" : pathname.replace(/^\/_bot/, "");
+    return NextResponse.redirect(url);
   }
 
   // Skip redirects for excluded URLs
   if (isRedirectExcludedUrl(pathname)) {
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
   // Check if user has a language preference in cookies
-  const cookieLanguage = request.cookies.get(LANGUAGE_STORAGE_KEY)?.value
+  const cookieLanguage = request.cookies.get(LANGUAGE_STORAGE_KEY)?.value;
 
   // Check if user's preferred language is already set in cookies
   if (cookieLanguage && SUPPORTED_LANGUAGES.includes(cookieLanguage as any)) {
     // User has a valid language preference, no need to redirect
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
   // Detect preferred language from Accept-Language header
-  const detectedLanguage = detectLanguageFromHeader(request)
+  const detectedLanguage = detectLanguageFromHeader(request);
 
   // Create response to set cookie with detected language
-  const response = NextResponse.next()
+  const response = NextResponse.next();
 
   // Set cookie with the detected language
   response.cookies.set(LANGUAGE_STORAGE_KEY, detectedLanguage, {
     maxAge: 60 * 60 * 24 * 365, // 1 year
-    path: '/',
-  })
+    path: "/",
+  });
 
-  return response
+  return response;
 }
 
 /**
@@ -82,6 +79,6 @@ export const config = {
      * 4. /locales (translation files)
      * 5. all files in the public folder
      */
-    '/((?!api|_next|static|locales|favicon.ico|robots.txt).*)',
+    "/((?!api|_next|static|locales|favicon.ico|robots.txt).*)",
   ],
-}
+};
