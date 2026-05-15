@@ -7,16 +7,16 @@ This document describes how to set up a GitHub OAuth App for the Comfy Registry.
 1. Go to [GitHub Developer Settings - OAuth Apps](https://github.com/settings/applications/new)
 
 2. Fill in the following details:
-    - **Application name**: `Comfy Registry`
-    - **Application description**: `Comfy-Org official GitHub app to verify user's GitHub account permissions for managing and claiming nodes`
-    - **Homepage URL**: `https://registry.comfy.org` (no trailing slash)
-    - **Authorization callback URL**: `https://registry.comfy.org/api/auth/github/callback`
+   - **Application name**: `Comfy Registry`
+   - **Application description**: `Comfy-Org official GitHub app to verify user's GitHub account permissions for managing and claiming nodes`
+   - **Homepage URL**: `https://registry.comfy.org` (no trailing slash)
+   - **Authorization callback URL**: `https://registry.comfy.org/api/auth/github/callback`
 
 3. Click "Register application"
 
 4. After creation, you'll receive:
-    - **Client ID** - Add this to your environment variables as `GITHUB_CLIENT_ID`
-    - **Client Secret** - Add this to your environment variables as `GITHUB_CLIENT_SECRET`
+   - **Client ID** - Add this to your environment variables as `GITHUB_CLIENT_ID`
+   - **Client Secret** - Add this to your environment variables as `GITHUB_CLIENT_SECRET`
 
 ## Environment Variables
 

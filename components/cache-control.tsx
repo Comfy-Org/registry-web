@@ -1,11 +1,11 @@
-import { url } from 'inspector'
+import { url } from "inspector";
 import {
-    getGetNodeByComfyNodeNameQueryOptions,
-    getGetNodeQueryOptions,
-    getListComfyNodesQueryOptions,
-    getListNodeVersionsQueryOptions,
-} from '@/src/api/generated'
-import { REQUEST_OPTIONS_NO_CACHE } from '@/src/constants'
+  getGetNodeByComfyNodeNameQueryOptions,
+  getGetNodeQueryOptions,
+  getListComfyNodesQueryOptions,
+  getListNodeVersionsQueryOptions,
+} from "@/src/api/generated";
+import { REQUEST_OPTIONS_NO_CACHE } from "@/src/constants";
 //
 // This file should keep track with backend:
 // https://github.com/Comfy-Org/comfy-api/blob/main/server/middleware/cache_control.go
@@ -30,16 +30,13 @@ var comfyNodesListEndpointPattern = regexp.MustCompile(`^/nodes/[^/]+/versions/[
 // they must be refetched with INVALIDATE_CACHE_OPTION after any editing operation,
 // or all users will still fetch the cached data from proxies/cdns/isps cache
 export const shouldRevalidateRegex = {
-    nodeEndpointPattern: /^\/nodes\/[^/]+$/,
-    nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
-    comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
-    comfyNodesListEndpointPattern:
-        /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
-}
+  nodeEndpointPattern: /^\/nodes\/[^/]+$/,
+  nodeVersionsEndpointPattern: /^\/nodes\/[^/]+\/versions$/,
+  comfyNodesNodeEndpointPattern: /^\/comfy-nodes\/[^/]+\/node$/,
+  comfyNodesListEndpointPattern: /^\/nodes\/[^/]+\/versions\/[^/]+\/comfy-nodes$/,
+};
 export function isCacheControlEndpointQ(pathname: string): boolean {
-    return Object.values(shouldRevalidateRegex).some((regex) =>
-        regex.test(pathname)
-    )
+  return Object.values(shouldRevalidateRegex).some((regex) => regex.test(pathname));
 }
 
 /**
@@ -68,13 +65,13 @@ export function isCacheControlEndpointQ(pathname: string): boolean {
  *
  */
 export const shouldInvalidate = {
-    getGetNodeQueryOptions,
-    getListNodeVersionsQueryOptions,
-    getGetNodeByComfyNodeNameQueryOptions,
-    getListComfyNodesQueryOptions,
-}
+  getGetNodeQueryOptions,
+  getListNodeVersionsQueryOptions,
+  getGetNodeByComfyNodeNameQueryOptions,
+  getListComfyNodesQueryOptions,
+};
 
 export const INVALIDATE_CACHE_OPTION = {
-    query: { staleTime: 0 }, // force refetch
-    request: REQUEST_OPTIONS_NO_CACHE,
-}
+  query: { staleTime: 0 }, // force refetch
+  request: REQUEST_OPTIONS_NO_CACHE,
+};
