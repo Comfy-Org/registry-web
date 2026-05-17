@@ -2,13 +2,7 @@ import i18next from 'i18next'
 import I18nextBrowserLanguageDetector from 'i18next-browser-languagedetector'
 import i18nextResourcesToBackend from 'i18next-resources-to-backend'
 import { useRouter } from 'next/router'
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { useCallback } from 'react'
 import { initReactI18next, useTranslation } from 'react-i18next'
 import { useLocalStorage } from 'react-use'
 import useCookieValue from 'react-use-cookie'
@@ -33,6 +27,8 @@ declare global {
   }
   var Translator: TranslatorAPI | undefined
 }
+
+const isDev = process.env.NODE_ENV !== 'production'
 
 const i18n = i18next
   .use(I18nextBrowserLanguageDetector)
@@ -68,8 +64,9 @@ i18n.init({
   missingKeyNoValueFallbackToKey: true,
   missingKeyHandler: async (lngs, ns, key) => {
     const lng = i18next.language
-    console.log(lngs, i18next.language, key)
-    console.log(`Missing translation for key "${key}" in language "${lng}"`)
+    if (isDev) {
+      console.log(`Missing translation for key "${key}" in language "${lng}"`)
+    }
 
     // (Experimental) Try use browser Translator API to handle missing keys
     // If the Translator API is not available, just return the key
@@ -88,14 +85,12 @@ i18n.init({
     for await (const chunk of translator.translateStreaming(key)) {
       tr += chunk
     }
-    console.log(`Translated "${key}" to "${tr}" in language "${lng}"`)
-    // add to i18next resources
-    // how to trigger a re-render in components that use this key?
+    if (isDev) {
+      console.log(`Translated "${key}" to "${tr}" in language "${lng}"`)
+    }
+    // add to i18next resources and notify React to re-render via bindI18nStore: 'added'
     i18next.addResource(lng, ns, key, tr)
     i18next.emit('added', lng, ns, key, tr)
-
-    // TODO: use ChatGPT to handle missing keys if browser Translator API is not available
-    //
   },
 })
 
@@ -112,13 +107,13 @@ export const useDynamicTranslate = () => {
 
   // try experimental dynamic translation
   //
-  // 2025-07-27 currently, only chrome 138+ supports the Translator API
+  // currently, only chrome 138+ supports the Translator API
   // cons:
   // 1. requires network access to the browser's translation service
   // 2. not able to use in server-side rendering
   // 3. not available in china
   //
-  const [available, availableState] = useAsyncData(async () => {
+  const [available] = useAsyncData(async () => {
     if (typeof globalThis.Translator === 'undefined') return null
     const Translator = globalThis.Translator as TranslatorAPI
     const translator = await Translator.create({
@@ -157,10 +152,7 @@ export function useNextTranslation(namespace = 'common') {
   }
 
   // Use a cookie to store the user's language preference, for server-side detection
-  const [cookieLocale, setCookieLocale] = useCookieValue(
-    LANGUAGE_STORAGE_KEY,
-    ''
-  )
+  const [, setCookieLocale] = useCookieValue(LANGUAGE_STORAGE_KEY, '')
 
   const { t, i18n, ready } = useTranslation(namespace, { lng: locale })
 
