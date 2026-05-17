@@ -1,29 +1,29 @@
-import React from 'react'
-import DrCard from './DrCard'
-import DrHeader from './DrHeader'
+import React from "react";
+import DrCard from "./DrCard";
+import DrHeader from "./DrHeader";
 
 const cardData = [
   {
-    title: 'NodesOrg 1',
-    createdDate: '5/20/24',
-    members: ['Robin Huang', 'Yoland Yan'],
+    title: "NodesOrg 1",
+    createdDate: "5/20/24",
+    members: ["Robin Huang", "Yoland Yan"],
   },
   {
-    title: 'NodesOrg 2',
-    createdDate: '5/21/24',
-    members: ['John Doe', 'Jane Smith'],
+    title: "NodesOrg 2",
+    createdDate: "5/21/24",
+    members: ["John Doe", "Jane Smith"],
   },
   {
-    title: 'NodesOrg 3',
-    createdDate: '5/22/24',
-    members: ['Alice Johnson', 'Bob Anderson'],
+    title: "NodesOrg 3",
+    createdDate: "5/22/24",
+    members: ["Alice Johnson", "Bob Anderson"],
   },
   {
-    title: 'NodesOrg 4',
-    createdDate: '5/23/24',
-    members: ['Ella Parker', 'Tom Wilson'],
+    title: "NodesOrg 4",
+    createdDate: "5/23/24",
+    members: ["Ella Parker", "Tom Wilson"],
   },
-]
+];
 
 const DeveloperRegister = () => {
   return (
@@ -35,7 +35,7 @@ const DeveloperRegister = () => {
         ))}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default DeveloperRegister
+export default DeveloperRegister;

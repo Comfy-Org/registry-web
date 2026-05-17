@@ -1,29 +1,29 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import React from 'react'
-import Container from '@/components/common/Container'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import React from "react";
+import Container from "@/components/common/Container";
 
 // Define proper type for component props
 interface ContainerProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 const meta: Meta<ContainerProps> = {
-  title: 'Components/Common/Container',
+  title: "Components/Common/Container",
   component: Container as React.FC<ContainerProps>,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
-}
+  tags: ["autodocs"],
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Empty: Story = {
   args: {
     children: <div className="h-[100px] w-full">Empty container</div>,
   },
-}
+};
 
 export const WithContent: Story = {
   args: {
@@ -36,7 +36,7 @@ export const WithContent: Story = {
       </div>
     ),
   },
-}
+};
 
 export const WithMultipleItems: Story = {
   args: {
@@ -48,4 +48,4 @@ export const WithMultipleItems: Story = {
       </>
     ),
   },
-}
+};

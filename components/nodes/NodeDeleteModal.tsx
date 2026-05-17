@@ -1,20 +1,20 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
-import { Button, Label, Modal, TextInput } from 'flowbite-react'
-import { useRouter } from 'next/router'
-import React, { useState } from 'react'
-import { toast } from 'react-toastify'
-import { customThemeTModal } from 'utils/comfyTheme'
-import { useDeleteNode } from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from '../cache-control'
+import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { Button, Label, Modal, TextInput } from "flowbite-react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { customThemeTModal } from "utils/comfyTheme";
+import { useDeleteNode } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "../cache-control";
 
 type NodeDeleteModalProps = {
-  openDeleteModal: boolean
-  onClose: () => void
-  nodeId: string
-  publisherId?: string
-}
+  openDeleteModal: boolean;
+  onClose: () => void;
+  nodeId: string;
+  publisherId?: string;
+};
 
 export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
   openDeleteModal,
@@ -22,14 +22,14 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
   nodeId,
   publisherId,
 }) => {
-  const { t } = useNextTranslation()
-  const mutation = useDeleteNode({})
-  const router = useRouter()
-  const qc = useQueryClient()
+  const { t } = useNextTranslation();
+  const mutation = useDeleteNode({});
+  const router = useRouter();
+  const qc = useQueryClient();
   const handleSubmit = async () => {
     if (!publisherId) {
-      toast.error(t('Cannot delete node.'))
-      return
+      toast.error(t("Cannot delete node."));
+      return;
     }
     return mutation.mutate(
       {
@@ -42,30 +42,26 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
             toast.error(
               t(`Failed to delete node. {{message}}`, {
                 message: error.response?.data?.message,
-              })
-            )
+              }),
+            );
           } else {
-            toast.error(t('Failed to delete node'))
+            toast.error(t("Failed to delete node"));
           }
         },
         onSuccess: () => {
-          toast.success(t('Node deleted successfully'))
+          toast.success(t("Node deleted successfully"));
           qc.fetchQuery(
-            shouldInvalidate.getGetNodeQueryOptions(
-              nodeId,
-              undefined,
-              INVALIDATE_CACHE_OPTION
-            )
-          )
-          onClose()
-          router.push('/nodes')
+            shouldInvalidate.getGetNodeQueryOptions(nodeId, undefined, INVALIDATE_CACHE_OPTION),
+          );
+          onClose();
+          router.push("/nodes");
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
-  const validateText = `${publisherId}/${nodeId}`
-  const [confirmationText, setConfirmationText] = useState('')
+  const validateText = `${publisherId}/${nodeId}`;
+  const [confirmationText, setConfirmationText] = useState("");
   return (
     <Modal
       show={openDeleteModal}
@@ -78,25 +74,22 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
     >
       <Modal.Body className="!bg-gray-800 p-8 md:px-9 md:py-8 rounded-none">
         <Modal.Header className="!bg-gray-800">
-          <p className="text-white">{t('Delete Node')}</p>
+          <p className="text-white">{t("Delete Node")}</p>
         </Modal.Header>
         <form
           className="space-y-6 p-2"
           onSubmit={async (e) => {
-            e.preventDefault()
-            await handleSubmit()
+            e.preventDefault();
+            await handleSubmit();
           }}
         >
           <p className="text-white">
-            {t(
-              'Are you sure you want to delete this node? This action cannot be undone.'
-            )}
+            {t("Are you sure you want to delete this node? This action cannot be undone.")}
           </p>
           <div>
             <Label className="text-white">
-              {t('Type')}{' '}
-              <code className="text-red-300 inline">{validateText}</code>{' '}
-              {t('to confirm')}:
+              {t("Type")} <code className="text-red-300 inline">{validateText}</code>{" "}
+              {t("to confirm")}:
             </Label>
             <TextInput
               className="input"
@@ -105,12 +98,8 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
             />
           </div>
           <div className="flex">
-            <Button
-              color="gray"
-              className="w-full text-white bg-gray-800"
-              onClick={onClose}
-            >
-              {t('Cancel')}
+            <Button color="gray" className="w-full text-white bg-gray-800" onClick={onClose}>
+              {t("Cancel")}
             </Button>
             <Button
               color="red"
@@ -118,11 +107,11 @@ export const NodeDeleteModal: React.FC<NodeDeleteModalProps> = ({
               type="submit"
               disabled={validateText !== confirmationText}
             >
-              {t('Delete')}
+              {t("Delete")}
             </Button>
           </div>
         </form>
       </Modal.Body>
     </Modal>
-  )
-}
+  );
+};

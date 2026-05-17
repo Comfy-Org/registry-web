@@ -1,29 +1,29 @@
-import { Button } from 'flowbite-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useState } from 'react'
-import { HiPencil } from 'react-icons/hi'
-import { Node } from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { PublisherId } from '../Search/PublisherId'
-import { AdminNodeClaimModal } from './AdminNodeClaimModal'
+import { Button } from "flowbite-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { HiPencil } from "react-icons/hi";
+import { Node } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
+import { PublisherId } from "../Search/PublisherId";
+import { AdminNodeClaimModal } from "./AdminNodeClaimModal";
 
 export default function UnclaimedNodeCard({
   node,
   onSuccess,
 }: {
-  node: Node
-  onSuccess?: () => void
+  node: Node;
+  onSuccess?: () => void;
 }) {
-  const { t } = useNextTranslation()
-  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
-  const { name, description, icon, rating, id } = node
-  const buttonLink = `/nodes/${id}`
+  const { t } = useNextTranslation();
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
+  const { name, description, icon, rating, id } = node;
+  const buttonLink = `/nodes/${id}`;
 
-  const publisherId = node.publisher?.id
+  const publisherId = node.publisher?.id;
   if (!publisherId) {
-    console.error('Publisher ID is missing for node:', node)
-    return null
+    console.error("Publisher ID is missing for node:", node);
+    return null;
   }
 
   return (
@@ -32,7 +32,7 @@ export default function UnclaimedNodeCard({
         <div className="w-[250px]">
           <Image
             className="rounded-lg sm:rounded-lg"
-            src={icon || ''}
+            src={icon || ""}
             alt={`${name}'s Avatar`}
             width={200}
             height={200}
@@ -50,7 +50,7 @@ export default function UnclaimedNodeCard({
             className="flex items-center absolute top-2 right-2"
           >
             <HiPencil className="mr-1" />
-            {t('Edit')}
+            {t("Edit")}
           </Button>
         </div>
 
@@ -60,7 +60,7 @@ export default function UnclaimedNodeCard({
         <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-end w-full">
           <p className="flex-0 line-clamp-2 max-w-full">{description}</p>
           <p className="text-blue-400 cursor-pointer">
-            <Link href={buttonLink}>{t('More')}</Link>
+            <Link href={buttonLink}>{t("More")}</Link>
           </p>
         </div>
       </div>
@@ -73,5 +73,5 @@ export default function UnclaimedNodeCard({
         onSuccess={onSuccess}
       />
     </div>
-  )
+  );
 }

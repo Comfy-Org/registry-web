@@ -40,32 +40,32 @@ This admin tool provides a comprehensive interface for updating node version com
 ### Filtering Node Versions
 
 1. **By Node ID**:
-    - Enter a node ID in the "Filter by Node ID" field
-    - The table will show only matching node versions
+   - Enter a node ID in the "Filter by Node ID" field
+   - The table will show only matching node versions
 2. **By Status**:
-    - Click the "Select Statuses" dropdown
-    - Choose one or more status filters
-    - Click "Clear Filters" to remove all status filters
+   - Click the "Select Statuses" dropdown
+   - Choose one or more status filters
+   - Click "Clear Filters" to remove all status filters
 
 ### Editing Compatibility Information
 
 1. **Open Edit Modal**:
-    - Click the "Edit" button for any node version row
-    - A modal will open with the current compatibility information
-    - The modal includes a specification reference link to the ComfyUI registry documentation
-    - The modal displays the node ID and version at the top for reference
+   - Click the "Edit" button for any node version row
+   - A modal will open with the current compatibility information
+   - The modal includes a specification reference link to the ComfyUI registry documentation
+   - The modal displays the node ID and version at the top for reference
 
 2. **Update Fields**:
-    - **ComfyUI Frontend Version**: Enter the supported frontend version (e.g., "1.2.0")
-    - **ComfyUI Version**: Enter the supported backend version (e.g., "0.1.0")
-    - **Operating Systems**: Enter one OS per line (e.g., "Windows", "macOS", "Linux")
-    - **Accelerators**: Enter one accelerator per line (e.g., "CUDA", "ROCm", "Metal", "CPU")
+   - **ComfyUI Frontend Version**: Enter the supported frontend version (e.g., "1.2.0")
+   - **ComfyUI Version**: Enter the supported backend version (e.g., "0.1.0")
+   - **Operating Systems**: Enter one OS per line (e.g., "Windows", "macOS", "Linux")
+   - **Accelerators**: Enter one accelerator per line (e.g., "CUDA", "ROCm", "Metal", "CPU")
 
 3. **Save Changes**:
-    - Click "Save Changes" to apply updates
-    - Use Ctrl+Enter (or Cmd+Enter on Mac) as a keyboard shortcut to submit
-    - Click "Cancel" to discard changes
-    - A success/error message will appear based on the operation result
+   - Click "Save Changes" to apply updates
+   - Use Ctrl+Enter (or Cmd+Enter on Mac) as a keyboard shortcut to submit
+   - Click "Cancel" to discard changes
+   - A success/error message will appear based on the operation result
 
 ## Data Format
 

@@ -1,18 +1,18 @@
-import { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import UnclaimedNodeCard from '@/components/nodes/UnclaimedNodeCard'
-import { Node } from '@/src/api/generated'
+import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import UnclaimedNodeCard from "@/components/nodes/UnclaimedNodeCard";
+import { Node } from "@/src/api/generated";
 
 // Mock function for actions
 
 const meta: Meta<typeof UnclaimedNodeCard> = {
-  title: 'Components/Nodes/UnclaimedNodeCard',
+  title: "Components/Nodes/UnclaimedNodeCard",
   component: UnclaimedNodeCard,
   parameters: {
-    layout: 'centered',
-    backgrounds: { default: 'dark' },
+    layout: "centered",
+    backgrounds: { default: "dark" },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => {
       const queryClient = new QueryClient({
@@ -21,53 +21,52 @@ const meta: Meta<typeof UnclaimedNodeCard> = {
             retry: false,
           },
         },
-      })
+      });
       return (
         <QueryClientProvider client={queryClient}>
-          <div style={{ width: '800px', maxWidth: '100%' }}>
+          <div style={{ width: "800px", maxWidth: "100%" }}>
             <Story />
           </div>
         </QueryClientProvider>
-      )
+      );
     },
   ],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof UnclaimedNodeCard>
+export default meta;
+type Story = StoryObj<typeof UnclaimedNodeCard>;
 
 // Sample unclaimed node data
 const sampleUnclaimedNode: Node = {
-  id: 'unclaimed-node-1',
-  name: 'Unclaimed Custom Node',
-  description:
-    'This is an unclaimed ComfyUI custom node that needs to be claimed by a publisher.',
-  icon: 'https://via.placeholder.com/200',
+  id: "unclaimed-node-1",
+  name: "Unclaimed Custom Node",
+  description: "This is an unclaimed ComfyUI custom node that needs to be claimed by a publisher.",
+  icon: "https://via.placeholder.com/200",
   downloads: 850,
   rating: 4.2,
-  repository: 'https://github.com/sample-user/unclaimed-comfy-node',
+  repository: "https://github.com/sample-user/unclaimed-comfy-node",
   publisher: {
-    id: 'unclaimed-admin',
-    name: 'Unclaimed Admin',
+    id: "unclaimed-admin",
+    name: "Unclaimed Admin",
   },
-}
+};
 
 export const Default: Story = {
   args: {
     node: sampleUnclaimedNode,
     onSuccess: () => {},
   },
-}
+};
 
 export const WithoutIcon: Story = {
   args: {
     node: {
       ...sampleUnclaimedNode,
-      icon: '',
+      icon: "",
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const LongDescription: Story = {
   args: {
@@ -78,17 +77,17 @@ export const LongDescription: Story = {
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const LongName: Story = {
   args: {
     node: {
       ...sampleUnclaimedNode,
-      name: 'Very Long Node Name That Should Be Handled Properly In The Card Layout',
+      name: "Very Long Node Name That Should Be Handled Properly In The Card Layout",
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const WithoutRepository: Story = {
   args: {
@@ -98,7 +97,7 @@ export const WithoutRepository: Story = {
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const HighRating: Story = {
   args: {
@@ -109,7 +108,7 @@ export const HighRating: Story = {
     },
     onSuccess: () => {},
   },
-}
+};
 
 export const LowRating: Story = {
   args: {
@@ -120,4 +119,4 @@ export const LowRating: Story = {
     },
     onSuccess: () => {},
   },
-}
+};

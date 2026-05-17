@@ -1,7 +1,7 @@
-import Registry from '../components/registry/Registry'
+import Registry from "../components/registry/Registry";
 
 function NodeList() {
-  return <Registry />
+  return <Registry />;
 }
 
-export default NodeList
+export default NodeList;

@@ -6,7 +6,6 @@
   ],
   "plugins": [],
   "rules": {
-    "prefer-template": "warn",
-    "jsx-a11y/alt-text": "off"
+    "prefer-template": "warn"
   }
 }

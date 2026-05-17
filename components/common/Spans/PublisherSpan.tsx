@@ -3,34 +3,34 @@
  *
  * Displays a publisher name and ID with hover information and click navigation
  */
-import { Tooltip } from 'flowbite-react'
-import { useRouter } from 'next/router'
-import { MouseEvent } from 'react'
+import { Tooltip } from "flowbite-react";
+import { useRouter } from "next/router";
+import { MouseEvent } from "react";
 
 interface PublisherSpanProps {
-  publisherId: string
-  publisherName?: string
-  className?: string
-  onClick?: (e: MouseEvent<HTMLSpanElement>) => void
+  publisherId: string;
+  publisherName?: string;
+  className?: string;
+  onClick?: (e: MouseEvent<HTMLSpanElement>) => void;
 }
 
 export default function PublisherSpan({
   publisherId,
   publisherName,
-  className = '',
+  className = "",
   onClick,
 }: PublisherSpanProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
     if (onClick) {
-      onClick(e)
-      return
+      onClick(e);
+      return;
     }
 
-    e.preventDefault()
-    window.open(`/publishers/${publisherId}`, '_blank')
-  }
+    e.preventDefault();
+    window.open(`/publishers/${publisherId}`, "_blank");
+  };
 
   return (
     <div className="inline-block">
@@ -43,11 +43,9 @@ export default function PublisherSpan({
           className={`cursor-pointer underline underline-offset-2 decoration-dashed ${className}`}
           onClick={handleClick}
         >
-          {publisherName
-            ? `${publisherName} (@${publisherId})`
-            : `@${publisherId}`}
+          {publisherName ? `${publisherName} (@${publisherId})` : `@${publisherId}`}
         </span>
       </Tooltip>
     </div>
-  )
+  );
 }

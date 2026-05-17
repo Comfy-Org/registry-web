@@ -64,4 +64,8 @@ storybook-static
 public/_storybook
 
 # ignore core file
-core
+/core
+/prs
+
+# ai reports
+/report.md

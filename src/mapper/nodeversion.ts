@@ -1,20 +1,20 @@
-import { NodeVersionStatus } from '@/src/api/generated'
+import { NodeVersionStatus } from "@/src/api/generated";
 
 export function NodeVersionStatusToReadable({
   status,
 }: {
-  status?: NodeVersionStatus
+  status?: NodeVersionStatus;
 } = {}) {
   if (!status) {
-    return 'Unknown'
+    return "Unknown";
   }
   const mapStatusToReadable = {
-    [NodeVersionStatus.NodeVersionStatusFlagged]: 'Flagged',
-    [NodeVersionStatus.NodeVersionStatusPending]: 'Pending',
-    [NodeVersionStatus.NodeVersionStatusBanned]: 'Banned',
-    [NodeVersionStatus.NodeVersionStatusActive]: 'Active',
-    [NodeVersionStatus.NodeVersionStatusDeleted]: 'Deleted',
-  }
+    [NodeVersionStatus.NodeVersionStatusFlagged]: "Flagged",
+    [NodeVersionStatus.NodeVersionStatusPending]: "Pending",
+    [NodeVersionStatus.NodeVersionStatusBanned]: "Banned",
+    [NodeVersionStatus.NodeVersionStatusActive]: "Active",
+    [NodeVersionStatus.NodeVersionStatusDeleted]: "Deleted",
+  };
 
-  return mapStatusToReadable[status] || 'Unknown'
+  return mapStatusToReadable[status] || "Unknown";
 }

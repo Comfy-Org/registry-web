@@ -1,16 +1,14 @@
-import { Badge } from 'flowbite-react'
-import { PublisherStatus } from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { Badge } from "flowbite-react";
+import { PublisherStatus } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
 
-const PublisherStatusBadge: React.FC<{ status?: PublisherStatus }> = ({
-  status,
-}) => {
-  const { t } = useNextTranslation()
+const PublisherStatusBadge: React.FC<{ status?: PublisherStatus }> = ({ status }) => {
+  const { t } = useNextTranslation();
   if (status === PublisherStatus.PublisherStatusBanned) {
-    return <Badge color="failure">{t('Banned')}</Badge>
+    return <Badge color="failure">{t("Banned")}</Badge>;
   }
 
-  return null
-}
+  return null;
+};
 
-export default PublisherStatusBadge
+export default PublisherStatusBadge;

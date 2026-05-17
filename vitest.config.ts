@@ -1,12 +1,12 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import storybookTest from '@storybook/addon-vitest/vitest-plugin'
-import { defineConfig } from 'vitest/config'
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import storybookTest from "@storybook/addon-vitest/vitest-plugin";
+import { defineConfig } from "vitest/config";
 
 const dirname =
-  typeof __dirname !== 'undefined'
+  typeof __dirname !== "undefined"
     ? __dirname // run by nodejs, vitest
-    : path.dirname(fileURLToPath(import.meta.url)) // bun
+    : path.dirname(fileURLToPath(import.meta.url)); // bun
 
 // More info at: https://storybook.js.org/docs/writing-tests/test-addon
 export default defineConfig({
@@ -19,20 +19,20 @@ export default defineConfig({
           // See options at: https://storybook.js.org/docs/writing-tests/test-addon#storybooktest
           // @ts-expect-error: The storybookTest plugin has incomplete type definitions, but it works as expected.
           storybookTest({
-            configDir: path.join(dirname, '.storybook'),
+            configDir: path.join(dirname, ".storybook"),
           }),
         ],
         test: {
-          name: 'storybook',
+          name: "storybook",
           browser: {
             enabled: true,
             headless: true,
-            name: 'chromium',
-            provider: 'playwright',
+            name: "chromium",
+            provider: "playwright",
           },
-          setupFiles: ['.storybook/vitest.setup.ts'],
+          setupFiles: [".storybook/vitest.setup.ts"],
         },
       },
     ],
   },
-})
+});

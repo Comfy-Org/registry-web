@@ -1,14 +1,14 @@
-import { Button, Spinner } from 'flowbite-react'
-import React from 'react'
-import { PersonalAccessToken } from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
+import { Button, Spinner } from "flowbite-react";
+import React from "react";
+import { PersonalAccessToken } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
 
 type PersonAccessTokenTableProps = {
-  accessTokens: PersonalAccessToken[]
-  handleCreateButtonClick: () => void
-  deleteToken: (id: string) => void
-  isLoading: boolean
-}
+  accessTokens: PersonalAccessToken[];
+  handleCreateButtonClick: () => void;
+  deleteToken: (id: string) => void;
+  isLoading: boolean;
+};
 
 const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
   handleCreateButtonClick,
@@ -16,7 +16,7 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
   isLoading,
   deleteToken,
 }) => {
-  const { t } = useNextTranslation()
+  const { t } = useNextTranslation();
 
   return (
     <div className="mt-8">
@@ -38,7 +38,7 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
             d="M12 14v3m-3-6V7a3 3 0 1 1 6 0v4m-8 0h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"
           />
         </svg>
-        {t('API Keys')}
+        {t("API Keys")}
       </h2>
       {isLoading && <Spinner color="blue" size="lg" />}
 
@@ -49,10 +49,10 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
               <thead className="bg-gray-800">
                 <tr>
                   <th className="px-4 py-3 text-sm font-semibold text-left text-gray-400 uppercase">
-                    {t('Name')}
+                    {t("Name")}
                   </th>
                   <th className="px-4 py-3 text-sm font-semibold text-left text-gray-400 uppercase">
-                    {t('Secret Key')}
+                    {t("Secret Key")}
                   </th>
                   <th className="px-4 py-3 text-right"></th>
                 </tr>
@@ -88,7 +88,7 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
                         </button>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -100,10 +100,10 @@ const PersonalAccessTokenTable: React.FC<PersonAccessTokenTableProps> = ({
         className="w-40 mt-6 bg-gray-900 text-gray-400 bg-transparent hover:!bg-transparent focus:!bg-blue focus:!border-none focus:!outline-none"
         onClick={handleCreateButtonClick}
       >
-        <span className="text-white">{t('+ Create new key')}</span>
+        <span className="text-white">{t("+ Create new key")}</span>
       </Button>
     </div>
-  )
-}
+  );
+};
 
-export default PersonalAccessTokenTable
+export default PersonalAccessTokenTable;

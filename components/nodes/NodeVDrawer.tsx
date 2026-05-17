@@ -1,30 +1,23 @@
-import { useQueryClient } from '@tanstack/react-query'
-import { Button, Spinner } from 'flowbite-react'
-import React, { useState } from 'react'
-import { toast } from 'react-toastify'
-import analytic from 'src/analytic/analytic'
-import {
-  INVALIDATE_CACHE_OPTION,
-  shouldInvalidate,
-} from '@/components/cache-control'
-import {
-  NodeVersion,
-  useGetNodeVersion,
-  useUpdateNodeVersion,
-} from '@/src/api/generated'
-import { useNextTranslation } from '@/src/hooks/i18n'
-import { FormatRelativeDate } from './NodeDetails'
-import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
+import { useQueryClient } from "@tanstack/react-query";
+import { Button, Spinner } from "flowbite-react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import analytic from "src/analytic/analytic";
+import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
+import { NodeVersion, useGetNodeVersion, useUpdateNodeVersion } from "@/src/api/generated";
+import { useNextTranslation } from "@/src/hooks/i18n";
+import { FormatRelativeDate } from "./NodeDetails";
+import { NodeVersionDeleteModal } from "./NodeVersionDeleteModal";
 
 type NodeVDrawerProps = {
-  isDrawerOpen: boolean
-  toggleDrawer: () => void
-  publisherId?: string // Means don't deprecate version.
-  canEdit?: boolean
-  onUpdate: (version: NodeVersion) => void
-  nodeId: string
-  versionNumber: string
-}
+  isDrawerOpen: boolean;
+  toggleDrawer: () => void;
+  publisherId?: string; // Means don't deprecate version.
+  canEdit?: boolean;
+  onUpdate: (version: NodeVersion) => void;
+  nodeId: string;
+  versionNumber: string;
+};
 
 const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
   publisherId,
@@ -35,32 +28,28 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
   onUpdate,
   canEdit = false,
 }) => {
-  const { t } = useNextTranslation()
-  const {
-    data: version,
-    isLoading,
-    refetch,
-  } = useGetNodeVersion(nodeId, versionNumber)
+  const { t } = useNextTranslation();
+  const { data: version, isLoading, refetch } = useGetNodeVersion(nodeId, versionNumber);
 
-  const isVersionAvailable = version && !version.deprecated
-  const updateNodeVersionMutation = useUpdateNodeVersion()
-  const queryClient = useQueryClient()
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const isVersionAvailable = version && !version.deprecated;
+  const updateNodeVersionMutation = useUpdateNodeVersion();
+  const queryClient = useQueryClient();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleToggleDeprecate = () => {
     if (!version || !version.id) {
-      toast.error(t('Version not found'))
-      return
+      toast.error(t("Version not found"));
+      return;
     }
     if (!publisherId) {
-      toast.error(t('Cannot Update'))
-      return
+      toast.error(t("Cannot Update"));
+      return;
     }
-    analytic.track('Deprecate Node Version', {
+    analytic.track("Deprecate Node Version", {
       version: version.version,
       publisherId: publisherId,
       nodeId: nodeId,
-    })
+    });
 
     updateNodeVersionMutation.mutate(
       {
@@ -73,7 +62,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
       },
       {
         onError: (error) => {
-          toast.error(t('Could not update version. Please try again.'))
+          toast.error(t("Could not update version. Please try again."));
         },
         onSuccess: (version) => {
           // Cache-busting invalidation for cached endpoints
@@ -81,28 +70,28 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             shouldInvalidate.getListNodeVersionsQueryOptions(
               nodeId,
               undefined,
-              INVALIDATE_CACHE_OPTION
-            )
-          )
+              INVALIDATE_CACHE_OPTION,
+            ),
+          );
 
-          toast.success(t('Version updated successfully'))
-          onUpdate(version)
-          refetch()
+          toast.success(t("Version updated successfully"));
+          onUpdate(version);
+          refetch();
         },
-      }
-    )
-  }
+      },
+    );
+  };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Spinner className="" />
       </div>
-    )
+    );
   }
 
   if (!version || !version.id) {
-    return null
+    return null;
   }
 
   return (
@@ -110,7 +99,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
       <div
         id="drawer-create-product-default"
         className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${
-          isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+          isDrawerOpen ? "translate-x-0" : "translate-x-full"
         } bg-gray-800`}
         aria-labelledby="drawer-label"
         aria-hidden={!isDrawerOpen}
@@ -150,7 +139,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
 
           {version?.createdAt && (
             <p className="text-gray-400">
-              {t('Released')} <FormatRelativeDate date={version.createdAt} />
+              {t("Released")} <FormatRelativeDate date={version.createdAt} />
             </p>
           )}
 
@@ -159,15 +148,15 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
               <Button
                 className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
                 onClick={() => {
-                  analytic.track('Download Node Version', {
+                  analytic.track("Download Node Version", {
                     version: version.version,
                     publisherId: publisherId,
                     nodeId: nodeId,
-                  })
+                  });
                 }}
               >
                 <a href={version.downloadUrl}>
-                  {t('Download Version {{version}}', {
+                  {t("Download Version {{version}}", {
                     version: version.version,
                   })}
                 </a>
@@ -178,7 +167,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
                 className="flex-shrink-0 px-4 text-white bg-red-600 rounded whitespace-nowrap text-[16px] mt-5"
                 onClick={() => setIsDeleteModalOpen(true)}
               >
-                {t('Delete Version')}
+                {t("Delete Version")}
               </Button>
             )}
           </div>
@@ -187,7 +176,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
           <div className="space-y-4">
             {version && (
               <div>
-                <h2 className="font-bold">{t('Updates')}</h2>
+                <h2 className="font-bold">{t("Updates")}</h2>
                 <p>{version.changelog}</p>
               </div>
             )}
@@ -208,11 +197,9 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             </label>
 
             <div className="ml-2 text-white">
-              <p className="font-semibold">{t('Deprecate version')}</p>
+              <p className="font-semibold">{t("Deprecate version")}</p>
               <p className="text-xs text-gray-400">
-                {t(
-                  'Users will see a warning prompting them to use another version.'
-                )}
+                {t("Users will see a warning prompting them to use another version.")}
               </p>
             </div>
           </div>
@@ -226,7 +213,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         publisherId={publisherId as string}
       />
     </>
-  )
-}
+  );
+};
 
-export default NodeVDrawer
+export default NodeVDrawer;
