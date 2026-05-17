@@ -18,8 +18,8 @@ The "Update PR Branches to Latest Main" workflow allows maintainers to automatic
 2. Click on "Update PR Branches to Latest Main" workflow
 3. Click the "Run workflow" button
 4. Configure options:
-    - **PR numbers**: Leave empty to update all open PRs, or specify comma-separated PR numbers (e.g., `220,224,226`)
-    - **Dry run**: Check this to see what would be updated without making changes
+   - **PR numbers**: Leave empty to update all open PRs, or specify comma-separated PR numbers (e.g., `220,224,226`)
+   - **Dry run**: Check this to see what would be updated without making changes
 5. Click "Run workflow"
 
 ### Via GitHub CLI
@@ -61,9 +61,9 @@ If the workflow detects merge conflicts:
 - The merge is aborted automatically
 - A comment is added to the PR noting manual intervention is needed
 - The PR author should:
-    1. Pull latest changes from main
-    2. Resolve conflicts locally
-    3. Push the resolved changes
+  1. Pull latest changes from main
+  2. Resolve conflicts locally
+  3. Push the resolved changes
 
 ## Limitations
 

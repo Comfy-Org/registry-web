@@ -27,15 +27,15 @@ This PR implements an experimental feature using Chrome's built-in Translator AP
 2. **Opt-in Feature**: Users can enable dynamic translation via a toggle in the language dropdown menu.
 
 3. **Translation Hook**: The `useDynamicTranslate()` hook provides a `dt()` function that wraps i18next:
-    - When disabled or unavailable: Returns the original text (English)
-    - When enabled: Translates text on-demand using the browser's translation service
+   - When disabled or unavailable: Returns the original text (English)
+   - When enabled: Translates text on-demand using the browser's translation service
 
 4. **Missing Key Handler**: When i18next encounters a missing translation key (user-generated content), it automatically attempts translation via the Translator API and caches the result.
 
 5. **Selective Usage**: The `dt()` function is applied only to user-generated content:
-    - Node descriptions (`dt(node.description)`)
-    - Version changelogs (`dt(version.changelog)`)
-    - Static UI text continues using regular `t()` function
+   - Node descriptions (`dt(node.description)`)
+   - Version changelogs (`dt(version.changelog)`)
+   - Static UI text continues using regular `t()` function
 
 ### Implementation Details
 
@@ -46,10 +46,10 @@ This PR implements an experimental feature using Chrome's built-in Translator AP
 - TypeScript type definitions for Chrome's Translator API
 - `useDynamicTranslateEnabled()` - LocalStorage-based toggle hook
 - `useDynamicTranslate()` - Main hook providing:
-    - `available` - Whether browser supports the Translator API
-    - `enabled` - User preference for dynamic translation
-    - `setEnabled` - Toggle function
-    - `dt()` - Dynamic translation function
+  - `available` - Whether browser supports the Translator API
+  - `enabled` - User preference for dynamic translation
+  - `setEnabled` - Toggle function
+  - `dt()` - Dynamic translation function
 - `missingKeyHandler` - i18next callback that auto-translates missing keys
 
 **`components/nodes/NodeDetails.tsx`**
@@ -90,16 +90,16 @@ This PR implements an experimental feature using Chrome's built-in Translator AP
 ### Alternative Approaches
 
 1. **OpenAI GPT Translation**: Server-side translation using ChatGPT API
-    - Pros: Better quality, context-aware, available everywhere
-    - Cons: API costs, latency, privacy concerns
+   - Pros: Better quality, context-aware, available everywhere
+   - Cons: API costs, latency, privacy concerns
 
 2. **Crowdsourced Translations**: Allow community to submit translations
-    - Pros: Free, potentially high quality for popular nodes
-    - Cons: Requires moderation, incomplete coverage
+   - Pros: Free, potentially high quality for popular nodes
+   - Cons: Requires moderation, incomplete coverage
 
 3. **Publisher-Provided Translations**: Encourage node authors to provide translations
-    - Pros: Most accurate, free
-    - Cons: Low adoption, maintenance burden on publishers
+   - Pros: Most accurate, free
+   - Cons: Low adoption, maintenance burden on publishers
 
 ### Potential Improvements
 
