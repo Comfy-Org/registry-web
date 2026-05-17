@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { SUPPORTED_LANGUAGES } from "@/src/constants";
-import { useNextTranslation } from "@/src/hooks/i18n";
+import { useDynamicTranslate, useNextTranslation } from "@/src/hooks/i18n";
 import { LocalizationContributeModal } from "./LocalizationContributeModal";
 
 export default function LanguageSwitcher({
@@ -12,6 +12,11 @@ export default function LanguageSwitcher({
   className?: string;
 } = {}) {
   const { t, i18n, changeLanguage, currentLanguage } = useNextTranslation();
+  const {
+    available: dynamicTranslateAvailable,
+    enabled: dynamicTranslateEnabled,
+    setEnabled: setDynamicTranslateEnabled,
+  } = useDynamicTranslate();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -304,6 +309,27 @@ export default function LanguageSwitcher({
                 })
               )}
             </ul>
+
+            {/* Dynamic translation toggle */}
+            {dynamicTranslateAvailable && (
+              <div className="border-t border-gray-200 p-1 dark:border-gray-600">
+                <label className="flex w-full cursor-pointer items-center justify-between rounded px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600">
+                  <span className="flex items-center">
+                    <span className="mr-2" aria-hidden="true">
+                      🔄
+                    </span>
+                    <span>{t("Dynamic Translation")}</span>
+                    <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">(Beta)</span>
+                  </span>
+                  <input
+                    type="checkbox"
+                    checked={dynamicTranslateEnabled}
+                    onChange={(e) => setDynamicTranslateEnabled(e.target.checked)}
+                    className="form-checkbox h-4 w-4 text-blue-600"
+                  />
+                </label>
+              </div>
+            )}
 
             {/* Contribute footer */}
             <div className="border-t border-gray-200 p-1 dark:border-gray-600">
