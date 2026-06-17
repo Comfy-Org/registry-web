@@ -88,7 +88,7 @@ This generates react queries that you can use in your Components.
 
 #### Production
 
-Make a PR to the `main` branch. Once merged, Vercel will deploy to https://comfyregistry.org
+Make a PR to the `main` branch. Once merged, Vercel will deploy to https://registry.comfy.org
 
 ### CORS
 

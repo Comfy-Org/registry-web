@@ -22,7 +22,7 @@ export const Default: Story = {
 
 export const LongCommand: Story = {
   args: {
-    code: "comfy install my-node-id --token=12345abcde --registry=https://comfyregistry.org",
+    code: "comfy install my-node-id --token=12345abcde --registry=https://registry.comfy.org",
   },
 };
 
