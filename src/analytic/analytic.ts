@@ -1,4 +1,4 @@
-import mixpanel from "mixpanel-browser";
+import posthog from "posthog-js";
 
 interface UserProfile {
   $email: string | null;
@@ -8,46 +8,37 @@ interface UserProfile {
   [key: string]: any;
 }
 
-class MixpanelAnalytics {
+class Analytics {
   private isProduction: boolean;
 
   constructor() {
     this.isProduction = process.env.NEXT_PUBLIC_ENV === "production";
-
-    if (this.isProduction && process.env.NEXT_PUBLIC_MIXPANEL_KEY) {
-      mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_KEY, {
-        debug: true,
-        track_pageview: true,
-        persistence: "localStorage",
-        api_host: "https://mp.comfy.org",
-      });
-    }
   }
 
   public track(event: string, properties?: object): void {
     if (this.isProduction) {
-      mixpanel.track(event, properties);
+      posthog.capture(event, properties);
     } else {
-      console.log(`Mixpanel Track - Event: ${event}, Properties: ${JSON.stringify(properties)}`);
+      console.log(`Track - Event: ${event}, Properties: ${JSON.stringify(properties)}`);
     }
   }
 
   public identify(distinctId: string): void {
     if (this.isProduction) {
-      mixpanel.identify(distinctId);
+      posthog.identify(distinctId);
     } else {
-      console.log(`Mixpanel Identify - Distinct ID: ${distinctId}`);
+      console.log(`Identify - Distinct ID: ${distinctId}`);
     }
   }
 
   public setProfile(updates: UserProfile): void {
     if (this.isProduction) {
-      mixpanel.people.set(updates);
+      posthog.setPersonProperties(updates);
     } else {
-      console.log(`Mixpanel Set Profile - Updates: ${JSON.stringify(updates)}`);
+      console.log(`Set Profile - Updates: ${JSON.stringify(updates)}`);
     }
   }
 }
 
-const analytic = new MixpanelAnalytics();
+const analytic = new Analytics();
 export default analytic;
