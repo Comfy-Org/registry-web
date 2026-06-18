@@ -16,6 +16,7 @@ class Analytics {
   }
 
   public track(event: string, properties?: object): void {
+    if (typeof window === "undefined") return;
     if (this.isProduction) {
       posthog.capture(event, properties);
     } else {
@@ -24,6 +25,7 @@ class Analytics {
   }
 
   public identify(distinctId: string): void {
+    if (typeof window === "undefined") return;
     if (this.isProduction) {
       posthog.identify(distinctId);
     } else {
@@ -32,6 +34,7 @@ class Analytics {
   }
 
   public setProfile(updates: UserProfile): void {
+    if (typeof window === "undefined") return;
     if (this.isProduction) {
       posthog.setPersonProperties(updates);
     } else {

@@ -135,22 +135,23 @@ const isProduction = process.env.NEXT_PUBLIC_ENV === "production";
 const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const posthogApiHost = process.env.NEXT_PUBLIC_POSTHOG_API_HOST ?? "https://t.comfy.org";
 
+// Initialize PostHog at module scope (browser only) so it is ready before any
+// component effect fires. Registry activity is then measured alongside the
+// other product surfaces.
+if (typeof window !== "undefined" && isProduction && posthogKey) {
+  posthog.init(posthogKey, {
+    api_host: posthogApiHost,
+    ui_host: "https://us.posthog.com",
+    capture_pageview: false,
+    capture_pageleave: true,
+    person_profiles: "identified_only",
+  });
+}
+
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   useEffect(persistEffect, []);
-
-  // Initialize PostHog so registry activity is measured alongside the other product surfaces.
-  useEffect(() => {
-    if (!isProduction || typeof window === "undefined" || !posthogKey) return;
-    posthog.init(posthogKey, {
-      api_host: posthogApiHost,
-      ui_host: "https://us.posthog.com",
-      capture_pageview: false,
-      capture_pageleave: true,
-      person_profiles: "identified_only",
-    });
-  }, []);
 
   // Manual pageview capture on client-side route changes (capture_pageview is off).
   useEffect(() => {
