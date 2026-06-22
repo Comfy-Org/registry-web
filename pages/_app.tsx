@@ -3,7 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
 import { getAuth } from "firebase/auth";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import Script from "next/script";
+import posthog from "posthog-js";
 import { useEffect } from "react";
 import { AXIOS_INSTANCE } from "@/src/api/mutator/axios-instance";
 import app from "@/src/firebase";
@@ -129,8 +131,37 @@ const persistEffect = () => {
 
 const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
+const isProduction = process.env.NEXT_PUBLIC_ENV === "production";
+const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+const posthogApiHost = process.env.NEXT_PUBLIC_POSTHOG_API_HOST ?? "https://t.comfy.org";
+
+// Initialize PostHog at module scope (browser only) so it is ready before any
+// component effect fires. Registry activity is then measured alongside the
+// other product surfaces.
+if (typeof window !== "undefined" && isProduction && posthogKey) {
+  posthog.init(posthogKey, {
+    api_host: posthogApiHost,
+    ui_host: "https://us.posthog.com",
+    capture_pageview: false,
+    capture_pageleave: true,
+    person_profiles: "identified_only",
+  });
+}
+
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
   useEffect(persistEffect, []);
+
+  // Manual pageview capture on client-side route changes (capture_pageview is off).
+  useEffect(() => {
+    if (!isProduction || !posthogKey) return;
+    const capturePageview = () =>
+      posthog.capture("$pageview", { $current_url: window.location.href });
+    capturePageview();
+    router.events.on("routeChangeComplete", capturePageview);
+    return () => router.events.off("routeChangeComplete", capturePageview);
+  }, [router.events]);
 
   return (
     <QueryClientProvider client={queryClient}>
