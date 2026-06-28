@@ -25,6 +25,7 @@ import {
 import nodesLogo from "@/src/assets/images/nodesLogo.svg";
 import { useNextTranslation } from "@/src/hooks/i18n";
 import CopyableCodeBlock from "../CodeBlock/CodeBlock";
+import ChangelogMarkdown from "./ChangelogMarkdown";
 import { NodeDeleteModal } from "./NodeDeleteModal";
 import { NodeEditModal } from "./NodeEditModal";
 import NodeStatusBadge from "./NodeStatusBadge";
@@ -508,9 +509,9 @@ const NodeDetails = () => {
                       <p className="mt-3 text-sm font-normal text-gray-400 ">
                         <FormatRelativeDate date={version.createdAt || ""} />
                       </p>
-                      <div className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
+                      <ChangelogMarkdown className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
                         {version.changelog}
-                      </div>
+                      </ChangelogMarkdown>
                       <div
                         className="text-sm font-normal text-blue-500 cursor-pointer"
                         onClick={() => selectVersion(version)}
