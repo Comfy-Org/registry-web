@@ -23,7 +23,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
 }) => {
   const { t } = useNextTranslation();
   const [page, setPage] = React.useState(1);
-  const { data, isError, isLoading } = useListNodesForPublisherV2(publisher.id as string, {
+  const { data } = useListNodesForPublisherV2(publisher.id as string, {
     page,
     include_banned,
     limit: 12,
@@ -60,7 +60,7 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
       </div>
 
       <div className="grid gap-4 pt-8 mb-6 lg:mb-5 md:grid-cols-2 lg:grid-cols-3">
-        {data?.nodes?.map((node, index) => (
+        {data?.nodes?.map((node) => (
           <NodesCard
             key={node.id}
             node={node}

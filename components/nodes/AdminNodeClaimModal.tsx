@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { customThemeTModal } from "utils/comfyTheme";
 import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
 import {
-  getGetNodeQueryKey,
   getListNodesForPublisherV2QueryKey,
   getSearchNodesQueryKey,
   Node,
@@ -235,7 +234,7 @@ export function AdminNodeClaimModal({ isOpen, onClose, node, onSuccess }: NodeCl
         publisherId: UNCLAIMED_ADMIN_PUBLISHER_ID,
         data: { publisher: selectedPublisher },
       });
-    } catch (error) {
+    } catch {
       // Error is handled in the mutation's onError
       toast.error(t("An unexpected error occurred while claiming the node."));
     }
