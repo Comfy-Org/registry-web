@@ -1,6 +1,12 @@
+import { isbot } from "isbot";
 import { NextRequest, NextResponse } from "next/server";
 import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from "@/src/constants";
 import { detectLanguageFromHeader, isRedirectExcludedUrl } from "@/src/hooks/i18n/serverUtils";
+
+// Use the `isbot` package (1000+ patterns, monthly updates) to identify
+// search-engine, social, and AI crawlers. Used to route bot requests to the
+// blocking-translation /_bot/* page variants so SEO meta tags stay localized.
+const NODE_PAGE_PATH = /^\/nodes\/[^/]+$|^\/publishers\/[^/]+\/nodes\/[^/]+$/;
 
 /**
  * Middleware to handle server-side language detection and redirection
@@ -10,6 +16,25 @@ export function middleware(request: NextRequest) {
   // Get current URL and pathname
   const url = request.nextUrl.clone();
   const { pathname } = url;
+
+  // Bot rewrite: route search-engine crawlers hitting node detail pages to
+  // the blocking-ISR /_bot/* variant so the rendered HTML contains
+  // localized meta tags. The URL stays the same to the bot (rewrite, not
+  // redirect). Note: bots may see auto-translated content (via OpenAI)
+  // while humans see stored translations or English fallback.
+  if (NODE_PAGE_PATH.test(pathname)) {
+    if (isbot(request.headers.get("user-agent"))) {
+      url.pathname = `/_bot${pathname}`;
+      return NextResponse.rewrite(url);
+    }
+  }
+
+  // Direct human access to /_bot/* (e.g. URL typed in address bar) is
+  // bounced to the canonical human path so the bot route stays internal.
+  if (pathname === "/_bot" || pathname.startsWith("/_bot/")) {
+    url.pathname = pathname === "/_bot" ? "/" : pathname.replace(/^\/_bot/, "");
+    return NextResponse.redirect(url);
+  }
 
   // Skip redirects for excluded URLs
   if (isRedirectExcludedUrl(pathname)) {

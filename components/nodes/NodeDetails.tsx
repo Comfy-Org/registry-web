@@ -24,7 +24,9 @@ import {
 } from "@/src/api/generated";
 import nodesLogo from "@/src/assets/images/nodesLogo.svg";
 import { useNextTranslation } from "@/src/hooks/i18n";
+import type { TranslatedNodeContent } from "@/src/hooks/i18n/translateNode";
 import CopyableCodeBlock from "../CodeBlock/CodeBlock";
+import ContentToggle from "./ContentToggle";
 import { NodeDeleteModal } from "./NodeDeleteModal";
 import { NodeEditModal } from "./NodeEditModal";
 import NodeStatusBadge from "./NodeStatusBadge";
@@ -87,8 +89,13 @@ export function formatDownloadCount(count: number): string {
   return `${cleanNum}${units[unitIndex]}`;
 }
 
-const NodeDetails = () => {
+const NodeDetails = ({
+  translatedContent,
+}: {
+  translatedContent?: TranslatedNodeContent | null;
+}) => {
   const { t, i18n } = useNextTranslation();
+
   // state for drawer and modals
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState<NodeVersion | null>(null);
@@ -489,7 +496,25 @@ const NodeDetails = () => {
               </div>
               <div>
                 <h2 className="mb-2 text-lg font-bold">{t("Description")}</h2>
-                <p className="text-base font-normal text-gray-200">{node.description}</p>
+                {(() => {
+                  const isrTranslation =
+                    translatedContent?.locale === i18n.language &&
+                    translatedContent?.description &&
+                    translatedContent.description !== node.description
+                      ? {
+                          description: translatedContent.description,
+                          source: translatedContent.source,
+                        }
+                      : null;
+                  return (
+                    <ContentToggle
+                      original={node.description ?? ""}
+                      translated={isrTranslation?.description ?? null}
+                      translationSource={isrTranslation?.source}
+                      locale={i18n.language}
+                    />
+                  );
+                })()}
               </div>
               <div className="mt-10" hidden={isUnclaimed}>
                 <h2 className="mb-2 text-lg font-semibold">{t("Version history")}</h2>

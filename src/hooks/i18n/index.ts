@@ -65,7 +65,7 @@ export function useNextTranslation(namespace = "common") {
           hash: router.asPath.split("#")[1] || "",
         },
         router.asPath,
-        { shallow: true, locale },
+        { locale },
       );
     },
   };
