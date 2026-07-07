@@ -1,10 +1,10 @@
-import { Meta, StoryObj } from "@storybook/nextjs-vite";
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { fn } from "storybook/test";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { User as FirebaseUser } from "firebase/auth";
+import type { User as FirebaseUser } from "firebase/auth";
 import { HttpResponse, http } from "msw";
 import ClaimMyNodePage from "@/pages/publishers/[publisherId]/claim-my-node";
-import { Node, Publisher, User } from "@/src/api/generated";
+import type { Node, Publisher, User } from "@/src/api/generated";
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from "@/src/constants";
 import { useFirebaseUser } from "@/src/hooks/useFirebaseUser.mock";
 import { CAPI } from "@/src/mocks/apibase";
