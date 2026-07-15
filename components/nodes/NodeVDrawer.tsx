@@ -6,6 +6,7 @@ import analytic from "src/analytic/analytic";
 import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
 import { NodeVersion, useGetNodeVersion, useUpdateNodeVersion } from "@/src/api/generated";
 import { useNextTranslation } from "@/src/hooks/i18n";
+import ChangelogMarkdown from "./ChangelogMarkdown";
 import { FormatRelativeDate } from "./NodeDetails";
 import { NodeVersionDeleteModal } from "./NodeVersionDeleteModal";
 
@@ -177,7 +178,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             {version && (
               <div>
                 <h2 className="font-bold">{t("Updates")}</h2>
-                <p>{version.changelog}</p>
+                <ChangelogMarkdown className="mt-2">{version.changelog}</ChangelogMarkdown>
               </div>
             )}
           </div>
