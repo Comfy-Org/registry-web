@@ -509,7 +509,10 @@ const NodeDetails = () => {
                       <p className="mt-3 text-sm font-normal text-gray-400 ">
                         <FormatRelativeDate date={version.createdAt || ""} />
                       </p>
-                      <ChangelogMarkdown className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2">
+                      <ChangelogMarkdown
+                        plain
+                        className="flex-grow mt-3 text-base font-normal text-gray-200 line-clamp-2"
+                      >
                         {version.changelog}
                       </ChangelogMarkdown>
                       <div
