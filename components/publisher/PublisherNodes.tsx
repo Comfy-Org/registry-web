@@ -9,6 +9,13 @@ import NodesCard from "../nodes/NodesCard";
 type PublisherNodesProps = {
   publisher: Publisher;
   onEditPublisher?: () => void;
+  /**
+   * Opt in to banned nodes. The registry API excludes banned nodes from
+   * `/publishers/{id}/nodes/v2` by default and coerces `include_banned=true`
+   * back to false for unauthenticated callers, so only set this on the
+   * authenticated publisher dashboard — where the request carries the caller's
+   * Firebase token and the publisher needs to see their own banned nodes.
+   */
   include_banned?: boolean;
 };
 
@@ -25,8 +32,10 @@ const PublisherNodes: React.FC<PublisherNodesProps> = ({
   const [page, setPage] = React.useState(1);
   const { data, isError, isLoading } = useListNodesForPublisherV2(publisher.id as string, {
     page,
-    include_banned,
     limit: 12,
+    // Omit the flag entirely when not opting in, so public/non-owner views send
+    // a clean request instead of an `include_banned=false` the backend ignores.
+    ...(include_banned ? { include_banned: true } : {}),
   });
 
   return (

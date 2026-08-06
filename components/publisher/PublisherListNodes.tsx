@@ -81,6 +81,10 @@ const Nodes: React.FC = () => {
           key={index}
           publisher={publisher}
           onEditPublisher={handleEditPublisherClick(publisher)}
+          // Authenticated dashboard listing the caller's own publishers — they
+          // must still see their banned nodes now that the API excludes them by
+          // default.
+          include_banned={true}
         />
       ))}
 
