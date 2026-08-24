@@ -1,12 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { intlFormatDistance } from "date-fns";
 import download from "downloadjs";
-import { Button, Label, Spinner } from "flowbite-react";
+import { Button, Label, Modal, Spinner } from "flowbite-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { ReactNode, useState } from "react";
 import { HiTrash } from "react-icons/hi";
-import { MdEdit, MdOpenInNew } from "react-icons/md";
+import { MdEdit, MdInstallDesktop, MdOpenInNew } from "react-icons/md";
 import { toast } from "react-toastify";
 import analytic from "src/analytic/analytic";
 import { UNCLAIMED_ADMIN_PUBLISHER_ID } from "src/constants";
@@ -97,6 +97,7 @@ const NodeDetails = () => {
   const [isSearchRankingEditModalOpen, setIsSearchRankingEditModalOpen] = useState(false);
   const [isPreemptedComfyNodeNamesEditModalOpen, setIsPreemptedComfyNodeNamesEditModalOpen] =
     useState(false);
+  const [isQuickInstallWarningOpen, setIsQuickInstallWarningOpen] = useState(false);
   // useNodeList
   // parse query parameters from the URL
   // note: publisherId can be undefined when accessing `/nodes/[nodeId]`
@@ -561,6 +562,20 @@ const NodeDetails = () => {
               </Button>
             )}
 
+            {/* Quick Install Button */}
+            {!isUnclaimed && nodeVersions?.length && (
+              <Button
+                className="flex-shrink-0 px-4 text-white bg-green-600 rounded whitespace-nowrap text-[16px]"
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  e.preventDefault();
+                  setIsQuickInstallWarningOpen(true);
+                }}
+              >
+                <MdInstallDesktop className="w-5 h-5 mr-2" />
+                {t("Quick Install")}
+              </Button>
+            )}
+
             {canEdit && (
               <Button
                 className="flex-shrink-0 px-4  flex items-center text-white bg-gray-700 rounded whitespace-nowrap text-[16px]"
@@ -756,6 +771,48 @@ const NodeDetails = () => {
           nodeId={nodeId}
           publisherId={publisherId}
         />
+
+        {/* Quick Install Warning Modal */}
+        <Modal show={isQuickInstallWarningOpen} onClose={() => setIsQuickInstallWarningOpen(false)}>
+          <Modal.Header>{t("Quick Install Warning")}</Modal.Header>
+          <Modal.Body>
+            <div className="space-y-6">
+              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                {t(
+                  "This feature requires ComfyUI Desktop with the latest comfy-cli installed. Make sure you have the latest version before proceeding.",
+                )}
+              </p>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              onClick={() => {
+                setIsQuickInstallWarningOpen(false);
+                const comfyUrl = `comfy://install-custom-node/${nodeId}`;
+
+                try {
+                  const newWindow = window.open(comfyUrl, "_blank");
+
+                  setTimeout(() => {
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed === "undefined") {
+                      alert(t("Install Latest ComfyUI Desktop Application"));
+                    }
+                  }, 500);
+
+                  analytic.track("Quick Install Node");
+                } catch (error) {
+                  alert(t("Install Latest ComfyUI Desktop Application"));
+                  analytic.track("Quick Install Node Failed");
+                }
+              }}
+            >
+              {t("Continue")}
+            </Button>
+            <Button color="gray" onClick={() => setIsQuickInstallWarningOpen(false)}>
+              {t("Cancel")}
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         {isDrawerOpen && selectedVersion && nodeId && (
           <NodeVDrawer
