@@ -34,8 +34,15 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
     isLoading: isLoadingAccessTokens,
     refetch: refetchTokens,
   } = useListPersonalAccessTokens(publisher.id as string);
-  const { data: nodeList } = useListNodesForPublisherV2(publisher.id as string);
   const { data: permissions } = useGetPermissionOnPublisher(publisher.id as string);
+  // Only the publisher's own dashboard opts in to banned nodes. Any signed-in
+  // user can open this page, so gate on edit permission rather than on being
+  // authenticated — and keep the count in sync with the list rendered below.
+  const canEditPublisher = !!permissions?.canEdit;
+  const { data: nodeList } = useListNodesForPublisherV2(
+    publisher.id as string,
+    canEditPublisher ? { include_banned: true } : undefined,
+  );
   const [openSecretKeyModal, setOpenSecretKeyModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -277,7 +284,7 @@ const PublisherDetail: React.FC<PublisherDetailProps> = ({ publisher }) => {
           </>
         )}
 
-        <PublisherNodes publisher={publisher} />
+        <PublisherNodes publisher={publisher} include_banned={canEditPublisher} />
       </div>
 
       <CreateSecretKeyModal

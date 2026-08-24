@@ -1,58 +1,22 @@
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { persistQueryClient } from "@tanstack/react-query-persist-client";
-import { getAuth } from "firebase/auth";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import posthog from "posthog-js";
 import { useEffect } from "react";
+import { attachAuthHeaders } from "@/src/api/mutator/authInterceptor";
 import { AXIOS_INSTANCE } from "@/src/api/mutator/axios-instance";
-import app from "@/src/firebase";
 import FlowBiteThemeProvider from "../components/flowbite-theme";
 import Layout from "../components/layout";
 import "../styles/globals.css";
 import { AxiosResponse } from "axios";
 import { DIE } from "phpdie";
-import { getAdminJwtToken, isAdminJwtTokenValid } from "@/src/utils/adminJwtStorage";
 
 // Add an interceptor to attach the Firebase JWT token to every request
 // Put in _app.tsx because this only works in react-dom environment
-AXIOS_INSTANCE.interceptors.request.use(async (config) => {
-  const method = (config.method || "GET").toUpperCase();
-  const path = (config.url || "").split("?")[0];
-
-  // Admin-JWT endpoints are all mutations; gating on method prevents IDs like
-  // "bananaforge" from matching the /ban suffix on a GET.
-  const requiresAdminJwt =
-    method !== "GET" &&
-    (path.endsWith("/ban") ||
-      (path.startsWith("/admin/") && !path.startsWith("/admin/generate-token")));
-
-  if (requiresAdminJwt) {
-    // Use JWT admin token for admin operations
-    const adminToken = getAdminJwtToken();
-    if (adminToken && isAdminJwtTokenValid()) {
-      config.headers.Authorization = `Bearer ${adminToken}`;
-    } else {
-      // Throw specific error that will be caught by the mutation error handler
-      throw new Error("ADMIN_JWT_REQUIRED");
-    }
-  } else {
-    // Use Firebase token for regular operations
-    const auth = getAuth(app);
-    const user = auth.currentUser;
-    if (user) {
-      const token = await user.getIdToken();
-      sessionStorage.setItem("idToken", token);
-      config.headers.Authorization = `Bearer ${token}`;
-    } else {
-      const cachedIdtoken = sessionStorage.getItem("idToken") ?? "";
-      if (cachedIdtoken) config.headers.Authorization = `Bearer ${cachedIdtoken}`;
-    }
-  }
-  return config;
-});
+AXIOS_INSTANCE.interceptors.request.use(attachAuthHeaders);
 
 const queryClient = new QueryClient({
   defaultOptions: {

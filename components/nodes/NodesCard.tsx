@@ -5,13 +5,14 @@ import React from "react";
 import { HiDownload, HiStar } from "react-icons/hi";
 import { Node } from "@/src/api/generated";
 import { useNextTranslation } from "@/src/hooks/i18n";
+import NodeStatusBadge from "./NodeStatusBadge";
 
 interface NodesCard {
   node: Node;
   buttonLink: string;
 }
 const NodesCard = React.memo<NodesCard>(
-  ({ node: { name, description, icon, downloads, rating, github_stars }, buttonLink }) => {
+  ({ node: { name, description, icon, downloads, rating, github_stars, status }, buttonLink }) => {
     const { t } = useNextTranslation();
     return (
       <div className="flex p-2 bg-gray-800 border border-gray-700 rounded-lg shadow sm:flex lg:p-4">
@@ -29,6 +30,11 @@ const NodesCard = React.memo<NodesCard>(
 
         <div className="flex flex-col px-4">
           <h6 className="mb-2 font-bold tracking-tight text-white">{name}</h6>
+
+          {/* Renders only for banned nodes, which the publisher dashboard opts
+              into via include_banned — without it a banned node is
+              indistinguishable from an active one. */}
+          <NodeStatusBadge status={status} />
 
           <span className="text-xs text-gray-300">{name}</span>
           <div className="mt-3 mb-1 overflow-hidden text-xs font-light text-gray-300 flex items-start">
