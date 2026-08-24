@@ -1,4 +1,5 @@
 import { fn } from "storybook/test";
+import type { User as FirebaseUser } from "firebase/auth";
 import * as actual from "./useFirebaseUser";
 
 export * from "./useFirebaseUser";
@@ -27,5 +28,3 @@ export const mockFirebaseUser = {
 export const useFirebaseUser = fn(actual.useFirebaseUser)
   .mockName("useFirebaseUser")
   .mockReturnValue([mockFirebaseUser, false, undefined]);
-
-import { User as FirebaseUser } from "firebase/auth";
