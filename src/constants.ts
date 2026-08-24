@@ -13,7 +13,7 @@ export const LANGUAGE_STORAGE_KEY = "comfy-registry-language-preference" as cons
 // Language configuration
 export const DEFAULT_LANGUAGE = "en";
 
-const LANGUAGE_NAMES = {
+export const LANGUAGE_NAMES = {
   en: "English",
   zh: "中文",
   ja: "日本語",
