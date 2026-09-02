@@ -3,10 +3,59 @@ import { LANGUAGE_STORAGE_KEY, SUPPORTED_LANGUAGES } from "@/src/constants";
 import { detectLanguageFromHeader, isRedirectExcludedUrl } from "@/src/hooks/i18n/serverUtils";
 
 /**
+ * Top-level path segments that are real routes or assets, never publisher
+ * handles. Used to keep the legacy-node redirect below off existing pages.
+ */
+const RESERVED_TOP_LEVEL = new Set([
+  "api",
+  "_next",
+  "_storybook",
+  "admin",
+  "auth",
+  "nodes",
+  "publishers",
+  "fonts",
+  "locales",
+  "static",
+  "discord",
+]);
+
+/** A two-segment path with no "." in either segment (so a static file such as
+ *  /assets/app.js never matches). */
+const LEGACY_NODE_URL = /^\/([^/.]+)\/([^/.]+)\/?$/;
+
+/**
+ * Legacy per-publisher node URLs: registry.comfy.org/<publisher>/<node>.
+ * The registry dropped the publisher-name prefix; nodes are served only at
+ * /nodes/<node-slug>, so old links now 404. 301 them to the canonical path.
+ *
+ * Done here rather than in `next.config.ts` `redirects()` so the "first segment
+ * is not a real route" test is a plain Set lookup instead of a route-pattern
+ * negative lookahead.
+ */
+function legacyPublisherNodeRedirect(request: NextRequest): NextResponse | null {
+  const match = request.nextUrl.pathname.match(LEGACY_NODE_URL);
+  if (!match) return null;
+  const [, publisher, node] = match;
+  if (RESERVED_TOP_LEVEL.has(publisher)) return null;
+
+  // Clone keeps `nextUrl.locale`, so a /<locale>/<publisher>/<node> request
+  // redirects to /<locale>/nodes/<node>.
+  const url = request.nextUrl.clone();
+  url.pathname = `/nodes/${node}`;
+  return NextResponse.redirect(url, 301);
+}
+
+/**
  * Middleware to handle server-side language detection and redirection
  * This runs on every request before the page is rendered
  */
 export function middleware(request: NextRequest) {
+  const legacyRedirect = legacyPublisherNodeRedirect(request);
+  if (legacyRedirect) {
+    return legacyRedirect;
+  }
+
   // Get current URL and pathname
   const url = request.nextUrl.clone();
   const { pathname } = url;
@@ -53,7 +102,11 @@ export const config = {
      * 3. /static (static files)
      * 4. /locales (translation files)
      * 5. all files in the public folder
+     *
+     * Each directory term is anchored with a trailing "/" so the exclusion
+     * matches the segment exactly, not any path that merely starts with it
+     * (e.g. a publisher named "apiary" must still reach the middleware).
      */
-    "/((?!api|_next|static|locales|favicon.ico|robots.txt).*)",
+    "/((?!api/|_next/|static/|locales/|favicon.ico|robots.txt).*)",
   ],
 };
