@@ -12,10 +12,11 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v7
         with:
+          package-manager-cache: false
           node-version: "22"
       - name: Install bun
         run: npm install -g bun
