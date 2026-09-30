@@ -1,23 +1,37 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { Button, Spinner } from "flowbite-react";
-import React, { useState } from "react";
-import { toast } from "react-toastify";
-import analytic from "src/analytic/analytic";
-import { INVALIDATE_CACHE_OPTION, shouldInvalidate } from "@/components/cache-control";
-import { NodeVersion, useGetNodeVersion, useUpdateNodeVersion } from "@/src/api/generated";
-import { useNextTranslation } from "@/src/hooks/i18n";
-import { FormatRelativeDate } from "./NodeDetails";
-import { NodeVersionDeleteModal } from "./NodeVersionDeleteModal";
+import { FeedbackThread } from '@/components/feedback/FeedbackThread'
+import { InstallationTags } from '@/components/feedback/InstallationTags'
+import { UnresolvedFeedbackBadge } from '@/components/feedback/UnresolvedFeedbackBadge'
+import type { FeedbackThread as Thread } from '@/src/api/feedback.generated'
+import { privateFeedbackEnabled } from '@/components/feedback/useVersionFeedback'
+import { useQueryClient } from '@tanstack/react-query'
+import { Button, Spinner } from 'flowbite-react'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
+import analytic from 'src/analytic/analytic'
+import {
+  INVALIDATE_CACHE_OPTION,
+  shouldInvalidate,
+} from '@/components/cache-control'
+import {
+  NodeVersion,
+  useGetNodeVersion,
+  useUpdateNodeVersion,
+} from '@/src/api/generated'
+import { useNextTranslation } from '@/src/hooks/i18n'
+import { FormatRelativeDate } from './NodeDetails'
+import { NodeVersionDeleteModal } from './NodeVersionDeleteModal'
 
 type NodeVDrawerProps = {
-  isDrawerOpen: boolean;
-  toggleDrawer: () => void;
-  publisherId?: string; // Means don't deprecate version.
-  canEdit?: boolean;
-  onUpdate: (version: NodeVersion) => void;
-  nodeId: string;
-  versionNumber: string;
-};
+  isDrawerOpen: boolean
+  toggleDrawer: () => void
+  publisherId?: string // Means don't deprecate version.
+  canEdit?: boolean
+  isAdmin?: boolean
+  feedbackThread?: Thread
+  onUpdate: (version: NodeVersion) => void
+  nodeId: string
+  versionNumber: string
+}
 
 const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
   publisherId,
@@ -27,29 +41,36 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
   toggleDrawer,
   onUpdate,
   canEdit = false,
+  isAdmin = false,
+  feedbackThread,
 }) => {
-  const { t } = useNextTranslation();
-  const { data: version, isLoading, refetch } = useGetNodeVersion(nodeId, versionNumber);
+  const { t } = useNextTranslation()
+  const {
+    data: version,
+    isLoading,
+    refetch,
+  } = useGetNodeVersion(nodeId, versionNumber)
 
-  const isVersionAvailable = version && !version.deprecated;
-  const updateNodeVersionMutation = useUpdateNodeVersion();
-  const queryClient = useQueryClient();
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const isVersionAvailable = version && !version.deprecated
+  const updateNodeVersionMutation = useUpdateNodeVersion()
+  const queryClient = useQueryClient()
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [tab, setTab] = useState<'version' | 'feedback'>('version')
 
   const handleToggleDeprecate = () => {
     if (!version || !version.id) {
-      toast.error(t("Version not found"));
-      return;
+      toast.error(t('Version not found'))
+      return
     }
     if (!publisherId) {
-      toast.error(t("Cannot Update"));
-      return;
+      toast.error(t('Cannot Update'))
+      return
     }
-    analytic.track("Deprecate Node Version", {
+    analytic.track('Deprecate Node Version', {
       version: version.version,
       publisherId: publisherId,
       nodeId: nodeId,
-    });
+    })
 
     updateNodeVersionMutation.mutate(
       {
@@ -61,8 +82,8 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         },
       },
       {
-        onError: (error) => {
-          toast.error(t("Could not update version. Please try again."));
+        onError: () => {
+          toast.error(t('Could not update version. Please try again.'))
         },
         onSuccess: (version) => {
           // Cache-busting invalidation for cached endpoints
@@ -70,28 +91,28 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             shouldInvalidate.getListNodeVersionsQueryOptions(
               nodeId,
               undefined,
-              INVALIDATE_CACHE_OPTION,
-            ),
-          );
+              INVALIDATE_CACHE_OPTION
+            )
+          )
 
-          toast.success(t("Version updated successfully"));
-          onUpdate(version);
-          refetch();
+          toast.success(t('Version updated successfully'))
+          onUpdate(version)
+          refetch()
         },
-      },
-    );
-  };
+      }
+    )
+  }
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Spinner className="" />
       </div>
-    );
+    )
   }
 
   if (!version || !version.id) {
-    return null;
+    return null
   }
 
   return (
@@ -99,7 +120,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
       <div
         id="drawer-create-product-default"
         className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${
-          isDrawerOpen ? "translate-x-0" : "translate-x-full"
+          isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         } bg-gray-800`}
         aria-labelledby="drawer-label"
         aria-hidden={!isDrawerOpen}
@@ -126,83 +147,115 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             </svg>
           </button>
         </div>
-        <div>
-          {/* <h5
-                        id="drawer-label"
-                        className="inline-flex items-center mb-6 text-xl font-semibold text-white "
-                    >
-                        {version ? version.version : ''}{' '}
-                        <div className="ml-1">
-                            <NodeVersionStatusBadge status={version?.status} />
-                        </div>
-                    </h5> */}
-
-          {version?.createdAt && (
-            <p className="text-gray-400">
-              {t("Released")} <FormatRelativeDate date={version.createdAt} />
-            </p>
-          )}
-
-          <div className="flex gap-4">
-            {version?.downloadUrl && (
-              <Button
-                className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
-                onClick={() => {
-                  analytic.track("Download Node Version", {
-                    version: version.version,
-                    publisherId: publisherId,
-                    nodeId: nodeId,
-                  });
-                }}
-              >
-                <a href={version.downloadUrl}>
-                  {t("Download Version {{version}}", {
-                    version: version.version,
-                  })}
-                </a>
-              </Button>
-            )}
-            {canEdit && (
-              <Button
-                className="flex-shrink-0 px-4 text-white bg-red-600 rounded whitespace-nowrap text-[16px] mt-5"
-                onClick={() => setIsDeleteModalOpen(true)}
-              >
-                {t("Delete Version")}
-              </Button>
-            )}
+        {privateFeedbackEnabled && canEdit && publisherId && (
+          <div
+            className="mb-5 flex gap-3"
+            role="group"
+            aria-label={t('Version detail views')}
+          >
+            <Button
+              color={tab === 'version' ? 'blue' : 'gray'}
+              onClick={() => setTab('version')}
+            >
+              {t('Version information')}
+            </Button>
+            <Button
+              color={tab === 'feedback' ? 'blue' : 'gray'}
+              onClick={() => setTab('feedback')}
+            >
+              {t('Private feedback')}
+              <span className="ml-2">
+                <UnresolvedFeedbackBadge thread={feedbackThread} />
+              </span>
+            </Button>
           </div>
-          <hr className="h-px my-8 bg-gray-700 border-0"></hr>
+        )}
+        {tab === 'feedback' &&
+        privateFeedbackEnabled &&
+        canEdit &&
+        publisherId ? (
+          <FeedbackThread
+            nodeId={nodeId}
+            versionId={version.id}
+            publisherId={publisherId}
+            role={isAdmin ? 'admin' : 'author'}
+          />
+        ) : (
+          <>
+            <div>
+              <InstallationTags tags={version.tags_admin} />
 
-          <div className="space-y-4">
-            {version && (
-              <div>
-                <h2 className="font-bold">{t("Updates")}</h2>
-                <p>{version.changelog}</p>
+              {version?.createdAt && (
+                <p className="text-gray-400">
+                  {t('Released')}{' '}
+                  <FormatRelativeDate date={version.createdAt} />
+                </p>
+              )}
+
+              <div className="flex gap-4">
+                {version?.downloadUrl && (
+                  <Button
+                    className="flex-shrink-0 px-4 text-white bg-blue-500 rounded whitespace-nowrap text-[16px] mt-5"
+                    onClick={() => {
+                      analytic.track('Download Node Version', {
+                        version: version.version,
+                        publisherId: publisherId,
+                        nodeId: nodeId,
+                      })
+                    }}
+                  >
+                    <a href={version.downloadUrl}>
+                      {t('Download Version {{version}}', {
+                        version: version.version,
+                      })}
+                    </a>
+                  </Button>
+                )}
+                {canEdit && (
+                  <Button
+                    className="flex-shrink-0 px-4 text-white bg-red-600 rounded whitespace-nowrap text-[16px] mt-5"
+                    onClick={() => setIsDeleteModalOpen(true)}
+                  >
+                    {t('Delete Version')}
+                  </Button>
+                )}
+              </div>
+              <hr className="h-px my-8 bg-gray-700 border-0"></hr>
+
+              <div className="space-y-4">
+                {version && (
+                  <div>
+                    <h2 className="font-bold">{t('Updates')}</h2>
+                    <p>{version.changelog}</p>
+                  </div>
+                )}
+              </div>
+              <hr className="h-px my-8 bg-gray-700 border-0"></hr>
+            </div>
+
+            {canEdit && (
+              <div className="flex items-center py-4 rounded-lg">
+                <label className="inline-flex items-center mb-5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={!isVersionAvailable}
+                    className="sr-only peer"
+                    onClick={handleToggleDeprecate}
+                  />
+                  <div className=" mt-[10px] relative w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                </label>
+
+                <div className="ml-2 text-white">
+                  <p className="font-semibold">{t('Deprecate version')}</p>
+                  <p className="text-xs text-gray-400">
+                    {t(
+                      'Users will see a warning prompting them to use another version.'
+                    )}
+                  </p>
+                </div>
               </div>
             )}
-          </div>
-          <hr className="h-px my-8 bg-gray-700 border-0"></hr>
-        </div>
-
-        {canEdit && (
-          <div className="flex items-center py-4 rounded-lg">
-            <label className="inline-flex items-center mb-5 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={!isVersionAvailable}
-                className="sr-only peer"
-                onClick={handleToggleDeprecate}
-              />
-              <div className=" mt-[10px] relative w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-            </label>
-
-            <div className="ml-2 text-white">
-              <p className="font-semibold">{t("Deprecate version")}</p>
-              <p className="text-xs text-gray-400">
-                {t("Users will see a warning prompting them to use another version.")}
-              </p>
-            </div>
-          </div>
+          </>
         )}
       </div>
       <NodeVersionDeleteModal
@@ -213,7 +266,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         publisherId={publisherId as string}
       />
     </>
-  );
-};
+  )
+}
 
-export default NodeVDrawer;
+export default NodeVDrawer
