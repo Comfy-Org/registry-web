@@ -402,17 +402,20 @@ export const RevokedDuringReply: Story = {
       queryClient.getQueriesData({ queryKey: [PRIVATE_REGISTRY_KEY] })
     ).not.toEqual([])
     await userEvent.click(canvas.getByRole('button', { name: 'Send reply' }))
-    await expect(
-      await canvas.findByText(
-        'Feedback is unavailable or you no longer have access.'
-      )
-    ).toBeVisible()
-    await expect(
-      canvas.queryByText(
-        'Please revise the installation command and share the replacement nodepack version.'
-      )
-    ).toBeNull()
-    await expect(canvas.queryByRole('textbox')).toBeNull()
+    // Cache removal remounts the conversation; assert against the current DOM.
+    await waitFor(() => {
+      expect(
+        canvas.getByText(
+          'Feedback is unavailable or you no longer have access.'
+        )
+      ).toBeVisible()
+      expect(
+        canvas.queryByText(
+          'Please revise the installation command and share the replacement nodepack version.'
+        )
+      ).toBeNull()
+      expect(canvas.queryByRole('textbox')).toBeNull()
+    })
     await expect(requests.messages[0].body).toBe('An update.')
     await expectPrivateCachesCleared()
   },
@@ -425,16 +428,19 @@ export const RevokedDuringHistory: Story = {
     await userEvent.click(
       await canvas.findByRole('button', { name: 'Load earlier messages' })
     )
-    await expect(
-      await canvas.findByText(
-        'Feedback is unavailable or you no longer have access.'
-      )
-    ).toBeVisible()
-    await expect(
-      canvas.queryByText(
-        'Please revise the installation command and share the replacement nodepack version.'
-      )
-    ).toBeNull()
+    await waitFor(() => {
+      expect(
+        canvas.getByText(
+          'Feedback is unavailable or you no longer have access.'
+        )
+      ).toBeVisible()
+      expect(
+        canvas.queryByText(
+          'Please revise the installation command and share the replacement nodepack version.'
+        )
+      ).toBeNull()
+      expect(canvas.queryByRole('textbox')).toBeNull()
+    })
     await expectPrivateCachesCleared()
   },
 }
