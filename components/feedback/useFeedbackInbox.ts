@@ -39,7 +39,12 @@ export function useFeedbackInbox(
       // Version badges need the complete node-scoped summary, never message bodies
       // or one request per version. Reuse the inbox API's cursor pagination.
       const threads = [...page.threads]
+      const cursors = new Set<string>()
+      if (params.cursor) cursors.add(params.cursor)
       while (page.next_cursor) {
+        if (cursors.has(page.next_cursor))
+          throw new Error('Repeated feedback inbox cursor')
+        cursors.add(page.next_cursor)
         page = await fetchPage(
           { ...params, cursor: page.next_cursor },
           undefined,

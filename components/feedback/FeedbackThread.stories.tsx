@@ -8,12 +8,20 @@ import type { ReactNode } from 'react'
 import { z } from 'zod'
 import { PRIVATE_REGISTRY_KEY } from '@/src/api/privateRegistry'
 import { versionId, feedbackFixture } from './feedback.fixtures'
-import {
-  feedbackHandlers as handlers,
-  type FeedbackRequests,
-} from './feedback.mocks'
+import { feedbackHandlers, type FeedbackRequests } from './feedback.mocks'
 
 const requests: FeedbackRequests = { messages: [], states: [] }
+const mocks = {
+  author: feedbackHandlers(false, 'open', requests),
+  admin: feedbackHandlers(true, 'open', requests),
+  emptyAuthor: feedbackHandlers(false, 'empty'),
+  emptyAdmin: feedbackHandlers(true, 'empty', requests),
+  resolved: feedbackHandlers(false, 'resolved'),
+  forbidden: feedbackHandlers(false, 'forbidden'),
+  failedReply: feedbackHandlers(false, 'failure', requests),
+  revokedReply: feedbackHandlers(false, 'revoked-on-send', requests),
+  revokedHistory: feedbackHandlers(false, 'revoked-on-history'),
+}
 let queryClient: QueryClient
 function CaptureQueryClient({ children }: { children: ReactNode }) {
   queryClient = useQueryClient()
@@ -52,12 +60,13 @@ const meta: Meta<typeof FeedbackThread> = {
     ),
   ],
   beforeEach: () => {
+    Object.values(mocks).forEach((mock) => mock.reset())
     requests.messages.length = 0
     requests.states.length = 0
   },
   parameters: {
     layout: 'fullscreen',
-    msw: { handlers: handlers(false, 'open', requests) },
+    msw: { handlers: mocks.author.handlers },
   },
 }
 export default meta
@@ -96,6 +105,7 @@ export const Author: Story = {
 }
 
 function markdownStory(role: 'admin' | 'author'): Story {
+  const mock = feedbackHandlers(role === 'admin')
   const data = feedbackFixture(role === 'admin')
   data.messages[0].sender_user_id = 'other-person'
   data.messages[0].sender_role = role === 'admin' ? 'author' : 'admin'
@@ -126,11 +136,12 @@ function markdownStory(role: 'admin' | 'author'): Story {
   data.thread!.last_message_seq = 2
   return {
     args: { role },
+    beforeEach: mock.reset,
     parameters: {
       msw: {
         handlers: [
           http.get(/\/feedback$/, () => HttpResponse.json(data)),
-          ...handlers(role === 'admin'),
+          ...mock.handlers,
         ],
       },
     },
@@ -229,7 +240,7 @@ export const LiveMarkdownPreview: Story = {
 
 export const Admin: Story = {
   args: { role: 'admin' },
-  parameters: { msw: { handlers: handlers(true, 'open', requests) } },
+  parameters: { msw: { handlers: mocks.admin.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const versionsKey = [
@@ -287,7 +298,7 @@ export const Admin: Story = {
   },
 }
 export const EmptyAuthor: Story = {
-  parameters: { msw: { handlers: handlers(false, 'empty') } },
+  parameters: { msw: { handlers: mocks.emptyAuthor.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(
@@ -303,7 +314,7 @@ export const EmptyAuthor: Story = {
 }
 export const FirstAdminMessage: Story = {
   args: { role: 'admin' },
-  parameters: { msw: { handlers: handlers(true, 'empty', requests) } },
+  parameters: { msw: { handlers: mocks.emptyAdmin.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.type(
@@ -329,7 +340,7 @@ export const FirstAdminMessage: Story = {
   },
 }
 export const Resolved: Story = {
-  parameters: { msw: { handlers: handlers(false, 'resolved') } },
+  parameters: { msw: { handlers: mocks.resolved.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(
@@ -346,7 +357,7 @@ export const Resolved: Story = {
   },
 }
 export const RevokedAccess: Story = {
-  parameters: { msw: { handlers: handlers(false, 'forbidden') } },
+  parameters: { msw: { handlers: mocks.forbidden.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(await canvas.findByRole('alert')).toHaveTextContent(
@@ -359,7 +370,7 @@ export const RevokedAccess: Story = {
   },
 }
 export const FailedReply: Story = {
-  parameters: { msw: { handlers: handlers(false, 'failure', requests) } },
+  parameters: { msw: { handlers: mocks.failedReply.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const input = await canvas.findByLabelText(
@@ -390,7 +401,7 @@ export const FailedReply: Story = {
 
 export const RevokedDuringReply: Story = {
   parameters: {
-    msw: { handlers: handlers(false, 'revoked-on-send', requests) },
+    msw: { handlers: mocks.revokedReply.handlers },
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -422,7 +433,7 @@ export const RevokedDuringReply: Story = {
 }
 
 export const RevokedDuringHistory: Story = {
-  parameters: { msw: { handlers: handlers(false, 'revoked-on-history') } },
+  parameters: { msw: { handlers: mocks.revokedHistory.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(

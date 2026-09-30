@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { getRouter } from '@storybook/nextjs-vite/router.mock'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { http, HttpResponse } from 'msw'
-import { expect, userEvent, within, waitFor } from 'storybook/test'
+import { expect, userEvent, within, waitFor, spyOn } from 'storybook/test'
 import AdminNodeVersions from '@/pages/admin/nodeversions'
 import { feedbackFixture, versionId } from './feedback.fixtures'
 import type { FeedbackReadInput } from '@/src/api/feedback.generated'
@@ -231,11 +231,9 @@ export const VersionListFailureKeepsFeedbackDraft: Story = {
     })
     await waitFor(() =>
       expect(
-        client
-          .getQueryCache()
-          .findAll({
-            predicate: (query) => query.queryKey.includes('admin-versions'),
-          })[0].state.status
+        client.getQueryCache().findAll({
+          predicate: (query) => query.queryKey.includes('admin-versions'),
+        })[0].state.status
       ).toBe('error')
     )
     expect(body.queryByRole('dialog')).not.toBeNull()
@@ -248,11 +246,9 @@ export const VersionListFailureKeepsFeedbackDraft: Story = {
     })
     await waitFor(() =>
       expect(
-        client
-          .getQueryCache()
-          .findAll({
-            predicate: (query) => query.queryKey.includes('admin-versions'),
-          })[0].state.status
+        client.getQueryCache().findAll({
+          predicate: (query) => query.queryKey.includes('admin-versions'),
+        })[0].state.status
       ).toBe('success')
     )
     expect(body.getByRole('textbox')).toHaveValue(
@@ -354,16 +350,23 @@ export const InboxDenialClearsVersionReports: Story = {
   },
 }
 export const ScanHistoryDenialClosesFeedback: Story = {
+  beforeEach: () => {
+    const clock: Window = window
+    const setInterval = clock.setInterval.bind(clock)
+    const timer = spyOn(clock, 'setInterval').mockImplementation(
+      (handler, delay, ...args) =>
+        setInterval(handler, delay === 25000 ? 100 : delay, ...args)
+    )
+    return () => timer.mockRestore()
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await userEvent.click(await canvas.findByText('Scan results · Admin only'))
     await waitFor(() =>
       expect(
-        client
-          .getQueryCache()
-          .findAll({
-            predicate: (query) => query.queryKey.includes('scan-history'),
-          })[0]?.state.status
+        client.getQueryCache().findAll({
+          predicate: (query) => query.queryKey.includes('scan-history'),
+        })[0]?.state.status
       ).toBe('success')
     )
     await userEvent.click(
@@ -375,6 +378,8 @@ export const ScanHistoryDenialClosesFeedback: Story = {
       await dialog.findByRole('textbox'),
       'Discard after scan endpoint revokes access.'
     )
+    // Positive control: the mounted scan panel really does poll automatically.
+    await waitFor(() => expect(requests.scans).toBeGreaterThan(1))
     scanError = 401
     await client.refetchQueries({
       predicate: (query) => query.queryKey.includes('scan-history'),
@@ -389,6 +394,11 @@ export const ScanHistoryDenialClosesFeedback: Story = {
         })
         .every((query) => query.state.data === undefined)
     ).toBe(true)
+    const stoppedAt = requests.scans
+    // Observe several accelerated polling periods after the panel is unmounted.
+    await new Promise((resolve) => setTimeout(resolve, 350))
+    expect(requests.scans).toBe(stoppedAt)
+    expect(canvas.queryByText('Scan results · Admin only')).toBeNull()
   },
 }
 

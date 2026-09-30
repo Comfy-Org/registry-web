@@ -13,6 +13,7 @@ import { PRIVATE_REGISTRY_KEY } from '@/src/api/privateRegistry'
 let client: QueryClient
 let canEdit = true
 let inboxError: number | null = null
+let repeatCursor = false
 let resolved = false
 let requests: URL[] = []
 let supersedeStatus = 204
@@ -58,6 +59,7 @@ const meta: Meta<typeof AuthorPage> = {
   beforeEach: () => {
     canEdit = true
     inboxError = null
+    repeatCursor = false
     resolved = false
     requests = []
     supersedeCalls = []
@@ -142,6 +144,12 @@ const meta: Meta<typeof AuthorPage> = {
         http.get('*/users/me/node-version-feedback', ({ request }) => {
           const url = new URL(request.url)
           requests.push(url)
+          // Bound a broken client's traffic so this regression cannot loop forever.
+          if (repeatCursor && requests.length > 2)
+            return HttpResponse.json(
+              { message: 'Unexpected repeated request' },
+              { status: 500 }
+            )
           if (inboxError)
             return HttpResponse.json(
               { message: 'Access denied' },
@@ -170,7 +178,10 @@ const meta: Meta<typeof AuthorPage> = {
               },
               unread_count: 0,
             })),
-            next_cursor: url.searchParams.has('cursor') ? null : 'older-page',
+            next_cursor:
+              !url.searchParams.has('cursor') || repeatCursor
+                ? 'older-page'
+                : null,
           })
         }),
       ],
@@ -218,6 +229,37 @@ export const UnresolvedVersions: Story = {
     )
   },
 }
+export const RepeatedInboxCursorStopsAndRecovers: Story = {
+  beforeEach: () => {
+    repeatCursor = true
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await canvas.findByRole('heading', { name: 'Version history' })
+    const inbox = {
+      queryKey: [PRIVATE_REGISTRY_KEY, 'firebase-user-123', 'author', 'inbox'],
+    }
+    await waitFor(() =>
+      expect(client.getQueryCache().findAll(inbox)[0]?.state.status).toBe(
+        'error'
+      )
+    )
+    expect(requests.map((url) => url.searchParams.get('cursor'))).toEqual([
+      null,
+      'older-page',
+    ])
+    expect(canvas.queryByText('Unresolved feedback')).toBeNull()
+    // A later valid response still loads every page and restores the badges.
+    repeatCursor = false
+    requests = []
+    await client.refetchQueries(inbox)
+    await waitFor(() =>
+      expect(canvas.getAllByText('Unresolved feedback')).toHaveLength(2)
+    )
+    expect(requests).toHaveLength(2)
+  },
+}
+
 export const PublicVersionHistory: Story = {
   beforeEach: () => {
     canEdit = false

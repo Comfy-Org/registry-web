@@ -144,11 +144,10 @@ function FeedbackConversation({
   }, [data, query.dataUpdatedAt, query.isError, markRead, accessDenied])
 
   const reportFailure = (error: unknown) => {
-    setFailure(
+    const conflict =
       (error as { response?: { status?: number } })?.response?.status === 409
-        ? 'conflict'
-        : 'request'
-    )
+    setFailure(conflict ? 'conflict' : 'request')
+    if (conflict) void query.refetch()
   }
   const submit = async () => {
     const body = feedbackBody(draft)

@@ -10,6 +10,8 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { useState, type ReactNode } from 'react'
 import { PRIVATE_REGISTRY_KEY } from '@/src/api/privateRegistry'
 
+const authorFeedback = feedbackHandlers()
+const adminFeedback = feedbackHandlers(true)
 let queryClient: QueryClient
 let inboxFailure: number | null = null
 function CaptureQueryClient({ children }: { children: ReactNode }) {
@@ -45,12 +47,14 @@ const meta: Meta<typeof FeedbackInbox> = {
   component: FeedbackInbox,
   args: { role: 'author' },
   beforeEach: () => {
+    authorFeedback.reset()
+    adminFeedback.reset()
     inboxFailure = null
   },
   parameters: {
     msw: {
       handlers: [
-        ...feedbackHandlers(),
+        ...authorFeedback.handlers,
         http.get('*/users/me/node-version-feedback', () =>
           HttpResponse.json({
             threads: [{ thread: feedbackFixture().thread, unread_count: 1 }],
@@ -98,7 +102,7 @@ export const Admin: Story = {
   parameters: {
     msw: {
       handlers: [
-        ...feedbackHandlers(true),
+        ...adminFeedback.handlers,
         http.get('*/admin/node-version-feedback', () =>
           HttpResponse.json({
             threads: [
@@ -347,14 +351,14 @@ async function verifyAccessLoss(
 export const RevokedAdminAccess: Story = {
   args: { role: 'admin' },
   parameters: {
-    msw: { handlers: [...feedbackHandlers(true), inboxHandler(true)] },
+    msw: { handlers: [...adminFeedback.handlers, inboxHandler(true)] },
   },
   play: async ({ canvasElement }) => verifyAccessLoss(canvasElement, true, 404),
 }
 
 export const ExpiredAuthorSession: Story = {
   parameters: {
-    msw: { handlers: [...feedbackHandlers(), inboxHandler(false)] },
+    msw: { handlers: [...authorFeedback.handlers, inboxHandler(false)] },
   },
   play: async ({ canvasElement }) =>
     verifyAccessLoss(canvasElement, false, 401),
@@ -363,7 +367,7 @@ export const ExpiredAuthorSession: Story = {
 export const TemporaryInboxFailure: Story = {
   parameters: {
     msw: {
-      handlers: [...feedbackHandlers(), inboxHandler(false, 'older-page')],
+      handlers: [...authorFeedback.handlers, inboxHandler(false, 'older-page')],
     },
   },
   play: async ({ canvasElement }) => {

@@ -105,8 +105,10 @@ replacement.thread = {
   version: '1.0.1',
 }
 replacement.target.thread_id = replacement.thread.id
+const replacementFeedback = feedbackHandlers(true, 'empty', sent, replacement)
 export const ReferenceEarlierIssueInNewFeedback: Story = {
   beforeEach: () => {
+    replacementFeedback.reset()
     sent.messages = []
     sent.states = []
   },
@@ -141,7 +143,7 @@ export const ReferenceEarlierIssueInNewFeedback: Story = {
           data.last_read_message_seq = 1
           return HttpResponse.json(data)
         }),
-        ...feedbackHandlers(true, 'empty', sent, replacement),
+        ...replacementFeedback.handlers,
       ],
     },
   },
