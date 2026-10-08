@@ -14,10 +14,10 @@ This file provides guidance to agents when working with code in this repository.
 
 ### Code Quality
 
-- `bun run lint` - Run ESLint
-- `bun run fix` - Run ESLint with --fix
-- `bun run format` - Check Prettier formatting
-- `bun run fmt` - Fix formatting with Prettier
+- `bun run _lint` - Run ESLint via `next lint`
+- `bun run _lint:biome` - Run Biome lint with --fix
+- `bun run fix` - Run oxlint with --fix
+- `bun run fmt` - Format code with oxfmt
 
 ### API & Code Generation
 
