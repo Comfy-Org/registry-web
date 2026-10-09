@@ -28,6 +28,8 @@ let supersedeStatus = 204
 let supersedeCalls: { url: string; body: FeedbackSupersedeInput }[] = []
 let deprecated: string[] = []
 let versionRequests: Request[] = []
+let versionsReady = Promise.resolve()
+let releaseVersions: (() => void) | undefined
 const publisher = { id: 'example-publisher', name: 'Example Publisher' }
 const versions = ['1.0.0', '0.9.0', '0.8.0', '0.7.0', '0.6.0'].map(
   (version, index) => ({
@@ -83,6 +85,8 @@ const meta: Meta<typeof AuthorPage> = {
     supersedeStatus = 204
     deprecated = []
     versionRequests = []
+    versionsReady = Promise.resolve()
+    releaseVersions = undefined
     uploadedVersion = null
     feedbackRevision = 1
   },
@@ -125,8 +129,9 @@ const meta: Meta<typeof AuthorPage> = {
             latest_version: uploadedVersion ?? versions[0],
           })
         ),
-        http.get('*/nodes/:nodeId/versions', ({ request }) => {
+        http.get('*/nodes/:nodeId/versions', async ({ request }) => {
           versionRequests.push(request)
+          await versionsReady
           return HttpResponse.json(
             (uploadedVersion ? [uploadedVersion, ...versions] : versions).map(
               (v) => ({
@@ -243,7 +248,10 @@ function feedbackRoleStory(admin: boolean, owner: boolean): Story {
     },
     play: async ({ canvasElement }) => {
       const canvas = within(canvasElement)
-      await waitFor(() => expect(requests).toHaveLength(2))
+      await waitFor(() =>
+        expect(canvas.getAllByText('Unresolved feedback')).toHaveLength(2)
+      )
+      expect(requests).toHaveLength(2)
       const inboxPath = owner
         ? '/users/me/node-version-feedback'
         : '/admin/node-version-feedback'
@@ -253,7 +261,7 @@ function feedbackRoleStory(admin: boolean, owner: boolean): Story {
       })
       if (owner) expect(supersede).toBeInTheDocument()
       else expect(supersede).toBeNull()
-      await userEvent.click(canvas.getAllByText('More')[0])
+      await userEvent.click((await canvas.findAllByText('More'))[0])
       await userEvent.click(
         await canvas.findByRole('button', { name: /Private feedback/ })
       )
@@ -304,11 +312,15 @@ export const OwnershipMustLoadBeforeFeedback: Story = {
     isAdmin = true
     holdPublisher = true
     publisherStatus = 500
+    versionsReady = new Promise<void>((resolve) => {
+      releaseVersions = resolve
+    })
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await waitFor(() => expect(typeof releasePublisher).toBe('function'))
-    await userEvent.click(canvas.getAllByText('More')[0])
+    releaseVersions!()
+    await userEvent.click((await canvas.findAllByText('More'))[0])
     expect(
       canvas.queryByRole('button', { name: /Private feedback/ })
     ).toBeNull()
