@@ -1,9 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
+import { pageFlow } from 'sflow'
 import {
   adminListVersionFeedback,
   authorListVersionFeedback,
   type AuthorListVersionFeedbackParams,
+  type FeedbackInbox,
 } from '@/src/api/feedback.generated'
 import {
   PRIVATE_REGISTRY_KEY,
@@ -27,31 +29,29 @@ export function useFeedbackInbox(
   )
   const key = [...scope, 'inbox', params, ...(allPages ? ['all-pages'] : [])]
   const [blocked, setBlocked] = usePrivateQueryRemoval(key)
-  const query = useQuery({
+  const query = useQuery<FeedbackInbox>({
     ...privateQueryOptions,
     queryKey: key,
     enabled: enabled && !!user && !blocked,
     queryFn: async ({ signal }) => {
       const fetchPage =
         role === 'admin' ? adminListVersionFeedback : authorListVersionFeedback
-      let page = await fetchPage(params, undefined, signal)
-      if (!allPages) return page
+      if (!allPages) return fetchPage(params, undefined, signal)
       // Version badges need the complete node-scoped summary, never message bodies
-      // or one request per version. Reuse the inbox API's cursor pagination.
-      const threads = [...page.threads]
-      const cursors = new Set<string>()
-      if (params.cursor) cursors.add(params.cursor)
-      while (page.next_cursor) {
-        if (cursors.has(page.next_cursor))
-          throw new Error('Repeated feedback inbox cursor')
-        cursors.add(page.next_cursor)
-        page = await fetchPage(
-          { ...params, cursor: page.next_cursor },
-          undefined,
-          signal
-        )
-        threads.push(...page.threads)
-      }
+      // or one request per version. Share page traversal with admin scan history.
+      const cursors = new Set<string | undefined>()
+      const threads = await pageFlow(
+        params.cursor,
+        async (cursor: string | undefined) => {
+          if (cursors.has(cursor))
+            throw new Error('Repeated feedback inbox cursor')
+          cursors.add(cursor)
+          const page = await fetchPage({ ...params, cursor }, undefined, signal)
+          return { data: page.threads, next: page.next_cursor || null }
+        }
+      )
+        .flat()
+        .toArray()
       return { threads, next_cursor: null }
     },
   })

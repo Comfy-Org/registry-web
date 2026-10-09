@@ -1,6 +1,6 @@
 import {
   NodeVersion,
-  useAdminListAllNodeVersions,
+  adminListAllNodeVersions,
 } from '@/src/api/feedback.generated'
 import {
   PRIVATE_REGISTRY_KEY,
@@ -8,7 +8,7 @@ import {
   isPrivateRegistryAccessDenied,
   clearPrivateRegistryCache,
 } from '@/src/api/privateRegistry'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
 import { compareBy } from 'comparing'
 import { Button } from 'flowbite-react'
@@ -24,6 +24,7 @@ import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 import { NodeVersionStatusToReadable } from 'src/mapper/nodeversion'
 import yaml from 'yaml'
 import { z } from 'zod'
+import { pageFlow } from 'sflow'
 import { NodeVersionStatus, useGetNode } from '@/src/api/generated'
 import { useNextTranslation } from '@/src/hooks/i18n'
 import { NodeStatusBadge } from './NodeStatusBadge'
@@ -200,28 +201,38 @@ export function NodeStatusReason(nv: NodeVersion) {
     () => [PRIVATE_REGISTRY_KEY, firebaseUser?.uid, 'admin'],
     [firebaseUser?.uid]
   )
-  const historyQuery = useAdminListAllNodeVersions(
-    {
-      nodeId: node_id!,
-      pageSize: 100,
-      include_status_reason: true,
-      include_deleted: true,
-    },
-    {
-      query: {
-        ...privateQueryOptions,
-        enabled: inView && !!firebaseUser,
-        queryKey: [...adminScope, 'scan-history', node_id],
-      },
-    }
-  )
+  const historyQuery = useQuery<NodeVersion[]>({
+    ...privateQueryOptions,
+    enabled: inView && !!firebaseUser,
+    queryKey: [...adminScope, 'scan-history', node_id],
+    // Approval comparison needs the whole history, including older/deleted versions.
+    queryFn: ({ signal }) =>
+      pageFlow(1, async (page) => {
+        const result = await adminListAllNodeVersions(
+          {
+            nodeId: node_id!,
+            page,
+            pageSize: 100,
+            include_status_reason: true,
+            include_deleted: true,
+          },
+          undefined,
+          signal
+        )
+        return {
+          data: result.versions ?? [],
+          next: page < (result.totalPages ?? 1) ? page + 1 : null,
+        }
+      })
+        .flat()
+        .uniqBy((version) => version.id)
+        .toArray(),
+  })
   const denied = isPrivateRegistryAccessDenied(historyQuery.error)
   useEffect(() => {
     if (denied) clearPrivateRegistryCache(client, adminScope)
   }, [denied, client, adminScope])
-  const nodeVersions = historyQuery.isError
-    ? undefined
-    : historyQuery.data?.versions
+  const nodeVersions = historyQuery.isError ? undefined : historyQuery.data
   const sortedNodeVersions = nodeVersions
     ? [...nodeVersions].sort(compareBy((e) => e.createdAt || e.id || ''))
     : nodeVersions

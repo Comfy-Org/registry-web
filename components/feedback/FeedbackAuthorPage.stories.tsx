@@ -19,6 +19,7 @@ let requests: URL[] = []
 let supersedeStatus = 204
 let supersedeCalls: { url: string; body: FeedbackSupersedeInput }[] = []
 let deprecated: string[] = []
+let versionRequests: Request[] = []
 const publisher = { id: 'example-publisher', name: 'Example Publisher' }
 const versions = ['1.0.0', '0.9.0', '0.8.0', '0.7.0', '0.6.0'].map(
   (version, index) => ({
@@ -65,6 +66,7 @@ const meta: Meta<typeof AuthorPage> = {
     supersedeCalls = []
     supersedeStatus = 204
     deprecated = []
+    versionRequests = []
     uploadedVersion = null
     feedbackRevision = 1
   },
@@ -91,8 +93,9 @@ const meta: Meta<typeof AuthorPage> = {
             latest_version: uploadedVersion ?? versions[0],
           })
         ),
-        http.get('*/nodes/:nodeId/versions', () =>
-          HttpResponse.json(
+        http.get('*/nodes/:nodeId/versions', ({ request }) => {
+          versionRequests.push(request)
+          return HttpResponse.json(
             (uploadedVersion ? [uploadedVersion, ...versions] : versions).map(
               (v) => ({
                 ...v,
@@ -100,7 +103,7 @@ const meta: Meta<typeof AuthorPage> = {
               })
             )
           )
-        ),
+        }),
         http.post(
           '*/publishers/:publisherId/nodes/:nodeId/versions/:versionId/feedback/supersede',
           async ({ request }) => {
@@ -340,11 +343,13 @@ export const NavigateAfterAccessLoss: Story = {
 export const SupersedeEarlierFeedback: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await userEvent.click(
-      await canvas.findByRole('button', {
-        name: 'Deprecate and close earlier feedback',
-      })
-    )
+    const trigger = await canvas.findByRole('button', {
+      name: 'Deprecate and close earlier feedback',
+    })
+    // Ownership loads after the initial public query, adding the Banned filter.
+    const displayed = new URL(versionRequests.at(-1)!.url)
+    const previousRequests = versionRequests.length
+    await userEvent.click(trigger)
     const dialog = within(await within(document.body).findByRole('dialog'))
     expect(dialog.getByText('0.9.0')).toBeInTheDocument()
     expect(dialog.getByText('0.8.0')).toBeInTheDocument()
@@ -386,6 +391,21 @@ export const SupersedeEarlierFeedback: Story = {
       ).toBeNull()
       expect(canvas.getAllByText('Unresolved feedback')).toHaveLength(1)
     })
+    expect(displayed.searchParams.getAll('statuses')).toContain(
+      'NodeVersionStatusFlagged'
+    )
+    // React Query invalidation alone cannot refresh this HTTP-cached URL.
+    const refreshed = versionRequests.filter(
+      (request) =>
+        request.url === displayed.href &&
+        request.headers.get('Cache-Control')?.includes('no-cache')
+    )
+    expect(refreshed).toHaveLength(1)
+    expect(
+      versionRequests
+        .slice(previousRequests)
+        .every((request) => request.url === displayed.href)
+    ).toBe(true)
   },
 }
 export const SupersedeConflictRequiresReview: Story = {

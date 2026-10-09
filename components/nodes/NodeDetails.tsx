@@ -14,6 +14,7 @@ import {
   NodeStatus,
   NodeVersion,
   NodeVersionStatus,
+  type ListNodeVersionsParams,
   useBanPublisherNode,
   useGetNode,
   useGetPermissionOnPublisherNodes,
@@ -160,17 +161,18 @@ const NodeDetails = () => {
   const warningForAdminEdit =
     isAdmin && !myPublishers?.map((e) => e.id)?.includes(publisherId) // if admin is editing a node that is not owned by them, show a warning
 
+  const versionParams: ListNodeVersionsParams = {
+    statuses: [
+      NodeVersionStatus.NodeVersionStatusActive,
+      NodeVersionStatus.NodeVersionStatusPending,
+      NodeVersionStatus.NodeVersionStatusFlagged,
+      // show rejected versions only to publisher
+      ...(!canEdit ? [] : [NodeVersionStatus.NodeVersionStatusBanned]),
+    ],
+  }
   const { data: nodeVersions, refetch: refetchVersions } = useListNodeVersions(
     nodeId as string,
-    {
-      statuses: [
-        NodeVersionStatus.NodeVersionStatusActive,
-        NodeVersionStatus.NodeVersionStatusPending,
-        NodeVersionStatus.NodeVersionStatusFlagged,
-        // show rejected versions only to publisher
-        ...(!canEdit ? [] : [NodeVersionStatus.NodeVersionStatusBanned]),
-      ],
-    },
+    versionParams,
     {
       query: {
         enabled: !!_nodeId,
@@ -565,6 +567,7 @@ const NodeDetails = () => {
                       nodeId={nodeId}
                       publisherId={publisherId}
                       versions={nodeVersions ?? []}
+                      versionParams={versionParams}
                       summaries={feedback.data?.threads ?? []}
                     />
                   )}

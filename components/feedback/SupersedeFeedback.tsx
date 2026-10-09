@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Button, Modal } from 'flowbite-react'
 import { useRef, useState } from 'react'
-import { type NodeVersion } from '@/src/api/generated'
+import {
+  type ListNodeVersionsParams,
+  type NodeVersion,
+} from '@/src/api/generated'
 import {
   authorSupersedeVersionFeedback,
   type FeedbackSummary,
@@ -24,6 +27,7 @@ type Props = {
   nodeId: string
   publisherId: string
   versions: NodeVersion[]
+  versionParams: ListNodeVersionsParams
   summaries: FeedbackSummary[]
 }
 type Selection = {
@@ -47,6 +51,7 @@ function SupersedeFeedbackContent({
   nodeId,
   publisherId,
   versions,
+  versionParams,
   summaries,
   userId,
 }: Props & { userId: string }) {
@@ -97,13 +102,15 @@ function SupersedeFeedbackContent({
           .slice(0, 100)
       : []
   const refresh = async () => {
-    await client.fetchQuery(
-      shouldInvalidate.getListNodeVersionsQueryOptions(
-        nodeId,
-        undefined,
-        INVALIDATE_CACHE_OPTION
-      )
+    const options = shouldInvalidate.getListNodeVersionsQueryOptions(
+      nodeId,
+      versionParams,
+      INVALIDATE_CACHE_OPTION
     )
+    // Replace any pre-mutation request and refresh the exact HTTP-cached URL
+    // displayed by the page, including its status filters.
+    await client.cancelQueries({ queryKey: options.queryKey, exact: true })
+    await client.fetchQuery(options)
     await Promise.all([
       client.invalidateQueries(
         {
@@ -119,8 +126,7 @@ function SupersedeFeedbackContent({
         {
           predicate: ({ queryKey }) =>
             typeof queryKey[0] === 'string' &&
-            (queryKey[0] === `/nodes/${nodeId}/versions` ||
-              queryKey[0].startsWith(`/nodes/${nodeId}/versions/`)),
+            queryKey[0].startsWith(`/nodes/${nodeId}/versions/`),
         },
         { throwOnError: true }
       ),

@@ -52,7 +52,7 @@ function FeedbackInboxContent({
   if (!user) return null
   return (
     <section
-      className="ph-no-capture my-6 space-y-3 rounded-lg border border-gray-700 p-4"
+      className="ph-no-capture my-6 space-y-3 rounded-lg border border-gray-700 p-4 text-gray-200"
       data-private="true"
       aria-label={t('Feedback inbox')}
     >

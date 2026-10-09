@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { afterEach as checkAccessibility } from '@storybook/addon-a11y/preview'
 import { getRouter } from '@storybook/nextjs-vite/router.mock'
 import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { http, HttpResponse } from 'msw'
@@ -11,6 +12,8 @@ let client: QueryClient
 let versionError: number | null = null
 let inboxError: number | null = null
 let scanError: number | null = null
+let scanPageGate: Promise<void> | undefined
+let releaseScanPage: () => void
 let readSeq = 1
 let versionRequests: URL[] = []
 let requests = { versions: 0, scans: 0, inbox: 0, reads: 0 }
@@ -25,6 +28,7 @@ const meta: Meta<typeof AdminPage> = {
     versionError = null
     inboxError = null
     scanError = null
+    scanPageGate = undefined
     readSeq = 1
     versionRequests = []
     requests = { versions: 0, scans: 0, inbox: 0, reads: 0 }
@@ -46,32 +50,41 @@ const meta: Meta<typeof AdminPage> = {
             name: 'Admin',
           })
         ),
-        http.get('*/admin/nodeversions', ({ request }) => {
-          const pageSize = Number(
-            new URL(request.url).searchParams.get('pageSize')
-          )
-          versionRequests.push(new URL(request.url))
-          requests[pageSize === 100 ? 'scans' : 'versions'] += 1
-          const error = pageSize === 100 ? scanError : versionError
+        http.get('*/admin/nodeversions', async ({ request }) => {
+          const url = new URL(request.url)
+          const pageSize = Number(url.searchParams.get('pageSize'))
+          const page = Number(url.searchParams.get('page') ?? 1)
+          const isScan = pageSize === 100
+          versionRequests.push(url)
+          requests[isScan ? 'scans' : 'versions'] += 1
+          if (isScan && page === 2) await scanPageGate
+          // Revoke access on a later page after the first page has succeeded.
+          const error = isScan ? (page > 1 ? scanError : null) : versionError
           if (error)
             return HttpResponse.json(
               { message: 'Version list unavailable' },
               { status: error }
             )
+          const version = {
+            id: versionId,
+            node_id: 'example',
+            version: '1.0.0',
+            status: 'NodeVersionStatusFlagged',
+            status_reason: 'Fictional scan',
+            tags_admin: [],
+          }
+          const versions = isScan
+            ? Array.from({ length: 201 }, (_, i) => ({
+                ...version,
+                id: i === 0 ? versionId : `scan-version-${i}`,
+                version: `1.${i}.0`,
+              })).slice((page - 1) * pageSize, page * pageSize)
+            : [version]
           return HttpResponse.json({
-            versions: [
-              {
-                id: versionId,
-                node_id: 'example',
-                version: '1.0.0',
-                status: 'NodeVersionStatusFlagged',
-                status_reason: 'Fictional scan',
-                tags_admin: [],
-              },
-            ],
-            total: 1,
-            totalPages: 1,
-            page: 1,
+            versions,
+            total: isScan ? 201 : 1,
+            totalPages: isScan ? 3 : 1,
+            page,
             pageSize,
           })
         }),
@@ -122,6 +135,39 @@ const meta: Meta<typeof AdminPage> = {
 }
 export default meta
 type Story = StoryObj<typeof meta>
+export const PrivateReviewControlsHaveReadableContrast: Story = {
+  decorators: [
+    (Story) => (
+      <div className="bg-gray-900">
+        <Story />
+      </div>
+    ),
+  ],
+  parameters: {
+    a11y: {
+      context: {
+        include: [
+          '[aria-label="Feedback inbox"]',
+          'details[data-private] > summary',
+        ],
+      },
+      options: { runOnly: ['color-contrast'] },
+    },
+  },
+  play: async (context) => {
+    const canvas = within(context.canvasElement)
+    await expect(
+      await canvas.findByRole('button', { name: /example · v1.0.0/ })
+    ).toBeVisible()
+    await expect(
+      await canvas.findByText('Scan results · Admin only')
+    ).toBeVisible()
+    await checkAccessibility(context)
+    expect(
+      context.reporting.reports.find((report) => report.type === 'a11y')
+    ).toMatchObject({ status: 'passed', result: { violations: [] } })
+  },
+}
 export const HandlingFilterPreservesOtherFiltersAndClearsSelection: Story = {
   parameters: {
     nextjs: {
@@ -381,7 +427,7 @@ export const ScanHistoryDenialClosesFeedback: Story = {
       'Discard after scan endpoint revokes access.'
     )
     // Positive control: the mounted scan panel really does poll automatically.
-    await waitFor(() => expect(requests.scans).toBeGreaterThan(1))
+    await waitFor(() => expect(requests.scans).toBeGreaterThan(3))
     scanError = 401
     await client.refetchQueries({
       predicate: (query) => query.queryKey.includes('scan-history'),
@@ -401,6 +447,39 @@ export const ScanHistoryDenialClosesFeedback: Story = {
     await new Promise((resolve) => setTimeout(resolve, 350))
     expect(requests.scans).toBe(stoppedAt)
     expect(canvas.queryByText('Scan results · Admin only')).toBeNull()
+  },
+}
+
+export const AccessLossCancelsRemainingScanPages: Story = {
+  beforeEach: () => {
+    scanPageGate = new Promise<void>((resolve) => {
+      releaseScanPage = resolve
+    })
+    return () => releaseScanPage()
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click(await canvas.findByText('Scan results · Admin only'))
+    await waitFor(() => expect(requests.scans).toBe(2))
+    versionError = 403
+    await client.refetchQueries({
+      predicate: (query) => query.queryKey.includes('admin-versions'),
+    })
+    await waitFor(() =>
+      expect(canvas.queryByText('Scan results · Admin only')).toBeNull()
+    )
+    releaseScanPage()
+    // A late response must neither restore private data nor fetch page three.
+    await new Promise((resolve) => setTimeout(resolve, 350))
+    expect(requests.scans).toBe(2)
+    expect(
+      client
+        .getQueryCache()
+        .findAll({
+          queryKey: ['registry-private', 'firebase-user-123', 'admin'],
+        })
+        .every((query) => query.state.data === undefined)
+    ).toBe(true)
   },
 }
 

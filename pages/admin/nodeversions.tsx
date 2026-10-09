@@ -228,12 +228,7 @@ function NodeVersionList({}) {
   const versions =
     accessDenied || getAllNodeVersionsQuery.isError
       ? []
-      : (getAllNodeVersionsQuery.data?.versions || [])
-          // The legacy moderation client expects a mutable tags array.
-          .map((nv) => ({
-            ...nv,
-            tags_admin: nv.tags_admin ? [...nv.tags_admin] : undefined,
-          }))
+      : getAllNodeVersionsQuery.data?.versions || []
 
   const updateNodeVersionMutation = useAdminUpdateNodeVersion()
 
@@ -1149,7 +1144,10 @@ function NodeVersionList({}) {
                 {t('Private feedback')}
               </Button>
             )}
-            <details className="ph-no-capture" data-private="true">
+            <details
+              className="ph-no-capture text-gray-200"
+              data-private="true"
+            >
               <summary className="cursor-pointer py-2">
                 {t('Scan results · Admin only')}
               </summary>

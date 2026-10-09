@@ -106,12 +106,12 @@ export const Author: Story = {
 
 function markdownStory(role: 'admin' | 'author'): Story {
   const mock = feedbackHandlers(role === 'admin')
-  const data = feedbackFixture(role === 'admin')
-  data.messages[0].sender_user_id = 'other-person'
-  data.messages[0].sender_role = role === 'admin' ? 'author' : 'admin'
-  data.messages[0].sender_name =
+  const fixture = feedbackFixture(role === 'admin')
+  fixture.messages[0].sender_user_id = 'other-person'
+  fixture.messages[0].sender_role = role === 'admin' ? 'author' : 'admin'
+  fixture.messages[0].sender_name =
     '<img src="/feedback-name-probe" onerror="document.documentElement.dataset.feedbackXss=1">'
-  data.messages[0].body = [
+  fixture.messages[0].body = [
     '## Installation review',
     '**Remove the script** and *pin dependencies*.',
     '- Verify offline installation\n- Share the tested nodepack version',
@@ -124,8 +124,8 @@ function markdownStory(role: 'admin' | 'author'): Story {
     '[script URL](javascript:alert%281%29) [encoded URL](jav&#x61;script:alert%281%29) [data URL](data:text/html,test) [VBScript URL](vbscript:msgbox%281%29)',
     '![Verification image](https://example.invalid/private-feedback-tracker)',
   ].join('\n\n')
-  data.messages.push({
-    ...data.messages[0],
+  fixture.messages.push({
+    ...fixture.messages[0],
     id: '33333333-3333-4333-8333-333333333333',
     seq: 2,
     sender_user_id: 'firebase-user-123',
@@ -133,10 +133,14 @@ function markdownStory(role: 'admin' | 'author'): Story {
     sender_role: role,
     body: '**Follow-up** with the verification details.',
   })
-  data.thread!.last_message_seq = 2
+  fixture.thread!.last_message_seq = 2
+  let data = structuredClone(fixture)
   return {
     args: { role },
-    beforeEach: mock.reset,
+    beforeEach: () => {
+      mock.reset()
+      data = structuredClone(fixture)
+    },
     parameters: {
       msw: {
         handlers: [
@@ -196,6 +200,53 @@ function markdownStory(role: 'admin' | 'author'): Story {
       )
       expect(ownStyle.boxShadow).not.toBe('none')
       expect(ownStyle.boxShadow).not.toBe(otherStyle.boxShadow)
+      const latestShadow = ownStyle.boxShadow
+      const olderShadow = otherStyle.boxShadow
+      const ownBackground = ownStyle.backgroundColor
+      const otherBackground = otherStyle.backgroundColor
+
+      // Alternate incoming and outgoing updates. Ownership must remain visible
+      // when the latest ring moves, including across multiple older own replies.
+      for (const [sender, body] of [
+        [fixture.messages[0], 'Additional review'],
+        [fixture.messages[1], 'Verification update'],
+        [fixture.messages[0], 'Final review'],
+      ] as const) {
+        data.messages.push({
+          ...sender,
+          id: crypto.randomUUID(),
+          seq: data.messages.length + 1,
+          sender_name:
+            sender.sender_user_id === 'other-person'
+              ? 'Reviewer'
+              : 'Current user',
+          body,
+        })
+        data.thread!.last_message_seq = data.messages.length
+        data.thread!.revision++
+        await queryClient.refetchQueries({
+          queryKey: [PRIVATE_REGISTRY_KEY, 'firebase-user-123', role],
+        })
+        const newest = (await canvas.findByText(body)).closest('article')!
+        expect(canvas.getAllByText('Latest feedback')).toHaveLength(1)
+        expect(within(newest).getByText('Latest feedback')).toBeInTheDocument()
+        const articles = canvas
+          .getByLabelText('Feedback messages')
+          .querySelectorAll('article')
+        expect(articles).toHaveLength(data.messages.length)
+        for (const [index, article] of Array.from(articles).entries()) {
+          const own =
+            data.messages[index].sender_user_id === 'firebase-user-123'
+          const style = getComputedStyle(article)
+          expect(style.backgroundColor).toBe(
+            own ? ownBackground : otherBackground
+          )
+          expect(!!within(article).queryByText('You')).toBe(own)
+          expect(style.boxShadow).toBe(
+            article === newest ? latestShadow : olderShadow
+          )
+        }
+      }
     },
   }
 }

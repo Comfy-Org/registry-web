@@ -67,7 +67,7 @@ const meta: Meta<typeof FeedbackInbox> = {
   decorators: [
     (Story) => (
       <CaptureQueryClient>
-        <div className="max-w-3xl p-6 text-white">
+        <div className="max-w-3xl bg-gray-900 p-6">
           <Story />
         </div>
       </CaptureQueryClient>
