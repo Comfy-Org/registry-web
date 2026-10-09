@@ -12,6 +12,14 @@ import { PRIVATE_REGISTRY_KEY } from '@/src/api/privateRegistry'
 
 let client: QueryClient
 let canEdit = true
+let isAdmin = false
+let memberRole = 'owner'
+let publisherStatus = 200
+let releasePublisher: (() => void) | undefined
+let holdPublisher = false
+let threadRequests: URL[] = []
+let messageRequests: URL[] = []
+let acceptReply = false
 let inboxError: number | null = null
 let repeatCursor = false
 let resolved = false
@@ -59,6 +67,14 @@ const meta: Meta<typeof AuthorPage> = {
   component: AuthorPage,
   beforeEach: () => {
     canEdit = true
+    isAdmin = false
+    memberRole = 'owner'
+    publisherStatus = 200
+    releasePublisher = undefined
+    holdPublisher = false
+    threadRequests = []
+    messageRequests = []
+    acceptReply = false
     inboxError = null
     repeatCursor = false
     resolved = false
@@ -80,6 +96,22 @@ const meta: Meta<typeof AuthorPage> = {
     },
     msw: {
       handlers: [
+        http.get('*/publishers/example-publisher', async () => {
+          if (holdPublisher)
+            await new Promise<void>((resolve) => {
+              releasePublisher = resolve
+            })
+          return HttpResponse.json(
+            {
+              ...publisher,
+              members: [
+                { user: { id: 'another-owner' }, role: 'owner' },
+                { user: { id: 'firebase-user-123' }, role: memberRole },
+              ],
+            },
+            { status: publisherStatus }
+          )
+        }),
         http.get('*/nodes/:nodeId', ({ params }) =>
           HttpResponse.json({
             id: params.nodeId,
@@ -121,21 +153,26 @@ const meta: Meta<typeof AuthorPage> = {
         http.get('*/nodes/:nodeId/versions/1.0.0', () =>
           HttpResponse.json(versions[0])
         ),
-        http.get(
-          '*/publishers/:publisherId/nodes/:nodeId/versions/:versionId/feedback',
-          () =>
-            HttpResponse.json({
-              ...feedbackFixture(),
-              last_read_message_seq: 1,
-              unread_count: 0,
-            })
-        ),
-        http.post(
-          '*/publishers/:publisherId/nodes/:nodeId/versions/:versionId/feedback/messages',
-          () => HttpResponse.json({ message: 'Access denied' }, { status: 404 })
-        ),
+        http.get(/\/versions\/[^/]+\/feedback$/, ({ request }) => {
+          const url = new URL(request.url)
+          threadRequests.push(url)
+          return HttpResponse.json({
+            ...feedbackFixture(url.pathname.startsWith('/admin/')),
+            last_read_message_seq: 1,
+            unread_count: 0,
+          })
+        }),
+        http.post(/\/feedback\/messages$/, ({ request }) => {
+          const url = new URL(request.url)
+          messageRequests.push(url)
+          return acceptReply
+            ? HttpResponse.json(
+                feedbackFixture(url.pathname.startsWith('/admin/'))
+              )
+            : HttpResponse.json({ message: 'Access denied' }, { status: 404 })
+        }),
         http.get('*/users', () =>
-          HttpResponse.json({ id: 'firebase-user-123', isAdmin: false })
+          HttpResponse.json({ id: 'firebase-user-123', isAdmin })
         ),
         http.get('*/users/publishers', () =>
           HttpResponse.json(canEdit ? [publisher] : [])
@@ -144,55 +181,181 @@ const meta: Meta<typeof AuthorPage> = {
           '*/publishers/example-publisher/nodes/:nodeId/permissions',
           () => HttpResponse.json({ canEdit })
         ),
-        http.get('*/users/me/node-version-feedback', ({ request }) => {
-          const url = new URL(request.url)
-          requests.push(url)
-          // Bound a broken client's traffic so this regression cannot loop forever.
-          if (repeatCursor && requests.length > 2)
-            return HttpResponse.json(
-              { message: 'Unexpected repeated request' },
-              { status: 500 }
-            )
-          if (inboxError)
-            return HttpResponse.json(
-              { message: 'Access denied' },
-              { status: inboxError }
-            )
-          const states = [
-            resolved ? 'resolved' : 'awaiting_author',
-            'resolved',
-            'awaiting_admin',
-            'awaiting_author',
-          ]
-          const indices = url.searchParams.has('cursor') ? [2, 3] : [0, 1]
-          return HttpResponse.json({
-            threads: indices.map((index) => ({
-              thread: {
-                ...feedbackFixture().thread,
-                node_id: url.searchParams.get('nodeId'),
-                id: versions[index].id,
-                version_id: versions[index].id,
-                version: versions[index].version,
-                revision: feedbackRevision,
-                state: deprecated.includes(versions[index].id)
-                  ? 'resolved'
-                  : states[index],
-                archived: index === 3,
-              },
-              unread_count: 0,
-            })),
-            next_cursor:
-              !url.searchParams.has('cursor') || repeatCursor
-                ? 'older-page'
-                : null,
-          })
-        }),
+        http.get(
+          /\/(?:users\/me|admin)\/node-version-feedback$/,
+          ({ request }) => {
+            const url = new URL(request.url)
+            requests.push(url)
+            // Bound a broken client's traffic so this regression cannot loop forever.
+            if (repeatCursor && requests.length > 2)
+              return HttpResponse.json(
+                { message: 'Unexpected repeated request' },
+                { status: 500 }
+              )
+            if (inboxError)
+              return HttpResponse.json(
+                { message: 'Access denied' },
+                { status: inboxError }
+              )
+            const states = [
+              resolved ? 'resolved' : 'awaiting_author',
+              'resolved',
+              'awaiting_admin',
+              'awaiting_author',
+            ]
+            const indices = url.searchParams.has('cursor') ? [2, 3] : [0, 1]
+            return HttpResponse.json({
+              threads: indices.map((index) => ({
+                thread: {
+                  ...feedbackFixture().thread,
+                  node_id: url.searchParams.get('nodeId'),
+                  id: versions[index].id,
+                  version_id: versions[index].id,
+                  version: versions[index].version,
+                  revision: feedbackRevision,
+                  state: deprecated.includes(versions[index].id)
+                    ? 'resolved'
+                    : states[index],
+                  archived: index === 3,
+                },
+                unread_count: 0,
+              })),
+              next_cursor:
+                !url.searchParams.has('cursor') || repeatCursor
+                  ? 'older-page'
+                  : null,
+            })
+          }
+        ),
       ],
     },
   },
 }
 export default meta
 type Story = StoryObj<typeof meta>
+
+function feedbackRoleStory(admin: boolean, owner: boolean): Story {
+  return {
+    beforeEach: () => {
+      isAdmin = admin
+      memberRole = owner ? 'owner' : 'member'
+      acceptReply = true
+    },
+    play: async ({ canvasElement }) => {
+      const canvas = within(canvasElement)
+      await waitFor(() => expect(requests).toHaveLength(2))
+      const inboxPath = owner
+        ? '/users/me/node-version-feedback'
+        : '/admin/node-version-feedback'
+      expect(requests.every((url) => url.pathname === inboxPath)).toBe(true)
+      const supersede = canvas.queryByRole('button', {
+        name: 'Deprecate and close earlier feedback',
+      })
+      if (owner) expect(supersede).toBeInTheDocument()
+      else expect(supersede).toBeNull()
+      await userEvent.click(canvas.getAllByText('More')[0])
+      await userEvent.click(
+        await canvas.findByRole('button', { name: /Private feedback/ })
+      )
+      const input = await canvas.findByLabelText(
+        owner
+          ? 'Private reply to the Registry team'
+          : 'Private feedback to the author'
+      )
+      const threadPath = `${owner ? '/publishers/example-publisher' : '/admin'}/nodes/example/versions/${versionId}/feedback`
+      expect(threadRequests.map((url) => url.pathname)).toEqual([threadPath])
+      const resolve = canvas.queryByRole('button', {
+        name: 'Resolve conversation',
+      })
+      if (owner) expect(resolve).toBeNull()
+      else expect(resolve).toBeInTheDocument()
+      await userEvent.type(input, 'Reply from the selected role.')
+      publisherStatus = 500
+      await client.refetchQueries({
+        queryKey: [
+          PRIVATE_REGISTRY_KEY,
+          'firebase-user-123',
+          'feedback-publisher',
+        ],
+      })
+      expect(input).toBeInTheDocument()
+      expect(input).toHaveValue('Reply from the selected role.')
+      expect(messageRequests).toHaveLength(0)
+      publisherStatus = 200
+      await userEvent.click(
+        canvas.getByRole('button', {
+          name: owner ? 'Send reply' : 'Send feedback',
+        })
+      )
+      await waitFor(() => expect(input).toHaveValue(''))
+      expect(messageRequests.map((url) => url.pathname)).toEqual([
+        `${threadPath}/messages`,
+      ])
+      expect(requests.every((url) => url.pathname === inboxPath)).toBe(true)
+    },
+  }
+}
+export const OwnerRepliesAsAuthor = feedbackRoleStory(false, true)
+export const AdminOwnerRepliesAsAuthor = feedbackRoleStory(true, true)
+export const AdminMemberUsesAdminScope = feedbackRoleStory(true, false)
+
+export const OwnershipMustLoadBeforeFeedback: Story = {
+  beforeEach: () => {
+    isAdmin = true
+    holdPublisher = true
+    publisherStatus = 500
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await waitFor(() => expect(typeof releasePublisher).toBe('function'))
+    await userEvent.click(canvas.getAllByText('More')[0])
+    expect(
+      canvas.queryByRole('button', { name: /Private feedback/ })
+    ).toBeNull()
+    expect(requests).toHaveLength(0)
+    releasePublisher!()
+    await waitFor(() => expect(client.isFetching()).toBe(0))
+    expect(
+      canvas.queryByRole('button', { name: /Private feedback/ })
+    ).toBeNull()
+    expect(requests).toHaveLength(0)
+    holdPublisher = false
+    publisherStatus = 200
+    await client.refetchQueries({ queryKey: [PRIVATE_REGISTRY_KEY] })
+    await userEvent.click(
+      await canvas.findByRole('button', { name: /Private feedback/ })
+    )
+    await canvas.findByLabelText('Private reply to the Registry team')
+    expect(
+      threadRequests.every((url) => url.pathname.startsWith('/publishers/'))
+    ).toBe(true)
+    await userEvent.type(
+      canvas.getByLabelText('Private reply to the Registry team'),
+      'Discard this draft when access is denied.'
+    )
+    publisherStatus = 403
+    await client.refetchQueries({
+      queryKey: [
+        PRIVATE_REGISTRY_KEY,
+        'firebase-user-123',
+        'feedback-publisher',
+      ],
+    })
+    await waitFor(() =>
+      expect(
+        canvas.queryByLabelText('Private reply to the Registry team')
+      ).toBeNull()
+    )
+    await waitFor(() =>
+      expect(
+        client.getQueryCache().findAll({
+          queryKey: [PRIVATE_REGISTRY_KEY, 'firebase-user-123', 'author'],
+          predicate: (query) => query.state.data !== undefined,
+        })
+      ).toHaveLength(0)
+    )
+  },
+}
 export const UnresolvedVersions: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

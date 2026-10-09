@@ -385,7 +385,7 @@ function FeedbackConversation({
         <p role="alert" className="text-sm text-yellow-200">
           {failure === 'conflict'
             ? t(
-                'The conversation changed. Refresh and try again. Your draft is preserved.'
+                'The conversation changed. Review the latest conversation before trying again. Your draft is preserved.'
               )
             : t(
                 'The request failed. Your draft is preserved; please try again.'

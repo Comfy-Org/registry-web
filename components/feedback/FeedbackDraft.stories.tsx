@@ -204,6 +204,9 @@ export const ConflictRefreshesWithoutResendingDraft: Story = {
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
     await canvas.findByText('Another admin started this conversation.')
     expect(canvas.getByRole('textbox')).toHaveValue(draft)
+    expect(canvas.getByRole('alert')).toHaveTextContent(
+      'The conversation changed. Review the latest conversation before trying again. Your draft is preserved.'
+    )
     expect(requests).toHaveLength(1)
     expect(requests[0].target.thread_id).toBeNull()
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))

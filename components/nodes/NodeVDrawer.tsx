@@ -2,7 +2,10 @@ import { FeedbackThread } from '@/components/feedback/FeedbackThread'
 import { InstallationTags } from '@/components/feedback/InstallationTags'
 import { UnresolvedFeedbackBadge } from '@/components/feedback/UnresolvedFeedbackBadge'
 import type { FeedbackThread as Thread } from '@/src/api/feedback.generated'
-import { privateFeedbackEnabled } from '@/components/feedback/useVersionFeedback'
+import {
+  privateFeedbackEnabled,
+  type FeedbackTarget,
+} from '@/components/feedback/useVersionFeedback'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Spinner } from 'flowbite-react'
 import React, { useState } from 'react'
@@ -26,7 +29,7 @@ type NodeVDrawerProps = {
   toggleDrawer: () => void
   publisherId?: string // Means don't deprecate version.
   canEdit?: boolean
-  isAdmin?: boolean
+  feedbackRole?: FeedbackTarget['role']
   feedbackThread?: Thread
   onUpdate: (version: NodeVersion) => void
   nodeId: string
@@ -41,7 +44,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
   toggleDrawer,
   onUpdate,
   canEdit = false,
-  isAdmin = false,
+  feedbackRole,
   feedbackThread,
 }) => {
   const { t } = useNextTranslation()
@@ -147,7 +150,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             </svg>
           </button>
         </div>
-        {privateFeedbackEnabled && canEdit && publisherId && (
+        {privateFeedbackEnabled && feedbackRole && publisherId && (
           <div
             className="mb-5 flex gap-3"
             role="group"
@@ -172,13 +175,13 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         )}
         {tab === 'feedback' &&
         privateFeedbackEnabled &&
-        canEdit &&
+        feedbackRole &&
         publisherId ? (
           <FeedbackThread
             nodeId={nodeId}
             versionId={version.id}
             publisherId={publisherId}
-            role={isAdmin ? 'admin' : 'author'}
+            role={feedbackRole}
           />
         ) : (
           <>

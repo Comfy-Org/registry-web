@@ -353,7 +353,10 @@ function NodeVersionList({}) {
   ) => {
     if (nv.status !== NodeVersionStatus.NodeVersionStatusFlagged) {
       toast.error(
-        `Node version ${nv.node_id}@${nv.version} is not flagged, skip`
+        t('Node version {{id}}@{{version}} is not flagged, skip', {
+          id: nv.node_id,
+          version: nv.version,
+        })
       )
       return
     }
@@ -384,7 +387,10 @@ function NodeVersionList({}) {
       nv.status !== NodeVersionStatus.NodeVersionStatusActive
     ) {
       toast.error(
-        `Node version ${nv.node_id}@${nv.version} is not flagged or active, skip`
+        t('Node version {{id}}@{{version}} is not flagged or active, skip', {
+          id: nv.node_id,
+          version: nv.version,
+        })
       )
       return
     }

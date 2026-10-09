@@ -18,6 +18,7 @@ import {
   useBanPublisherNode,
   useGetNode,
   useGetPermissionOnPublisherNodes,
+  useGetPublisher,
   useGetUser,
   useListNodeVersions,
   useListPublishersForUser,
@@ -25,6 +26,13 @@ import {
 } from '@/src/api/generated'
 import nodesLogo from '@/src/assets/images/nodesLogo.svg'
 import { useNextTranslation } from '@/src/hooks/i18n'
+import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
+import {
+  PRIVATE_REGISTRY_KEY,
+  privateQueryOptions,
+  isPrivateRegistryAccessDenied,
+  clearPrivateRegistryCache,
+} from '@/src/api/privateRegistry'
 import { useFeedbackInbox } from '@/components/feedback/useFeedbackInbox'
 import { privateFeedbackEnabled } from '@/components/feedback/useVersionFeedback'
 import { UnresolvedFeedbackBadge } from '@/components/feedback/UnresolvedFeedbackBadge'
@@ -139,18 +147,57 @@ const NodeDetails = () => {
     }
   )
 
-  const { data: user } = useGetUser()
+  const [firebaseUser] = useFirebaseUser()
+  const identity = useGetUser({
+    query: {
+      ...privateQueryOptions,
+      queryKey: [PRIVATE_REGISTRY_KEY, firebaseUser?.uid, 'node-user'],
+      enabled: !!firebaseUser,
+    },
+  })
+  const user = identity.data
   const isAdmin = user?.isAdmin
   const canEdit = isAdmin || permissions?.canEdit
+  // canEdit includes the legacy admin bypass; only an owner membership identifies
+  // the author's role. Keep this identity-bound and out of persisted public data.
+  const publisher = useGetPublisher(publisherId ?? '', {
+    query: {
+      ...privateQueryOptions,
+      queryKey: [
+        PRIVATE_REGISTRY_KEY,
+        firebaseUser?.uid,
+        'feedback-publisher',
+        publisherId,
+      ],
+      enabled:
+        privateFeedbackEnabled && !!firebaseUser && !!publisherId && !!canEdit,
+    },
+  })
+  const isOwner = publisher.data?.members?.some(
+    (member) => member.user?.id === firebaseUser?.uid && member.role === 'owner'
+  )
+  const feedbackIdentityDenied =
+    isPrivateRegistryAccessDenied(identity.error) ||
+    isPrivateRegistryAccessDenied(publisher.error)
+  // A temporary metadata outage must not switch roles or discard an unsent reply.
+  const feedbackRole =
+    firebaseUser &&
+    canEdit &&
+    identity.data &&
+    publisher.data &&
+    !feedbackIdentityDenied
+      ? isOwner
+        ? 'author'
+        : isAdmin
+          ? 'admin'
+          : undefined
+      : undefined
   const feedback = useFeedbackInbox(
-    'author',
+    feedbackRole ?? 'author',
     { nodeId, publisherId },
     {
       enabled:
-        privateFeedbackEnabled &&
-        !!_nodeId &&
-        !!publisherId &&
-        !!permissions?.canEdit,
+        privateFeedbackEnabled && !!_nodeId && !!publisherId && !!feedbackRole,
       allPages: true,
     }
   )
@@ -183,6 +230,17 @@ const NodeDetails = () => {
   const isUnclaimed = node?.publisher?.id === UNCLAIMED_ADMIN_PUBLISHER_ID
 
   const queryClient = useQueryClient()
+  React.useEffect(() => {
+    if (!feedbackIdentityDenied || !firebaseUser) return
+    // Clear both possible roles, retaining the failed metadata queries so their
+    // removal cannot immediately enable them again and restart a denial loop.
+    for (const role of ['author', 'admin'])
+      clearPrivateRegistryCache(queryClient, [
+        PRIVATE_REGISTRY_KEY,
+        firebaseUser.uid,
+        role,
+      ])
+  }, [feedbackIdentityDenied, firebaseUser, queryClient])
   const banNodeMutation = useBanPublisherNode()
   const updateNodeMutation = useUpdateNode()
 
@@ -560,7 +618,7 @@ const NodeDetails = () => {
                   {t('Version history')}
                 </h2>
                 {privateFeedbackEnabled &&
-                  permissions?.canEdit &&
+                  feedbackRole === 'author' &&
                   publisherId &&
                   !feedback.accessDenied && (
                     <SupersedeFeedback
@@ -856,7 +914,7 @@ const NodeDetails = () => {
             versionNumber={selectedVersion.version ?? ''}
             canEdit={canEdit}
             feedbackThread={versionFeedback(selectedVersion.id)}
-            isAdmin={!!isAdmin}
+            feedbackRole={feedbackRole}
             onUpdate={() => {
               refetchVersions()
             }}
