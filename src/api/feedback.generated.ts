@@ -29,13 +29,6 @@ export interface FeedbackError {
   error?: string
 }
 
-export type AdminNodeVersionAllOf = {
-  /** Raw scan evidence and internal moderation history. Registry admins only. */
-  status_reason: string
-}
-
-export type AdminNodeVersion = NodeVersion & AdminNodeVersionAllOf
-
 /**
  * unprocessed: no feedback messages; processed: the latest message is from an admin; needs_response: the latest message is from an author. Only the current Publisher conversation is considered, including resolved or archived conversations.
  */
@@ -214,14 +207,6 @@ export interface FeedbackReadResult {
   last_read_message_seq: number
 }
 
-export interface AdminVersionList {
-  versions: AdminNodeVersion[]
-  total: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
-
 export interface ErrorResponse {
   error: string
   message: string
@@ -243,10 +228,22 @@ export interface NodeVersion {
   deprecated?: boolean
   /** The status of the node version. */
   status?: NodeVersionStatus
-  /** Public installation information used by Manager policies. Only trusted administrators can write these tags. */
-  readonly tags_admin?: readonly string[]
+  status_reason?: string
+  tags?: string[]
+  /** Public installation-policy tags used by users and Manager. Written only by admins/scanners; publisher-supplied values are ignored on publish. */
+  tags_admin?: string[]
   /** The unique identifier of the node. */
   node_id?: string
+  /** The status of comfy node extraction process. */
+  comfy_node_extract_status?: string
+  /** Supported versions of ComfyUI */
+  supported_comfyui_version?: string
+  /** Supported versions of ComfyUI frontend */
+  supported_comfyui_frontend_version?: string
+  /** List of operating systems that this node supports */
+  supported_os?: string[]
+  /** List of accelerators (e.g. CUDA, DirectML, ROCm) that this node supports */
+  supported_accelerators?: string[]
 }
 
 export type NodeVersionStatus =
@@ -260,6 +257,48 @@ export const NodeVersionStatus = {
   NodeVersionStatusPending: 'NodeVersionStatusPending',
   NodeVersionStatusFlagged: 'NodeVersionStatusFlagged',
 } as const
+
+export type AdminListAllNodeVersionsParams = {
+  /**
+   * Exact nodepack version number. An empty value matches no versions.
+   */
+  version?: string
+  /**
+   * Latest sender in the current Publisher conversation, independently of resolution. Applied before counting and pagination.
+   */
+  feedback_status?: VersionFeedbackStatus
+  nodeId?: string
+  statuses?: NodeVersionStatus[]
+  include_status_reason?: boolean
+  /**
+   * The page number to retrieve.
+   */
+  page?: number
+  /**
+   * The number of items to include per page.
+   */
+  pageSize?: number
+  /**
+   * search for status_reason, case insensitive
+   */
+  status_reason?: string
+  /**
+   * Include soft-deleted node versions in the results
+   */
+  include_deleted?: boolean
+}
+
+export type AdminListAllNodeVersions200 = {
+  /** Total number of node versions available */
+  total?: number
+  versions?: NodeVersion[]
+  /** Current page number */
+  page?: number
+  /** Maximum number of node versions per page. Maximum is 100. */
+  pageSize?: number
+  /** Total number of pages available */
+  totalPages?: number
+}
 
 export type AdminGetVersionFeedbackParams = {
   /**
@@ -301,30 +340,177 @@ export type AuthorListVersionFeedbackParams = {
   cursor?: string
 }
 
-export type AdminListNodeVersionsParams = {
-  nodeId?: string
-  statuses?: NodeVersionStatus[]
-  status_reason?: string
-  /**
-   * Exact nodepack version number. Applied before pagination; combine with nodeId for a replacement-version link. An explicitly empty value matches no versions.
-   */
-  version?: string
-  /**
-   * Filter by the latest feedback message for the current Publisher. Applied before counting and pagination, independently of conversation resolution and version moderation status. Omit to include all versions.
-   */
-  feedback_status?: VersionFeedbackStatus
-  /**
-   * @minimum 1
-   */
-  page?: number
-  /**
-   * @minimum 1
-   * @maximum 100
-   */
-  pageSize?: number
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+
+/**
+ * Admin-only endpoint to list all node versions with support for including deleted versions. Only admins can access this endpoint.
+ * @summary Admin list all node versions with optional filters
+ */
+export const adminListAllNodeVersions = (
+  params?: AdminListAllNodeVersionsParams,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<AdminListAllNodeVersions200>(
+    { url: `/admin/nodeversions`, method: 'GET', params, signal },
+    options
+  )
 }
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+export const getAdminListAllNodeVersionsQueryKey = (
+  params?: AdminListAllNodeVersionsParams
+) => {
+  return [`/admin/nodeversions`, ...(params ? [params] : [])] as const
+}
+
+export const getAdminListAllNodeVersionsQueryOptions = <
+  TData = Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+  TError = ErrorResponse | null | ErrorResponse | ErrorResponse,
+>(
+  params?: AdminListAllNodeVersionsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey =
+    queryOptions?.queryKey ?? getAdminListAllNodeVersionsQueryKey(params)
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof adminListAllNodeVersions>>
+  > = ({ signal }) => adminListAllNodeVersions(params, requestOptions, signal)
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type AdminListAllNodeVersionsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof adminListAllNodeVersions>>
+>
+export type AdminListAllNodeVersionsQueryError =
+  | ErrorResponse
+  | null
+  | ErrorResponse
+  | ErrorResponse
+
+export function useAdminListAllNodeVersions<
+  TData = Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+  TError = ErrorResponse | null | ErrorResponse | ErrorResponse,
+>(
+  params: undefined | AdminListAllNodeVersionsParams,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+          TError,
+          Awaited<ReturnType<typeof adminListAllNodeVersions>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useAdminListAllNodeVersions<
+  TData = Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+  TError = ErrorResponse | null | ErrorResponse | ErrorResponse,
+>(
+  params?: AdminListAllNodeVersionsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+          TError,
+          Awaited<ReturnType<typeof adminListAllNodeVersions>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useAdminListAllNodeVersions<
+  TData = Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+  TError = ErrorResponse | null | ErrorResponse | ErrorResponse,
+>(
+  params?: AdminListAllNodeVersionsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary Admin list all node versions with optional filters
+ */
+
+export function useAdminListAllNodeVersions<
+  TData = Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+  TError = ErrorResponse | null | ErrorResponse | ErrorResponse,
+>(
+  params?: AdminListAllNodeVersionsParams,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof adminListAllNodeVersions>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getAdminListAllNodeVersionsQueryOptions(params, options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
 
 /**
  * Uses a Firebase ID token for an active Registry admin. The versionId is a UUID, not the version string. Returns the latest 30 messages in ascending sequence order; follow next_before_seq through before_seq to load older messages. GET never marks messages read. Preserve target for writes, inspect permissions, and use thread.revision for state changes. A null thread still supplies the target needed to start feedback.
@@ -811,7 +997,7 @@ export const useAdminReadVersionFeedback = <
 }
 
 /**
- * For active Registry admins using a Firebase ID token. Filter state by awaiting_admin, awaiting_author or resolved; combine nodeId and publisherId as needed. Omit state for all conversations. Returns up to 20 summaries, newest activity first with a stable ID tie-breaker. Follow the opaque next_cursor with the same filters until null. Versions without a conversation are available through adminListNodeVersions with feedback_status=unprocessed. Archived conversations can be present; read their permissions before writing.
+ * For active Registry admins using a Firebase ID token. Filter state by awaiting_admin, awaiting_author or resolved; combine nodeId and publisherId as needed. Omit state for all conversations. Returns up to 20 summaries, newest activity first with a stable ID tie-breaker. Follow the opaque next_cursor with the same filters until null. Versions without a conversation are available through adminListAllNodeVersions with feedback_status=unprocessed. Archived conversations can be present; read their permissions before writing.
  * @summary List private conversations by current state
  */
 export const adminListVersionFeedback = (
@@ -1703,172 +1889,6 @@ export function useAuthorListVersionFeedback<
   queryKey: DataTag<QueryKey, TData, TError>
 } {
   const queryOptions = getAuthorListVersionFeedbackQueryOptions(params, options)
-
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-
-  query.queryKey = queryOptions.queryKey
-
-  return query
-}
-
-/**
- * For active Registry admins using a Firebase ID token. feedback_status classifies no messages, latest admin message or latest author message; it does not filter conversation resolution. Combine it with nodeId, statuses and status_reason. Filters apply before total counts and pagination. Results include private scan evidence and use creation time descending with an ID tie-breaker. Processing records can change queue membership: re-query page 1 or collect IDs before mutating, rather than advancing page numbers while removing items.
- * @summary List admin versions by moderation and feedback handling status
- */
-export const adminListNodeVersions = (
-  params?: AdminListNodeVersionsParams,
-  options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
-) => {
-  return customInstance<AdminVersionList>(
-    { url: `/admin/nodeversions`, method: 'GET', params, signal },
-    options
-  )
-}
-
-export const getAdminListNodeVersionsQueryKey = (
-  params?: AdminListNodeVersionsParams
-) => {
-  return [`/admin/nodeversions`, ...(params ? [params] : [])] as const
-}
-
-export const getAdminListNodeVersionsQueryOptions = <
-  TData = Awaited<ReturnType<typeof adminListNodeVersions>>,
-  TError = FeedbackError,
->(
-  params?: AdminListNodeVersionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof adminListNodeVersions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
-
-  const queryKey =
-    queryOptions?.queryKey ?? getAdminListNodeVersionsQueryKey(params)
-
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof adminListNodeVersions>>
-  > = ({ signal }) => adminListNodeVersions(params, requestOptions, signal)
-
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof adminListNodeVersions>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type AdminListNodeVersionsQueryResult = NonNullable<
-  Awaited<ReturnType<typeof adminListNodeVersions>>
->
-export type AdminListNodeVersionsQueryError = FeedbackError
-
-export function useAdminListNodeVersions<
-  TData = Awaited<ReturnType<typeof adminListNodeVersions>>,
-  TError = FeedbackError,
->(
-  params: undefined | AdminListNodeVersionsParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof adminListNodeVersions>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof adminListNodeVersions>>,
-          TError,
-          Awaited<ReturnType<typeof adminListNodeVersions>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAdminListNodeVersions<
-  TData = Awaited<ReturnType<typeof adminListNodeVersions>>,
-  TError = FeedbackError,
->(
-  params?: AdminListNodeVersionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof adminListNodeVersions>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof adminListNodeVersions>>,
-          TError,
-          Awaited<ReturnType<typeof adminListNodeVersions>>
-        >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-export function useAdminListNodeVersions<
-  TData = Awaited<ReturnType<typeof adminListNodeVersions>>,
-  TError = FeedbackError,
->(
-  params?: AdminListNodeVersionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof adminListNodeVersions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
-/**
- * @summary List admin versions by moderation and feedback handling status
- */
-
-export function useAdminListNodeVersions<
-  TData = Awaited<ReturnType<typeof adminListNodeVersions>>,
-  TError = FeedbackError,
->(
-  params?: AdminListNodeVersionsParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof adminListNodeVersions>>,
-        TError,
-        TData
-      >
-    >
-    request?: SecondParameter<typeof customInstance>
-  },
-  queryClient?: QueryClient
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-} {
-  const queryOptions = getAdminListNodeVersionsQueryOptions(params, options)
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

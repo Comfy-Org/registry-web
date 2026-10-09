@@ -143,6 +143,8 @@ export const HandlingFilterPreservesOtherFiltersAndClearsSelection: Story = {
       const params = versionRequests.at(-1)!.searchParams
       expect(params.get('feedback_status')).toBe(status || null)
       expect(params.get('nodeId')).toBe('example')
+      expect(params.get('include_status_reason')).toBe('true')
+      expect(params.get('include_deleted')).toBe('false')
       expect(params.get('status_reason')).toBe('scan-marker')
       expect(params.get('page')).toBe(page)
       expect(params.getAll('statuses').sort()).toEqual([
@@ -415,5 +417,7 @@ export const ReplacementVersionLookup: Story = {
     )!
     expect(request.searchParams.get('nodeId')).toBe('example')
     expect(request.searchParams.get('version')).toBe('1.0.0')
+    expect(request.searchParams.get('include_status_reason')).toBe('true')
+    expect(request.searchParams.get('include_deleted')).toBe('true')
   },
 }

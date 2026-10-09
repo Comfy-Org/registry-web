@@ -1,6 +1,6 @@
 import {
-  AdminNodeVersion,
-  useAdminListNodeVersions,
+  NodeVersion,
+  useAdminListAllNodeVersions,
 } from '@/src/api/feedback.generated'
 import {
   PRIVATE_REGISTRY_KEY,
@@ -178,7 +178,7 @@ export const zStatusReason = z.object({
   batchId: z.string().optional(),
 })
 
-export function NodeStatusReason(nv: AdminNodeVersion) {
+export function NodeStatusReason(nv: NodeVersion) {
   const { t } = useNextTranslation()
   const { node_id, status_reason } = nv
   const { ref, inView } = useInView()
@@ -200,8 +200,13 @@ export function NodeStatusReason(nv: AdminNodeVersion) {
     () => [PRIVATE_REGISTRY_KEY, firebaseUser?.uid, 'admin'],
     [firebaseUser?.uid]
   )
-  const historyQuery = useAdminListNodeVersions(
-    { nodeId: node_id!, pageSize: 100 },
+  const historyQuery = useAdminListAllNodeVersions(
+    {
+      nodeId: node_id!,
+      pageSize: 100,
+      include_status_reason: true,
+      include_deleted: true,
+    },
     {
       query: {
         ...privateQueryOptions,

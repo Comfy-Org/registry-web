@@ -1,18 +1,23 @@
 import type { ConfigExternal } from 'orval'
 
-// Generate only this feature from the target backend. The existing client includes
-// newer, unrelated production APIs that are absent from this backend checkout.
+// Generate feedback and admin scan operations from the active Registry backend.
 export default {
   privateFeedback: {
     input: {
-      target: '../registry-backend/openapi.yml',
+      target: '../cloud/services/comfy-api/openapi.yml',
+      override: {
+        // Selected operations use schema refs only. Orval otherwise emits every
+        // shared proxy response/parameter, even with operation/schema filters.
+        transformer: (spec) => ({
+          ...spec,
+          components: { schemas: spec.components?.schemas },
+        }),
+      },
       filters: {
         tags: ['PrivateFeedback', 'AdminScans'],
         schemas: [
           /^Feedback/,
           'VersionFeedbackStatus',
-          'AdminNodeVersion',
-          'AdminVersionList',
           'NodeVersion',
           'NodeVersionStatus',
           'ErrorResponse',

@@ -1,5 +1,5 @@
 import {
-  useAdminListNodeVersions,
+  useAdminListAllNodeVersions,
   VersionFeedbackStatus,
 } from '@/src/api/feedback.generated'
 import {
@@ -183,6 +183,10 @@ function NodeVersionList({}) {
     page: page,
     pageSize: 8,
     statuses: selectedStatus,
+    include_status_reason: true,
+    include_deleted: selectedStatus.includes(
+      NodeVersionStatus.NodeVersionStatusDeleted
+    ),
     status_reason: queryForStatusReason || undefined,
     nodeId: queryForNodeId || undefined,
     feedback_status: queryForFeedbackStatus,
@@ -190,7 +194,7 @@ function NodeVersionList({}) {
   }
   const versionsKey = [...adminScope, 'admin-versions', versionParams]
   const [blocked, setBlocked] = usePrivateQueryRemoval(versionsKey)
-  const getAllNodeVersionsQuery = useAdminListNodeVersions(versionParams, {
+  const getAllNodeVersionsQuery = useAdminListAllNodeVersions(versionParams, {
     query: {
       ...privateQueryOptions,
       enabled: !!firebaseUser && !blocked,
