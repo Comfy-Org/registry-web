@@ -182,6 +182,7 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
             versionId={version.id}
             publisherId={publisherId}
             role={feedbackRole}
+            version={version}
           />
         ) : (
           <>

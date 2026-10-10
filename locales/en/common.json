@@ -594,5 +594,7 @@
   "• If you encounter issues, try clearing your token and generating a new one.": "• If you encounter issues, try clearing your token and generating a new one.",
   "• JWT tokens are stored locally in your browser and are not sent to the server except during admin operations.": "• JWT tokens are stored locally in your browser and are not sent to the server except during admin operations.",
   "• Only users with admin privileges can generate JWT tokens.": "• Only users with admin privileges can generate JWT tokens.",
-  "• Tokens expire after 1 hour. You will be prompted to generate a new token when needed.": "• Tokens expire after 1 hour. You will be prompted to generate a new token when needed."
+  "• Tokens expire after 1 hour. You will be prompted to generate a new token when needed.": "• Tokens expire after 1 hour. You will be prompted to generate a new token when needed.",
+  "Awaiting Registry review": "Awaiting Registry review",
+  "This version was flagged as a precaution and is awaiting review. This does not mean that a security issue has been confirmed. The Registry team will provide feedback here after review.": "This version was flagged as a precaution and is awaiting review. This does not mean that a security issue has been confirmed. The Registry team will provide feedback here after review."
 }

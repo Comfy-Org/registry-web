@@ -7,6 +7,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { z } from 'zod'
 import { PRIVATE_REGISTRY_KEY } from '@/src/api/privateRegistry'
+import { NodeVersionStatus } from '@/src/api/generated'
 import { versionId, feedbackFixture } from './feedback.fixtures'
 import { feedbackHandlers, type FeedbackRequests } from './feedback.mocks'
 
@@ -49,6 +50,7 @@ const meta: Meta<typeof FeedbackThread> = {
     versionId,
     publisherId: 'example-publisher',
     role: 'author',
+    version: { status: NodeVersionStatus.NodeVersionStatusFlagged },
   },
   decorators: [
     (Story) => (
@@ -77,6 +79,7 @@ export const Author: Story = {
     const input = await canvas.findByLabelText(
       'Private reply to the Registry team'
     )
+    expect(canvas.queryByText('Awaiting Registry review')).toBeNull()
     await expect(
       canvas.getByRole('button', { name: 'Send reply' })
     ).toBeDisabled()
@@ -349,6 +352,7 @@ export const Admin: Story = {
   },
 }
 export const EmptyAuthor: Story = {
+  args: { version: { status: NodeVersionStatus.NodeVersionStatusActive } },
   parameters: { msw: { handlers: mocks.emptyAuthor.handlers } },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -357,12 +361,23 @@ export const EmptyAuthor: Story = {
         'No feedback yet. The Registry team can start a conversation on a flagged version.'
       )
     ).toBeVisible()
+    expect(canvas.queryByText('Awaiting Registry review')).toBeNull()
     await expect(canvas.queryByRole('textbox')).toBeNull()
     await expect(
       canvas.queryByRole('button', { name: 'Send reply' })
     ).toBeNull()
   },
 }
+export const DeprecatedFlaggedAuthor: Story = {
+  ...EmptyAuthor,
+  args: {
+    version: {
+      status: NodeVersionStatus.NodeVersionStatusFlagged,
+      deprecated: true,
+    },
+  },
+}
+
 export const FirstAdminMessage: Story = {
   args: { role: 'admin' },
   parameters: { msw: { handlers: mocks.emptyAdmin.handlers } },
@@ -372,6 +387,7 @@ export const FirstAdminMessage: Story = {
       await canvas.findByLabelText('Private feedback to the author'),
       'Please revise installation.'
     )
+    expect(canvas.queryByText('Awaiting Registry review')).toBeNull()
     await userEvent.click(canvas.getByRole('button', { name: 'Send feedback' }))
     await expect(
       await within(canvas.getByLabelText('Feedback messages')).findByText(
@@ -414,6 +430,7 @@ export const RevokedAccess: Story = {
     await expect(await canvas.findByRole('alert')).toHaveTextContent(
       'Feedback is unavailable or you no longer have access.'
     )
+    expect(canvas.queryByText('Awaiting Registry review')).toBeNull()
     await expect(
       canvas.queryByText(feedbackFixture().messages[0].body)
     ).toBeNull()

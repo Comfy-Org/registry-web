@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { RouterContext } from 'next/dist/shared/lib/router-context.shared-runtime'
 import NodeDetails from '@/components/nodes/NodeDetails'
 import { feedbackFixture, versionId } from './feedback.fixtures'
+import { feedbackHandlers } from './feedback.mocks'
 import type { FeedbackSupersedeInput } from '@/src/api/feedback.generated'
 import { PRIVATE_REGISTRY_KEY } from '@/src/api/privateRegistry'
 
@@ -306,6 +307,38 @@ function feedbackRoleStory(admin: boolean, owner: boolean): Story {
 export const OwnerRepliesAsAuthor = feedbackRoleStory(false, true)
 export const AdminOwnerRepliesAsAuthor = feedbackRoleStory(true, true)
 export const AdminMemberUsesAdminScope = feedbackRoleStory(true, false)
+
+const awaitingReview = feedbackHandlers(false, 'empty')
+export const AwaitingRegistryReview: Story = {
+  beforeEach: () => awaitingReview.reset(),
+  parameters: {
+    msw: {
+      handlers: [
+        ...awaitingReview.handlers,
+        http.get('*/users/me/node-version-feedback', () =>
+          HttpResponse.json({ threads: [], next_cursor: null })
+        ),
+        ...meta.parameters!.msw.handlers,
+      ],
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await userEvent.click((await canvas.findAllByText('More'))[0])
+    await userEvent.click(
+      await canvas.findByRole('button', { name: 'Private feedback' })
+    )
+    await expect(
+      await canvas.findByText('Awaiting Registry review')
+    ).toBeVisible()
+    expect(canvas.getByText(/flagged as a precaution/)).toHaveTextContent(
+      'The Registry team will provide feedback here after review.'
+    )
+    expect(canvas.queryByRole('textbox')).toBeNull()
+    expect(canvas.queryByRole('button', { name: 'Send reply' })).toBeNull()
+    expect(canvas.queryByText('Unresolved feedback')).toBeNull()
+  },
+}
 
 export const OwnershipMustLoadBeforeFeedback: Story = {
   beforeEach: () => {

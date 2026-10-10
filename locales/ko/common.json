@@ -594,5 +594,7 @@
   "Write the changes the author should make. Resolving feedback does not approve the version.": "작성자가 수정해야 할 내용을 입력하세요. 피드백을 종료해도 버전이 승인되지는 않습니다.",
   "{{count}} unread": "읽지 않은 메시지 {{count}}개",
   "Node version {{id}}@{{version}} is not flagged, skip": "노드 버전 {{id}}@{{version}}이 검토 대상으로 표시되지 않아 건너뜁니다",
-  "Node version {{id}}@{{version}} is not flagged or active, skip": "노드 버전 {{id}}@{{version}}이 검토 대상 또는 활성 상태가 아니므로 건너뜁니다"
+  "Node version {{id}}@{{version}} is not flagged or active, skip": "노드 버전 {{id}}@{{version}}이 검토 대상 또는 활성 상태가 아니므로 건너뜁니다",
+  "Awaiting Registry review": "Registry 검토 대기 중",
+  "This version was flagged as a precaution and is awaiting review. This does not mean that a security issue has been confirmed. The Registry team will provide feedback here after review.": "이 버전은 예방적 조치로 보수적으로 flagged 처리되었으며 검토를 기다리고 있습니다. 보안 문제가 확정되었다는 의미는 아닙니다. Registry 팀이 검토한 후 이곳에 피드백을 제공할 예정입니다."
 }

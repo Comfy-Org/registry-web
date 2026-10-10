@@ -11,8 +11,13 @@ import {
 import { observe } from 'react-intersection-observer'
 import { FeedbackTarget, useVersionFeedback } from './useVersionFeedback'
 import { useFirebaseUser } from '@/src/hooks/useFirebaseUser'
+import { NodeVersionStatus, type NodeVersion } from '@/src/api/generated'
 
-export function FeedbackThread(props: FeedbackTarget) {
+type FeedbackThreadProps = FeedbackTarget & {
+  version?: Pick<NodeVersion, 'status' | 'deprecated'>
+}
+
+export function FeedbackThread(props: FeedbackThreadProps) {
   const [user] = useFirebaseUser()
   return (
     <FeedbackThreadContent
@@ -22,7 +27,7 @@ export function FeedbackThread(props: FeedbackTarget) {
   )
 }
 
-function FeedbackThreadContent(target: FeedbackTarget) {
+function FeedbackThreadContent({ version, ...target }: FeedbackThreadProps) {
   const feedback = useVersionFeedback(target)
   const binding = feedback.data?.target
   // A version has one conversation per Publisher. Assigning its first thread ID
@@ -32,6 +37,7 @@ function FeedbackThreadContent(target: FeedbackTarget) {
       key={binding?.publisher_id}
       target={target}
       feedback={feedback}
+      version={version}
     />
   )
 }
@@ -39,9 +45,11 @@ function FeedbackThreadContent(target: FeedbackTarget) {
 function FeedbackConversation({
   target,
   feedback,
+  version,
 }: {
   target: FeedbackTarget
   feedback: ReturnType<typeof useVersionFeedback>
+  version: FeedbackThreadProps['version']
 }) {
   const { t } = useNextTranslation()
   const {
@@ -275,15 +283,30 @@ function FeedbackConversation({
           )}
         </p>
       )}
-      {!data.thread && (
-        <p className="py-4 text-gray-300">
-          {data.permissions.can_start
-            ? t('Start a private conversation about this flagged version.')
-            : t(
-                'No feedback yet. The Registry team can start a conversation on a flagged version.'
+      {!data.thread &&
+        (target.role === 'author' &&
+        version?.status === NodeVersionStatus.NodeVersionStatusFlagged &&
+        !version.deprecated ? (
+          <div
+            role="status"
+            className="space-y-2 rounded-lg border border-blue-800 bg-blue-950 p-4 text-blue-100"
+          >
+            <p className="font-semibold">{t('Awaiting Registry review')}</p>
+            <p className="text-sm">
+              {t(
+                'This version was flagged as a precaution and is awaiting review. This does not mean that a security issue has been confirmed. The Registry team will provide feedback here after review.'
               )}
-        </p>
-      )}
+            </p>
+          </div>
+        ) : (
+          <p className="py-4 text-gray-300">
+            {data.permissions.can_start
+              ? t('Start a private conversation about this flagged version.')
+              : t(
+                  'No feedback yet. The Registry team can start a conversation on a flagged version.'
+                )}
+          </p>
+        ))}
       {data.next_before_seq && (
         <Button
           color="gray"
