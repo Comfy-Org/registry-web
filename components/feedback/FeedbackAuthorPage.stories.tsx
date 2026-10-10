@@ -420,7 +420,7 @@ export const UnresolvedVersions: Story = {
     }
     for (const version of ['0.9.0', '0.7.0', '0.6.0']) {
       const row = canvas.getByRole('heading', {
-        name: `Version ${version}`,
+        name: `Version ${version} Flagged`,
       }).parentElement!
       expect(within(row).queryByText('Unresolved feedback')).toBeNull()
     }
@@ -437,11 +437,13 @@ export const UnresolvedVersions: Story = {
     await waitFor(() =>
       expect(canvas.getAllByText('Unresolved feedback')).toHaveLength(1)
     )
+    expect(canvas.getAllByText('Flagged')).toHaveLength(versions.length)
     inboxError = 401
     await client.refetchQueries(inbox)
     await waitFor(() =>
       expect(canvas.queryByText('Unresolved feedback')).toBeNull()
     )
+    expect(canvas.getAllByText('Flagged')).toHaveLength(versions.length)
   },
 }
 export const RepeatedInboxCursorStopsAndRecovers: Story = {
@@ -476,12 +478,38 @@ export const RepeatedInboxCursorStopsAndRecovers: Story = {
 }
 
 export const PublicVersionHistory: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('*/nodes/:nodeId/versions', () =>
+          HttpResponse.json([
+            versions[0],
+            { ...versions[1], status: 'NodeVersionStatusActive' },
+          ])
+        ),
+        http.get('*/nodes/:nodeId/versions/0.9.0', () =>
+          HttpResponse.json({
+            ...versions[1],
+            status: 'NodeVersionStatusActive',
+          })
+        ),
+        ...meta.parameters!.msw.handlers,
+      ],
+    },
+  },
   beforeEach: () => {
     canEdit = false
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await canvas.findByRole('heading', { name: 'Version 1.0.0' })
+    const flagged = await canvas.findByRole('heading', {
+      name: 'Version 1.0.0 Flagged',
+    })
+    const active = await canvas.findByRole('heading', {
+      name: 'Version 0.9.0 Active',
+    })
+    expect(within(flagged).queryByText('Active')).toBeNull()
+    expect(within(active).queryByText('Flagged')).toBeNull()
     await waitFor(() => expect(client.isFetching()).toBe(0))
     expect(canvas.queryByText('Unresolved feedback')).toBeNull()
     expect(requests).toHaveLength(0)
@@ -490,6 +518,26 @@ export const PublicVersionHistory: Story = {
         name: 'Deprecate and close earlier feedback',
       })
     ).toBeNull()
+    for (const [heading, status, number] of [
+      [flagged, 'Flagged', '1.0.0'],
+      [active, 'Active', '0.9.0'],
+    ] as const) {
+      await userEvent.click(within(heading.parentElement!).getByText('More'))
+      const drawer = canvasElement.querySelector<HTMLElement>(
+        '#drawer-create-product-default'
+      )!
+      expect(
+        await within(drawer).findByRole('heading', {
+          name: `example · v${number} ${status}`,
+        })
+      ).toBeVisible()
+      expect(
+        within(drawer).queryByRole('button', { name: /Private feedback/ })
+      ).toBeNull()
+      await userEvent.click(
+        within(drawer).getByRole('button', { name: 'Close' })
+      )
+    }
   },
 }
 
@@ -716,7 +764,10 @@ export const SupersedeRetryKeepsSelection: Story = {
       client.refetchQueries({ queryKey: ['/nodes/example/versions'] }),
       client.refetchQueries(inbox),
     ])
-    await canvas.findByRole('heading', { name: 'Version 1.0.1', hidden: true })
+    await canvas.findByRole('heading', {
+      name: /^Version 1\.0\.1\b/,
+      hidden: true,
+    })
     const summaries = client.getQueriesData<{
       threads: { thread: { revision: number } }[]
     }>(inbox)

@@ -37,6 +37,7 @@ import { useFeedbackInbox } from '@/components/feedback/useFeedbackInbox'
 import { privateFeedbackEnabled } from '@/components/feedback/useVersionFeedback'
 import { UnresolvedFeedbackBadge } from '@/components/feedback/UnresolvedFeedbackBadge'
 import { SupersedeFeedback } from '@/components/feedback/SupersedeFeedback'
+import { NodeStatusBadge as NodeVersionStatusBadge } from '@/components/NodeStatusBadge'
 import CopyableCodeBlock from '../CodeBlock/CodeBlock'
 import { NodeDeleteModal } from './NodeDeleteModal'
 import { NodeEditModal } from './NodeEditModal'
@@ -638,8 +639,11 @@ const NodeDetails = () => {
                         `${version.version}-${version.createdAt}-${nodeVersions?.indexOf(version)}`
                       }
                     >
-                      <h3 className="flex flex-wrap items-center gap-2 text-base font-semibold text-gray-200">
+                      <h3 className="dark flex flex-wrap items-center gap-2 text-base font-semibold text-gray-200">
                         {t('Version')} {version.version}
+                        {version.status && (
+                          <NodeVersionStatusBadge status={version.status} />
+                        )}
                         <UnresolvedFeedbackBadge
                           thread={versionFeedback(version.id)}
                         />

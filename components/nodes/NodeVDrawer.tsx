@@ -1,6 +1,7 @@
 import { FeedbackThread } from '@/components/feedback/FeedbackThread'
 import { InstallationTags } from '@/components/feedback/InstallationTags'
 import { UnresolvedFeedbackBadge } from '@/components/feedback/UnresolvedFeedbackBadge'
+import { NodeStatusBadge as NodeVersionStatusBadge } from '@/components/NodeStatusBadge'
 import type { FeedbackThread as Thread } from '@/src/api/feedback.generated'
 import {
   privateFeedbackEnabled,
@@ -131,9 +132,14 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         <div className="mb-6 pr-8">
           <h2
             id="drawer-label"
-            className="break-words text-lg font-semibold text-gray-200"
+            className="flex flex-wrap items-center gap-2 text-lg font-semibold text-gray-200"
           >
-            {nodeId} · v{versionNumber}
+            <span className="min-w-0 break-words">
+              {nodeId} · v{versionNumber}
+            </span>
+            {version.status && (
+              <NodeVersionStatusBadge status={version.status} />
+            )}
           </h2>
           <button
             type="button"
