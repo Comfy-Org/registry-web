@@ -331,6 +331,10 @@ export const AwaitingRegistryReview: Story = {
     await expect(
       await canvas.findByText('Awaiting Registry review')
     ).toBeVisible()
+    const notice = canvas.getByText('Awaiting Registry review').parentElement!
+    expect(getComputedStyle(notice).backgroundColor).not.toBe(
+      'rgba(0, 0, 0, 0)'
+    )
     expect(canvas.getByText(/flagged as a precaution/)).toHaveTextContent(
       'The Registry team will provide feedback here after review.'
     )

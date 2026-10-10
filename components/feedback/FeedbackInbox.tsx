@@ -52,7 +52,7 @@ function FeedbackInboxContent({
   if (!user) return null
   return (
     <section
-      className="ph-no-capture my-6 space-y-3 rounded-lg border border-gray-700 p-4 text-gray-200"
+      className="dark ph-no-capture my-6 space-y-3 rounded-lg border border-gray-700 p-4 text-gray-200"
       data-private="true"
       aria-label={t('Feedback inbox')}
     >
@@ -141,6 +141,7 @@ function FeedbackInboxContent({
         )}
       </div>
       <Modal
+        className="dark bg-opacity-80"
         show={!!selected && !accessDenied}
         onClose={() => setSelected(null)}
         size="4xl"
@@ -148,7 +149,7 @@ function FeedbackInboxContent({
         <Modal.Header>
           {selected?.node_id} · v{selected?.version}
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="p-4 sm:p-6">
           {selected && !accessDenied && (
             <FeedbackThread
               nodeId={selected.node_id}

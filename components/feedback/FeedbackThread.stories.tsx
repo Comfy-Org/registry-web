@@ -158,7 +158,12 @@ function markdownStory(role: 'admin' | 'author'): Story {
         name: 'Installation review',
         level: 2,
       })
-      expect(canvas.getByText('Remove the script').tagName).toBe('STRONG')
+      const emphasis = canvas.getByText('Remove the script')
+      expect(emphasis.tagName).toBe('STRONG')
+      // Bold prose must not inherit the site's blue link-like strong styling.
+      expect(getComputedStyle(emphasis).color).toBe(
+        getComputedStyle(emphasis.parentElement!).color
+      )
       expect(canvas.getByText('pin dependencies').tagName).toBe('EM')
       expect(canvas.getAllByRole('listitem')).toHaveLength(2)
       expect(canvas.getByText('python -m pip check').tagName).toBe('CODE')
@@ -268,7 +273,16 @@ export const LiveMarkdownPreview: Story = {
       name: 'Message preview',
     })
     const preview = within(previewElement)
-    expect(preview.getByText('Updated').tagName).toBe('STRONG')
+    const emphasis = preview.getByText('Updated')
+    expect(emphasis.tagName).toBe('STRONG')
+    expect(getComputedStyle(emphasis).color).toBe(
+      getComputedStyle(emphasis.parentElement!).color
+    )
+    // The configured palette has no cyan, Flowbite's default button color.
+    expect(
+      getComputedStyle(canvas.getByRole('button', { name: 'Send reply' }))
+        .backgroundColor
+    ).not.toBe('rgba(0, 0, 0, 0)')
     expect(preview.getByText('pip check').tagName).toBe('CODE')
     await userEvent.type(
       input,

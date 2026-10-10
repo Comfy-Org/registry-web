@@ -741,7 +741,7 @@ function NodeVersionList({}) {
     undo: t('undo'),
   }
   return (
-    <div>
+    <div className="dark">
       <Breadcrumb className="py-4 px-4">
         <Breadcrumb.Item
           href="/"
@@ -786,6 +786,7 @@ function NodeVersionList({}) {
         <FeedbackInbox role="admin" nodeId={queryForNodeId} />
       )}
       <Modal
+        className="dark bg-opacity-80"
         show={!!feedbackVersion}
         onClose={() => setFeedbackVersion(null)}
         size="4xl"
@@ -794,7 +795,7 @@ function NodeVersionList({}) {
           {t('Private feedback')} · {feedbackVersion?.node_id} · v
           {feedbackVersion?.version}
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="p-4 sm:p-6">
           {feedbackVersion?.id && feedbackVersion.node_id && (
             <FeedbackThread
               nodeId={feedbackVersion.node_id}

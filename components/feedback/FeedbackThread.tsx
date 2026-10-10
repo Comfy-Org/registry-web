@@ -183,7 +183,7 @@ function FeedbackConversation({
     return <Spinner aria-label={t('Loading feedback')} />
   if (accessDenied || query.isError || !data)
     return (
-      <div role="alert" className="p-4 text-yellow-200">
+      <div role="alert" className="dark p-4 text-yellow-200">
         <p>{t('Feedback is unavailable or you no longer have access.')}</p>
         <Button color="gray" onClick={() => void retry()}>
           {t('Try again')}
@@ -199,67 +199,71 @@ function FeedbackConversation({
   const canWrite = data.permissions.can_start || data.permissions.can_reply
   return (
     <section
-      className="ph-no-capture space-y-4 rounded-lg border border-gray-600 bg-gray-900 p-4 text-gray-200"
+      className="dark ph-no-capture space-y-4 rounded-lg border border-gray-600 bg-gray-900 p-4 text-gray-200"
       data-private="true"
       aria-label={t('Private version feedback')}
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="font-semibold">{t('Private feedback')}</h3>
-        {data.thread && (
-          <span className="text-sm text-blue-200">
-            {data.thread.archived ? t('Archived') : status}
-          </span>
-        )}
-        {data.thread && (
-          <Button
-            color="gray"
-            size="sm"
-            title={t(
-              'Paste this Markdown reference into another feedback message.'
-            )}
-            onClick={async () => {
-              setCopyStatus(null)
-              try {
-                await navigator.clipboard.writeText(
-                  feedbackReferenceMarkdown(
-                    data.thread!,
-                    window.location.origin,
-                    t('{{node}}@{{version}} feedback', {
-                      node: data.thread!.node_id,
-                      version: data.thread!.version,
-                    })
+        <div className="flex flex-wrap items-center gap-3">
+          <h3 className="font-semibold">{t('Private feedback')}</h3>
+          {data.thread && (
+            <span className="text-sm text-blue-200">
+              {data.thread.archived ? t('Archived') : status}
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {data.thread && (
+            <Button
+              color="gray"
+              size="sm"
+              title={t(
+                'Paste this Markdown reference into another feedback message.'
+              )}
+              onClick={async () => {
+                setCopyStatus(null)
+                try {
+                  await navigator.clipboard.writeText(
+                    feedbackReferenceMarkdown(
+                      data.thread!,
+                      window.location.origin,
+                      t('{{node}}@{{version}} feedback', {
+                        node: data.thread!.node_id,
+                        version: data.thread!.version,
+                      })
+                    )
                   )
-                )
-                setCopyStatus('copied')
-              } catch {
-                setCopyStatus('failed')
-              }
-            }}
-          >
-            {copyStatus === 'copied'
-              ? t('Copied!')
-              : t('Copy Markdown reference')}
-          </Button>
-        )}
-        {(data.permissions.can_resolve || data.permissions.can_reopen) && (
-          <Button
-            color="gray"
-            size="sm"
-            disabled={state.isPending}
-            onClick={() => {
-              setFailure(null)
-              void state
-                .mutateAsync({
-                  target: data.target,
-                  state: resolved ? 'open' : 'resolved',
-                  expected_revision: data.thread!.revision,
-                })
-                .catch(reportFailure)
-            }}
-          >
-            {resolved ? t('Reopen conversation') : t('Resolve conversation')}
-          </Button>
-        )}
+                  setCopyStatus('copied')
+                } catch {
+                  setCopyStatus('failed')
+                }
+              }}
+            >
+              {copyStatus === 'copied'
+                ? t('Copied!')
+                : t('Copy Markdown reference')}
+            </Button>
+          )}
+          {(data.permissions.can_resolve || data.permissions.can_reopen) && (
+            <Button
+              color="gray"
+              size="sm"
+              disabled={state.isPending}
+              onClick={() => {
+                setFailure(null)
+                void state
+                  .mutateAsync({
+                    target: data.target,
+                    state: resolved ? 'open' : 'resolved',
+                    expected_revision: data.thread!.revision,
+                  })
+                  .catch(reportFailure)
+              }}
+            >
+              {resolved ? t('Reopen conversation') : t('Resolve conversation')}
+            </Button>
+          )}
+        </div>
       </div>
       {target.threadId && data.thread && (
         <p className="font-semibold">
@@ -289,7 +293,7 @@ function FeedbackConversation({
         !version.deprecated ? (
           <div
             role="status"
-            className="space-y-2 rounded-lg border border-blue-800 bg-blue-950 p-4 text-blue-100"
+            className="space-y-2 rounded-lg border border-blue-800 bg-blue-900/30 p-4 text-blue-100"
           >
             <p className="font-semibold">{t('Awaiting Registry review')}</p>
             <p className="text-sm">
@@ -331,8 +335,8 @@ function FeedbackConversation({
             className={clsx(
               'relative rounded-lg border p-3',
               message.sender_user_id === userId
-                ? 'ml-6 border-blue-700 bg-blue-900/30'
-                : 'mr-6 border-gray-600 bg-gray-800',
+                ? 'ml-3 border-blue-700 bg-blue-900/30 sm:ml-6'
+                : 'mr-3 border-gray-600 bg-gray-800 sm:mr-6',
               message.seq === data.thread?.last_message_seq &&
                 'ring-2 ring-yellow-300'
             )}
@@ -457,12 +461,14 @@ function FeedbackConversation({
               <FeedbackMarkdown>{draft}</FeedbackMarkdown>
             </section>
           )}
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <span className="text-xs text-gray-400">
               {t('Markdown supported')} · {Array.from(draft).length} / 5,000
             </span>
             <Button
               type="submit"
+              color="blue"
+              className="ml-auto shrink-0 whitespace-nowrap"
               disabled={!feedbackBody(draft) || send.isPending}
             >
               {send.isPending
@@ -487,7 +493,7 @@ function FeedbackConversation({
 // History and the live composer preview share the same formatting and security policy.
 function FeedbackMarkdown({ children }: { children: string }) {
   return (
-    <div className="space-y-2 break-words text-sm text-gray-200 [&_blockquote]:border-l-2 [&_blockquote]:border-gray-500 [&_blockquote]:pl-3 [&_code]:rounded [&_code]:bg-gray-900 [&_code]:px-1 [&_h1]:text-xl [&_h2]:text-lg [&_h3]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:whitespace-pre-wrap [&_pre]:overflow-x-auto [&_pre]:rounded [&_pre]:bg-gray-900 [&_pre]:p-3 [&_ul]:list-disc [&_ul]:pl-5">
+    <div className="space-y-2 break-words text-sm text-gray-200 [&_blockquote]:border-l-2 [&_blockquote]:border-gray-500 [&_blockquote]:pl-3 [&_code]:rounded [&_code]:bg-gray-900 [&_code]:px-1 [&_h1]:text-xl [&_h2]:text-lg [&_h3]:font-semibold [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:whitespace-pre-wrap [&_pre]:overflow-x-auto [&_pre]:rounded [&_pre]:bg-gray-900 [&_pre]:p-3 [&_strong]:[color:inherit] [&_ul]:list-disc [&_ul]:pl-5">
       <Markdown
         components={{
           a: ({ href, children }) =>

@@ -167,7 +167,7 @@ function SupersedeFeedbackContent({
   }
   if (!eligible.length && !selection) return null
   return (
-    <div className="ph-no-capture my-4 space-y-3" data-private="true">
+    <div className="dark ph-no-capture my-4 space-y-3" data-private="true">
       <Button
         color="gray"
         disabled={!eligible.length || !!selection}
@@ -197,6 +197,7 @@ function SupersedeFeedbackContent({
         </p>
       )}
       <Modal
+        className="dark bg-opacity-80"
         show={!!selection}
         onClose={() => {
           if (!submitting.current) setSelection(null)
@@ -234,7 +235,7 @@ function SupersedeFeedbackContent({
             ))}
           </ul>
           {failure === 'request' && (
-            <p role="alert" className="text-yellow-600">
+            <p role="alert" className="text-yellow-200">
               {t('The request failed. Try again to finish the same selection.')}
             </p>
           )}

@@ -122,19 +122,26 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
     <>
       <div
         id="drawer-create-product-default"
-        className={`fixed top-0 right-0 z-40 w-full max-w-2xl h-screen py-20 px-12 overflow-y-auto transition-transform ${
+        className={`dark fixed top-0 right-0 z-40 w-full max-w-2xl h-screen p-4 sm:p-8 overflow-y-auto transition-transform ${
           isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         } bg-gray-800`}
         aria-labelledby="drawer-label"
         aria-hidden={!isDrawerOpen}
       >
-        <div>
+        <div className="mb-6 pr-8">
+          <h2
+            id="drawer-label"
+            className="break-words text-lg font-semibold text-gray-200"
+          >
+            {nodeId} · v{versionNumber}
+          </h2>
           <button
             type="button"
             onClick={toggleDrawer}
             aria-controls="drawer-create-product-default"
             className="text-white bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
           >
+            <span className="sr-only">{t('Close')}</span>
             <svg
               aria-hidden="true"
               className="w-5 h-5"
@@ -152,17 +159,21 @@ const NodeVDrawer: React.FC<NodeVDrawerProps> = ({
         </div>
         {privateFeedbackEnabled && feedbackRole && publisherId && (
           <div
-            className="mb-5 flex gap-3"
+            className="mb-5 flex flex-wrap gap-2"
             role="group"
             aria-label={t('Version detail views')}
           >
             <Button
+              size="sm"
+              aria-pressed={tab === 'version'}
               color={tab === 'version' ? 'blue' : 'gray'}
               onClick={() => setTab('version')}
             >
               {t('Version information')}
             </Button>
             <Button
+              size="sm"
+              aria-pressed={tab === 'feedback'}
               color={tab === 'feedback' ? 'blue' : 'gray'}
               onClick={() => setTab('feedback')}
             >
