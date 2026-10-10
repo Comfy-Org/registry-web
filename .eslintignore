@@ -2,3 +2,4 @@
 /worktrees
 NativeApp/*
 src/api/generated.ts
+src/api/feedback.generated.ts
