@@ -251,7 +251,14 @@ export const ReadingFeedbackDoesNotReloadVersionReports: Story = {
     await userEvent.click(
       canvas.getByRole('button', { name: 'Private feedback' })
     )
-    await within(canvasElement.ownerDocument.body).findByRole('textbox')
+    const body = within(canvasElement.ownerDocument.body)
+    await body.findByRole('textbox')
+    // The modal is portaled outside the page, so its header needs its own
+    // recording-block ancestor as well as the conversation body.
+    const header = body.getByRole('heading', {
+      name: 'Private feedback · example · v1.0.0',
+    })
+    expect(header.closest('.ph-no-capture')).not.toBeNull()
     await waitFor(() => expect(requests.reads).toBeGreaterThan(0))
     await waitFor(() => expect(client.isMutating()).toBe(0))
     await waitFor(() => expect(client.isFetching()).toBe(0))

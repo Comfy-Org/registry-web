@@ -541,6 +541,34 @@ export const PublicVersionHistory: Story = {
   },
 }
 
+export const KoreanVersionHistory: Story = {
+  ...PublicVersionHistory,
+  parameters: {
+    ...PublicVersionHistory.parameters,
+    nextjs: { router: { locale: 'ko' } },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    for (const [number, status] of [
+      ['1.0.0', '플래그 지정됨'],
+      ['0.9.0', '활성'],
+    ]) {
+      const heading = await canvas.findByRole('heading', {
+        name: `버전 ${number} ${status}`,
+      })
+      await userEvent.click(within(heading.parentElement!).getByText('더 보기'))
+      const drawerHeading = await canvas.findByRole('heading', {
+        name: `example · v${number} ${status}`,
+      })
+      expect(drawerHeading).toBeVisible()
+      const drawer = within(
+        drawerHeading.closest<HTMLElement>('#drawer-create-product-default')!
+      )
+      await userEvent.click(drawer.getByRole('button', { name: '닫기' }))
+    }
+  },
+}
+
 export const ThreadDenialClearsVersionBadges: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

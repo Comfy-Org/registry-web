@@ -791,7 +791,7 @@ function NodeVersionList({}) {
         onClose={() => setFeedbackVersion(null)}
         size="4xl"
       >
-        <Modal.Header>
+        <Modal.Header className="ph-no-capture">
           {t('Private feedback')} · {feedbackVersion?.node_id} · v
           {feedbackVersion?.version}
         </Modal.Header>
