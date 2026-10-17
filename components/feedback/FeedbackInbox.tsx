@@ -146,7 +146,7 @@ function FeedbackInboxContent({
         onClose={() => setSelected(null)}
         size="4xl"
       >
-        <Modal.Header>
+        <Modal.Header className="ph-no-capture">
           {selected?.node_id} · v{selected?.version}
         </Modal.Header>
         <Modal.Body className="p-4 sm:p-6">

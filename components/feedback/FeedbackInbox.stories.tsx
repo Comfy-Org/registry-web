@@ -85,6 +85,11 @@ export const Author: Story = {
     const dialog = within(
       await within(canvasElement.ownerDocument.body).findByRole('dialog')
     )
+    expect(
+      dialog
+        .getByRole('heading', { name: 'example · v1.0.0' })
+        .closest('.ph-no-capture')
+    ).not.toBeNull()
     await userEvent.type(
       await dialog.findByLabelText('Private reply to the Registry team'),
       'The installation command is updated.'
@@ -123,6 +128,11 @@ export const Admin: Story = {
     const dialog = within(
       await within(canvasElement.ownerDocument.body).findByRole('dialog')
     )
+    expect(
+      dialog
+        .getByRole('heading', { name: 'example · v1.0.0' })
+        .closest('.ph-no-capture')
+    ).not.toBeNull()
     await expect(
       await dialog.findByLabelText('Private feedback to the author')
     ).toBeVisible()
