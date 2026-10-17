@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { useQueryClient, type QueryClient } from '@tanstack/react-query'
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -487,12 +487,14 @@ export const PublicVersionHistory: Story = {
             { ...versions[1], status: 'NodeVersionStatusActive' },
           ])
         ),
-        http.get('*/nodes/:nodeId/versions/0.9.0', () =>
-          HttpResponse.json({
+        http.get('*/nodes/:nodeId/versions/0.9.0', async () => {
+          // Exercise opening a drawer before its detail request has completed.
+          await delay(100)
+          return HttpResponse.json({
             ...versions[1],
             status: 'NodeVersionStatusActive',
           })
-        ),
+        }),
         ...meta.parameters!.msw.handlers,
       ],
     },
@@ -523,14 +525,13 @@ export const PublicVersionHistory: Story = {
       [active, 'Active', '0.9.0'],
     ] as const) {
       await userEvent.click(within(heading.parentElement!).getByText('More'))
-      const drawer = canvasElement.querySelector<HTMLElement>(
+      const drawerHeading = await canvas.findByRole('heading', {
+        name: `example · v${number} ${status}`,
+      })
+      expect(drawerHeading).toBeVisible()
+      const drawer = drawerHeading.closest<HTMLElement>(
         '#drawer-create-product-default'
       )!
-      expect(
-        await within(drawer).findByRole('heading', {
-          name: `example · v${number} ${status}`,
-        })
-      ).toBeVisible()
       expect(
         within(drawer).queryByRole('button', { name: /Private feedback/ })
       ).toBeNull()
