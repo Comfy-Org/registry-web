@@ -20,12 +20,7 @@ type ChangelogMarkdownProps = {
 const RICH_COMPONENTS: Components = {
   p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
   a: ({ children, href }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-500 underline"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
       {children}
     </a>
   ),
@@ -91,9 +86,7 @@ const ChangelogMarkdown: React.FC<ChangelogMarkdownProps> = ({
 }) => {
   return (
     <div className={className}>
-      <Markdown components={plain ? PLAIN_COMPONENTS : RICH_COMPONENTS}>
-        {children ?? ""}
-      </Markdown>
+      <Markdown components={plain ? PLAIN_COMPONENTS : RICH_COMPONENTS}>{children ?? ""}</Markdown>
     </div>
   );
 };
