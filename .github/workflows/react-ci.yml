@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push the prettier changed files back to the repository.
+      # Give the default GITHUB_TOKEN write permission to commit and push the formatter-fixed files back to the repository.
       contents: write
     runs-on: ubuntu-latest
     steps:
@@ -23,9 +23,9 @@ jobs:
         run: bun install
         env:
           HUSKY: 0
-      - name: Run Next.js Lint
+      - name: Run oxlint
         run: bun fix
-      - name: Run Format
+      - name: Run oxfmt
         run: bun fmt
       - name: Scan i18n Keys
         run: bun scripts/scan-i18n.ts
@@ -35,7 +35,7 @@ jobs:
         run: bunx sort-package-json
       - name: Build the Next.js Project
         run: bun run build
-      # commit prettier fixed code only if there are changes
+      # commit formatter-fixed code only if there are changes
       - name: Check for changes
         id: verify_diff
         run: |
@@ -43,7 +43,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         if: steps.verify_diff.outputs.changed == 'true'
         with:
-          commit_message: "format: Apply prettier --fix changes"
+          commit_message: "format: Apply oxlint/oxfmt changes"
           commit_options: "--no-verify"
         env:
           HUSKY: 0
